@@ -21,7 +21,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 	/// An implementation of <see cref="IHighlighterTooltipProvider"/> that provides colored C# identifier tooltips,
 	/// or falls back to an underlying provider when necessary.
 	/// </summary>
-	public class EnhancedHighlighterTooltipProvider : IHighlighterTooltipProvider {
+	public partial class EnhancedHighlighterTooltipProvider : IHighlighterTooltipProvider {
 
 		private readonly IHighlighterTooltipProvider _underlyingHighlighterTooltipProvider;
 		private readonly ISolution _solution;
@@ -105,7 +105,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				return null;
 
 			IPsiServices psiServices = _solution.GetPsiServices();
-			if (!psiServices.Files.AllDocumentsAreCommitted || psiServices.Caches.HasDirtyFiles)
+			if (!AreAllDocumentsCommitted(psiServices.Files) || psiServices.Caches.HasDirtyFiles)
 				return null;
 
 			psiSourceFile = highlighter.Document.GetPsiSourceFile(_solution);
