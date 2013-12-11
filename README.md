@@ -9,7 +9,8 @@ Installation
 ------------
 Visual Studio 2010, 2012 and 2013 are supported.  
 ReSharper 8.1 EAP 8.1.22.190 or later must be installed.  
-Install the plugin using the built-in Extension Manager from the ReSharper menu. Don't forget to select _Include Prerelease_ in the Extension Manager!  
+
+Install the plugin using the built-in Extension Manager from the ReSharper menu. Don't forget to select _Include Prerelease_.  
 **RESTART** Visual Studio after installing or there could be problems!  
 
 Tooltip Highlighting
@@ -20,7 +21,7 @@ The tooltip that appears on mouse over is now syntax highlighted. Note that only
 Parameter Info Highlighting
 ---------------------------
 The parameter information popup is now syntax highlighted.
-The colors used for the types either the one having a name starting by _ReSharper_ if _Color identifiers_ is used, or the Visual Studio ones starting with _User Types_ otherwise.  
+The colors used for the types are either the one having a name starting by _ReSharper_ if _Color identifiers_ is used, or the Visual Studio ones starting with _User Types_ otherwise.  
 ![Parameter Info Highlighting](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Screenshots/ParameterInfo.png "Parameter Info Highlighting")
 
 Limitations
