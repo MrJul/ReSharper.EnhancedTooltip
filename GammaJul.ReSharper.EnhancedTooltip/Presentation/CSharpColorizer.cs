@@ -520,13 +520,18 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			bool isIndexer = IsIndexer(element);
 			AppendText(isIndexer ? "[" : "(", null);
 			IList<IParameter> parameters = parametersOwner.Parameters;
+			if (parameters.Count == 0) {
+				AppendText("<no parameters>", new TextStyle(FontStyle.Regular, Color.Gray));
+			}
+			else {
 			for (int i = 0; i < parameters.Count; i++) {
-				if (i > 0)
-					AppendText(", ", null);
-				int startOffset = _richText.Length;
-				AppendParameter(parameters[i], substitution);
-				if (updatePresentedInfo)
-					_presentedInfo.Parameters.Add(new TextRange(startOffset, _richText.Length));
+					if (i > 0)
+						AppendText(", ", null);
+					int startOffset = _richText.Length;
+					AppendParameter(parameters[i], substitution);
+					if (updatePresentedInfo)
+						_presentedInfo.Parameters.Add(new TextRange(startOffset, _richText.Length));
+				}
 			}
 			AppendText(isIndexer ? "]" : ")", null);
 		}
