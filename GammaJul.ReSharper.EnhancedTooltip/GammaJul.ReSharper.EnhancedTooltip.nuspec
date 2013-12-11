@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+	<metadata>
+		<id>EnhancedTooltip</id>
+		<version>1.0.0-EAP-20131211</version>
+		<title>Enhanced Tooltip</title>
+		<authors>Julien Lebosquain</authors>
+		<description>Colorizes the tooltip as well as the parameter information popup.</description>
+		<projectUrl>https://github.com/MrJul/ReSharper.EnhancedTooltip/</projectUrl>
+		<iconUrl>https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/Logo/Logo128.png</iconUrl>
+		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+		<copyright>Copyright &#x00A9; 2013 Julien Lebosquain</copyright>
+		<tags>Tooltip Syntax Color</tags>
+		<dependencies>
+			<dependency id="ReSharper" version="8.1" />
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.dll" target="ReSharper\v8.1\plugins" />
+	</files>
+</package>
