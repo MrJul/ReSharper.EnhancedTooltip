@@ -513,18 +513,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private void AppendParameters([NotNull] IDeclaredElement element, [NotNull] ISubstitution substitution, bool updatePresentedInfo) {
-			var parametersOwner = element as IParametersOwner;
+			var parametersOwner = TryGetParametersOwner(element);
 			if (parametersOwner == null || !ShouldShowParameters(element))
 				return;
 
 			bool isIndexer = IsIndexer(element);
 			AppendText(isIndexer ? "[" : "(", null);
 			IList<IParameter> parameters = parametersOwner.Parameters;
-			if (parameters.Count == 0) {
+
+			if (parameters.Count == 0 && _options.ShowEmptyParametersText)
 				AppendText("<no parameters>", new TextStyle(FontStyle.Regular, Color.Gray));
-			}
+
 			else {
-			for (int i = 0; i < parameters.Count; i++) {
+				for (int i = 0; i < parameters.Count; i++) {
 					if (i > 0)
 						AppendText(", ", null);
 					int startOffset = _richText.Length;
@@ -533,7 +534,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 						_presentedInfo.Parameters.Add(new TextRange(startOffset, _richText.Length));
 				}
 			}
+
 			AppendText(isIndexer ? "]" : ")", null);
+		}
+
+		[CanBeNull]
+		private static IParametersOwner TryGetParametersOwner([NotNull] IDeclaredElement declaredElement) {
+			var parametersOwner = declaredElement as IParametersOwner;
+			if (parametersOwner != null)
+				return parametersOwner;
+
+			var deleg = declaredElement as IDelegate;
+			if (deleg != null)
+				return deleg.InvokeMethod;
+
+			return null;
 		}
 
 		private void AppendParameter([NotNull] IParameter parameter, [NotNull] ISubstitution substitution) {
@@ -562,7 +577,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private static bool ShouldShowParameters([NotNull] IDeclaredElement element) {
-			if (CSharpDeclaredElementUtil.IsDestructor(element) || element is IDelegate || element is IProperty)
+			if (CSharpDeclaredElementUtil.IsDestructor(element) || element is IProperty)
 				return false;
 			
 			var accessor = element as IAccessor;

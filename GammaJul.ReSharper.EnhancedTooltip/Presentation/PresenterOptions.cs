@@ -17,6 +17,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public NamespaceDisplays ShowNamespaces { get; set; }
 		public bool ShowParameterNames { get; set; }
 		public bool ShowParameterTypes { get; set; }
+		public bool ShowEmptyParametersText { get; set; }
 		public bool UseReSharperColors { get; set; }
 		public bool UseTypeKeywords { get; set; }
 
@@ -26,6 +27,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowConstantValues = true;
 			ShowElementKind = false;
 			ShowElementType = ElementTypeDisplay.Before;
+			ShowEmptyParametersText = false;
 			ShowModifiers = false;
 			ShowName = true;
 			ShowNamespaces = NamespaceDisplays.Member;

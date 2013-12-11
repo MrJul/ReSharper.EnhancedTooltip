@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	<metadata>
 		<id>EnhancedTooltip</id>
-		<version>1.0.1-EAP-20131211</version>
+		<version>1.0.8-pre</version>
 		<title>Enhanced Tooltip</title>
 		<authors>Julien Lebosquain</authors>
 		<description>Colorizes the tooltip as well as the parameter information popup.</description>
