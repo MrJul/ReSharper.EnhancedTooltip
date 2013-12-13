@@ -8,7 +8,7 @@ It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) 8.0
 Installation
 ------------
 Visual Studio 2010, 2012 and 2013 are supported.  
-ReSharper 8.0.x or 8.1 EAP 8.1.22.190 (or later) must be installed.  
+ReSharper 8.0.x or 8.1 must be installed.  
 
 Install the plugin using the built-in Extension Manager from the ReSharper menu. Don't forget to select _Include Prerelease_.  
 
