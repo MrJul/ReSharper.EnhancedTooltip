@@ -9,6 +9,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
+using JetBrains.ReSharper.Psi.CSharp.Resources;
 using JetBrains.ReSharper.Psi.CSharp.Tree.Query;
 using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Resolve;
@@ -577,7 +578,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private static bool ShouldShowParameters([NotNull] IDeclaredElement element) {
-			if (CSharpDeclaredElementUtil.IsDestructor(element) || element is IProperty)
+			if (CSharpDeclaredElementUtil.IsDestructor(element) || CSharpDeclaredElementUtil.IsProperty(element))
 				return false;
 			
 			var accessor = element as IAccessor;

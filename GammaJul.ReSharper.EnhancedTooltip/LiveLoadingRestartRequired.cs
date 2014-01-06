@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.Application.Extensions;
@@ -44,11 +43,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip {
 			// will be more than one instance of DaemonImpl
 			ISolution solution = _solutionsManager.Solution;
 			if (solution != null) {
-				// We can't call GetComponents here, since that verifies cardinality and throws
-				// if we try and get multiple instances of a component that should be used with
-				// a single instance. We can fake it with Get<IEnumerable<>> though. If we get
-				// more than one instance, we're being live loaded, and need a restart
-				return solution.GetComponent<IEnumerable<DaemonImpl>>().Count() > 1;
+				try {
+					// The only way we can check if we have multiple instances of DaemonImpl registered
+					// is by trying to get it. If it succeeds, we're fine. If it throws, we need to restart
+					solution.GetComponent<DaemonImpl>();
+				}
+				catch {
+					return true;
+				}
 			}
 
 			return false;
