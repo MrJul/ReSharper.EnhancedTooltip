@@ -10,7 +10,7 @@ Installation
 Visual Studio 2010, 2012 and 2013 are supported.  
 ReSharper 8.0.x or 8.1 must be installed.  
 
-Install the plugin using the built-in Extension Manager from the ReSharper menu. Don't forget to select _Include Prerelease_.  
+Install the plugin using the built-in Extension Manager from the ReSharper menu.  
 
 Tooltip Highlighting
 --------------------
