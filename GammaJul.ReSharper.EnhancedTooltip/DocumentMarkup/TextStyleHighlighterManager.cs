@@ -14,7 +14,7 @@ using JetBrains.VsIntegration;
 namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 	/// <summary>
-	/// A component that retrive <see cref="HighlighterAttributes"/> from either ReSharper's highlighters or Visual Studio colors.
+	/// A component that retrieve <see cref="HighlighterAttributes"/> from either ReSharper's highlighters or Visual Studio colors.
 	/// </summary>
 	[SolutionComponent]
 	public class TextStyleHighlighterManager {

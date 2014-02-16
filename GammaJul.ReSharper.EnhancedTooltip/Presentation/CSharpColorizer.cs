@@ -9,7 +9,6 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
-using JetBrains.ReSharper.Psi.CSharp.Resources;
 using JetBrains.ReSharper.Psi.CSharp.Tree.Query;
 using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Resolve;
@@ -330,7 +329,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (deleg != null && _options.FormatDelegatesAsLambdas && expectedNamespaceDisplay == NamespaceDisplays.Parameters) {
 				AppendParameters(deleg.InvokeMethod, substitution, false);
 				AppendText(" => ", VsHighlightingAttributeIds.Operator);
-				AppendType(deleg.InvokeMethod.ReturnType, expectedNamespaceDisplay);
+				AppendType(substitution.Apply(deleg.InvokeMethod.ReturnType), expectedNamespaceDisplay);
 				return;
 			}
 
@@ -513,7 +512,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return null;
 		}
 
-		private void AppendParameters([NotNull] IDeclaredElement element, [NotNull] ISubstitution substitution, bool updatePresentedInfo) {
+		private void AppendParameters([NotNull] IDeclaredElement element, [NotNull] ISubstitution substitution, bool isTopLevel) {
 			var parametersOwner = TryGetParametersOwner(element);
 			if (parametersOwner == null || !ShouldShowParameters(element))
 				return;
@@ -522,8 +521,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText(isIndexer ? "[" : "(", null);
 			IList<IParameter> parameters = parametersOwner.Parameters;
 
-			if (parameters.Count == 0 && _options.ShowEmptyParametersText)
-				AppendText("<no parameters>", new TextStyle(FontStyle.Regular, Color.Gray));
+			if (parameters.Count == 0 && _options.ShowEmptyParametersText) {
+				if (isTopLevel)
+					AppendText("<no parameters>", new TextStyle(FontStyle.Regular, Color.Gray));
+			}
 
 			else {
 				for (int i = 0; i < parameters.Count; i++) {
@@ -531,7 +532,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 						AppendText(", ", null);
 					int startOffset = _richText.Length;
 					AppendParameter(parameters[i], substitution);
-					if (updatePresentedInfo)
+					if (isTopLevel)
 						_presentedInfo.Parameters.Add(new TextRange(startOffset, _richText.Length));
 				}
 			}

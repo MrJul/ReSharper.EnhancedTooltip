@@ -5,36 +5,61 @@ using JetBrains.ReSharper.Feature.Services.ParameterInfo.Settings;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
-	public class PresenterOptions {
+	public sealed class PresenterOptions {
 
-		public bool FormatDelegatesAsLambdas { get; set; }
-		public bool ShowAccessRights { get; set; }
-		public bool ShowConstantValues { get; set; }
-		public bool ShowElementKind { get; set; }
-		public ElementTypeDisplay ShowElementType { get; set; }
-		public bool ShowModifiers { get; set; }
-		public bool ShowName { get; set; }
-		public NamespaceDisplays ShowNamespaces { get; set; }
-		public bool ShowParameterNames { get; set; }
-		public bool ShowParameterTypes { get; set; }
-		public bool ShowEmptyParametersText { get; set; }
-		public bool UseReSharperColors { get; set; }
-		public bool UseTypeKeywords { get; set; }
+		public bool FormatDelegatesAsLambdas { get; private set; }
+		public bool ShowAccessRights { get; private set; }
+		public bool ShowConstantValues { get; private set; }
+		public bool ShowElementKind { get; private set; }
+		public ElementTypeDisplay ShowElementType { get; private set; }
+		public bool ShowModifiers { get; private set; }
+		public bool ShowName { get; private set; }
+		public NamespaceDisplays ShowNamespaces { get; private set; }
+		public bool ShowParameterNames { get; private set; }
+		public bool ShowParameterTypes { get; private set; }
+		public bool ShowEmptyParametersText { get; private set; }
+		public bool UseReSharperColors { get; private set; }
+		public bool UseTypeKeywords { get; private set; }
 
-		public PresenterOptions([NotNull] IContextBoundSettingsStore settings) {
-			FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas);
-			ShowAccessRights = false;
-			ShowConstantValues = true;
-			ShowElementKind = false;
-			ShowElementType = ElementTypeDisplay.Before;
-			ShowEmptyParametersText = false;
-			ShowModifiers = false;
-			ShowName = true;
-			ShowNamespaces = NamespaceDisplays.Member;
-			ShowParameterTypes = true;
-			ShowParameterNames = true;
-			UseReSharperColors = settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled);
-			UseTypeKeywords = true;
+		[NotNull]
+		public static PresenterOptions ForToolTip([NotNull] IContextBoundSettingsStore settings) {
+			return new PresenterOptions {
+				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas),
+				ShowAccessRights = false,
+				ShowConstantValues = true,
+				ShowElementKind = true,
+				ShowElementType = ElementTypeDisplay.Before,
+				ShowEmptyParametersText = false,
+				ShowModifiers = false,
+				ShowName = true,
+				ShowNamespaces = NamespaceDisplays.Member,
+				ShowParameterTypes = true,
+				ShowParameterNames = true,
+				UseReSharperColors = settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled),
+				UseTypeKeywords = true
+			};
+		}
+
+		[NotNull]
+		public static PresenterOptions ForParameterInfo([NotNull] IContextBoundSettingsStore settings) {
+			return new PresenterOptions {
+				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas),
+				ShowAccessRights = false,
+				ShowConstantValues = true,
+				ShowElementKind = false,
+				ShowElementType = ElementTypeDisplay.After,
+				ShowEmptyParametersText = true,
+				ShowModifiers = false,
+				ShowName = false,
+				ShowNamespaces = NamespaceDisplays.None,
+				ShowParameterTypes = true,
+				ShowParameterNames = true,
+				UseReSharperColors = settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled),
+				UseTypeKeywords = true
+			};
+		}
+
+		private PresenterOptions() {
 		}
 
 	}

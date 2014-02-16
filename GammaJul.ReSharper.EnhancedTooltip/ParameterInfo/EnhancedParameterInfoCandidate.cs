@@ -38,12 +38,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 					return signature;
 			}
 
-			var options = new PresenterOptions(_settings) {
-				ShowName = false,
-				ShowElementType = ElementTypeDisplay.After,
-				ShowEmptyParametersText = true,
-				ShowNamespaces = NamespaceDisplays.None
-			};
+			var options = PresenterOptions.ForParameterInfo(_settings);
 
 			PresentedInfo presentedInfo;
 			InvocationCandidate invocationCandidate = _candidate.InvocationCandidate;

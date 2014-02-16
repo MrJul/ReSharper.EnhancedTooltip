@@ -63,7 +63,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				return null;
 			
 			// Presents it using colors.
-			var options = new PresenterOptions(psiSourceFile.GetSettingsStore()) { ShowElementKind = true };
+			var options = PresenterOptions.ForToolTip(psiSourceFile.GetSettingsStore());
 			RichText richText = _colorizerPresenter.Present(elementInstance, options, highlighter.AttributeId);
 			if (richText.IsEmpty)
 				return null;
