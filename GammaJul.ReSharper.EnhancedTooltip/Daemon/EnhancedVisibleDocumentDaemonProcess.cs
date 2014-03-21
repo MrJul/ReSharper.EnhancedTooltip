@@ -23,17 +23,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Daemon {
 
 		[NotNull]
 		private static EnhancedDocumentMarkupManager CreateEnhancedDocumentMarkupManager([NotNull] IDocumentMarkupManager documentMarkupManager,
-			[NotNull] ISolution solution, [NotNull] IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter, [NotNull] IHighlighterCustomization highlighterCustomization,
-			[NotNull] ColorizerPresenter colorizerPresenter) {
-			return new EnhancedDocumentMarkupManager(documentMarkupManager, solution, declaredElementDescriptionPresenter, highlighterCustomization, colorizerPresenter);
+			[NotNull] ISolution solution, [NotNull] IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter, [NotNull] ColorizerPresenter colorizerPresenter) {
+			return new EnhancedDocumentMarkupManager(documentMarkupManager, solution, declaredElementDescriptionPresenter, colorizerPresenter);
 		}
 
 		public EnhancedVisibleDocumentDaemonProcess(IPsiSourceFile sourceFile, IDocumentMarkupManager documentMarkupManager,
 			ITextControlManager textControlManager, DocumentManager documentManager, SolutionAnalysisService solutionAnalysisService,
 			HighlightingSettingsManager highlightingSettingsManager, IShellLocks locks, SolutionDocumentTransactionManager documentTransactionManager,
 			Lifetime lifetime, ISolution solution, IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter,
-			IHighlighterCustomization highlighterCustomization, ColorizerPresenter colorizerPresenter)
-			: base(sourceFile, CreateEnhancedDocumentMarkupManager(documentMarkupManager, solution, declaredElementDescriptionPresenter, highlighterCustomization, colorizerPresenter),
+			ColorizerPresenter colorizerPresenter)
+			: base(sourceFile, CreateEnhancedDocumentMarkupManager(documentMarkupManager, solution, declaredElementDescriptionPresenter, colorizerPresenter),
 				textControlManager, documentManager, solutionAnalysisService, highlightingSettingsManager, locks, documentTransactionManager, lifetime) {
 		}
 

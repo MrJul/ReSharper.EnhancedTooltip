@@ -20,26 +20,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		private readonly IDocumentMarkupManager _underlyingManager;
 		private readonly ISolution _solution;
 		private readonly IDeclaredElementDescriptionPresenter _declaredElementDescriptionPresenter;
-		private readonly IHighlighterCustomization _highlighterCustomization;
 		private readonly ColorizerPresenter _colorizerPresenter;
 
 		public IDocumentMarkup GetMarkupModel(IDocument document) {
 			EnhancedDocumentMarkup documentMarkup = document.GetData(_enhancedDocumentMarkUpKey);
 			if (documentMarkup == null) {
 				documentMarkup = new EnhancedDocumentMarkup(_underlyingManager.GetMarkupModel(document),
-					_solution, _declaredElementDescriptionPresenter, _highlighterCustomization, _colorizerPresenter);
+					_solution, _declaredElementDescriptionPresenter, _colorizerPresenter);
 				document.PutData(_enhancedDocumentMarkUpKey, documentMarkup);
 			}
 			return documentMarkup;
 		}
 
 		public EnhancedDocumentMarkupManager([NotNull] IDocumentMarkupManager underlyingManager, [NotNull] ISolution solution,
-			[NotNull] IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter, [NotNull] IHighlighterCustomization highlighterCustomization,
-			[NotNull] ColorizerPresenter colorizerPresenter) {
+			[NotNull] IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter, [NotNull] ColorizerPresenter colorizerPresenter) {
 			_underlyingManager = underlyingManager;
 			_solution = solution;
 			_declaredElementDescriptionPresenter = declaredElementDescriptionPresenter;
-			_highlighterCustomization = highlighterCustomization;
 			_colorizerPresenter = colorizerPresenter;
 		}
 

@@ -20,7 +20,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		private readonly IDocumentMarkup _underlyingMarkup;
 		private readonly ISolution _solution;
 
-		private readonly Dictionary<IHighlighterTooltipProvider, EnhancedHighlighterTooltipProvider> _highlighterTooltipProviders = new Dictionary<IHighlighterTooltipProvider, EnhancedHighlighterTooltipProvider>();
+		private readonly Dictionary<IHighlighterTooltipProvider, EnhancedHighlighterTooltipProvider> _highlighterTooltipProviders
+			= new Dictionary<IHighlighterTooltipProvider, EnhancedHighlighterTooltipProvider>();
 		private readonly IDeclaredElementDescriptionPresenter _declaredElementDescriptionPresenter;
 		private readonly ColorizerPresenter _colorizerPresenter;
 
@@ -91,8 +92,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 
 		public EnhancedDocumentMarkup([NotNull] IDocumentMarkup underlyingMarkup, [NotNull] ISolution solution,
-			[NotNull] IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter, [NotNull] IHighlighterCustomization highlighterCustomization,
-			[NotNull] ColorizerPresenter colorizerPresenter) {
+			[NotNull] IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter, [NotNull] ColorizerPresenter colorizerPresenter) {
 			_underlyingMarkup = underlyingMarkup;
 			_solution = solution;
 			_declaredElementDescriptionPresenter = declaredElementDescriptionPresenter;

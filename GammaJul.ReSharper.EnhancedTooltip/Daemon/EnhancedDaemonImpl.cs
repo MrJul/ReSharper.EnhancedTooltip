@@ -35,13 +35,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Daemon {
 		private readonly IShellLocks _locks;
 		private readonly ISolution _solution;
 		private readonly IDeclaredElementDescriptionPresenter _declaredElementDescriptionPresenter;
-		private readonly IHighlighterCustomization _highlighterCustomization;
 		private readonly ColorizerPresenter _colorizerPresenter;
 
 		protected override VisibleDocumentDaemonProcess CreateDaemonForDocumentImpl(IPsiSourceFile sourceFile) {
 			return new EnhancedVisibleDocumentDaemonProcess(sourceFile, myDocumentMarkupManager, myTextControlManager, myDocumentManager,
 				mySolutionAnalysisService, myHighlightingSettingsManager, _locks, mySolutionDocumentTransactionManager, myLifetime,
-				_solution, _declaredElementDescriptionPresenter, _highlighterCustomization, _colorizerPresenter);
+				_solution, _declaredElementDescriptionPresenter, _colorizerPresenter);
 		}
 
 		public EnhancedDaemonImpl(ISolution solution, Lifetime lifetime, IPsiServices psiServices, DocumentManager documentManager, IShellLocks locks,
@@ -51,15 +50,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Daemon {
 			SolutionAnalysisIndicator solutionAnalysisIndicator, ISettingsStore settingsStore, IDaemonThread daemonThread,
 			ISolutionLoadTasksScheduler scheduler, DaemonAutoDisableStrategy daemonAutoDisableStrategy,
 			SolutionDocumentTransactionManager solutionDocumentTransactionManager, DocumentToProjectFileMappingStorage documentStorage,
-			IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter, IHighlighterCustomization highlighterCustomization,
-			ColorizerPresenter colorizerPresenter)
+			IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter, ColorizerPresenter colorizerPresenter)
 			: base(solution, lifetime, psiServices, documentManager, locks, textControlManager, changeManager, daemonStageManager, highlightingSettingsManager,
 				excludedFilesManager, solutionAnalysisService, documentMarkupManager, asyncCommitService, solutionAnalysisIndicator, settingsStore, daemonThread,
 				scheduler, daemonAutoDisableStrategy, solutionDocumentTransactionManager, documentStorage) {
 			_solution = solution;
 			_locks = locks;
 			_declaredElementDescriptionPresenter = declaredElementDescriptionPresenter;
-			_highlighterCustomization = highlighterCustomization;
 			_colorizerPresenter = colorizerPresenter;
 		}
 
