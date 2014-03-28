@@ -1,16 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\JetBrains.ReSharper.SDK.8.1.555\build\JetBrains.ReSharper.SDK.Props" Condition="Exists('..\packages\JetBrains.ReSharper.SDK.8.1.555\build\JetBrains.ReSharper.SDK.Props')" />
-  <Import Project="EnhancedTooltip.props" />
   <PropertyGroup>
     <ProjectGuid>{633F0585-4703-47CE-B044-CAB216393886}</ProjectGuid>
     <AssemblyName>GammaJul.ReSharper.EnhancedTooltip.8.1</AssemblyName>
+    <RootNamespace>GammaJul.ReSharper.EnhancedTooltip</RootNamespace>
   </PropertyGroup>
+  <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="**\*.8.0.cs" />
+    <Compile Include="**\*.cs" Exclude="obj\**" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.8.1.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="JetBrains.Platform.ReSharper.VisualStudio.SinceVs11">
+      <HintPath>..\packages\JetBrains.ReSharper.SDK.8.1.555\bin\JetBrains.Platform.ReSharper.VisualStudio.SinceVs11.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.PsiFeatures.VisualStudio.SinceVs10">
+      <HintPath>..\packages\JetBrains.ReSharper.SDK.8.1.555\bin\JetBrains.Platform.ReSharper.VisualStudio.SinceVs10.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Presentation\HeaderedContentControlTemplate.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\JetBrains.ReSharper.SDK.8.1.555\build\JetBrains.ReSharper.SDK.Targets" Condition="Exists('..\packages\JetBrains.ReSharper.SDK.8.1.555\build\JetBrains.ReSharper.SDK.Targets')" />

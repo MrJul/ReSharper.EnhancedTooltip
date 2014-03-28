@@ -27,7 +27,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas),
 				ShowAccessRights = false,
 				ShowConstantValues = true,
-				ShowElementKind = true,
+				ShowElementKind = false,
 				ShowElementType = ElementTypeDisplay.Before,
 				ShowEmptyParametersText = false,
 				ShowModifiers = false,

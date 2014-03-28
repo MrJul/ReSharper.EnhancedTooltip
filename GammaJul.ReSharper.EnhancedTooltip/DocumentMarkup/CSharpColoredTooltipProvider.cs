@@ -13,49 +13,31 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl.DocumentMarkup;
+using JetBrains.UI.Icons;
 using JetBrains.UI.RichText;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 	/// <summary>
-	/// An implementation of <see cref="IHighlighterTooltipProvider"/> that provides colored C# identifier tooltips,
-	/// or falls back to an underlying provider when necessary.
+	/// Provides colored C# identifier tooltips.
 	/// </summary>
-	public partial class EnhancedHighlighterTooltipProvider : IHighlighterTooltipProvider {
+	[SolutionComponent]
+	public class CSharpColoredTooltipProvider {
 
-		private readonly IHighlighterTooltipProvider _underlyingHighlighterTooltipProvider;
 		private readonly ISolution _solution;
 		private readonly IDeclaredElementDescriptionPresenter _declaredElementDescriptionPresenter;
 		private readonly ColorizerPresenter _colorizerPresenter;
-
-		public RichTextBlock GetRichTooltip(IHighlighter highlighter) {
-			// For C# identifiers, colorize the tooltip.
-			var csProvider = _underlyingHighlighterTooltipProvider as IdentifierTooltipProvider<CSharpLanguage>;
-			if (csProvider != null) {
-				RichTextBlock coloredTooltip = GetCSharpColoredTooltip(highlighter);
-				if (coloredTooltip != null)
-					return coloredTooltip;
-			}
-
-			// Fallback to the underlying provider.
-			return _underlyingHighlighterTooltipProvider.GetRichTooltip(highlighter);
-		}
-
-		public string GetTooltip(IHighlighter highlighter) {
-			return _underlyingHighlighterTooltipProvider.GetTooltip(highlighter);
-		}
-
-		public string GetTooltipForErrorStripe(IHighlighter highlighter) {
-			return _underlyingHighlighterTooltipProvider.GetTooltipForErrorStripe(highlighter);
-		}
 
 		/// <summary>
 		/// Returns a colored <see cref="RichTextBlock"/> for a C# identifier represented by a <see cref="IHighlighter"/>.
 		/// </summary>
 		/// <param name="highlighter">The highlighter representing the identifier.</param>
+		/// <param name="iconId">The icon for the identifier.</param>
 		/// <returns>A <see cref="RichTextBlock"/> representing a colored tooltip, or <c>null</c>.</returns>
 		[CanBeNull]
-		private RichTextBlock GetCSharpColoredTooltip([NotNull] IHighlighter highlighter) {
+		public RichTextBlock TryGetCSharpColoredTooltip([NotNull] IHighlighter highlighter, [CanBeNull] out IconId iconId) {
+			iconId = null;
+
 			// Finds the element represented by the identifier.
 			IPsiSourceFile psiSourceFile;
 			DeclaredElementInstance elementInstance = FindValidHighlightedElement(highlighter, out psiSourceFile);
@@ -67,6 +49,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			RichText richText = _colorizerPresenter.Present(elementInstance, options, highlighter.AttributeId);
 			if (richText.IsEmpty)
 				return null;
+
+			// Finds the corresponding icon.
+			var psiIconManager = _solution.GetComponent<PsiIconManager>();
+			iconId = psiIconManager.GetImage(elementInstance.Element, elementInstance.Element.PresentationLanguage, true);
 
 			// Appends the element's description.
 			var richTextBlock = new RichTextBlock(richText);
@@ -105,7 +91,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				return null;
 
 			IPsiServices psiServices = _solution.GetPsiServices();
-			if (!AreAllDocumentsCommitted(psiServices.Files) || psiServices.Caches.HasDirtyFiles)
+			if (!psiServices.Files.AllDocumentsAreCommitted || psiServices.Caches.HasDirtyFiles)
 				return null;
 
 			psiSourceFile = highlighter.Document.GetPsiSourceFile(_solution);
@@ -175,10 +161,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			return null;
 		}
 
-		public EnhancedHighlighterTooltipProvider([NotNull] IHighlighterTooltipProvider underlyingHighlighterTooltipProvider, [NotNull] ISolution solution,
-			[NotNull] IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter,
-			[NotNull] ColorizerPresenter colorizerPresenter) {
-			_underlyingHighlighterTooltipProvider = underlyingHighlighterTooltipProvider;
+		public CSharpColoredTooltipProvider([NotNull] ISolution solution, [NotNull] ColorizerPresenter colorizerPresenter,
+			[NotNull] IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter) {
 			_solution = solution;
 			_declaredElementDescriptionPresenter = declaredElementDescriptionPresenter;
 			_colorizerPresenter = colorizerPresenter;

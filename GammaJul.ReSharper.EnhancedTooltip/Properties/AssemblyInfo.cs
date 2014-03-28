@@ -10,7 +10,7 @@ using JetBrains.Application.PluginSupport;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("1.0.11.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
 
 [assembly: PluginTitle("Enhanced Tooltip")]
 [assembly: PluginDescription("Enhances the tooltip and parameter information with colors.")]

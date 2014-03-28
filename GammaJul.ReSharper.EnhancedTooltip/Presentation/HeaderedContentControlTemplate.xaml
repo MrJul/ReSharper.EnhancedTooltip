@@ -1,0 +1,32 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:theming="clr-namespace:JetBrains.VsIntegration.SinceVs11.Theming;assembly=JetBrains.Platform.ReSharper.VisualStudio.SinceVs11"
+	xmlns:local="clr-namespace:GammaJul.ReSharper.EnhancedTooltip.Presentation">
+
+	<ControlTemplate TargetType="{x:Type HeaderedContentControl}" x:Key="HeaderedContentControlTemplate">
+		<Grid x:Name="Root">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			
+			<Border BorderThickness="1" Padding="5" Grid.Row="1"
+				BorderBrush="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}"
+				Background="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBackgroundBrushKey}}"
+				TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTextBrushKey}}">
+				<ContentPresenter />
+			</Border>
+
+			<Border BorderThickness="1,1,1,0" Padding="5,2" HorizontalAlignment="Left" Margin="0,0,0,-1" Grid.Row="0"
+				BorderBrush="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}"
+				Background="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTabSelectedTabBrushKey}}"
+				TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTabSelectedTextBrushKey}}"
+				TextElement.FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}">
+				<ContentPresenter ContentSource="Header" />
+			</Border>
+
+		</Grid>
+	</ControlTemplate>
+
+</ResourceDictionary>
