@@ -4,8 +4,6 @@ using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.Util;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
@@ -33,7 +31,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		[NotNull]
 		private ICandidate Enhance([NotNull] ICandidate candidate) {
 			var typedCandidate = candidate as ParameterInfoCandidate;
-			return typedCandidate != null && typedCandidate.Language.Is<CSharpLanguage>()
+			return typedCandidate != null
 				? new EnhancedParameterInfoCandidate(typedCandidate, _colorizerPresenter, _settings)
 				: candidate;
 		}

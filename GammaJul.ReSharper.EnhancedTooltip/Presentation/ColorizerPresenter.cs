@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.UI.RichText;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
@@ -20,13 +21,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// </summary>
 		/// <param name="declaredElementInstance">The declared element instance.</param>
 		/// <param name="options">The options to use to present the element.</param>
+		/// <param name="languageType">The type of language used to present the element.</param>
 		/// <param name="nameHighlightingAttributeId">The highlighting attribute identifier used to colorize the name.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
-		[NotNull]
-		public RichText Present([NotNull] DeclaredElementInstance declaredElementInstance, [NotNull] PresenterOptions options,
-			[CanBeNull] string nameHighlightingAttributeId) {
+		[CanBeNull]
+		public RichText TryPresent([NotNull] DeclaredElementInstance declaredElementInstance, [NotNull] PresenterOptions options,
+			[NotNull] PsiLanguageType languageType, [CanBeNull] string nameHighlightingAttributeId) {
 			PresentedInfo presentedInfo;
-			return Present(declaredElementInstance, options, nameHighlightingAttributeId, out presentedInfo);
+			return TryPresent(declaredElementInstance, options, languageType, nameHighlightingAttributeId, out presentedInfo);
 		}
 
 		/// <summary>
@@ -34,24 +36,31 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// </summary>
 		/// <param name="declaredElementInstance">The declared element instance.</param>
 		/// <param name="options">The options to use to present the element.</param>
+		/// <param name="languageType">The type of language used to present the element.</param>
 		/// <param name="nameHighlightingAttributeId">The highlighting attribute identifier used to colorize the name.</param>
 		/// <param name="presentedInfo">When the method returns, a <see cref="PresentedInfo"/> containing range information about the presented element.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
-		[NotNull]
-		public RichText Present([NotNull] DeclaredElementInstance declaredElementInstance, [NotNull] PresenterOptions options,
-			[CanBeNull] string nameHighlightingAttributeId, [NotNull] out PresentedInfo presentedInfo) {
+		[CanBeNull]
+		public RichText TryPresent([NotNull] DeclaredElementInstance declaredElementInstance, [NotNull] PresenterOptions options,
+			[NotNull] PsiLanguageType languageType, [CanBeNull] string nameHighlightingAttributeId, [NotNull] out PresentedInfo presentedInfo) {
 			
 			var richText = new RichText();
 			presentedInfo = new PresentedInfo();
-			IColorizer colorizer = CreateColorizer(richText, options, presentedInfo);
+			IColorizer colorizer = TryCreateColorizer(richText, options, languageType, presentedInfo);
+			if (colorizer == null)
+				return null;
+
 			colorizer.AppendDeclaredElement(declaredElementInstance.Element, declaredElementInstance.Substitution, nameHighlightingAttributeId);
 			return richText;
 		}
 
-		[NotNull]
-		private IColorizer CreateColorizer([NotNull] RichText richText, [NotNull] PresenterOptions options, [NotNull] PresentedInfo presentedInfo) {
-			// TODO: handle other languages
-			return new CSharpColorizer(richText, options, presentedInfo, _textStyleHighlighterManager);
+		[CanBeNull]
+		private IColorizer TryCreateColorizer([NotNull] RichText richText, [NotNull] PresenterOptions options,
+			[NotNull] PsiLanguageType languageType, [NotNull] PresentedInfo presentedInfo) {
+			// TODO: remove constructor parameters and resolve as a language service
+			if (languageType.Is<CSharpLanguage>())
+				return new CSharpColorizer(richText, options, presentedInfo, _textStyleHighlighterManager);
+			return null;
 		}
 
 		public ColorizerPresenter([NotNull] TextStyleHighlighterManager textStyleHighlighterManager) {

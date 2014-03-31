@@ -39,11 +39,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			}
 
 			var options = PresenterOptions.ForParameterInfo(_settings);
-
 			PresentedInfo presentedInfo;
 			InvocationCandidate invocationCandidate = _candidate.InvocationCandidate;
 			var elementInstance = new DeclaredElementInstance(invocationCandidate.Element, invocationCandidate.Substitution);
-			RichText newRichText = _colorizerPresenter.Present(elementInstance, options, null, out presentedInfo);
+			
+			RichText newRichText = _colorizerPresenter.TryPresent(elementInstance, options, _candidate.Language, null, out presentedInfo);
+			if (newRichText == null)
+				return _candidate.GetSignature(namedArguments, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 
 			if (presentedInfo.Parameters.Count == 0) {
 				parameterRanges = EmptyArray<TextRange>.Instance;

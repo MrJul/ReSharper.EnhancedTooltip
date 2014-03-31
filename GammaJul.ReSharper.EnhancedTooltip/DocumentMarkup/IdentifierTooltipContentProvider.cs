@@ -7,7 +7,6 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Feature.Services.Descriptions;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
@@ -19,61 +18,59 @@ using JetBrains.UI.RichText;
 namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 	/// <summary>
-	/// Provides colored C# identifier tooltips.
+	/// Provides colored identifier tooltips.
 	/// </summary>
 	[SolutionComponent]
-	public class CSharpColoredTooltipProvider {
+	public class IdentifierTooltipContentProvider {
 
 		private readonly ISolution _solution;
 		private readonly IDeclaredElementDescriptionPresenter _declaredElementDescriptionPresenter;
 		private readonly ColorizerPresenter _colorizerPresenter;
 
 		/// <summary>
-		/// Returns a colored <see cref="RichTextBlock"/> for a C# identifier represented by a <see cref="IHighlighter"/>.
+		/// Returns a colored <see cref="TooltipContent"/> for an identifier represented by a <see cref="IHighlighter"/>.
 		/// </summary>
 		/// <param name="highlighter">The highlighter representing the identifier.</param>
-		/// <param name="iconId">The icon for the identifier.</param>
-		/// <returns>A <see cref="RichTextBlock"/> representing a colored tooltip, or <c>null</c>.</returns>
+		/// <param name="languageType">The type of language used to present the identifier.</param>
+		/// <returns>A <see cref="TooltipContent"/> representing a colored tooltip, or <c>null</c>.</returns>
 		[CanBeNull]
-		public RichTextBlock TryGetCSharpColoredTooltip([NotNull] IHighlighter highlighter, [CanBeNull] out IconId iconId) {
-			iconId = null;
-
+		public TooltipContent TryGetTooltipContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType) {
 			// Finds the element represented by the identifier.
 			IPsiSourceFile psiSourceFile;
-			DeclaredElementInstance elementInstance = FindValidHighlightedElement(highlighter, out psiSourceFile);
+			DeclaredElementInstance elementInstance = FindValidHighlightedElement(highlighter, languageType, out psiSourceFile);
 			if (elementInstance == null)
 				return null;
 			
 			// Presents it using colors.
 			var options = PresenterOptions.ForToolTip(psiSourceFile.GetSettingsStore());
-			RichText richText = _colorizerPresenter.Present(elementInstance, options, highlighter.AttributeId);
-			if (richText.IsEmpty)
+			RichText identifierText = _colorizerPresenter.TryPresent(elementInstance, options, languageType, highlighter.AttributeId);
+			if (identifierText == null || identifierText.IsEmpty)
 				return null;
 
-			// Finds the corresponding icon.
-			var psiIconManager = _solution.GetComponent<PsiIconManager>();
-			iconId = psiIconManager.GetImage(elementInstance.Element, elementInstance.Element.PresentationLanguage, true);
-
-			// Appends the element's description.
-			var richTextBlock = new RichTextBlock(richText);
-			AppendDescription(richTextBlock, elementInstance.Element, psiSourceFile.PsiModule);
-			return richTextBlock;
+			return new TooltipContent {
+				MainText = identifierText,
+				Icon = TryGetIcon(elementInstance.Element),
+				DescriptionText = TryGetDescription(elementInstance.Element, psiSourceFile.PsiModule, languageType)
+			};
 		}
 
 		/// <summary>
-		/// Appends the description of an element to a <see cref="RichTextBlock"/>.
+		/// Returns description of an element, if available.
 		/// </summary>
-		/// <param name="richTextBlock">The block to append to.</param>
-		/// <param name="element">The element whose description will be appended.</param>
+		/// <param name="element">The element whose description will be returned.</param>
 		/// <param name="psiModule">The PSI module of the file containing the identifier.</param>
-		private void AppendDescription([NotNull] RichTextBlock richTextBlock, [NotNull] IDeclaredElement element, [NotNull] IPsiModule psiModule) {
-			RichTextBlock description = _declaredElementDescriptionPresenter.GetDeclaredElementDescription(element,
-				DeclaredElementDescriptionStyle.SUMMARY_STYLE, CSharpLanguage.Instance, psiModule);
+		/// <param name="languageType">The type of language used to present the identifier.</param>
+		[CanBeNull]
+		private RichText TryGetDescription([NotNull] IDeclaredElement element, [NotNull] IPsiModule psiModule, [NotNull] PsiLanguageType languageType) {
+			RichTextBlock description = _declaredElementDescriptionPresenter.GetDeclaredElementDescription(
+				element, DeclaredElementDescriptionStyle.SUMMARY_STYLE, languageType, psiModule);
+			return description != null ? description.RichText : null;
+		}
 
-			if (!RichTextBlock.IsNullOrEmpty(description)) {
-				richTextBlock.Add(new RichText());
-				richTextBlock.AddLines(description);
-			}
+		[CanBeNull]
+		private IconId TryGetIcon([NotNull] IDeclaredElement declaredElement) {
+			var psiIconManager = _solution.GetComponent<PsiIconManager>();
+			return psiIconManager.GetImage(declaredElement, declaredElement.PresentationLanguage, true);
 		}
 
 		/// <summary>
@@ -81,10 +78,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// </summary>
 		/// <param name="highlighter">The highlighter.</param>
 		/// <param name="psiSourceFile">When the method returns, the <see cref="IPsiSourceFile"/> containing the highlighter.</param>
+		/// <param name="languageType">The type of language used to present the identifier.</param>
 		/// <returns>A valid <see cref="DeclaredElementInstance"/>, or <c>null</c>.</returns>
 		[ContractAnnotation("=> null, psiSourceFile: null; => notnull, psiSourceFile: notnull")]
 		[CanBeNull]
-		private DeclaredElementInstance FindValidHighlightedElement([NotNull] IHighlighter highlighter, [CanBeNull] out IPsiSourceFile psiSourceFile) {
+		private DeclaredElementInstance FindValidHighlightedElement([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType,
+			[CanBeNull] out IPsiSourceFile psiSourceFile) {
 			psiSourceFile = null;
 
 			if (!highlighter.IsValid || highlighter.AttributeId == HighlightingAttributeIds.MUTABLE_LOCAL_VARIABLE_IDENTIFIER_ATTRIBUTE)
@@ -99,7 +98,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				return null;
 
 			var documentRange = new DocumentRange(highlighter.Document, highlighter.Range);
-			IFile file = psiSourceFile.GetPsiFile<CSharpLanguage>(documentRange);
+			IFile file = psiSourceFile.GetPsiFile(languageType, documentRange);
 			if (file == null)
 				return null;
 
@@ -161,7 +160,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			return null;
 		}
 
-		public CSharpColoredTooltipProvider([NotNull] ISolution solution, [NotNull] ColorizerPresenter colorizerPresenter,
+		public IdentifierTooltipContentProvider([NotNull] ISolution solution, [NotNull] ColorizerPresenter colorizerPresenter,
 			[NotNull] IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter) {
 			_solution = solution;
 			_declaredElementDescriptionPresenter = declaredElementDescriptionPresenter;

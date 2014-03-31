@@ -13,7 +13,6 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.SolutionAnalysis.UI.Resources;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.UI.Avalon.Controls;
 using JetBrains.UI.Components.Theming;
@@ -168,55 +167,83 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (highlighter.Attributes.Effect.Type == EffectType.GUTTER_MARK)
 				return Pair.Of((UIElement) null, HighlighterType.Other);
 
-			var dockPanel = new DockPanel { Margin = new Thickness(3, 2, 3, 2) };
-			var highlighterType = HighlighterType.Other;
-			RichTextBlock richTextBlock = null;
-			
-			var highlighting = highlighter.UserData as IHighlighting;
-			if (highlighting != null) {
-				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, documentMarkup.Document);
-
-				IconId iconId = TryGetSeverityIcon(severity);
-				if (iconId != null)
-					highlighterType = HighlighterType.Issue;
-				else {
-					PsiLanguageType languageType = TryGetIdentifierLanguage(highlighting);
-					if (languageType != null) {
-						highlighterType = HighlighterType.Identifier;
-						if (languageType.IsExactly<CSharpLanguage>()) {
-							var solutionManager = Shell.Instance.TryGetComponent<VSSolutionManager>();
-							if (solutionManager != null) {
-								ISolution solution = solutionManager.CurrentSolution;
-								if (solution != null) {
-									var tooltipProvider = solution.GetComponent<CSharpColoredTooltipProvider>();
-									richTextBlock = tooltipProvider.TryGetCSharpColoredTooltip(highlighter, out iconId);
-								}
-							}
-						}
-					}
-				}
-
-				if (iconId != null) {
-					var image = new ThemedIconViewImage(iconId) {
-						Margin = new Thickness(0, 0, 4, 0),
-						VerticalAlignment = VerticalAlignment.Top,
-						HorizontalAlignment = HorizontalAlignment.Left
-					};
-					DockPanel.SetDock(image, Dock.Left);
-					dockPanel.Children.Add(image);
-				}
-
-			}
-
-			if (richTextBlock == null)
-				richTextBlock = highlighter.RichTextToolTip;
-
-			RichText richText = richTextBlock != null ? richTextBlock.RichText : null;
-			if (richText == null || richText.IsEmpty)
+			Pair<TooltipContent, HighlighterType> pair = TryGetTooltipContent(highlighter, documentMarkup);
+			TooltipContent tooltipContent = pair.First;
+			HighlighterType highlighterType = pair.Second;
+			if (tooltipContent == null || tooltipContent.MainText == null || tooltipContent.MainText.IsEmpty)
 				return Pair.Of((UIElement) null, highlighterType);
 
-			dockPanel.Children.Add(CreateRichTextPresenter(richText, false));
-			return Pair.Of((UIElement) dockPanel, highlighterType);
+			var dockPanel = PresentTooltipContent(tooltipContent);
+			return Pair.Of(dockPanel, highlighterType);
+		}
+
+		[NotNull]
+		private static UIElement PresentTooltipContent([NotNull] TooltipContent tooltipContent) {
+			var dockPanel = new DockPanel { Margin = new Thickness(3, 2, 3, 2) };
+
+			if (tooltipContent.Icon != null) {
+				var image = new ThemedIconViewImage(tooltipContent.Icon) {
+					Margin = new Thickness(0, 0, 4, 0),
+					VerticalAlignment = VerticalAlignment.Top,
+					HorizontalAlignment = HorizontalAlignment.Left
+				};
+				DockPanel.SetDock(image, Dock.Left);
+				dockPanel.Children.Add(image);
+			}
+
+			dockPanel.Children.Add(CreateRichTextPresenter(tooltipContent.MainText, false));
+			
+			return dockPanel;
+		}
+
+		private static Pair<TooltipContent, HighlighterType> TryGetTooltipContent([NotNull] IHighlighter highlighter, [NotNull] IDocumentMarkup documentMarkup) {
+			var highlighting = highlighter.UserData as IHighlighting;
+			if (highlighting == null)
+				return Pair.Of(TryCreateTooltipContent(highlighter.RichTextToolTip, null), HighlighterType.Other);
+
+			Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, documentMarkup.Document);
+			IconId severityIcon = TryGetSeverityIcon(severity);
+			if (severityIcon != null)
+				return Pair.Of(TryCreateTooltipContent(highlighter.RichTextToolTip, severityIcon), HighlighterType.Issue);
+
+			var highlighterType = HighlighterType.Other;
+			PsiLanguageType languageType = TryGetIdentifierLanguage(highlighting);
+			TooltipContent tooltipContent = null;
+			if (languageType != null) {
+				highlighterType = HighlighterType.Identifier;
+				tooltipContent = TryGetIdentifierTooltipContent(highlighter, languageType);
+			}
+
+			return Pair.Of(tooltipContent ?? TryCreateTooltipContent(highlighter.RichTextToolTip, null), highlighterType);
+		}
+
+		[CanBeNull]
+		private static TooltipContent TryGetIdentifierTooltipContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType) {
+			var solutionManager = Shell.Instance.TryGetComponent<VSSolutionManager>();
+			if (solutionManager == null)
+				return null;
+
+			ISolution solution = solutionManager.CurrentSolution;
+			if (solution == null)
+				return null;
+
+			var provider = solution.GetComponent<IdentifierTooltipContentProvider>();
+			return provider.TryGetTooltipContent(highlighter, languageType);
+		}
+
+		[CanBeNull]
+		private static TooltipContent TryCreateTooltipContent([CanBeNull] RichTextBlock richTextTooltip, [CanBeNull] IconId icon) {
+			if (richTextTooltip == null)
+				return null;
+
+			RichText richText = richTextTooltip.RichText;
+			if (richText.IsEmpty)
+				return null;
+
+			return new TooltipContent {
+				MainText = richText,
+				Icon = icon
+			};
 		}
 
 		private TextRange GetCurrentTextRange([NotNull] IIntellisenseSession session) {
@@ -271,7 +298,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		}
 
 		[NotNull]
-		private static UIElement CreateRichTextPresenter([NotNull] RichText richText, bool isAutoContrasted) {
+		private static UIElement CreateRichTextPresenter([CanBeNull] RichText richText, bool isAutoContrasted) {
 			var richTextPresenter = new RichTextPresenter(richText) { IsAutoContrasted = isAutoContrasted };
 			
 			TextOptions.SetTextFormattingMode(richTextPresenter, TextFormattingMode.Ideal);
