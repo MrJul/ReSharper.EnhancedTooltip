@@ -6,6 +6,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.DocumentModel;
@@ -16,11 +17,9 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.UI.Avalon.Controls;
 using JetBrains.UI.Components.Theming;
-using JetBrains.UI.Extensions;
 using JetBrains.UI.Icons;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
-using JetBrains.Util.Lazy;
 using JetBrains.VsIntegration.DevTen.Markup;
 using JetBrains.VsIntegration.Markup;
 using JetBrains.VsIntegration.ProjectModel;
@@ -36,14 +35,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactoryService;
 		private readonly ITextBuffer _textBuffer;
-
-		private static readonly JetBrains.Util.Lazy.Lazy<ControlTemplate> _headeredContentControlTemplate = Lazy.Of(() => {
-			var dictionary = new ResourceDictionary {
-				Source = UriHelpers.MakeUriToExecutingAssemplyResource("Presentation/HeaderedContentControlTemplate.xaml", typeof(QuickInfoSource).Assembly)
-			};
-			return (ControlTemplate) dictionary["HeaderedContentControlTemplate"];
-		});
-
+		
 		private enum HighlighterType {
 			Identifier,
 			Issue,
@@ -90,7 +82,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 						}
 					}
 					
-					AddPresenters(identifierPresenters, "Identifier", "Identifiers", quickInfoContent);
+					AddPresenters(identifierPresenters, "Id", "Ids", quickInfoContent);
 					AddPresenters(issuePresenters, "Issue", "Issues", quickInfoContent);
 					AddPresenters(otherPresenters, "Other", "Other", quickInfoContent);
 				}
@@ -179,7 +171,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		[NotNull]
 		private static UIElement PresentTooltipContent([NotNull] TooltipContent tooltipContent) {
-			var dockPanel = new DockPanel { Margin = new Thickness(3, 2, 3, 2) };
+			var mainTextPanel = new DockPanel { Margin = new Thickness(3, 2, 3, 2) };
 
 			if (tooltipContent.Icon != null) {
 				var image = new ThemedIconViewImage(tooltipContent.Icon) {
@@ -188,12 +180,20 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					HorizontalAlignment = HorizontalAlignment.Left
 				};
 				DockPanel.SetDock(image, Dock.Left);
-				dockPanel.Children.Add(image);
+				mainTextPanel.Children.Add(image);
 			}
 
-			dockPanel.Children.Add(CreateRichTextPresenter(tooltipContent.MainText, false));
-			
-			return dockPanel;
+			mainTextPanel.Children.Add(CreateRichTextPresenter(tooltipContent.MainText, false));
+			if (tooltipContent.DescriptionText.IsNullOrEmpty())
+				return mainTextPanel;
+
+			return new StackPanel {
+				Orientation = Orientation.Vertical,
+				Children = {
+					mainTextPanel,
+					CreateRichTextPresenter(tooltipContent.DescriptionText, true)
+				}
+			};
 		}
 
 		private static Pair<TooltipContent, HighlighterType> TryGetTooltipContent([NotNull] IHighlighter highlighter, [NotNull] IDocumentMarkup documentMarkup) {
@@ -249,7 +249,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		private TextRange GetCurrentTextRange([NotNull] IIntellisenseSession session) {
 			ITextSnapshot currentSnapshot = _textBuffer.CurrentSnapshot;
 			SnapshotPoint currentPoint = session.GetTriggerPoint(_textBuffer).GetPoint(currentSnapshot);
-			var currentSpan = new SnapshotSpan(currentPoint, currentPoint.Position < currentSnapshot.Length ? 1 : 0);
+			//var currentSpan = new SnapshotSpan(currentPoint, currentPoint.Position < currentSnapshot.Length ? 1 : 0);
+			var currentSpan = new SnapshotSpan(currentPoint, 0);
 			return new TextRange(currentSpan.Start, currentSpan.End);
 		}
 
@@ -291,7 +292,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		[NotNull]
 		private static HeaderedContentControl CreaterHeaderedContentControl([CanBeNull] object header, [CanBeNull] UIElement content) {
 			return new HeaderedContentControl {
-				Template = _headeredContentControlTemplate.Value,
+				Style = UIResources.Instance.HeaderedContentControlStyle,
 				Header = header,
 				Content = content
 			};
@@ -299,7 +300,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		[NotNull]
 		private static UIElement CreateRichTextPresenter([CanBeNull] RichText richText, bool isAutoContrasted) {
-			var richTextPresenter = new RichTextPresenter(richText) { IsAutoContrasted = isAutoContrasted };
+			var richTextPresenter = new RichTextPresenter(richText) {
+				IsAutoContrasted = isAutoContrasted,
+				TextWrapping = TextWrapping.Wrap
+			};
 			
 			TextOptions.SetTextFormattingMode(richTextPresenter, TextFormattingMode.Ideal);
 			TextOptions.SetTextRenderingMode(richTextPresenter, TextRenderingMode.ClearType);

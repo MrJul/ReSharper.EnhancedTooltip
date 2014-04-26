@@ -5,3 +5,4 @@ obj
 /_ReSharper.GammaJul.ReSharper.EnhancedTooltip
 /packages/JetBrains.ReSharper.SDK.*
 /*.tss
+/GammaJul.ReSharper.EnhancedTooltip/obj*

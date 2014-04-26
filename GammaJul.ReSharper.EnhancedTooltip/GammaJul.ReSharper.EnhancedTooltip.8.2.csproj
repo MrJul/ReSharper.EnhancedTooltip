@@ -5,10 +5,11 @@
     <ProjectGuid>{C181470B-B767-4DED-B3C8-ACEF50AF4D4F}</ProjectGuid>
     <AssemblyName>GammaJul.ReSharper.EnhancedTooltip.8.2</AssemblyName>
     <RootNamespace>GammaJul.ReSharper.EnhancedTooltip</RootNamespace>
+    <IntermediateOutputPath>obj82</IntermediateOutputPath>
   </PropertyGroup>
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <ItemGroup>
-	<Compile Include="**\*.cs" Exclude="obj\**" />
+    <Compile Include="**\*.cs" Exclude="obj81\**;obj82\**" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.8.2.config" />
@@ -22,7 +23,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Presentation\HeaderedContentControlTemplate.xaml">
+    <Page Include="Presentation\UIResources.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
