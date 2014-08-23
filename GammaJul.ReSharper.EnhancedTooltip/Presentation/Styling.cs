@@ -8,7 +8,7 @@ using JetBrains.Util;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
-	internal static class Styling {
+	public static class Styling {
 
 		/// <summary>
 		/// Identifies the attached dependency property <c>IsTransparent</c>.
@@ -32,11 +32,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private static void OnShouldStyleParentListBoxChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+			if (!(bool) e.NewValue)
+				return;
+
 			var element = d as FrameworkElement;
 			if (element == null)
 				return;
 			
 			element.WhenLoaded(lifetime => {
+				// We're styling the parent VS ListBox included inside the tooltip.
 				var listBox = element.FindVisualAncestor<ListBox>();
 				if (listBox != null)
 					SetListBoxStyle(listBox);

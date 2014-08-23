@@ -9,7 +9,29 @@
   </PropertyGroup>
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="obj81\**;obj82\**" />
+    <Compile Include="DocumentMarkup\IdentifierTooltipContentProvider.cs" />
+    <Compile Include="DocumentMarkup\TextStyleHighlighterManager.cs" />
+    <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.cs" />
+    <Compile Include="ParameterInfo\EnhancedParameterInfoContext.cs" />
+    <Compile Include="ParameterInfo\EnhancedParameterInfoContextFactory.cs" />
+    <Compile Include="Presentation\ColorizerPresenter.cs" />
+    <Compile Include="Presentation\CSharpColorizer.cs" />
+    <Compile Include="Presentation\ElementTypeDisplay.cs" />
+    <Compile Include="Presentation\IColorizer.cs" />
+    <Compile Include="Presentation\IdentifierContent.cs" />
+    <Compile Include="Presentation\IssueContent.cs" />
+    <Compile Include="Presentation\ITooltipContent.cs" />
+    <Compile Include="Presentation\MiscContent.cs" />
+    <Compile Include="Presentation\NamespaceDisplayMode.cs" />
+    <Compile Include="Presentation\PresentedInfo.cs" />
+    <Compile Include="Presentation\PresenterOptions.cs" />
+    <Compile Include="Presentation\SmallFontConverter.cs" />
+    <Compile Include="Presentation\Styling.cs" />
+    <Compile Include="Presentation\UIResources.cs" />
+    <Compile Include="Presentation\VsHighlightingAttributeIds.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VisualStudio\QuickInfoSource.cs" />
+    <Compile Include="VisualStudio\QuickInfoSourceProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.8.2.config" />

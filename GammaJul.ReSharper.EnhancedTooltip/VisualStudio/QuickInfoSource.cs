@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
@@ -15,7 +14,6 @@ using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.SolutionAnalysis.UI.Resources;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl.DocumentMarkup;
-using JetBrains.UI.Avalon.Controls;
 using JetBrains.UI.Components.Theming;
 using JetBrains.UI.Icons;
 using JetBrains.UI.RichText;
@@ -36,12 +34,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactoryService;
 		private readonly ITextBuffer _textBuffer;
 		
-		private enum HighlighterType {
-			Identifier,
-			Issue,
-			Other
-		}
-
 		public void AugmentQuickInfoSession(IQuickInfoSession session, IList<object> quickInfoContent, out ITrackingSpan applicableToSpan) {
 			applicableToSpan = null;
 
@@ -59,32 +51,32 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					
 					List<Vs10Highlighter> highlighters = documentMarkup.GetHighlightersOver(textRange).OfType<Vs10Highlighter>().ToList();
 
-					var identifierPresenters = new List<UIElement>();
-					var issuePresenters = new List<UIElement>();
-					var otherPresenters = new List<UIElement>();
+					var identifierContents = new List<ITooltipContent>();
+					var issueContents = new List<ITooltipContent>();
+					var miscContents = new List<ITooltipContent>();
 
 					foreach (Vs10Highlighter highlighter in highlighters) {
-						var pair = TryPresentHighlighter(highlighter, documentMarkup);
-						UIElement presenter = pair.First;
-						if (presenter == null)
+						ITooltipContent tooltipContent = TryGetTooltipContent(highlighter, documentMarkup);
+						if (tooltipContent == null || tooltipContent.Text.IsNullOrEmpty())
 							continue;
 
-						switch (pair.Second) {
-							case HighlighterType.Identifier:
-								identifierPresenters.Add(presenter);
-								break;
-							case HighlighterType.Issue:
-								issuePresenters.Add(presenter);
-								break;
-							default:
-								otherPresenters.Add(presenter);
-								break;
-						}
+						if (tooltipContent is IdentifierContent)
+							identifierContents.Add(tooltipContent);
+						else if (tooltipContent is IssueContent)
+							issueContents.Add(tooltipContent);
+						else
+							miscContents.Add(tooltipContent);
 					}
-					
-					AddPresenters(identifierPresenters, "Id", "Ids", quickInfoContent);
-					AddPresenters(issuePresenters, "Issue", "Issues", quickInfoContent);
-					AddPresenters(otherPresenters, "Other", "Other", quickInfoContent);
+
+					foreach (ITooltipContent identifierContent in identifierContents)
+						quickInfoContent.Add(PresentTooltipContents("Id", new[] { identifierContent }));
+
+					if (issueContents.Count > 0)
+						quickInfoContent.Add(PresentTooltipContents(issueContents.Count == 1 ? "Issue" : "Issues", issueContents));
+
+					foreach (ITooltipContent miscContent in miscContents)
+						quickInfoContent.Add(PresentTooltipContents("Misc", new[] { miscContent }));
+
 				}
 			};
 
@@ -141,6 +133,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		}
 
 		[CanBeNull]
+		[Pure]
 		private IDocumentMarkup TryGetDocumentMarkup() {
 			VSIVsTextBuffer bufferAdapter = _editorAdaptersFactoryService.GetBufferAdapter(_textBuffer);
 			if (bufferAdapter == null)
@@ -151,74 +144,35 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				return null;
 			
 			IDocumentMarkup documentMarkup = DocumentMarkupManagerBase.TryGetMarkupModel(document);
-			// ReSharper disable once SuspiciousTypeConversion.Global
 			return documentMarkup is IVsDocumentMarkup ? documentMarkup : null;
 		}
 
-		private static Pair<UIElement, HighlighterType> TryPresentHighlighter([NotNull] IHighlighter highlighter, [NotNull] IDocumentMarkup documentMarkup) {
+		[CanBeNull]
+		[Pure]
+		private static ITooltipContent TryGetTooltipContent([NotNull] IHighlighter highlighter, [NotNull] IDocumentMarkup documentMarkup) {
 			if (highlighter.Attributes.Effect.Type == EffectType.GUTTER_MARK)
-				return Pair.Of((UIElement) null, HighlighterType.Other);
+				return null;
 
-			Pair<TooltipContent, HighlighterType> pair = TryGetTooltipContent(highlighter, documentMarkup);
-			TooltipContent tooltipContent = pair.First;
-			HighlighterType highlighterType = pair.Second;
-			if (tooltipContent == null || tooltipContent.MainText == null || tooltipContent.MainText.IsEmpty)
-				return Pair.Of((UIElement) null, highlighterType);
-
-			var dockPanel = PresentTooltipContent(tooltipContent);
-			return Pair.Of(dockPanel, highlighterType);
-		}
-
-		[NotNull]
-		private static UIElement PresentTooltipContent([NotNull] TooltipContent tooltipContent) {
-			var mainTextPanel = new DockPanel { Margin = new Thickness(3, 2, 3, 2) };
-
-			if (tooltipContent.Icon != null) {
-				var image = new ThemedIconViewImage(tooltipContent.Icon) {
-					Margin = new Thickness(0, 0, 4, 0),
-					VerticalAlignment = VerticalAlignment.Top,
-					HorizontalAlignment = HorizontalAlignment.Left
-				};
-				DockPanel.SetDock(image, Dock.Left);
-				mainTextPanel.Children.Add(image);
-			}
-
-			mainTextPanel.Children.Add(CreateRichTextPresenter(tooltipContent.MainText, false));
-			if (tooltipContent.DescriptionText.IsNullOrEmpty())
-				return mainTextPanel;
-
-			return new StackPanel {
-				Orientation = Orientation.Vertical,
-				Children = {
-					mainTextPanel,
-					CreateRichTextPresenter(tooltipContent.DescriptionText, true)
-				}
-			};
-		}
-
-		private static Pair<TooltipContent, HighlighterType> TryGetTooltipContent([NotNull] IHighlighter highlighter, [NotNull] IDocumentMarkup documentMarkup) {
 			var highlighting = highlighter.UserData as IHighlighting;
-			if (highlighting == null)
-				return Pair.Of(TryCreateTooltipContent(highlighter.RichTextToolTip, null), HighlighterType.Other);
+			if (highlighting != null) {
 
-			Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, documentMarkup.Document);
-			IconId severityIcon = TryGetSeverityIcon(severity);
-			if (severityIcon != null)
-				return Pair.Of(TryCreateTooltipContent(highlighter.RichTextToolTip, severityIcon), HighlighterType.Issue);
+				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, documentMarkup.Document);
+				IconId severityIcon = TryGetSeverityIcon(severity);
+				if (severityIcon != null)
+					return TryCreateIssueContent(highlighter.RichTextToolTip, severityIcon);
 
-			var highlighterType = HighlighterType.Other;
-			PsiLanguageType languageType = TryGetIdentifierLanguage(highlighting);
-			TooltipContent tooltipContent = null;
-			if (languageType != null) {
-				highlighterType = HighlighterType.Identifier;
-				tooltipContent = TryGetIdentifierTooltipContent(highlighter, languageType);
+				PsiLanguageType languageType = TryGetIdentifierLanguage(highlighting);
+				if (languageType != null)
+					return TryGetIdentifierTooltipContent(highlighter, languageType);
+
 			}
-
-			return Pair.Of(tooltipContent ?? TryCreateTooltipContent(highlighter.RichTextToolTip, null), highlighterType);
+			
+			return TryCreateMiscContent(highlighter.RichTextToolTip);
 		}
 
 		[CanBeNull]
-		private static TooltipContent TryGetIdentifierTooltipContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType) {
+		[Pure]
+		private static IdentifierContent TryGetIdentifierTooltipContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType) {
 			var solutionManager = Shell.Instance.TryGetComponent<VSSolutionManager>();
 			if (solutionManager == null)
 				return null;
@@ -228,24 +182,41 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				return null;
 
 			var provider = solution.GetComponent<IdentifierTooltipContentProvider>();
-			return provider.TryGetTooltipContent(highlighter, languageType);
+			return provider.TryGetIdentifierText(highlighter, languageType);
 		}
 
 		[CanBeNull]
-		private static TooltipContent TryCreateTooltipContent([CanBeNull] RichTextBlock richTextTooltip, [CanBeNull] IconId icon) {
-			if (richTextTooltip == null)
+		[Pure]
+		private static IssueContent TryCreateIssueContent([CanBeNull] RichTextBlock textBlock, [CanBeNull] IconId icon) {
+			if (textBlock == null)
 				return null;
 
-			RichText richText = richTextTooltip.RichText;
-			if (richText.IsEmpty)
+			RichText text = textBlock.RichText;
+			if (text.IsEmpty)
 				return null;
 
-			return new TooltipContent {
-				MainText = richText,
+			return new IssueContent {
+				Text = text,
 				Icon = icon
 			};
 		}
 
+		[CanBeNull]
+		[Pure]
+		private static MiscContent TryCreateMiscContent([CanBeNull] RichTextBlock textBlock) {
+			if (textBlock == null)
+				return null;
+
+			RichText text = textBlock.RichText;
+			if (text.IsEmpty)
+				return null;
+
+			return new MiscContent {
+				Text = text
+			};
+		}
+
+		[Pure]
 		private TextRange GetCurrentTextRange([NotNull] IIntellisenseSession session) {
 			ITextSnapshot currentSnapshot = _textBuffer.CurrentSnapshot;
 			SnapshotPoint currentPoint = session.GetTriggerPoint(_textBuffer).GetPoint(currentSnapshot);
@@ -255,6 +226,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		}
 
 		[CanBeNull]
+		[Pure]
 		private static IconId TryGetSeverityIcon(Severity severity) {
 			switch (severity) {
 				case Severity.HINT:
@@ -270,52 +242,27 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			}
 		}
 
-		private static void AddPresenters([NotNull] IReadOnlyList<UIElement> presenters, [NotNull] string singularHeader,
-			[NotNull] string pluralHeader, [NotNull] ICollection<object> quickInfoContent) {
-			switch (presenters.Count) {
-				case 0:
-					return;
-
-				case 1:
-					quickInfoContent.Add(CreaterHeaderedContentControl(singularHeader, presenters[0]));
-					break;
-
-				default:
-					var stackPanel = new StackPanel { Orientation = Orientation.Vertical };
-					foreach (UIElement presenter in presenters)
-						stackPanel.Children.Add(presenter);
-					quickInfoContent.Add(CreaterHeaderedContentControl(pluralHeader, stackPanel));
-					break;
-			}
-		}
-
 		[NotNull]
-		private static HeaderedContentControl CreaterHeaderedContentControl([CanBeNull] object header, [CanBeNull] UIElement content) {
-			return new HeaderedContentControl {
+		[Pure]
+		private static HeaderedContentControl PresentTooltipContents([CanBeNull] object header, [NotNull] IEnumerable<ITooltipContent> tooltipContents) {
+			var control = new HeaderedContentControl {
 				Style = UIResources.Instance.HeaderedContentControlStyle,
+				Focusable = false,
 				Header = header,
-				Content = content
+				Content = new ItemsControl {
+					Focusable = false,
+					ItemsSource = tooltipContents
+				}
 			};
-		}
 
-		[NotNull]
-		private static UIElement CreateRichTextPresenter([CanBeNull] RichText richText, bool isAutoContrasted) {
-			var richTextPresenter = new RichTextPresenter(richText) {
-				IsAutoContrasted = isAutoContrasted,
-				TextWrapping = TextWrapping.Wrap
-			};
-			
-			TextOptions.SetTextFormattingMode(richTextPresenter, TextFormattingMode.Ideal);
-			TextOptions.SetTextRenderingMode(richTextPresenter, TextRenderingMode.ClearType);
-			
-			object foreground = richTextPresenter.TryFindResource(ThemeColor.TooltipForeground);
+			object foreground = control.TryFindResource(ThemeColor.TooltipForeground);
 			if (foreground is Color)
-				richTextPresenter.Foreground = new SolidColorBrush((Color) foreground);
-
-			return richTextPresenter;
+				control.Foreground = new SolidColorBrush((Color) foreground);
+			return control;
 		}
 		
 		[CanBeNull]
+		[Pure]
 		private static PsiLanguageType TryGetIdentifierLanguage([NotNull] IHighlighting highlighting) {
 			var attribute = highlighting.GetType().GetCustomAttribute<DaemonTooltipProviderAttribute>();
 			if (attribute == null || attribute.Type == null)

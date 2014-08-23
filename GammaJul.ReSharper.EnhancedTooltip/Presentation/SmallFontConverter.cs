@@ -10,7 +10,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public static readonly SmallFontConverter Instance = new SmallFontConverter();
 
-		private const double Scale = 0.9;
+		private const double Scale = 0.8;
 
 		[CanBeNull]
 		private static object ScaleDouble([CanBeNull] object value, double scale) {

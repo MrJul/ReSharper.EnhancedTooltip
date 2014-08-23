@@ -28,13 +28,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		private readonly ColorizerPresenter _colorizerPresenter;
 
 		/// <summary>
-		/// Returns a colored <see cref="TooltipContent"/> for an identifier represented by a <see cref="IHighlighter"/>.
+		/// Returns a colored <see cref="IdentifierContent"/> for an identifier represented by a <see cref="IHighlighter"/>.
 		/// </summary>
 		/// <param name="highlighter">The highlighter representing the identifier.</param>
 		/// <param name="languageType">The type of language used to present the identifier.</param>
-		/// <returns>A <see cref="TooltipContent"/> representing a colored tooltip, or <c>null</c>.</returns>
+		/// <returns>A <see cref="IdentifierContent"/> representing a colored tooltip, or <c>null</c>.</returns>
 		[CanBeNull]
-		public TooltipContent TryGetTooltipContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType) {
+		public IdentifierContent TryGetIdentifierText([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType) {
 			// Finds the element represented by the identifier.
 			IPsiSourceFile psiSourceFile;
 			DeclaredElementInstance elementInstance = FindValidHighlightedElement(highlighter, languageType, out psiSourceFile);
@@ -47,24 +47,42 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (identifierText == null || identifierText.IsEmpty)
 				return null;
 
-			return new TooltipContent {
-				MainText = identifierText,
-				Icon = TryGetIcon(elementInstance.Element),
-				DescriptionText = TryGetDescription(elementInstance.Element, psiSourceFile.PsiModule, languageType)
+			IDeclaredElement element = elementInstance.Element;
+			IPsiModule psiModule = psiSourceFile.PsiModule;
+
+			return new IdentifierContent {
+				Text = identifierText,
+				Icon = TryGetIcon(element),
+				Description = TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.NO_OBSOLETE_SUMMARY_STYLE),
+				Obsolete = TryRemoveObsoletePrefix(TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.OBSOLETE_DESCRIPTION))
 			};
 		}
 
 		/// <summary>
-		/// Returns description of an element, if available.
+		/// Returns the description of an element, if available.
 		/// </summary>
 		/// <param name="element">The element whose description will be returned.</param>
 		/// <param name="psiModule">The PSI module of the file containing the identifier.</param>
 		/// <param name="languageType">The type of language used to present the identifier.</param>
+		/// <param name="style"></param>
 		[CanBeNull]
-		private RichText TryGetDescription([NotNull] IDeclaredElement element, [NotNull] IPsiModule psiModule, [NotNull] PsiLanguageType languageType) {
-			RichTextBlock description = _declaredElementDescriptionPresenter.GetDeclaredElementDescription(
-				element, DeclaredElementDescriptionStyle.SUMMARY_STYLE, languageType, psiModule);
+		private RichText TryGetDescription([NotNull] IDeclaredElement element, [NotNull] IPsiModule psiModule, [NotNull] PsiLanguageType languageType,
+			[NotNull] DeclaredElementDescriptionStyle style) {
+			RichTextBlock description = _declaredElementDescriptionPresenter.GetDeclaredElementDescription(element, style, languageType, psiModule);
 			return description != null ? description.RichText : null;
+		}
+
+		[CanBeNull]
+		private static RichText TryRemoveObsoletePrefix([CanBeNull] RichText text) {
+			if (text == null)
+				return null;
+
+			const string obsoletePrefix = "Obsolete: ";
+
+			IList<RichString> parts = text.GetFormattedParts();
+			if (parts.Count >= 2 && parts[0].Text == obsoletePrefix)
+				return text.Split(obsoletePrefix.Length)[1];
+			return text;
 		}
 
 		[CanBeNull]

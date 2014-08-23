@@ -2,9 +2,113 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:theming="clr-namespace:JetBrains.VsIntegration.SinceVs11.Theming;assembly=JetBrains.Platform.ReSharper.VisualStudio.SinceVs11"
+	xmlns:controls="clr-namespace:JetBrains.UI.Avalon.Controls;assembly=JetBrains.Platform.ReSharper.UI"
 	xmlns:local="clr-namespace:GammaJul.ReSharper.EnhancedTooltip.Presentation">
 
+	<!-- Style for VS listbox item inside the tooltip -->
+	<Style x:Key="QuickInfoItemStyle" TargetType="{x:Type ListBoxItem}">
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Margin" Value="0,0,0,2" />
+		<Setter Property="Padding" Value="0" />
+	</Style>
+
+	<!-- Style for VS listbox item's data inside the tooltip -->
+	<DataTemplate x:Key="QuickInfoItemDataTemplate">
+		<!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+		<ContentPresenter Content="{Binding VisualElement}" Margin="0" />
+	</DataTemplate>
+
+	<!-- Style for VS listbox inside the tooltip -->
+	<Style x:Key="QuickInfoListBoxStyle" TargetType="{x:Type ListBox}">
+		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="BorderBrush" Value="{Binding PresenterStyle.BorderBrush}" />
+		<Setter Property="Background" Value="Transparent" />
+		<Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.StatusFontFamilyKey}}" />
+		<Setter Property="FontSize" Value="{DynamicResource {x:Static SystemFonts.StatusFontSizeKey}}" />
+		<Setter Property="FontStyle" Value="{DynamicResource {x:Static SystemFonts.StatusFontStyleKey}}" />
+		<Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.StatusFontWeightKey}}" />
+		<Setter Property="Padding" Value="0" />
+		<Setter Property="Margin" Value="0" />
+		<Setter Property="HorizontalContentAlignment" Value="Left" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type ListBox}">
+					<Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}"
+						BorderBrush="{TemplateBinding BorderBrush}" Padding="{TemplateBinding Control.Padding}">
+						<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+					</Border>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+
+	<!-- Style for a "group" inside the tooltip" -->
 	<Style x:Key="HeaderedContentControlStyle" TargetType="{x:Type HeaderedContentControl}">
+		<Style.Resources>
+
+			<!-- Style for an identifier -->
+			<DataTemplate DataType="{x:Type local:IdentifierContent}">
+				<Grid x:Name="Grid" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType">
+					<Grid.RowDefinitions>
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+						<RowDefinition Height="Auto" />
+					</Grid.RowDefinitions>
+
+					<DockPanel Grid.Row="0" Margin="8,6">
+						<ContentPresenter x:Name="IconPresenter" Focusable="False"
+							Content="{Binding Icon}" Margin="0,0,4,0"
+							DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Left" />
+						<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="False"
+							RichText="{Binding Text}" />
+					</DockPanel>
+
+					<StackPanel x:Name="DescriptionPresenter" Orientation="Vertical" Grid.Row="1">
+						<Line StrokeThickness="1" StrokeDashArray="3,3" RenderOptions.EdgeMode="Aliased"
+							X1="0" X2="{Binding ActualWidth, ElementName=Grid}"
+							Stroke="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}" />
+						<controls:RichTextPresenter Margin="8,6" TextWrapping="Wrap" IsAutoContrasted="True"
+							RichText="{Binding Description}" />
+					</StackPanel>
+
+					<StackPanel x:Name="ObsoletePresenter" Orientation="Horizontal" Grid.Row="2" Margin="8,0,8,6" >
+						<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" VerticalAlignment="Center">
+							<TextBlock Text="Obsolete" Margin="2" Foreground="Gray" FontWeight="Bold"
+								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Grid, Converter={x:Static local:SmallFontConverter.Instance}}" />
+						</Border>
+						<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="False"
+							RichText="{Binding Obsolete}" />
+					</StackPanel>
+
+				</Grid>
+				<DataTemplate.Triggers>
+					<DataTrigger Binding="{Binding Icon}" Value="{x:Null}">
+						<Setter TargetName="IconPresenter" Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+					<DataTrigger Binding="{Binding Description}" Value="{x:Null}">
+						<Setter TargetName="DescriptionPresenter" Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+					<DataTrigger Binding="{Binding Obsolete}" Value="{x:Null}">
+						<Setter TargetName="ObsoletePresenter" Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+				</DataTemplate.Triggers>
+			</DataTemplate>
+
+			<!-- Style for an issue -->
+			<DataTemplate DataType="{x:Type local:IssueContent}">
+				<DockPanel Margin="8,6">
+					<ContentPresenter x:Name="IconPresenter" Focusable="False"
+						Content="{Binding Icon}" Margin="0,0,4,0"
+						DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Left" />
+					<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="False"
+						RichText="{Binding Text}" />
+				</DockPanel>
+			</DataTemplate>
+
+		</Style.Resources>
+
 		<Setter Property="Margin" Value="0" />
 		<Setter Property="local:Styling.ShouldStyleParentListBox" Value="True" />
 		<Setter Property="Template">
@@ -30,44 +134,10 @@
 								</ContentPresenter>
 							</Border>
 
-							<ContentPresenter Grid.Column="1" Margin="5"
+							<ContentPresenter Grid.Column="1"
 								TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTextBrushKey}}" />
 
 						</Grid>
-					</Border>
-				</ControlTemplate>
-			</Setter.Value>
-		</Setter>
-	</Style>
-
-	<Style x:Key="QuickInfoItemStyle" TargetType="{x:Type ListBoxItem}">
-		<Setter Property="BorderThickness" Value="0" />
-		<Setter Property="Margin" Value="0,0,0,2" />
-		<Setter Property="Padding" Value="0" />
-	</Style>
-
-	<DataTemplate x:Key="QuickInfoItemDataTemplate">
-		<ContentPresenter Content="{Binding VisualElement}" Margin="0" Focusable="False" />
-	</DataTemplate>
-
-	<Style x:Key="QuickInfoListBoxStyle" TargetType="{x:Type ListBox}">
-		<Setter Property="BorderThickness" Value="0" />
-		<Setter Property="BorderBrush" Value="{Binding PresenterStyle.BorderBrush}" />
-		<Setter Property="Background" Value="Transparent" />
-		<Setter Property="FontFamily" Value="{DynamicResource {x:Static SystemFonts.StatusFontFamilyKey}}" />
-		<Setter Property="FontSize" Value="{DynamicResource {x:Static SystemFonts.StatusFontSizeKey}}" />
-		<Setter Property="FontStyle" Value="{DynamicResource {x:Static SystemFonts.StatusFontStyleKey}}" />
-		<Setter Property="FontWeight" Value="{DynamicResource {x:Static SystemFonts.StatusFontWeightKey}}" />
-		<Setter Property="Padding" Value="0" />
-		<Setter Property="Margin" Value="0" />
-		<Setter Property="HorizontalContentAlignment" Value="Left" />
-		<Setter Property="VerticalContentAlignment" Value="Center" />
-		<Setter Property="Template">
-			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type ListBox}">
-					<Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"
-						Padding="{TemplateBinding Control.Padding}">
-						<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
 					</Border>
 				</ControlTemplate>
 			</Setter.Value>
