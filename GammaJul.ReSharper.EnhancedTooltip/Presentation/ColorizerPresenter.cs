@@ -2,6 +2,7 @@
 using JetBrains.Annotations;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.UI.RichText;
 
@@ -15,6 +16,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	public class ColorizerPresenter {
 
 		private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
+		private readonly CodeAnnotationsCache _codeAnnotationsCache;
 
 		/// <summary>
 		/// Presents a given <see cref="DeclaredElementInstance"/> using a colorizer.
@@ -59,12 +61,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			[NotNull] PsiLanguageType languageType, [NotNull] PresentedInfo presentedInfo) {
 			// TODO: remove constructor parameters and resolve as a language service
 			if (languageType.Is<CSharpLanguage>())
-				return new CSharpColorizer(richText, options, presentedInfo, _textStyleHighlighterManager);
+				return new CSharpColorizer(richText, options, presentedInfo, _textStyleHighlighterManager, _codeAnnotationsCache);
 			return null;
 		}
 
-		public ColorizerPresenter([NotNull] TextStyleHighlighterManager textStyleHighlighterManager) {
+		public ColorizerPresenter([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache) {
 			_textStyleHighlighterManager = textStyleHighlighterManager;
+			_codeAnnotationsCache = codeAnnotationsCache;
 		}
 
 	}

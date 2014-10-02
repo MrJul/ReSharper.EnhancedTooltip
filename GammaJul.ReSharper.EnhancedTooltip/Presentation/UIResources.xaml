@@ -50,14 +50,9 @@
 
 			<!-- Style for an identifier -->
 			<DataTemplate DataType="{x:Type local:IdentifierContent}">
-				<Grid x:Name="Grid" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType">
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="Auto" />
-					</Grid.RowDefinitions>
-
-					<DockPanel Grid.Row="0" Margin="8,6">
+				<StackPanel x:Name="Root" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType">
+					
+					<DockPanel Margin="8,6">
 						<ContentPresenter x:Name="IconPresenter" Focusable="False"
 							Content="{Binding Icon}" Margin="0,0,4,0"
 							DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -65,24 +60,45 @@
 							RichText="{Binding Text}" />
 					</DockPanel>
 
-					<StackPanel x:Name="DescriptionPresenter" Orientation="Vertical" Grid.Row="1">
+					<StackPanel x:Name="DescriptionPresenter" Orientation="Vertical">
 						<Line StrokeThickness="1" StrokeDashArray="3,3" RenderOptions.EdgeMode="Aliased"
-							X1="0" X2="{Binding ActualWidth, ElementName=Grid}"
+							X1="0" X2="{Binding ActualWidth, ElementName=Root}"
 							Stroke="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}" />
 						<controls:RichTextPresenter Margin="8,6" TextWrapping="Wrap" IsAutoContrasted="True"
 							RichText="{Binding Description}" />
 					</StackPanel>
 
-					<StackPanel x:Name="ObsoletePresenter" Orientation="Horizontal" Grid.Row="2" Margin="8,0,8,6" >
-						<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" VerticalAlignment="Center">
-							<TextBlock Text="Obsolete" Margin="2" Foreground="Gray" FontWeight="Bold"
-								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Grid, Converter={x:Static local:SmallFontConverter.Instance}}" />
+					<StackPanel x:Name="ObsoletePresenter" Orientation="Horizontal" Margin="8,0,8,6">
+						<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0">
+							<TextBlock Text="Obsolete" Margin="2" Foreground="Gray" FontWeight="Bold" VerticalAlignment="Center"
+								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}" />
 						</Border>
 						<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="False"
 							RichText="{Binding Obsolete}" />
 					</StackPanel>
 
-				</Grid>
+					<ItemsControl x:Name="ExceptionsPresenter" ItemsSource="{Binding Exceptions}" Margin="8,0,8,6" Grid.IsSharedSizeScope="True">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate DataType="{x:Type local:ExceptionContent}">
+								<Grid Margin="0,2,0,0">
+									<Grid.ColumnDefinitions>
+										<ColumnDefinition Width="Auto" SharedSizeGroup="ExceptionBoxColumnSizeGroup" />
+										<ColumnDefinition Width="Auto" SharedSizeGroup="ExceptionNameColumnSizeGroup" />
+										<ColumnDefinition Width="*" />
+									</Grid.ColumnDefinitions>
+									<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" Grid.Column="0">
+										<TextBlock Text="Exception" Margin="2" Foreground="Gray" FontWeight="Bold"
+											FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}" />
+									</Border>
+									<TextBlock TextWrapping="Wrap" FontStyle="Italic" Text="{Binding Exception}" VerticalAlignment="Center" Grid.Column="1" />
+									<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="False" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="2"
+										RichText="{Binding Description}" />
+								</Grid>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+
+				</StackPanel>
 				<DataTemplate.Triggers>
 					<DataTrigger Binding="{Binding Icon}" Value="{x:Null}">
 						<Setter TargetName="IconPresenter" Property="Visibility" Value="Collapsed" />
@@ -92,6 +108,9 @@
 					</DataTrigger>
 					<DataTrigger Binding="{Binding Obsolete}" Value="{x:Null}">
 						<Setter TargetName="ObsoletePresenter" Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+					<DataTrigger Binding="{Binding Path=HasItems, ElementName=ExceptionsPresenter}" Value="False">
+						<Setter TargetName="ExceptionsPresenter" Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
 				</DataTemplate.Triggers>
 			</DataTemplate>
@@ -123,16 +142,16 @@
 								<ColumnDefinition Width="*" />
 							</Grid.ColumnDefinitions>
 
-							<Border BorderThickness="0,0,1,0" Grid.Column="0"
-								BorderBrush="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}">
-								<ContentPresenter ContentSource="Header" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center"
-									TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTabSelectedTextBrushKey}}"
-									TextElement.FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}">
-									<ContentPresenter.LayoutTransform>
-										<RotateTransform Angle="-90" />
-									</ContentPresenter.LayoutTransform>
-								</ContentPresenter>
-							</Border>
+<!--							<Border BorderThickness="0,0,1,0" Grid.Column="0"-->
+<!--								BorderBrush="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}">-->
+<!--								<ContentPresenter ContentSource="Header" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center"-->
+<!--									TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTabSelectedTextBrushKey}}"-->
+<!--									TextElement.FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}">-->
+<!--									<ContentPresenter.LayoutTransform>-->
+<!--										<RotateTransform Angle="-90" />-->
+<!--									</ContentPresenter.LayoutTransform>-->
+<!--								</ContentPresenter>-->
+<!--							</Border>-->
 
 							<ContentPresenter Grid.Column="1"
 								TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTextBrushKey}}" />

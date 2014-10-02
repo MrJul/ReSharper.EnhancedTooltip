@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Text;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
@@ -33,10 +36,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowTypeParameters = TypeParameterStyle.NONE
 		};
 
+		private static string _notNullAttributeName = CodeAnnotationsCache.NotNullAttributeShortName.TrimFromEnd("Attribute", StringComparison.Ordinal);
+		private static string _canBeNullAttributeName = CodeAnnotationsCache.CanBeNullAttributeShortName.TrimFromEnd("Attribute", StringComparison.Ordinal);
+
 		private readonly RichText _richText;
 		private readonly PresenterOptions _options;
 		private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
 		private readonly PresentedInfo _presentedInfo;
+		private readonly CodeAnnotationsCache _codeAnnotationsCache;
 
 		public void AppendDeclaredElement(IDeclaredElement element, ISubstitution substitution, string nameHighlightingAttributeId) {
 			if (!IsClrPresentableElement(element))
@@ -49,7 +56,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendAccessRights(element);
 			if (_options.ShowModifiers)
 				AppendModifiers(element);
-			
+
+			if (_options.ShowNullness) {
+				var attributesOwner = element as IAttributesOwner;
+				if (attributesOwner != null)
+					AppendNullness(attributesOwner);
+			}
+
 			if (_options.ShowElementType == ElementTypeDisplay.Before)
 				AppendElementType(element, substitution, NamespaceDisplays.ElementType, null, " ");
 
@@ -566,6 +579,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					_presentedInfo.IsExtensionMethod = true;
 			}
 
+			if (_options.ShowNullness)
+				AppendNullness(parameter);
+
 			if (_options.ShowParameterTypes)
 				AppendElementType(parameter, substitution, NamespaceDisplays.Parameters, null, _options.ShowParameterNames ? " " : null);
 
@@ -576,6 +592,27 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (_options.ShowConstantValues)
 				AppendDefaultValue(parameter, substitution);
+		}
+
+		private void AppendNullness([NotNull] IAttributesOwner attributesOwner) {
+			CodeAnnotationNullableValue? nullableValue = _codeAnnotationsCache.GetNullableAttribute(attributesOwner);
+			if (nullableValue == null)
+				return;
+
+			var classHighlightingAttributeId = _options.UseReSharperColors
+				? HighlightingAttributeIds.TYPE_CLASS_ATTRIBUTE
+				: VsHighlightingAttributeIds.Classes;
+
+			AppendText("[", null);
+			switch (nullableValue.Value) {
+				case CodeAnnotationNullableValue.NOT_NULL:
+					AppendText(_notNullAttributeName, classHighlightingAttributeId);
+					break;		
+				case CodeAnnotationNullableValue.CAN_BE_NULL:
+					AppendText(_canBeNullAttributeName, classHighlightingAttributeId);
+					break;
+			}
+			AppendText("] ", null);
 		}
 
 		private static bool ShouldShowParameters([NotNull] IDeclaredElement element) {
@@ -649,11 +686,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		public CSharpColorizer([NotNull] RichText richText, [NotNull] PresenterOptions options,
-			[NotNull] PresentedInfo presentedInfo, [NotNull] TextStyleHighlighterManager textStyleHighlighterManager) {
+			[NotNull] PresentedInfo presentedInfo, [NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
+			[NotNull] CodeAnnotationsCache codeAnnotationsCache) {
+			Debug.Assert(codeAnnotationsCache != null, "codeAnnotationsCache != null");
+
 			_richText = richText;
 			_options = options;
 			_presentedInfo = presentedInfo;
 			_textStyleHighlighterManager = textStyleHighlighterManager;
+			_codeAnnotationsCache = codeAnnotationsCache;
 		}
 
 	}

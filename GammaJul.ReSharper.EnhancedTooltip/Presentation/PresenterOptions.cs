@@ -20,6 +20,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public bool ShowEmptyParametersText { get; private set; }
 		public bool UseReSharperColors { get; private set; }
 		public bool UseTypeKeywords { get; private set; }
+		public bool ShowNullness { get; set; }
 
 		[NotNull]
 		public static PresenterOptions ForToolTip([NotNull] IContextBoundSettingsStore settings) {
@@ -60,6 +61,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private PresenterOptions() {
+			ShowNullness = true;
 		}
 
 	}
