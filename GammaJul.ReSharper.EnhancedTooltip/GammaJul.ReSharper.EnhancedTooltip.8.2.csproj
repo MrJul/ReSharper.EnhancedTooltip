@@ -10,7 +10,9 @@
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <ItemGroup>
     <Compile Include="DocumentMarkup\IdentifierTooltipContentProvider.cs" />
+    <Compile Include="DocumentMarkup\SeverityExtensions.cs" />
     <Compile Include="DocumentMarkup\TextStyleHighlighterManager.cs" />
+    <Compile Include="GenericImages\ThemedIcons.Generic.Generated.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContext.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContextFactory.cs" />
@@ -33,6 +35,14 @@
     <Compile Include="Presentation\UIResources.cs" />
     <Compile Include="Presentation\VsHighlightingAttributeIds.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Settings\EnhancedTooltipSettingsRoot.cs" />
+    <Compile Include="Settings\EnhancedTooltipOptionsPage.xaml.cs">
+      <DependentUpon>EnhancedTooltipOptionsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\IssueTooltipSettings.cs" />
+    <Compile Include="Settings\ParameterInfoSettings.cs" />
+    <Compile Include="Settings\IdentifierTooltipSettings.cs" />
+    <Compile Include="Settings\SettingsExtensions.cs" />
     <Compile Include="VisualStudio\QuickInfoSource.cs" />
     <Compile Include="VisualStudio\QuickInfoSourceProvider.cs" />
   </ItemGroup>
@@ -48,9 +58,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="GenericImages\ThemedIcons.Generic.Generated.Xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Presentation\UIResources.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Settings\EnhancedTooltipOptionsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <ThemedIconPng Include="GenericImages\Logo16.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

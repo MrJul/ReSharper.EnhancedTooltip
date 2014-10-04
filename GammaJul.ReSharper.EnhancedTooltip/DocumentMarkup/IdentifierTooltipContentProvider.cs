@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
+using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
+using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.ProjectModel;
@@ -37,9 +39,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// </summary>
 		/// <param name="highlighter">The highlighter representing the identifier.</param>
 		/// <param name="languageType">The type of language used to present the identifier.</param>
+		/// <param name="settings">The settings to use.</param>
 		/// <returns>A <see cref="IdentifierContent"/> representing a colored tooltip, or <c>null</c>.</returns>
 		[CanBeNull]
-		public IdentifierContent TryGetIdentifierText([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType) {
+		public IdentifierContent TryGetIdentifierContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType, [NotNull] IContextBoundSettingsStore settings) {
 			// Finds the element represented by the identifier.
 			IPsiSourceFile psiSourceFile;
 			DeclaredElementInstance elementInstance = FindValidHighlightedElement(highlighter, languageType, out psiSourceFile);
@@ -47,8 +50,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				return null;
 			
 			// Presents it using colors.
-			var options = PresenterOptions.ForToolTip(psiSourceFile.GetSettingsStore());
-			RichText identifierText = _colorizerPresenter.TryPresent(elementInstance, options, languageType, highlighter.AttributeId);
+			RichText identifierText = _colorizerPresenter.TryPresent(elementInstance, PresenterOptions.ForToolTip(settings), languageType, highlighter.AttributeId);
 			if (identifierText == null || identifierText.IsEmpty)
 				return null;
 
@@ -57,11 +59,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			var identifierContent = new IdentifierContent {
 				Text = identifierText,
-				Icon = TryGetIcon(element),
 				Description = TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.NO_OBSOLETE_SUMMARY_STYLE),
-				Obsolete = TryRemoveObsoletePrefix(TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.OBSOLETE_DESCRIPTION)),
 			};
-			identifierContent.Exceptions.AddRange(GetExceptions(element, languageType, psiModule, psiSourceFile.ResolveContext));
+			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowIcon))
+				identifierContent.Icon = TryGetIcon(element);
+			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowObsolete))
+				identifierContent.Obsolete = TryRemoveObsoletePrefix(TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.OBSOLETE_DESCRIPTION));
+			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowExceptions))
+				identifierContent.Exceptions.AddRange(GetExceptions(element, languageType, psiModule, psiSourceFile.ResolveContext));
 			return identifierContent;
 		}
 		

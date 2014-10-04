@@ -1,0 +1,43 @@
+﻿<ScrollViewer
+	x:Class="GammaJul.ReSharper.EnhancedTooltip.Settings.EnhancedTooltipOptionsPage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:controls="urn:schemas-jetbrains-com:jetbrains-ui-controls"
+	mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
+	HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+
+	<ScrollViewer.Resources>
+		<Style TargetType="{x:Type controls:CheckBoxDisabledNoCheck2}">
+			<Setter Property="Margin" Value="8,2,0,1" />
+		</Style>
+	</ScrollViewer.Resources>
+
+	<StackPanel>
+
+		<StackPanel Orientation="Vertical" Margin="10,0,0,0">
+			<controls:SectionHeading Text="Identifier Tooltip" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowIconCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowKindCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowObsoleteCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowExceptionsCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipUseTypeKeywordsCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowIdentifierNullnessCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowParametersNullnessCheckBox" />
+		</StackPanel>
+
+		<StackPanel Orientation="Vertical" Margin="10,0,0,0">
+			<controls:SectionHeading Text="Issue Tooltip" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="IssueTooltipShowIconCheckBox" />
+		</StackPanel>
+
+		<StackPanel Orientation="Vertical" Margin="10,0,0,0">
+			<controls:SectionHeading Text="Parameter Info" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoUseTypeKeywordsCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoShowParametersNullnessCheckBox" />
+		</StackPanel>
+
+	</StackPanel>
+
+</ScrollViewer>

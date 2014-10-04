@@ -36,8 +36,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowTypeParameters = TypeParameterStyle.NONE
 		};
 
-		private static string _notNullAttributeName = CodeAnnotationsCache.NotNullAttributeShortName.TrimFromEnd("Attribute", StringComparison.Ordinal);
-		private static string _canBeNullAttributeName = CodeAnnotationsCache.CanBeNullAttributeShortName.TrimFromEnd("Attribute", StringComparison.Ordinal);
+		private static readonly string _notNullAttributeName = CodeAnnotationsCache.NotNullAttributeShortName.TrimFromEnd("Attribute", StringComparison.Ordinal);
+		private static readonly string _canBeNullAttributeName = CodeAnnotationsCache.CanBeNullAttributeShortName.TrimFromEnd("Attribute", StringComparison.Ordinal);
 
 		private readonly RichText _richText;
 		private readonly PresenterOptions _options;
@@ -57,7 +57,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (_options.ShowModifiers)
 				AppendModifiers(element);
 
-			if (_options.ShowNullness) {
+			if (_options.ShowElementNullness) {
 				var attributesOwner = element as IAttributesOwner;
 				if (attributesOwner != null)
 					AppendNullness(attributesOwner);
@@ -68,7 +68,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (_options.ShowName)
 				AppendNameWithContainer(element, substitution, nameHighlightingAttributeId);
-			if (_options.ShowParameterTypes || _options.ShowParameterNames)
+			if (_options.ShowParametersType || _options.ShowParametersName)
 				AppendParameters(element, substitution, true);
 
 			if (_options.ShowElementType == ElementTypeDisplay.After)
@@ -579,13 +579,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					_presentedInfo.IsExtensionMethod = true;
 			}
 
-			if (_options.ShowNullness)
+			if (_options.ShowParametersNullness)
 				AppendNullness(parameter);
 
-			if (_options.ShowParameterTypes)
-				AppendElementType(parameter, substitution, NamespaceDisplays.Parameters, null, _options.ShowParameterNames ? " " : null);
+			if (_options.ShowParametersType)
+				AppendElementType(parameter, substitution, NamespaceDisplays.Parameters, null, _options.ShowParametersName ? " " : null);
 
-			if (_options.ShowParameterNames) {
+			if (_options.ShowParametersName) {
 				string attributeId = _options.UseReSharperColors ? HighlightingAttributeIds.PARAMETER_IDENTIFIER_ATTRIBUTE : null;
 				AppendText(FormatShortName(parameter.ShortName), attributeId);
 			}
@@ -595,24 +595,26 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private void AppendNullness([NotNull] IAttributesOwner attributesOwner) {
-			CodeAnnotationNullableValue? nullableValue = _codeAnnotationsCache.GetNullableAttribute(attributesOwner);
-			if (nullableValue == null)
+			string nullnessName = GetNullnessName(attributesOwner);
+			if (nullnessName == null)
 				return;
 
-			var classHighlightingAttributeId = _options.UseReSharperColors
-				? HighlightingAttributeIds.TYPE_CLASS_ATTRIBUTE
-				: VsHighlightingAttributeIds.Classes;
-
 			AppendText("[", null);
-			switch (nullableValue.Value) {
-				case CodeAnnotationNullableValue.NOT_NULL:
-					AppendText(_notNullAttributeName, classHighlightingAttributeId);
-					break;		
-				case CodeAnnotationNullableValue.CAN_BE_NULL:
-					AppendText(_canBeNullAttributeName, classHighlightingAttributeId);
-					break;
-			}
+			AppendText(nullnessName, _options.UseReSharperColors ? HighlightingAttributeIds.TYPE_CLASS_ATTRIBUTE : VsHighlightingAttributeIds.Classes);
 			AppendText("] ", null);
+		}
+
+		[CanBeNull]
+		private string GetNullnessName([NotNull] IAttributesOwner attributesOwner) {
+			CodeAnnotationNullableValue? nullableValue = _codeAnnotationsCache.GetNullableAttribute(attributesOwner);
+			switch (nullableValue) {
+				case CodeAnnotationNullableValue.NOT_NULL:
+					return _notNullAttributeName;
+				case CodeAnnotationNullableValue.CAN_BE_NULL:
+					return _canBeNullAttributeName;
+				default:
+					return null;
+			}
 		}
 
 		private static bool ShouldShowParameters([NotNull] IDeclaredElement element) {

@@ -6,16 +6,16 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
+using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Application;
+using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Daemon.SolutionAnalysis.UI.Resources;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.UI.Components.Theming;
-using JetBrains.UI.Icons;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
 using JetBrains.VsIntegration.DevTen.Markup;
@@ -156,51 +156,58 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			var highlighting = highlighter.UserData as IHighlighting;
 			if (highlighting != null) {
 
-				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, documentMarkup.Document);
-				IconId severityIcon = TryGetSeverityIcon(severity);
-				if (severityIcon != null)
-					return TryCreateIssueContent(highlighter.RichTextToolTip, severityIcon);
+				IDocument document = documentMarkup.Document;
+				IContextBoundSettingsStore settings = document.GetSettings();
+
+				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, document);
+				IssueContent issueContent = TryCreateIssueContent(highlighter.RichTextToolTip, severity, settings);
+				if (issueContent != null)
+					return issueContent;
 
 				PsiLanguageType languageType = TryGetIdentifierLanguage(highlighting);
-				if (languageType != null)
-					return TryGetIdentifierTooltipContent(highlighter, languageType);
-
+				if (languageType != null) {
+					ISolution solution = TryGetCurrentSolution();
+					if (solution != null) {
+						IdentifierContent identifierContent = TryGetIdentifierTooltipContent(highlighter, languageType, solution, settings);
+						if (identifierContent != null)
+							return identifierContent;
+					}
+				}
 			}
-			
+
 			return TryCreateMiscContent(highlighter.RichTextToolTip);
 		}
 
 		[CanBeNull]
-		[Pure]
-		private static IdentifierContent TryGetIdentifierTooltipContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType) {
+		private static ISolution TryGetCurrentSolution() {
 			var solutionManager = Shell.Instance.TryGetComponent<VSSolutionManager>();
-			if (solutionManager == null)
-				return null;
-
-			ISolution solution = solutionManager.CurrentSolution;
-			if (solution == null)
-				return null;
-
-			var provider = solution.GetComponent<IdentifierTooltipContentProvider>();
-			return provider.TryGetIdentifierText(highlighter, languageType);
+			return solutionManager != null ? solutionManager.CurrentSolution : null;
 		}
 
 		[CanBeNull]
 		[Pure]
-		private static IssueContent TryCreateIssueContent([CanBeNull] RichTextBlock textBlock, [CanBeNull] IconId icon) {
-			if (textBlock == null)
+		private static IdentifierContent TryGetIdentifierTooltipContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType,
+			[NotNull] ISolution solution, [NotNull] IContextBoundSettingsStore settings) {
+			var contentProvider = solution.GetComponent<IdentifierTooltipContentProvider>();
+			return contentProvider.TryGetIdentifierContent(highlighter, languageType, settings);
+		}
+
+		[CanBeNull]
+		[Pure]
+		private static IssueContent TryCreateIssueContent([CanBeNull] RichTextBlock textBlock, Severity severity, [NotNull] IContextBoundSettingsStore settings) {
+			if (textBlock == null || !severity.IsIssue())
 				return null;
 
 			RichText text = textBlock.RichText;
 			if (text.IsEmpty)
 				return null;
 
-			return new IssueContent {
-				Text = text,
-				Icon = icon
-			};
+			var issueContent = new IssueContent { Text = text };
+			if (settings.GetValue((IssueTooltipSettings s) => s.ShowIcon))
+				issueContent.Icon = severity.TryGetIcon();
+			return issueContent;
 		}
-
+		
 		[CanBeNull]
 		[Pure]
 		private static MiscContent TryCreateMiscContent([CanBeNull] RichTextBlock textBlock) {
@@ -211,35 +218,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (text.IsEmpty)
 				return null;
 
-			return new MiscContent {
-				Text = text
-			};
+			return new MiscContent { Text = text };
 		}
 
 		[Pure]
 		private TextRange GetCurrentTextRange([NotNull] IIntellisenseSession session) {
 			ITextSnapshot currentSnapshot = _textBuffer.CurrentSnapshot;
 			SnapshotPoint currentPoint = session.GetTriggerPoint(_textBuffer).GetPoint(currentSnapshot);
-			//var currentSpan = new SnapshotSpan(currentPoint, currentPoint.Position < currentSnapshot.Length ? 1 : 0);
 			var currentSpan = new SnapshotSpan(currentPoint, 0);
 			return new TextRange(currentSpan.Start, currentSpan.End);
-		}
-
-		[CanBeNull]
-		[Pure]
-		private static IconId TryGetSeverityIcon(Severity severity) {
-			switch (severity) {
-				case Severity.HINT:
-					return SolutionAnalysisThemedIcons.SolutionAnalysisHint.Id;
-				case Severity.SUGGESTION:
-					return SolutionAnalysisThemedIcons.SolutionAnalysisSuggestion.Id;
-				case Severity.WARNING:
-					return SolutionAnalysisThemedIcons.SolutionAnalysisWarning.Id;
-				case Severity.ERROR:
-					return SolutionAnalysisThemedIcons.SolutionAnalysisError.Id;
-				default:
-					return null;
-			}
 		}
 
 		[NotNull]
