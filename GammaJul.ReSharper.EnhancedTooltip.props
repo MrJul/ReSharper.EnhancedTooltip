@@ -32,7 +32,7 @@
   <PropertyGroup>
     <StartAction>Program</StartAction>
     <StartProgram>$(VsInstallDir)devenv.exe</StartProgram>
-    <StartArguments>/ReSharper.Plugin $(AssemblyName).dll /ReSharper.Internal</StartArguments>
+    <StartArguments>/RootSuffix Exp /ReSharper.Plugin $(AssemblyName).dll /ReSharper.Internal</StartArguments>
     <StartWorkingDirectory>$(MSBuildProjectDirectory)\$(OutputPath)</StartWorkingDirectory>
   </PropertyGroup>
   

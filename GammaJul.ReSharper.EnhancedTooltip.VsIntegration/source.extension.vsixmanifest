@@ -2,8 +2,9 @@
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
 	<Metadata>
 		<Identity Id="GammaJul.ReSharper.EnhancedTooltip.VsIntegration" Version="1.0" Language="en-US" Publisher="Julien Lebosquain" />
-		<DisplayName>GammaJul.ReSharper.EnhancedTooltip.VsIntegration</DisplayName>
-		<Description xml:space="preserve">Visual Studio integration of the Enhanced Tooltip extension for ReSharper.</Description>
+		<DisplayName>EnhancedTooltip VS Integration</DisplayName>
+		<Description xml:space="preserve">Visual Studio integration of the Enhanced Tooltip extension for ReSharper.
+If you want to uninstall this extension completely, please use the ReSharper Extension Manager.		</Description>
 	</Metadata>
 	<Installation>
 		<InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[11.0,12.0]" />

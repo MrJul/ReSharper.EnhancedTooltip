@@ -83,27 +83,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (!shellLocks.ReentrancyGuard.TryExecute("GetEnhancedTooltips", getEnhancedTooltips))
 				return;
 
-			/*var tooltips = new List<RichTextBlock>();
-			Span? unionSpan = new Span?();
-			bool hasErrorHighlighters = false;
-			Action action = (Action) (() => {
-				using (documentMarkup.Locks.UsingReadLock()) {
-					foreach (Vs10Highlighter item_3 in Enumerable.ToList<Vs10Highlighter>(Enumerable.OfType<Vs10Highlighter>((IEnumerable) documentMarkup.GetHighlightersOver(textRange)))) {
-						if (item_3.Attributes.Effect.Type != EffectType.GUTTER_MARK) {
-							if (item_3.ErrorStripeAttributes.Kind == ErrorStripeKind.ERROR)
-								hasErrorHighlighters = true;
-							RichTextBlock local_2 = item_3.RichTextToolTip;
-							if (local_2 != null && !string.IsNullOrEmpty(local_2.Text)) {
-								tooltips.Add(local_2);
-								Span local_3 = ConversionDevTen.ToSpan(item_3.Range);
-								unionSpan = new Span?(!unionSpan.HasValue ? local_3 : Span.FromBounds(Math.Min(unionSpan.Value.Start, local_3.Start), Math.Max(unionSpan.Value.End, local_3.End)));
-							}
-						}
-					}
-				}
-			});
-			if (!documentMarkup.Locks.ReentrancyGuard.TryExecute("GetTooltips", action))
-				return;
+			/*
 			if (unionSpan.HasValue) {
 				if (!this.IsTypeScript() || hasErrorHighlighters) {
 					quickInfoContent.Clear();
