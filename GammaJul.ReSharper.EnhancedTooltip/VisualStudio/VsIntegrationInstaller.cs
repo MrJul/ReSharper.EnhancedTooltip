@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains;
 using JetBrains.Annotations;
 using JetBrains.Application;
@@ -8,7 +7,6 @@ using JetBrains.Application.Components;
 using JetBrains.Application.Extensions;
 using JetBrains.Util;
 using Microsoft.VisualStudio.ExtensionManager;
-using IExtension = JetBrains.Application.Extensions.IExtension;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
@@ -19,21 +17,24 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 	public class VsIntegrationInstaller : IExtensionRepository {
 
 		private const string ExtensionId = "EnhancedTooltip";
+		private const string VsIntegrationExtensionId = "GammaJul.ReSharper.EnhancedTooltip.VsIntegration";
 
 		private readonly Optional<IVsExtensionManager> _vsExtensionManager;
-
-		private bool _shouldRestart;
-
-		public bool CanUninstall(string id) {
-			return false;
-		}
+		private bool _restartRequired;
 
 		public bool HasMissingExtensions() {
 			return false;
 		}
 
+		public void RestoreMissingExtensions() {
+		}
+
 		public IEnumerable<string> GetExtensionsRequiringRestart() {
-			return _shouldRestart ? new[] { ExtensionId } : EmptyList<string>.InstanceList;
+			return _restartRequired ? new[] { ExtensionId } : EmptyList<string>.InstanceList;
+		}
+
+		public bool CanUninstall(string id) {
+			return id == ExtensionId;
 		}
 
 		public void Uninstall(string id, bool removeDependencies, IEnumerable<string> dependencies, Action<LoggingLevel, string> logger) {
@@ -45,7 +46,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				return;
 
 			IInstalledExtension thisExtension;
-			if (!vsExtensionManager.TryGetInstalledExtension("GammaJul.ReSharper.EnhancedTooltip.VsIntegration", out thisExtension))
+			if (!vsExtensionManager.TryGetInstalledExtension(VsIntegrationExtensionId, out thisExtension))
 				return;
 
 			try {
@@ -56,26 +57,32 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			}
 		}
 
-		public void RestoreMissingExtensions() {
-		}
-
-		private void TryInstallVsIntegration([CanBeNull] IExtension extension, [CanBeNull] IVsExtensionManager vsExtensionManager) {
-			if (extension == null || vsExtensionManager == null)
+		private void TryInstallVsIntegration([CanBeNull] IVsExtensionManager vsExtensionManager) {
+			if (vsExtensionManager == null)
 				return;
 
-			FileSystemPath vsixPath = extension.GetFiles("vsix").FirstOrDefault();
-			if (vsixPath == null)
+			IInstalledExtension vsIntegrationExtension;
+			if (vsExtensionManager.TryGetInstalledExtension(VsIntegrationExtensionId, out vsIntegrationExtension))
+				return;
+
+			FileSystemPath thisAssemblyPath = FileSystemPath.TryParse(typeof(VsIntegrationInstaller).Assembly.Location);
+			if (thisAssemblyPath.IsNullOrEmpty())
+				return;
+
+			FileSystemPath vsixPath = thisAssemblyPath.Directory.Combine(VsIntegrationExtensionId + ".vsix");
+			if (!vsixPath.ExistsFile)
 				return;
 
 			IInstallableExtension installableExtension = vsExtensionManager.CreateInstallableExtension(vsixPath.FullPath);
-			if (vsExtensionManager.Install(installableExtension, false) != RestartReason.None)
-				_shouldRestart = true;
+			RestartReason restartReason = vsExtensionManager.Install(installableExtension, false);
+			if (restartReason != RestartReason.None)
+				_restartRequired = true;
 		}
 
-		public VsIntegrationInstaller([NotNull] ExtensionManager extensionManager, [NotNull] Optional<IVsExtensionManager> vsExtensionManager) {
+		public VsIntegrationInstaller([NotNull] Optional<IVsExtensionManager> vsExtensionManager) {
 			_vsExtensionManager = vsExtensionManager;
 			
-			TryInstallVsIntegration(extensionManager.GetExtension(ExtensionId), vsExtensionManager.CanBeNull);
+			TryInstallVsIntegration(vsExtensionManager.CanBeNull);
 		}
 
 	}

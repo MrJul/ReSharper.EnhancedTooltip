@@ -41,10 +41,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (documentMarkup == null)
 				return;
 
+			// Try to get an arbitrary shell component from Enhanced Tooltip; if it fails, it means we are disabled.
+			var vsIntegrationInstaller = Shell.Instance.TryGetComponent<VsIntegrationInstaller>();
+			if (vsIntegrationInstaller == null)
+				return;
+
 			var textRange = GetCurrentTextRange(session);
 			IShellLocks shellLocks = documentMarkup.Context.Locks;
-
-			quickInfoContent.Clear();
 
 			Action getEnhancedTooltips = () => {
 				using (shellLocks.UsingReadLock()) {
@@ -67,6 +70,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 						else
 							miscContents.Add(tooltipContent);
 					}
+
+					quickInfoContent.Clear();
 
 					foreach (ITooltipContent identifierContent in identifierContents)
 						quickInfoContent.Add(PresentTooltipContents("Id", new[] { identifierContent }));

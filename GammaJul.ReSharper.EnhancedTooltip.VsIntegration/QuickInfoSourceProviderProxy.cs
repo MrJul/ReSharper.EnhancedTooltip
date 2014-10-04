@@ -40,15 +40,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VsIntegration {
 		/// Gets the EnhancedTooltip QuickInfoSourceProvider corresponding to the correct ReSharper version if available.
 		/// This way, this package works for any future version of R# without any modification.
 		/// </summary>
-		private string TryGetProviderTypeName() {
+		private Type TryGetProviderType() {
 			Version reSharperVersion = TryGetVsShell().TryGetReSharperVersion();
-			if (reSharperVersion == null) {
-				// No ReSharper? we don't have a reason to exist anymore, as this means ReSharper has been uninstalled but we didn't.
-				Uninstall();
+			if (reSharperVersion == null)
 				return null;
-			}
 
-			return ProviderTypeNameWithoutVersion + reSharperVersion.ToString(2);
+			return Type.GetType(ProviderTypeNameWithoutVersion + reSharperVersion.ToString(2), false);
 		}
 
 		private void Uninstall() {
@@ -62,13 +59,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VsIntegration {
 		}
 
 		private IQuickInfoSourceProvider LoadProvider() {
-			string providerTypeName = TryGetProviderTypeName();
-			if (providerTypeName == null)
+			Type providerType = TryGetProviderType();
+			if (providerType == null) {
+				// No EnhancedTooltip or No ReSharper?
+				// we don't have a reason to exist anymore, as this means EnhancedTooltip or ReSharper has been uninstalled but we didn't.
+				Uninstall();
 				return null;
-
-			Type providerType = Type.GetType(providerTypeName, false);
-			if (providerType == null)
-				return null;
+			}
 			
 			return Activator.CreateInstance(providerType, VsEditorAdaptersFactoryService) as IQuickInfoSourceProvider;
 		}

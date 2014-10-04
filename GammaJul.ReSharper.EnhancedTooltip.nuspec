@@ -7,8 +7,11 @@
 		<authors>Julien Lebosquain</authors>
 		<description>Colorizes the tooltip as well as the parameter information popup.</description>
 		<releaseNotes>
-			Delegates displayed in lambda syntax now have the correct return type.
-			Support for ReSharper 8.2 EAP.
+			Fix: Color highlighting doesn't disappear anymore when the solution is reloaded.
+			New: Better tooltip style.
+			New: An icon is now displayed next to identifiers and issues inside the tooltip (configurable).
+			New: CanBeNull/NotNull annotations are now displayed inside the tooltip and parameter info (configurable).
+			New: Added an options page.
 		</releaseNotes>
 		<projectUrl>https://github.com/MrJul/ReSharper.EnhancedTooltip/</projectUrl>
 		<iconUrl>https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Logo/Logo128.png</iconUrl>
@@ -20,6 +23,7 @@
 		</dependencies>
 	</metadata>
 	<files>
-		<file src="GammaJul.ReSharper.EnhancedTooltip\bin\Release\GammaJul.ReSharper.EnhancedTooltip.8.2.dll" target="ReSharper\v8.2\plugins" />
+		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.8.2.dll" target="ReSharper\v8.2\plugins" />
+		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.vsix" target="ReSharper\v8.2\plugins" />
 	</files>
 </package>
