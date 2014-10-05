@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using JetBrains.Annotations;
+using JetBrains.UI.RichText;
 using Microsoft.VisualStudio.Text.Formatting;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
@@ -12,12 +13,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		private readonly List<IdentifierTooltipContent> _identifierContents = new List<IdentifierTooltipContent>();
 		private readonly List<IssueTooltipContent> _issueContents = new List<IssueTooltipContent>();
-		private readonly List<ReSharperTooltipContent> _otherReSharperContents = new List<ReSharperTooltipContent>();
-		private readonly List<VisualStudioTooltipContent> _visualStudioContents = new List<VisualStudioTooltipContent>();
+		private readonly List<MiscTooltipContent> _miscContents = new List<MiscTooltipContent>();
 		private readonly TextFormattingRunProperties _formatting;
 
 		public bool TryAddContent([CanBeNull] ITooltipContent content) {
-			if (content == null || content.IsEmpty)
+			if (content == null || content.Text.IsNullOrEmpty())
 				return true;
 
 			var identifierContent = content as IdentifierTooltipContent;
@@ -32,15 +32,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				return true;
 			}
 
-			var rsContent = content as ReSharperTooltipContent;
+			var rsContent = content as MiscTooltipContent;
 			if (rsContent != null) {
-				_otherReSharperContents.Add(rsContent);
-				return true;
-			}
-
-			var vsContent = content as VisualStudioTooltipContent;
-			if (vsContent != null) {
-				_visualStudioContents.Add(vsContent);
+				_miscContents.Add(rsContent);
 				return true;
 			}
 
@@ -55,11 +49,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (_issueContents.Count > 0)
 				yield return PresentTooltipContents(_issueContents.Count == 1 ? "Issue" : "Issues", _issueContents);
 
-			foreach (ReSharperTooltipContent rsContent in _otherReSharperContents)
-				yield return PresentTooltipContents("Misc", new[] { rsContent });
-
-			foreach (VisualStudioTooltipContent vsContent in _visualStudioContents)
-				yield return PresentTooltipContents("Misc", new[] { vsContent });
+			foreach (MiscTooltipContent miscContent in _miscContents)
+				yield return PresentTooltipContents("Misc", new[] { miscContent });
 		}
 
 		[NotNull]

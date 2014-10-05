@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Windows;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
@@ -65,20 +64,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 							finalSpan = highlighter.Range.ToSpan().Union(finalSpan);
 					}
 
-					var nonWpfElements = new List<object>();
+					var nonReSharperContents = new List<object>();
 					foreach (object content in quickInfoContent) {
-						if (content is RichTextPresenter) // ignore original R# elements
-							continue;
-
-						if (content is UIElement || content is string)
-							presenter.TryAddContent(new VisualStudioTooltipContent { InnerContent = content });
-						else
-							nonWpfElements.Add(content);
+						// ignore existing R# elements
+						if (!(content is RichTextPresenter))
+							nonReSharperContents.Add(content);
 					}
 
 					quickInfoContent.Clear();
 					quickInfoContent.AddRange(presenter.PresentContents());
-					quickInfoContent.AddRange(nonWpfElements);
+					quickInfoContent.AddRange(nonReSharperContents);
 
 				}
 			};
@@ -165,7 +160,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		
 		[CanBeNull]
 		[Pure]
-		private static ReSharperTooltipContent TryCreateMiscContent([CanBeNull] RichTextBlock textBlock) {
+		private static MiscTooltipContent TryCreateMiscContent([CanBeNull] RichTextBlock textBlock) {
 			if (textBlock == null)
 				return null;
 
@@ -173,7 +168,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (text.IsEmpty)
 				return null;
 
-			return new ReSharperTooltipContent { Text = text };
+			return new MiscTooltipContent { Text = text };
 		}
 
 		[Pure]

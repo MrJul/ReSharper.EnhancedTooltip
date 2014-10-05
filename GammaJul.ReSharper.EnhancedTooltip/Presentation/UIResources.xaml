@@ -14,8 +14,12 @@
 
 	<!-- Style for VS listbox item's data inside the tooltip -->
 	<DataTemplate x:Key="QuickInfoItemDataTemplate">
-		<!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
-		<ContentPresenter Content="{Binding VisualElement}" Margin="0" />
+		<Border BorderThickness="1"
+			BorderBrush="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}"
+			Background="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTabSelectedTabBrushKey}}">
+			<!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
+			<ContentPresenter Content="{Binding VisualElement}" Margin="8,6" />
+		</Border>
 	</DataTemplate>
 
 	<!-- Style for VS listbox inside the tooltip -->
@@ -52,7 +56,7 @@
 			<DataTemplate DataType="{x:Type local:IdentifierTooltipContent}">
 				<StackPanel x:Name="Root" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType">
 					
-					<DockPanel Margin="8,6">
+					<DockPanel>
 						<ContentPresenter x:Name="IconPresenter" Focusable="False"
 							Content="{Binding Icon}" Margin="0,0,4,0"
 							DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -117,7 +121,7 @@
 
 			<!-- Style for an issue -->
 			<DataTemplate DataType="{x:Type local:IssueTooltipContent}">
-				<DockPanel Margin="8,6">
+				<DockPanel>
 					<ContentPresenter x:Name="IconPresenter" Focusable="False"
 						Content="{Binding Icon}" Margin="0,0,4,0"
 						DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -126,15 +130,10 @@
 				</DockPanel>
 			</DataTemplate>
 
-			<!-- Style for other ReSharper content -->
-			<DataTemplate DataType="{x:Type local:ReSharperTooltipContent}">
-				<controls:RichTextPresenter TextWrapping="Wrap" Margin="8,6" IsAutoContrasted="True"
+			<!-- Style for other content -->
+			<DataTemplate DataType="{x:Type local:MiscTooltipContent}">
+				<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="True"
 					RichText="{Binding Text}" VerticalAlignment="Center" />
-			</DataTemplate>
-
-			<!-- Style for VS content -->
-			<DataTemplate DataType="{x:Type local:VisualStudioTooltipContent}">
-				<ContentPresenter Focusable="False" Margin="8,6" Content="{Binding InnerContent}" />
 			</DataTemplate>
 
 		</Style.Resources>
@@ -144,9 +143,6 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type HeaderedContentControl}">
-					<Border BorderThickness="1"
-						BorderBrush="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}"
-						Background="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTabSelectedTabBrushKey}}">
 						<Grid x:Name="Root">
 							<Grid.ColumnDefinitions>
 								<ColumnDefinition Width="Auto" />
@@ -168,7 +164,6 @@
 								TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTextBrushKey}}" />
 
 						</Grid>
-					</Border>
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

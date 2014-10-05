@@ -1,7 +1,13 @@
-﻿namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
+﻿using JetBrains.Annotations;
+using JetBrains.UI.RichText;
+
+namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public interface ITooltipContent {
-		bool IsEmpty { get; }
+		
+		[CanBeNull]
+		RichText Text { get; }
+
 	}
 
 }

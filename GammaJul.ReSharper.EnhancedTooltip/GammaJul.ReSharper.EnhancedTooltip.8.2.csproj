@@ -30,8 +30,7 @@
     </Compile>
     <Compile Include="Presentation\IssueTooltipContent.cs" />
     <Compile Include="Presentation\ITooltipContent.cs" />
-    <Compile Include="Presentation\ReSharperTooltipContent.cs" />
-    <Compile Include="Presentation\VisualStudioTooltipContent.cs" />
+    <Compile Include="Presentation\MiscTooltipContent.cs" />
     <Compile Include="Presentation\NamespaceDisplayMode.cs" />
     <Compile Include="Presentation\PresentedInfo.cs" />
     <Compile Include="Presentation\PresenterOptions.cs" />

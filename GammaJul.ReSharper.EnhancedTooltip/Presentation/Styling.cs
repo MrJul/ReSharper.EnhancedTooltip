@@ -19,6 +19,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			typeof(Styling),
 			new FrameworkPropertyMetadata(BooleanBoxes.False, OnShouldStyleParentListBoxChanged));
 
+		private static readonly DependencyProperty _originalStylesProperty = DependencyProperty.RegisterAttached(
+			"OriginalStyles",
+			typeof(OriginalStyles),
+			typeof(Styling),
+			new FrameworkPropertyMetadata(null));
+
 		public static bool GetShouldStyleParentListBox([NotNull] DependencyObject owner) {
 			if (owner == null)
 				throw new ArgumentNullException("owner");
@@ -40,17 +46,56 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return;
 			
 			element.WhenLoaded(lifetime => {
+
 				// We're styling the parent VS ListBox included inside the tooltip.
 				var listBox = element.FindVisualAncestor<ListBox>();
-				if (listBox != null)
-					SetListBoxStyle(listBox);
+				if (listBox == null || listBox.GetValue(_originalStylesProperty) != null)
+					return;
+
+				SetListBoxStyle(listBox);
+
+				RoutedEventHandler onListBoxUnloaded = null;
+				onListBoxUnloaded = (sender, args) => {
+					listBox.Unloaded -= onListBoxUnloaded;
+					RestoreOriginalStyles(listBox);
+				};
+				listBox.Unloaded += onListBoxUnloaded;
+
 			});
 		}
 
+
+		private sealed class OriginalStyles {
+			[CanBeNull] public Style Style { get; set; }
+			[CanBeNull] public Style ItemContainerStyle { get; set; }
+			[CanBeNull] public DataTemplate ItemTemplate { get; set; }
+		}
+
 		private static void SetListBoxStyle([NotNull] ListBox listBox) {
+			var originalStyles = listBox.GetValue(_originalStylesProperty) as OriginalStyles;
+			if (originalStyles == null) {
+				listBox.SetValue(_originalStylesProperty, new OriginalStyles {
+					Style = listBox.Style,
+					ItemContainerStyle = listBox.ItemContainerStyle,
+					ItemTemplate = listBox.ItemTemplate
+				});
+			}
+
 			listBox.Style = UIResources.Instance.QuickInfoListBoxStyle;
 			listBox.ItemContainerStyle = UIResources.Instance.QuickInfoItemStyle;
 			listBox.ItemTemplate = UIResources.Instance.QuickInfoItemDataTemplate;
+		}
+
+		private static void RestoreOriginalStyles([NotNull] ListBox listBox) {
+			var originalStyles = listBox.GetValue(_originalStylesProperty) as OriginalStyles;
+			if (originalStyles == null)
+				return;
+
+			listBox.ClearValue(_originalStylesProperty);
+
+			listBox.Style = originalStyles.Style;
+			listBox.ItemContainerStyle = originalStyles.ItemContainerStyle;
+			listBox.ItemTemplate = originalStyles.ItemTemplate;
 		}
 
 	}
