@@ -25,6 +25,7 @@
     <Compile Include="Presentation\ElementTypeDisplay.cs" />
     <Compile Include="Presentation\ExceptionContent.cs" />
     <Compile Include="Presentation\IColorizer.cs" />
+    <Compile Include="Presentation\IconScaling.cs" />
     <Compile Include="Presentation\IdentifierTooltipContent.cs">
       <SubType>Code</SubType>
     </Compile>

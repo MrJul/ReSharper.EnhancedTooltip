@@ -3,6 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:theming="clr-namespace:JetBrains.VsIntegration.SinceVs11.Theming;assembly=JetBrains.Platform.ReSharper.VisualStudio.SinceVs11"
 	xmlns:controls="clr-namespace:JetBrains.UI.Avalon.Controls;assembly=JetBrains.Platform.ReSharper.UI"
+	xmlns:jui="urn:schemas-jetbrains-com:jetbrains-ui-avalon"
 	xmlns:local="clr-namespace:GammaJul.ReSharper.EnhancedTooltip.Presentation">
 
 	<!-- Style for VS listbox item inside the tooltip -->
@@ -57,9 +58,11 @@
 				<StackPanel x:Name="Root" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType">
 					
 					<DockPanel Margin="0">
-						<ContentPresenter x:Name="IconPresenter" Focusable="False"
-							Content="{Binding Icon}" Margin="0,0,4,0"
-							DockPanel.Dock="Left" VerticalAlignment="Top" HorizontalAlignment="Left" />
+						<Border DataContext="{Binding Icon}">
+							<jui:ThemedIconViewImage x:Name="IconPresenter" Stretch="Uniform"
+								Margin="0,0,4,0" local:IconScaling.IsScalingWithFontSize="True"
+								DockPanel.Dock="Left" VerticalAlignment="Top" HorizontalAlignment="Left" />
+						</Border>
 						<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="False"
 							RichText="{Binding Text}" VerticalAlignment="Center" />
 					</DockPanel>
@@ -124,12 +127,19 @@
 			<!-- Style for an issue -->
 			<DataTemplate DataType="{x:Type local:IssueTooltipContent}">
 				<DockPanel>
-					<ContentPresenter x:Name="IconPresenter" Focusable="False"
-						Content="{Binding Icon}" Margin="0,0,4,0"
-						DockPanel.Dock="Left" VerticalAlignment="Top" HorizontalAlignment="Left" />
+					<Border DataContext="{Binding Icon}">
+						<jui:ThemedIconViewImage x:Name="IconPresenter" Stretch="Uniform"
+							Margin="0,0,4,0" local:IconScaling.IsScalingWithFontSize="True"
+							DockPanel.Dock="Left" VerticalAlignment="Top" HorizontalAlignment="Left" />
+					</Border>
 					<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="False"
 						RichText="{Binding Text}" VerticalAlignment="Center" />
 				</DockPanel>
+				<DataTemplate.Triggers>
+					<DataTrigger Binding="{Binding Icon}" Value="{x:Null}">
+						<Setter TargetName="IconPresenter" Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+				</DataTemplate.Triggers>
 			</DataTemplate>
 
 			<!-- Style for other content -->
