@@ -34,30 +34,40 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			get { return this; }
 		}
 
-		private void SetCheckBoxBinding<TSettings>([NotNull] Expression<Func<TSettings, bool>> settingAccessor, [NotNull] CheckBoxDisabledNoCheck2 checkBox) {
+		private void SetCheckBoxBinding<TSettings>([NotNull] Expression<Func<TSettings, bool>> settingAccessor, [NotNull] CheckBoxDisabledNoCheck2 checkBox,
+			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckbox) {
+
 			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
-			checkBox.Content = entry.Description;
+			if (checkBox.Content == null)
+				checkBox.Content = entry.Description;
 			_context.SetBinding<bool>(_lifetime, entry, checkBox, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
+
+			if (parentCheckbox != null)
+				parentCheckbox.IsCheckedLogically.FlowInto(_lifetime, checkBox, IsEnabledProperty);
 		}
 
 		private void SetIdentifierTooltipSettingsBindings() {
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowIcon, IdentifierTooltipShowIconCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowKind, IdentifierTooltipShowKindCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowObsolete, IdentifierTooltipShowObsoleteCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowExceptions, IdentifierTooltipShowExceptionsCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseTypeKeywords, IdentifierTooltipUseTypeKeywordsCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowIdentifierNullness, IdentifierTooltipShowIdentifierNullnessCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowParametersNullness, IdentifierTooltipShowParametersNullnessCheckBox);
+			CheckBoxDisabledNoCheck2 enabledCheckBox = IdentifierTooltipEnabledCheckBox;
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.Enabled, enabledCheckBox, null);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowIcon, IdentifierTooltipShowIconCheckBox, enabledCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowKind, IdentifierTooltipShowKindCheckBox, enabledCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowObsolete, IdentifierTooltipShowObsoleteCheckBox, enabledCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowExceptions, IdentifierTooltipShowExceptionsCheckBox, enabledCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseTypeKeywords, IdentifierTooltipUseTypeKeywordsCheckBox, enabledCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowIdentifierNullness, IdentifierTooltipShowIdentifierNullnessCheckBox, enabledCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowParametersNullness, IdentifierTooltipShowParametersNullnessCheckBox, enabledCheckBox);
 		}
 
 		private void SetIssueTooltipSettingsBindings() {
-			SetCheckBoxBinding((IssueTooltipSettings s) => s.ShowIcon, IssueTooltipShowIconCheckBox);
+			SetCheckBoxBinding((IssueTooltipSettings s) => s.ShowIcon, IssueTooltipShowIconCheckBox, null);
 		}
 
 		private void SetParameterInfoSettingsBindings() {
-			SetCheckBoxBinding((ParameterInfoSettings s) => s.ShowEmptyParametersText, ParameterInfoShowEmptyParametersTextCheckBox);
-			SetCheckBoxBinding((ParameterInfoSettings s) => s.UseTypeKeywords, ParameterInfoUseTypeKeywordsCheckBox);
-			SetCheckBoxBinding((ParameterInfoSettings s) => s.ShowNullness, ParameterInfoShowNullnessCheckBox);
+			CheckBoxDisabledNoCheck2 enabledCheckBox = ParameterInfoEnabledCheckBox;
+			SetCheckBoxBinding((ParameterInfoSettings s) => s.Enabled, enabledCheckBox, null);
+			SetCheckBoxBinding((ParameterInfoSettings s) => s.ShowEmptyParametersText, ParameterInfoShowEmptyParametersTextCheckBox, enabledCheckBox);
+			SetCheckBoxBinding((ParameterInfoSettings s) => s.UseTypeKeywords, ParameterInfoUseTypeKeywordsCheckBox, enabledCheckBox);
+			SetCheckBoxBinding((ParameterInfoSettings s) => s.ShowNullness, ParameterInfoShowNullnessCheckBox, enabledCheckBox);
 		}
 
 		public EnhancedTooltipOptionsPage([NotNull] Lifetime lifetime, [NotNull] OptionsSettingsSmartContext context) {

@@ -18,6 +18,7 @@
 
 		<StackPanel Orientation="Vertical" Margin="10,0,0,0">
 			<controls:SectionHeading Text="Identifier Tooltip" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipEnabledCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowIconCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowKindCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowObsoleteCheckBox" />
@@ -34,6 +35,7 @@
 
 		<StackPanel Orientation="Vertical" Margin="10,0,0,0">
 			<controls:SectionHeading Text="Parameter Info" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoEnabledCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoShowEmptyParametersTextCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoUseTypeKeywordsCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoShowNullnessCheckBox" />

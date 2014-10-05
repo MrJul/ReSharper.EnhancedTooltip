@@ -5,6 +5,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 	[SettingsKey(typeof(EnhancedTooltipSettingsRoot), "Settings determining how tooltips are shown for identifiers.")]
 	public class IdentifierTooltipSettings {
 
+		[SettingsEntry(true, "Enhance identifier tooltips.")]
+		public bool Enabled { get; set; }
+
 		[SettingsEntry(true, "Display an icon for identifiers.")]
 		public bool ShowIcon { get; set; }
 

@@ -43,6 +43,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// <returns>A <see cref="IdentifierTooltipContent"/> representing a colored tooltip, or <c>null</c>.</returns>
 		[CanBeNull]
 		public IdentifierTooltipContent TryGetIdentifierContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType, [NotNull] IContextBoundSettingsStore settings) {
+			if (!settings.GetValue((IdentifierTooltipSettings s) => s.Enabled))
+				return null;
+			
 			IPsiSourceFile psiSourceFile;
 			DeclaredElementInstance elementInstance = FindValidHighlightedElement(highlighter, languageType, out psiSourceFile);
 			if (elementInstance == null)

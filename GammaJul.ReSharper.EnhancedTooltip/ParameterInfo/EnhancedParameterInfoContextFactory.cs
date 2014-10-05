@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
+using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.Application.Settings;
@@ -45,6 +46,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 
 		[CanBeNull]
 		private static IParameterInfoContext Enhance([CanBeNull] IParameterInfoContext context, [NotNull] ISolution solution, [NotNull] IContextBoundSettingsStore settings) {
+			if (!settings.GetValue((ParameterInfoSettings s) => s.Enabled))
+				return context;
+
 			return context == null
 				? null
 				: new EnhancedParameterInfoContext(context, solution.GetComponent<ColorizerPresenter>(), settings);

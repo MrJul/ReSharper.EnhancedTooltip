@@ -5,6 +5,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 	[SettingsKey(typeof(EnhancedTooltipSettingsRoot), "Settings determining how information about parameters are shown when writing a call.")]
 	public class ParameterInfoSettings {
 
+		[SettingsEntry(true, "Enhance parameter information popups.")]
+		public bool Enabled { get; set; }
+
+		[SettingsEntry(true, "Colorize C# calls.")]
+		public bool ColorizeSupportedLanguages { get; set; }
+
 		[SettingsEntry(true, "Display <no parameters> when there are no parameters.")]
 		public bool ShowEmptyParametersText { get; set; }
 
