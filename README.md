@@ -3,7 +3,13 @@
 
 What's ReSharper.EnhancedTooltip?
 --------------
-It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) 8.2 that colorizes the tooltip as well as the parameter information popup.  
+It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) 8.2 that enhances the tooltip and parameter information popup.  
+
+- Colorizes tooltips and parameter information popups for C#.
+- Displays icons for identifiers and issues in the tooltip.
+- Uses the colors and font configured in Visual Studio.
+- When working with JetBrains annotations, can display [CanBeNull] and [NotNull] attributes.
+- Everything is configurable.
 
 Installation
 ------------
@@ -23,9 +29,15 @@ The parameter information popup is now syntax highlighted.
 The colors used for the types are either the ones having a name starting by _ReSharper_ if _Color identifiers_ is used, or the Visual Studio ones starting with _User Types_ otherwise.  
 ![Parameter Info Highlighting](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Screenshots/ParameterInfo.png "Parameter Info Highlighting")
 
+Options
+-------
+Enhanced Tooltip provides many options to configure the display as you like.  
+The options page is located at ReSharper → Options → Environment → IntelliSense → Enhanced Tooltip.  
+![Options Page](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Screenshots/Options.png "Options Page")
+
 Current Limitations
 -----------
-- Only works in C# files. The standard tooltip and parameter information popup are used in other file types.  
+- Colors only work in C# files. The standard tooltip and parameter information popup are used in other file types.  
 - The parameter information popup isn't highlighted for calls using named parameters.  
 
 Licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)

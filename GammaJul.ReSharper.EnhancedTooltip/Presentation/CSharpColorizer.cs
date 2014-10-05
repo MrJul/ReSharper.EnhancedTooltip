@@ -271,6 +271,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			var declaredType = type as IDeclaredType;
 			if (declaredType != null)
 				AppendDeclaredType(declaredType, expectedNamespaceDisplay);
+
+			if (type is IAnonymousType)
+				AppendText("anonymous type", null);
 		}
 
 		private void AppendArrayType([NotNull] IArrayType arrayType, NamespaceDisplays expectedNamespaceDisplay) {
