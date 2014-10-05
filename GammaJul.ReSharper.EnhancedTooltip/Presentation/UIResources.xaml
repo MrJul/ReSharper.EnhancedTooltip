@@ -49,7 +49,7 @@
 		<Style.Resources>
 
 			<!-- Style for an identifier -->
-			<DataTemplate DataType="{x:Type local:IdentifierContent}">
+			<DataTemplate DataType="{x:Type local:IdentifierTooltipContent}">
 				<StackPanel x:Name="Root" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType">
 					
 					<DockPanel Margin="8,6">
@@ -73,7 +73,7 @@
 							<TextBlock Text="Obsolete" Margin="2" Foreground="Gray" FontWeight="Bold" VerticalAlignment="Center"
 								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}" />
 						</Border>
-						<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="False"
+						<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="True"
 							RichText="{Binding Obsolete}" />
 					</StackPanel>
 
@@ -91,7 +91,7 @@
 											FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}" />
 									</Border>
 									<TextBlock TextWrapping="Wrap" FontStyle="Italic" Text="{Binding Exception}" VerticalAlignment="Center" Grid.Column="1" />
-									<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="False" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="2"
+									<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="True" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="2"
 										RichText="{Binding Description}" />
 								</Grid>
 							</DataTemplate>
@@ -116,7 +116,7 @@
 			</DataTemplate>
 
 			<!-- Style for an issue -->
-			<DataTemplate DataType="{x:Type local:IssueContent}">
+			<DataTemplate DataType="{x:Type local:IssueTooltipContent}">
 				<DockPanel Margin="8,6">
 					<ContentPresenter x:Name="IconPresenter" Focusable="False"
 						Content="{Binding Icon}" Margin="0,0,4,0"
@@ -124,6 +124,17 @@
 					<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="False"
 						RichText="{Binding Text}" VerticalAlignment="Center" />
 				</DockPanel>
+			</DataTemplate>
+
+			<!-- Style for other ReSharper content -->
+			<DataTemplate DataType="{x:Type local:ReSharperTooltipContent}">
+				<controls:RichTextPresenter TextWrapping="Wrap" Margin="8,6" IsAutoContrasted="True"
+					RichText="{Binding Text}" VerticalAlignment="Center" />
+			</DataTemplate>
+
+			<!-- Style for VS content -->
+			<DataTemplate DataType="{x:Type local:VisualStudioTooltipContent}">
+				<ContentPresenter Focusable="False" Margin="8,6" Content="{Binding InnerContent}" />
 			</DataTemplate>
 
 		</Style.Resources>

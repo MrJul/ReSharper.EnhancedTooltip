@@ -35,29 +35,35 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		private readonly ColorizerPresenter _colorizerPresenter;
 
 		/// <summary>
-		/// Returns a colored <see cref="IdentifierContent"/> for an identifier represented by a <see cref="IHighlighter"/>.
+		/// Returns a colored <see cref="IdentifierTooltipContent"/> for an identifier represented by a <see cref="IHighlighter"/>.
 		/// </summary>
 		/// <param name="highlighter">The highlighter representing the identifier.</param>
 		/// <param name="languageType">The type of language used to present the identifier.</param>
 		/// <param name="settings">The settings to use.</param>
-		/// <returns>A <see cref="IdentifierContent"/> representing a colored tooltip, or <c>null</c>.</returns>
+		/// <returns>A <see cref="IdentifierTooltipContent"/> representing a colored tooltip, or <c>null</c>.</returns>
 		[CanBeNull]
-		public IdentifierContent TryGetIdentifierContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType, [NotNull] IContextBoundSettingsStore settings) {
-			// Finds the element represented by the identifier.
+		public IdentifierTooltipContent TryGetIdentifierContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType, [NotNull] IContextBoundSettingsStore settings) {
 			IPsiSourceFile psiSourceFile;
 			DeclaredElementInstance elementInstance = FindValidHighlightedElement(highlighter, languageType, out psiSourceFile);
 			if (elementInstance == null)
 				return null;
 			
-			// Presents it using colors.
-			RichText identifierText = _colorizerPresenter.TryPresent(elementInstance, PresenterOptions.ForToolTip(settings), languageType, highlighter.AttributeId);
+			return TryPresentColorized(elementInstance, languageType, psiSourceFile, settings, highlighter.AttributeId)
+				?? TryPresentNonColorized(highlighter, elementInstance.Element, settings);
+		}
+
+		[CanBeNull]
+		private IdentifierTooltipContent TryPresentColorized([NotNull] DeclaredElementInstance elementInstance, [NotNull] PsiLanguageType languageType,
+			[NotNull] IPsiSourceFile psiSourceFile, [NotNull] IContextBoundSettingsStore settings, [CanBeNull] string highlighterAttributeId) {
+			
+			RichText identifierText = _colorizerPresenter.TryPresent(elementInstance, PresenterOptions.ForToolTip(settings), languageType, highlighterAttributeId);
 			if (identifierText == null || identifierText.IsEmpty)
 				return null;
 
 			IDeclaredElement element = elementInstance.Element;
 			IPsiModule psiModule = psiSourceFile.PsiModule;
 
-			var identifierContent = new IdentifierContent {
+			var identifierContent = new IdentifierTooltipContent {
 				Text = identifierText,
 				Description = TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.NO_OBSOLETE_SUMMARY_STYLE),
 			};
@@ -69,7 +75,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				identifierContent.Exceptions.AddRange(GetExceptions(element, languageType, psiModule, psiSourceFile.ResolveContext));
 			return identifierContent;
 		}
-		
+
+		[CanBeNull]
+		private IdentifierTooltipContent TryPresentNonColorized([NotNull] IHighlighter highlighter, [NotNull] IDeclaredElement element, [NotNull] IContextBoundSettingsStore settings) {
+			RichTextBlock richTextToolTip = highlighter.RichTextToolTip;
+			if (richTextToolTip == null)
+				return null;
+
+			RichText richText = richTextToolTip.RichText;
+			if (richText.IsNullOrEmpty())
+				return null;
+
+			var identifierContent = new IdentifierTooltipContent { Text = richText };
+			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowIcon))
+				identifierContent.Icon = TryGetIcon(element);
+			return identifierContent;
+		}
+
 		[NotNull]
 		private static IEnumerable<ExceptionContent> GetExceptions([NotNull] IDeclaredElement element, [NotNull] PsiLanguageType languageType,
 			[NotNull] IPsiModule psiModule, [NotNull] IModuleReferenceResolveContext resolveContext) {

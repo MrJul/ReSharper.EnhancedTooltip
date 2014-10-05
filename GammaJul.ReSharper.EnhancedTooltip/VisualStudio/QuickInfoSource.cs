@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
@@ -16,15 +14,16 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl.DocumentMarkup;
+using JetBrains.UI.Avalon.Controls;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
+using JetBrains.VsIntegration.DevTen.Interop.Shim;
 using JetBrains.VsIntegration.DevTen.Markup;
 using JetBrains.VsIntegration.Markup;
 using JetBrains.VsIntegration.ProjectModel;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Formatting;
 using VSIVsTextBuffer = Microsoft.VisualStudio.TextManager.Interop.IVsTextBuffer;
 using JetIVsTextBuffer = JetBrains.VsIntegration.Interop.Shim.TextManager.IVsTextBuffer;
 
@@ -38,6 +37,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		public void AugmentQuickInfoSession(IQuickInfoSession session, IList<object> quickInfoContent, out ITrackingSpan applicableToSpan) {
 			applicableToSpan = null;
 
+			if (session == null || quickInfoContent == null || quickInfoContent.IsReadOnly)
+				return;
+			
 			IDocumentMarkup documentMarkup = TryGetDocumentMarkup();
 			if (documentMarkup == null)
 				return;
@@ -47,76 +49,42 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (tooltipFontProvider == null)
 				return;
 
-			var textRange = GetCurrentTextRange(session);
+			ITextSnapshot textSnapshot = _textBuffer.CurrentSnapshot;
+			TextRange textRange = GetCurrentTextRange(session, textSnapshot);
 			IShellLocks shellLocks = documentMarkup.Context.Locks;
+			Span? finalSpan = null;
 
 			Action getEnhancedTooltips = () => {
 				using (shellLocks.UsingReadLock()) {
+					
+					var presenter = new MultipleTooltipContentPresenter(tooltipFontProvider.GetTooltipFormatting());
 
-					TextFormattingRunProperties formatting = tooltipFontProvider.GetTooltipFormatting();
 					List<Vs10Highlighter> highlighters = documentMarkup.GetHighlightersOver(textRange).OfType<Vs10Highlighter>().ToList();
-
-					var identifierContents = new List<ITooltipContent>();
-					var issueContents = new List<ITooltipContent>();
-					var miscContents = new List<ITooltipContent>();
-
 					foreach (Vs10Highlighter highlighter in highlighters) {
-						ITooltipContent tooltipContent = TryGetTooltipContent(highlighter, documentMarkup);
-						if (tooltipContent == null || tooltipContent.Text.IsNullOrEmpty())
+						if (presenter.TryAddContent(TryGetTooltipContent(highlighter, documentMarkup)))
+							finalSpan = highlighter.Range.ToSpan().Union(finalSpan);
+					}
+
+					var nonWpfElements = new List<object>();
+					foreach (object content in quickInfoContent) {
+						if (content is RichTextPresenter) // ignore original R# elements
 							continue;
 
-						if (tooltipContent is IdentifierContent)
-							identifierContents.Add(tooltipContent);
-						else if (tooltipContent is IssueContent)
-							issueContents.Add(tooltipContent);
+						if (content is UIElement || content is string)
+							presenter.TryAddContent(new VisualStudioTooltipContent { InnerContent = content });
 						else
-							miscContents.Add(tooltipContent);
+							nonWpfElements.Add(content);
 					}
 
 					quickInfoContent.Clear();
-
-					foreach (ITooltipContent identifierContent in identifierContents)
-						quickInfoContent.Add(PresentTooltipContents("Id", new[] { identifierContent }, formatting));
-
-					if (issueContents.Count > 0)
-						quickInfoContent.Add(PresentTooltipContents(issueContents.Count == 1 ? "Issue" : "Issues", issueContents, formatting));
-
-					foreach (ITooltipContent miscContent in miscContents)
-						quickInfoContent.Add(PresentTooltipContents("Misc", new[] { miscContent }, formatting));
+					quickInfoContent.AddRange(presenter.PresentContents());
+					quickInfoContent.AddRange(nonWpfElements);
 
 				}
 			};
 
-			if (!shellLocks.ReentrancyGuard.TryExecute("GetEnhancedTooltips", getEnhancedTooltips))
-				return;
-
-			/*
-			if (unionSpan.HasValue) {
-				if (!this.IsTypeScript() || hasErrorHighlighters) {
-					quickInfoContent.Clear();
-				}
-				else {
-					foreach (object obj in (IEnumerable<object>) quickInfoContent) {
-						string str = obj is ITextBuffer ? ((ITextBuffer) obj).CurrentSnapshot.GetText().Trim() : obj.ToString().Trim();
-						if (str.StartsWith("(") || str.IndexOf(' ') < 0)
-							quickInfoContent.Remove(obj);
-					}
-				}
-				foreach (RichTextBlock block in tooltips)
-					quickInfoContent.Add((object) ToolTipUtil.CreateUIElement(block, (ThemeColor) null, (ThemeColor) null, true));
-				applicableToSpan = currentSnapshot.CreateTrackingSpan(unionSpan.Value, SpanTrackingMode.EdgeInclusive);
-			}
-			else {
-				if (!this.IsVsCSharpAutoPopupDisabled())
-					return;
-				foreach (ITextBuffer textBuffer in Enumerable.OfType<ITextBuffer>((IEnumerable) quickInfoContent)) {
-					ITextSnapshot currentSnapshot2 = textBuffer.CurrentSnapshot;
-					if (currentSnapshot2.Length >= "(dynamic".Length && currentSnapshot2.GetText(0, "(dynamic".Length) == "(dynamic") {
-						quickInfoContent.Remove((object) textBuffer);
-						break;
-					}
-				}
-			}*/
+			if (shellLocks.ReentrancyGuard.TryExecute("GetEnhancedTooltips", getEnhancedTooltips) && finalSpan != null)
+				applicableToSpan = textSnapshot.CreateTrackingSpan(finalSpan.Value, SpanTrackingMode.EdgeInclusive);
 		}
 
 		[CanBeNull]
@@ -147,7 +115,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				IContextBoundSettingsStore settings = document.GetSettings();
 
 				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, document);
-				IssueContent issueContent = TryCreateIssueContent(highlighter.RichTextToolTip, severity, settings);
+				IssueTooltipContent issueContent = TryCreateIssueContent(highlighter.RichTextToolTip, severity, settings);
 				if (issueContent != null)
 					return issueContent;
 
@@ -155,7 +123,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				if (languageType != null) {
 					ISolution solution = TryGetCurrentSolution();
 					if (solution != null) {
-						IdentifierContent identifierContent = TryGetIdentifierTooltipContent(highlighter, languageType, solution, settings);
+						IdentifierTooltipContent identifierContent = TryGetIdentifierTooltipContent(highlighter, languageType, solution, settings);
 						if (identifierContent != null)
 							return identifierContent;
 					}
@@ -173,7 +141,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		[CanBeNull]
 		[Pure]
-		private static IdentifierContent TryGetIdentifierTooltipContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType,
+		private static IdentifierTooltipContent TryGetIdentifierTooltipContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType,
 			[NotNull] ISolution solution, [NotNull] IContextBoundSettingsStore settings) {
 			var contentProvider = solution.GetComponent<IdentifierTooltipContentProvider>();
 			return contentProvider.TryGetIdentifierContent(highlighter, languageType, settings);
@@ -181,7 +149,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		[CanBeNull]
 		[Pure]
-		private static IssueContent TryCreateIssueContent([CanBeNull] RichTextBlock textBlock, Severity severity, [NotNull] IContextBoundSettingsStore settings) {
+		private static IssueTooltipContent TryCreateIssueContent([CanBeNull] RichTextBlock textBlock, Severity severity, [NotNull] IContextBoundSettingsStore settings) {
 			if (textBlock == null || !severity.IsIssue())
 				return null;
 
@@ -189,7 +157,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (text.IsEmpty)
 				return null;
 
-			var issueContent = new IssueContent { Text = text };
+			var issueContent = new IssueTooltipContent { Text = text };
 			if (settings.GetValue((IssueTooltipSettings s) => s.ShowIcon))
 				issueContent.Icon = severity.TryGetIcon();
 			return issueContent;
@@ -197,7 +165,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		
 		[CanBeNull]
 		[Pure]
-		private static MiscContent TryCreateMiscContent([CanBeNull] RichTextBlock textBlock) {
+		private static ReSharperTooltipContent TryCreateMiscContent([CanBeNull] RichTextBlock textBlock) {
 			if (textBlock == null)
 				return null;
 
@@ -205,46 +173,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (text.IsEmpty)
 				return null;
 
-			return new MiscContent { Text = text };
+			return new ReSharperTooltipContent { Text = text };
 		}
 
 		[Pure]
-		private TextRange GetCurrentTextRange([NotNull] IIntellisenseSession session) {
-			ITextSnapshot currentSnapshot = _textBuffer.CurrentSnapshot;
-			SnapshotPoint currentPoint = session.GetTriggerPoint(_textBuffer).GetPoint(currentSnapshot);
+		private TextRange GetCurrentTextRange([NotNull] IIntellisenseSession session, [NotNull] ITextSnapshot textSnapshot) {
+			SnapshotPoint currentPoint = session.GetTriggerPoint(_textBuffer).GetPoint(textSnapshot);
 			var currentSpan = new SnapshotSpan(currentPoint, 0);
 			return new TextRange(currentSpan.Start, currentSpan.End);
-		}
-
-		[NotNull]
-		[Pure]
-		private static HeaderedContentControl PresentTooltipContents([CanBeNull] object header, [NotNull] IEnumerable<ITooltipContent> tooltipContents,
-			[NotNull] TextFormattingRunProperties formatting) {
-			var control = new HeaderedContentControl {
-				Style = UIResources.Instance.HeaderedContentControlStyle,
-				Focusable = false,
-				Header = header,
-				Content = new ItemsControl {
-					Focusable = false,
-					ItemsSource = tooltipContents
-				}
-			};
-			ApplyFormatting(control, formatting);
-			return control;
-		}
-
-		private static void ApplyFormatting([NotNull] Control control, [NotNull] TextFormattingRunProperties formatting) {
-			if (!formatting.TypefaceEmpty) {
-				Typeface typeface = formatting.Typeface;
-				control.FontFamily = typeface.FontFamily;
-				control.FontWeight = typeface.Weight;
-				control.FontStretch = typeface.Stretch;
-				control.FontStyle = typeface.Style;
-			}
-			if (!formatting.FontRenderingEmSizeEmpty)
-				control.FontSize = formatting.FontRenderingEmSize;
-			if (!formatting.ForegroundBrushEmpty)
-				control.Foreground = formatting.ForegroundBrush;
 		}
 
 		[CanBeNull]

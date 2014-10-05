@@ -25,12 +25,13 @@
     <Compile Include="Presentation\ElementTypeDisplay.cs" />
     <Compile Include="Presentation\ExceptionContent.cs" />
     <Compile Include="Presentation\IColorizer.cs" />
-    <Compile Include="Presentation\IdentifierContent.cs">
+    <Compile Include="Presentation\IdentifierTooltipContent.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Presentation\IssueContent.cs" />
+    <Compile Include="Presentation\IssueTooltipContent.cs" />
     <Compile Include="Presentation\ITooltipContent.cs" />
-    <Compile Include="Presentation\MiscContent.cs" />
+    <Compile Include="Presentation\ReSharperTooltipContent.cs" />
+    <Compile Include="Presentation\VisualStudioTooltipContent.cs" />
     <Compile Include="Presentation\NamespaceDisplayMode.cs" />
     <Compile Include="Presentation\PresentedInfo.cs" />
     <Compile Include="Presentation\PresenterOptions.cs" />
@@ -48,9 +49,10 @@
     <Compile Include="Settings\IdentifierTooltipSettings.cs" />
     <Compile Include="Settings\SettingsExtensions.cs" />
     <Compile Include="VisualStudio\ExposeVsServices.cs" />
-    <Compile Include="VisualStudio\FontInfo.cs" />
     <Compile Include="VisualStudio\QuickInfoSource.cs" />
     <Compile Include="VisualStudio\QuickInfoSourceProvider.cs" />
+    <Compile Include="VisualStudio\MultipleTooltipContentPresenter.cs" />
+    <Compile Include="VisualStudio\SpanExtensions.cs" />
     <Compile Include="VisualStudio\TooltipFormattingProvider.cs" />
     <Compile Include="VisualStudio\VsIntegrationInstaller.cs" />
   </ItemGroup>
