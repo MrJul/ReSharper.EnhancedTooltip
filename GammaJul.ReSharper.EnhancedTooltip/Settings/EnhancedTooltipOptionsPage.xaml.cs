@@ -56,7 +56,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		private void SetParameterInfoSettingsBindings() {
 			SetCheckBoxBinding((ParameterInfoSettings s) => s.UseTypeKeywords, ParameterInfoUseTypeKeywordsCheckBox);
-			SetCheckBoxBinding((ParameterInfoSettings s) => s.ShowParametersNullness, ParameterInfoShowParametersNullnessCheckBox);
+			SetCheckBoxBinding((ParameterInfoSettings s) => s.ShowNullness, ParameterInfoShowNullnessCheckBox);
 		}
 
 		public EnhancedTooltipOptionsPage([NotNull] Lifetime lifetime, [NotNull] OptionsSettingsSmartContext context) {

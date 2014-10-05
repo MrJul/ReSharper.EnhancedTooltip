@@ -17,7 +17,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display documented exceptions that can be thrown.")]
 		public bool ShowExceptions { get; set; }
 
-		[SettingsEntry(true, "Use type keywords when possible (eg. int instead of Int32).")]
+		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32).")]
 		public bool UseTypeKeywords { get; set; }
 
 		[SettingsEntry(true, "Display [CanBeNull] and [NotNull] for identifiers.")]

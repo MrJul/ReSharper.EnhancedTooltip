@@ -59,7 +59,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowName = false,
 				ShowNamespaces = NamespaceDisplays.None,
 				ShowParametersName = true,
-				ShowParametersNullness = settings.GetValue((ParameterInfoSettings s) => s.ShowParametersNullness),
+				ShowParametersNullness = settings.GetValue((ParameterInfoSettings s) => s.ShowNullness),
 				ShowParametersType = true,
 				UseReSharperColors = settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled),
 				UseTypeKeywords = settings.GetValue((ParameterInfoSettings s) => s.UseTypeKeywords)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
@@ -15,7 +16,6 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl.DocumentMarkup;
-using JetBrains.UI.Components.Theming;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
 using JetBrains.VsIntegration.DevTen.Markup;
@@ -24,6 +24,7 @@ using JetBrains.VsIntegration.ProjectModel;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Formatting;
 using VSIVsTextBuffer = Microsoft.VisualStudio.TextManager.Interop.IVsTextBuffer;
 using JetIVsTextBuffer = JetBrains.VsIntegration.Interop.Shim.TextManager.IVsTextBuffer;
 
@@ -41,9 +42,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (documentMarkup == null)
 				return;
 
-			// Try to get an arbitrary shell component from Enhanced Tooltip; if it fails, it means we are disabled.
-			var vsIntegrationInstaller = Shell.Instance.TryGetComponent<VsIntegrationInstaller>();
-			if (vsIntegrationInstaller == null)
+			// If this fail, it means the extension is disabled and none of are components are available.
+			var tooltipFontProvider = Shell.Instance.TryGetComponent<TooltipFormattingProvider>();
+			if (tooltipFontProvider == null)
 				return;
 
 			var textRange = GetCurrentTextRange(session);
@@ -51,7 +52,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 			Action getEnhancedTooltips = () => {
 				using (shellLocks.UsingReadLock()) {
-					
+
+					TextFormattingRunProperties formatting = tooltipFontProvider.GetTooltipFormatting();
 					List<Vs10Highlighter> highlighters = documentMarkup.GetHighlightersOver(textRange).OfType<Vs10Highlighter>().ToList();
 
 					var identifierContents = new List<ITooltipContent>();
@@ -74,13 +76,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					quickInfoContent.Clear();
 
 					foreach (ITooltipContent identifierContent in identifierContents)
-						quickInfoContent.Add(PresentTooltipContents("Id", new[] { identifierContent }));
+						quickInfoContent.Add(PresentTooltipContents("Id", new[] { identifierContent }, formatting));
 
 					if (issueContents.Count > 0)
-						quickInfoContent.Add(PresentTooltipContents(issueContents.Count == 1 ? "Issue" : "Issues", issueContents));
+						quickInfoContent.Add(PresentTooltipContents(issueContents.Count == 1 ? "Issue" : "Issues", issueContents, formatting));
 
 					foreach (ITooltipContent miscContent in miscContents)
-						quickInfoContent.Add(PresentTooltipContents("Misc", new[] { miscContent }));
+						quickInfoContent.Add(PresentTooltipContents("Misc", new[] { miscContent }, formatting));
 
 				}
 			};
@@ -216,7 +218,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		[NotNull]
 		[Pure]
-		private static HeaderedContentControl PresentTooltipContents([CanBeNull] object header, [NotNull] IEnumerable<ITooltipContent> tooltipContents) {
+		private static HeaderedContentControl PresentTooltipContents([CanBeNull] object header, [NotNull] IEnumerable<ITooltipContent> tooltipContents,
+			[NotNull] TextFormattingRunProperties formatting) {
 			var control = new HeaderedContentControl {
 				Style = UIResources.Instance.HeaderedContentControlStyle,
 				Focusable = false,
@@ -226,13 +229,24 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					ItemsSource = tooltipContents
 				}
 			};
-
-			object foreground = control.TryFindResource(ThemeColor.TooltipForeground);
-			if (foreground is Color)
-				control.Foreground = new SolidColorBrush((Color) foreground);
+			ApplyFormatting(control, formatting);
 			return control;
 		}
-		
+
+		private static void ApplyFormatting([NotNull] Control control, [NotNull] TextFormattingRunProperties formatting) {
+			if (!formatting.TypefaceEmpty) {
+				Typeface typeface = formatting.Typeface;
+				control.FontFamily = typeface.FontFamily;
+				control.FontWeight = typeface.Weight;
+				control.FontStretch = typeface.Stretch;
+				control.FontStyle = typeface.Style;
+			}
+			if (!formatting.FontRenderingEmSizeEmpty)
+				control.FontSize = formatting.FontRenderingEmSize;
+			if (!formatting.ForegroundBrushEmpty)
+				control.Foreground = formatting.ForegroundBrush;
+		}
+
 		[CanBeNull]
 		[Pure]
 		private static PsiLanguageType TryGetIdentifierLanguage([NotNull] IHighlighting highlighting) {
