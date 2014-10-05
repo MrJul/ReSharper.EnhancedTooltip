@@ -54,7 +54,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowElementKind = false,
 				ShowElementNullness = false,
 				ShowElementType = ElementTypeDisplay.After,
-				ShowEmptyParametersText = true,
+				ShowEmptyParametersText = settings.GetValue((ParameterInfoSettings s) => s.ShowEmptyParametersText),
 				ShowModifiers = false,
 				ShowName = false,
 				ShowNamespaces = NamespaceDisplays.None,

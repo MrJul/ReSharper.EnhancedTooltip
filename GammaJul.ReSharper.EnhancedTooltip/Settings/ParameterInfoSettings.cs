@@ -5,6 +5,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 	[SettingsKey(typeof(EnhancedTooltipSettingsRoot), "Settings determining how information about parameters are shown when writing a call.")]
 	public class ParameterInfoSettings {
 
+		[SettingsEntry(true, "Display <no parameters> when there are no parameters.")]
+		public bool ShowEmptyParametersText { get; set; }
+
 		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32).")]
 		public bool UseTypeKeywords { get; set; }
 

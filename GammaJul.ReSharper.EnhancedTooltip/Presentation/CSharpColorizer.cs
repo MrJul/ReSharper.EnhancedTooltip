@@ -332,7 +332,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				}
 
 				ITypeElement containingType = typeElement.GetContainingType();
-				if (containingType != null) {
+				if (containingType != null && !(typeElement is IDelegate && _options.FormatDelegatesAsLambdas)) {
 					AppendDeclaredType(TypeFactory.CreateType(containingType, substitution), NamespaceDisplays.None);
 					AppendText(".", VsHighlightingAttributeIds.Operator);
 				}

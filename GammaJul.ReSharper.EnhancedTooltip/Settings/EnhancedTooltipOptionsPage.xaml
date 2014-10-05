@@ -34,6 +34,7 @@
 
 		<StackPanel Orientation="Vertical" Margin="10,0,0,0">
 			<controls:SectionHeading Text="Parameter Info" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoShowEmptyParametersTextCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoUseTypeKeywordsCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoShowNullnessCheckBox" />
 		</StackPanel>

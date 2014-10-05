@@ -8,9 +8,11 @@
 		<description>Colorizes the tooltip as well as the parameter information popup.</description>
 		<releaseNotes>
 			Fix: Color highlighting doesn't disappear anymore when the solution is reloaded.
+			Fix: Nested delegates shown in lambda syntax don't display the outer class name anymore.
 			New: Better tooltip style.
 			New: An icon is now displayed next to identifiers and issues inside the tooltip (configurable).
 			New: CanBeNull/NotNull annotations are now displayed inside the tooltip and parameter info (configurable).
+			New: The tooltip font configured in Visual Studio options is now used.
 			New: Added an options page.
 		</releaseNotes>
 		<projectUrl>https://github.com/MrJul/ReSharper.EnhancedTooltip/</projectUrl>

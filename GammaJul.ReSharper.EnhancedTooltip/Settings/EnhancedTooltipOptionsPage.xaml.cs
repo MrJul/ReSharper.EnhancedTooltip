@@ -55,6 +55,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		}
 
 		private void SetParameterInfoSettingsBindings() {
+			SetCheckBoxBinding((ParameterInfoSettings s) => s.ShowEmptyParametersText, ParameterInfoShowEmptyParametersTextCheckBox);
 			SetCheckBoxBinding((ParameterInfoSettings s) => s.UseTypeKeywords, ParameterInfoUseTypeKeywordsCheckBox);
 			SetCheckBoxBinding((ParameterInfoSettings s) => s.ShowNullness, ParameterInfoShowNullnessCheckBox);
 		}

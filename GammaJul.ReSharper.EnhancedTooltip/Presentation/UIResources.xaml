@@ -56,7 +56,7 @@
 			<DataTemplate DataType="{x:Type local:IdentifierTooltipContent}">
 				<StackPanel x:Name="Root" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType">
 					
-					<DockPanel>
+					<DockPanel Margin="0">
 						<ContentPresenter x:Name="IconPresenter" Focusable="False"
 							Content="{Binding Icon}" Margin="0,0,4,0"
 							DockPanel.Dock="Left" VerticalAlignment="Center" HorizontalAlignment="Left" />
@@ -65,14 +65,14 @@
 					</DockPanel>
 
 					<StackPanel x:Name="DescriptionPresenter" Orientation="Vertical">
-						<Line StrokeThickness="1" StrokeDashArray="3,3" RenderOptions.EdgeMode="Aliased"
-							X1="0" X2="{Binding ActualWidth, ElementName=Root}"
+						<Path StrokeThickness="1" StrokeDashArray="3,3" RenderOptions.EdgeMode="Aliased"
+							Data="M0,0 H10" Margin="-8,6" Stretch="Uniform"
 							Stroke="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}" />
-						<controls:RichTextPresenter Margin="8,6" TextWrapping="Wrap" IsAutoContrasted="True"
+						<controls:RichTextPresenter Margin="0" TextWrapping="Wrap" IsAutoContrasted="True"
 							RichText="{Binding Description}" />
 					</StackPanel>
 
-					<StackPanel x:Name="ObsoletePresenter" Orientation="Horizontal" Margin="8,0,8,6">
+					<StackPanel x:Name="ObsoletePresenter" Orientation="Horizontal" Margin="0,6,0,0">
 						<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0">
 							<TextBlock Text="Obsolete" Margin="2" Foreground="Gray" FontWeight="Bold" VerticalAlignment="Center"
 								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}" />
@@ -81,21 +81,23 @@
 							RichText="{Binding Obsolete}" />
 					</StackPanel>
 
-					<ItemsControl x:Name="ExceptionsPresenter" ItemsSource="{Binding Exceptions}" Margin="8,0,8,6" Grid.IsSharedSizeScope="True">
+					<ItemsControl x:Name="ExceptionsPresenter" ItemsSource="{Binding Exceptions}" Margin="0,6,0,0" Grid.IsSharedSizeScope="True">
 						<ItemsControl.ItemTemplate>
 							<DataTemplate DataType="{x:Type local:ExceptionContent}">
 								<Grid Margin="0,2,0,0">
 									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="Auto" SharedSizeGroup="ExceptionBoxColumnSizeGroup" />
-										<ColumnDefinition Width="Auto" SharedSizeGroup="ExceptionNameColumnSizeGroup" />
+										<ColumnDefinition Width="Auto" />
+										<ColumnDefinition Width="Auto" />
+										<ColumnDefinition Width="Auto" />
 										<ColumnDefinition Width="*" />
 									</Grid.ColumnDefinitions>
 									<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" Grid.Column="0">
 										<TextBlock Text="Exception" Margin="2" Foreground="Gray" FontWeight="Bold"
 											FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}" />
 									</Border>
-									<TextBlock TextWrapping="Wrap" FontStyle="Italic" Text="{Binding Exception}" VerticalAlignment="Center" Grid.Column="1" />
-									<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="True" VerticalAlignment="Center" Margin="8,0,0,0" Grid.Column="2"
+									<TextBlock Text="{Binding Exception}" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="1" />
+									<TextBlock Text=" → " FontWeight="Bold" Grid.Column="2" VerticalAlignment="Center" />
+									<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="True" VerticalAlignment="Center" Grid.Column="3"
 										RichText="{Binding Description}" />
 								</Grid>
 							</DataTemplate>
