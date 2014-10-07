@@ -81,7 +81,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		public VsIntegrationInstaller([NotNull] Optional<IVsExtensionManager> vsExtensionManager) {
 			_vsExtensionManager = vsExtensionManager;
-			
+
 			TryInstallVsIntegration(vsExtensionManager.CanBeNull);
 		}
 

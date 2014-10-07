@@ -6,7 +6,6 @@
     <AssemblyName>GammaJul.ReSharper.EnhancedTooltip.8.2</AssemblyName>
     <RootNamespace>GammaJul.ReSharper.EnhancedTooltip</RootNamespace>
     <IntermediateOutputPath>obj82</IntermediateOutputPath>
-    <NoWarn>1685</NoWarn>
   </PropertyGroup>
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <ItemGroup>
@@ -48,13 +47,12 @@
     <Compile Include="Settings\ParameterInfoSettings.cs" />
     <Compile Include="Settings\IdentifierTooltipSettings.cs" />
     <Compile Include="Settings\SettingsExtensions.cs" />
-    <Compile Include="VisualStudio\ExposeVsServices.cs" />
+    <Compile Include="VisualStudio\ExposeClassificationFormatMapService.cs" />
     <Compile Include="VisualStudio\QuickInfoSource.cs" />
     <Compile Include="VisualStudio\QuickInfoSourceProvider.cs" />
     <Compile Include="VisualStudio\MultipleTooltipContentPresenter.cs" />
     <Compile Include="VisualStudio\SpanExtensions.cs" />
     <Compile Include="VisualStudio\TooltipFormattingProvider.cs" />
-    <Compile Include="VisualStudio\VsIntegrationInstaller.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.8.2.config" />
@@ -68,7 +66,6 @@
       <HintPath>..\packages\JetBrains.ReSharper.SDK.8.2.1158\Bin\JetBrains.Platform.ReSharper.VisualStudio.SinceVs11.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.ExtensionManager" />
     <Reference Include="Microsoft.VisualStudio.Text.UI, Version=10.0.0.0" />
     <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=10.0.0.0" />
   </ItemGroup>

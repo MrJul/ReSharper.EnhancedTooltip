@@ -6,3 +6,4 @@ obj
 /packages/JetBrains.ReSharper.SDK.*
 /*.tss
 /GammaJul.ReSharper.EnhancedTooltip/obj*
+*.nupkg
