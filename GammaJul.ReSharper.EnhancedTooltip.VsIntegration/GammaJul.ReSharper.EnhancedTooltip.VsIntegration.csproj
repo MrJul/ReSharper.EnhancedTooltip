@@ -15,10 +15,12 @@
     <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <ProjectGuid>{95370CDE-2391-41E3-94CF-D831C7101059}</ProjectGuid>
     <RootNamespace>GammaJul.ReSharper.EnhancedTooltip.VsIntegration</RootNamespace>
-    <AssemblyName>GammaJul.ReSharper.EnhancedTooltip.Vs12Integration</AssemblyName>
     <GeneratePkgDefFile>false</GeneratePkgDefFile>
   </PropertyGroup>
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
+  <PropertyGroup>
+    <AssemblyName>GammaJul.ReSharper.EnhancedTooltip.VsIntegration</AssemblyName>
+  </PropertyGroup>
   <PropertyGroup>
     <StartAction>Program</StartAction>
     <StartProgram>C:\Program Files %28x86%29\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe</StartProgram>
@@ -41,7 +43,6 @@
     <Reference Include="Microsoft.VisualStudio.Shell" />
     <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0" />
     <Reference Include="Microsoft.VisualStudio.Shell.Interop" />
-    <Reference Include="Microsoft.VisualStudio.ExtensionManager, Version=12.0.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\Logo\Logo32.png">

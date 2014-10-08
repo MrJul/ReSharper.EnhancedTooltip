@@ -69,8 +69,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (thisAssemblyPath.IsNullOrEmpty())
 				return;
 
-			string vsixName = thisAssemblyPath.Name.TrimFromEnd("Only.dll", StringComparison.OrdinalIgnoreCase) + "Integration.vsix";
-			FileSystemPath vsixPath = thisAssemblyPath.Directory.Combine(vsixName);
+			FileSystemPath vsixPath = thisAssemblyPath.Directory.Combine(VsIntegrationExtensionId + ".vsix");
 			if (!vsixPath.ExistsFile) {
 				MessageBox.ShowInfo("Does not exist: \"{0}\"".FormatEx(vsixPath.FullPath));
 				return;

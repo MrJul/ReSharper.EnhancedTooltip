@@ -24,7 +24,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VsIntegration {
 		private const string ProviderTypeNameWithoutVersion = "GammaJul.ReSharper.EnhancedTooltip.VisualStudio.QuickInfoSourceProvider, GammaJul.ReSharper.EnhancedTooltip.";
 
 		private readonly Lazy<IQuickInfoSourceProvider> _lazyProvider;
-
+		
 		[Import(AllowDefault = true)]
 		public IVsEditorAdaptersFactoryService VsEditorAdaptersFactoryService { get; set; }
 

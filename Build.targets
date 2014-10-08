@@ -1,0 +1,10 @@
+<Project ToolsVersion="12.0" DefaultTargets="BuildAll" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="BuildAll">
+	<!--
+		We have to build two separates assembly because the reference to Microsoft.VisualStudio.ExtensionManager must have the correct version.
+		Visual Studio doesn't provide a binding redirect for this specific assembly.
+	-->
+    <MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip.sln" Properties="Platform=Any CPU;Configuration=Release;TargetVsVersion=11" />
+    <MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip.sln" Properties="Platform=Any CPU;Configuration=Release;TargetVsVersion=12" />
+  </Target>
+</Project>

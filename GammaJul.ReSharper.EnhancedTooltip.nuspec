@@ -9,7 +9,7 @@
 		<description>Colorizes the tooltip as well as the parameter information popup.</description>
 		<releaseNotes>
 			**You might have to restart VS TWICE after updating if you were using v1.0.** 
-			Fixed integration into VS2012 integration.
+			Fixed integration into VS2012.
 		</releaseNotes>
 		<projectUrl>https://github.com/MrJul/ReSharper.EnhancedTooltip/</projectUrl>
 		<iconUrl>https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Logo/Logo128.png</iconUrl>
@@ -23,13 +23,11 @@
 	
 	<files>
 		
-		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.8.2.dll" target="ReSharper\v8.2\vs11.0\plugins" />
-		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.Vs11Integration.vsix" target="ReSharper\v8.2\vs11.0\plugins" />
-		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.Vs11Only.dll" target="ReSharper\v8.2\vs11.0\plugins" />
+		<file src="bin\Release\Vs11\GammaJul.ReSharper.EnhancedTooltip.8.2.dll" target="ReSharper\v8.2\vs11.0\plugins" />
+		<file src="bin\Release\Vs11\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.vsix" target="ReSharper\v8.2\vs11.0\plugins" />
 		
-		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.8.2.dll" target="ReSharper\v8.2\vs12.0\plugins" />
-		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.Vs12Integration.vsix" target="ReSharper\v8.2\vs12.0\plugins" />
-		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.Vs12Only.dll" target="ReSharper\v8.2\vs12.0\plugins" />
+		<file src="bin\Release\Vs12\GammaJul.ReSharper.EnhancedTooltip.8.2.dll" target="ReSharper\v8.2\vs12.0\plugins" />
+		<file src="bin\Release\Vs12\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.vsix" target="ReSharper\v8.2\vs12.0\plugins" />
 		
 	</files>
 	
