@@ -69,9 +69,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (thisAssemblyPath.IsNullOrEmpty())
 				return;
 
-			FileSystemPath vsixPath = thisAssemblyPath.Directory.Combine(VsIntegrationExtensionId + ".vsix");
-			if (!vsixPath.ExistsFile)
+			string vsixName = thisAssemblyPath.Name.TrimFromEnd("Only.dll", StringComparison.OrdinalIgnoreCase) + "Integration.vsix";
+			FileSystemPath vsixPath = thisAssemblyPath.Directory.Combine(vsixName);
+			if (!vsixPath.ExistsFile) {
+				MessageBox.ShowInfo("Does not exist: \"{0}\"".FormatEx(vsixPath.FullPath));
 				return;
+			}
 
 			IInstallableExtension installableExtension = vsExtensionManager.CreateInstallableExtension(vsixPath.FullPath);
 			RestartReason restartReason = vsExtensionManager.Install(installableExtension, false);

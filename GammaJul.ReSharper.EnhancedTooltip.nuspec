@@ -24,11 +24,11 @@
 	<files>
 		
 		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.8.2.dll" target="ReSharper\v8.2\vs11.0\plugins" />
-		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.vsix" target="ReSharper\v8.2\vs11.0\plugins" />
+		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.Vs11Integration.vsix" target="ReSharper\v8.2\vs11.0\plugins" />
 		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.Vs11Only.dll" target="ReSharper\v8.2\vs11.0\plugins" />
 		
 		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.8.2.dll" target="ReSharper\v8.2\vs12.0\plugins" />
-		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.vsix" target="ReSharper\v8.2\vs12.0\plugins" />
+		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.Vs12Integration.vsix" target="ReSharper\v8.2\vs12.0\plugins" />
 		<file src="bin\Release\GammaJul.ReSharper.EnhancedTooltip.Vs12Only.dll" target="ReSharper\v8.2\vs12.0\plugins" />
 		
 	</files>
