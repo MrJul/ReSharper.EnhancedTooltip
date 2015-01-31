@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+	
+	<metadata>
+		<id>EnhancedTooltip</id>
+		<version>2.0.1</version>
+		<title>Enhanced Tooltip</title>
+		<authors>Julien Lebosquain</authors>
+		<description>Colorizes the tooltip as well as the parameter information popup.</description>
+		<releaseNotes>
+			**You might have to restart VS TWICE after updating if you were using v1.0.** 
+			Fixed integration into VS2012.
+		</releaseNotes>
+		<projectUrl>https://github.com/MrJul/ReSharper.EnhancedTooltip/</projectUrl>
+		<iconUrl>https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Logo/Logo128.png</iconUrl>
+		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+		<copyright>Copyright &#x00A9; 2013-2014 Julien Lebosquain</copyright>
+		<tags>Tooltip Syntax Color Parameter</tags>
+		<dependencies>
+			<dependency id="ReSharper" version="[8.2,8.3)" />
+		</dependencies>
+	</metadata>
+	
+	<files>
+		
+		<file src="bin\Release\Vs11\GammaJul.ReSharper.EnhancedTooltip.8.2.dll" target="ReSharper\v8.2\vs11.0\plugins" />
+		<file src="bin\Release\Vs11\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.vsix" target="ReSharper\v8.2\vs11.0\plugins" />
+		
+		<file src="bin\Release\Vs12\GammaJul.ReSharper.EnhancedTooltip.8.2.dll" target="ReSharper\v8.2\vs12.0\plugins" />
+		<file src="bin\Release\Vs12\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.vsix" target="ReSharper\v8.2\vs12.0\plugins" />
+		
+	</files>
+	
+</package>
