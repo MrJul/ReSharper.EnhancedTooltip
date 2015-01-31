@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Linq.Expressions;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.DataFlow;
+using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Features.Intellisense.Options;
 using JetBrains.UI.Controls;
 using JetBrains.UI.CrossFramework;
@@ -46,6 +49,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 				parentCheckbox.IsCheckedLogically.FlowInto(_lifetime, checkBox, IsEnabledProperty);
 		}
 
+		private void SetComboBoxBinding<TSettings>([NotNull] Expression<Func<TSettings, AnnotationsDisplayKind>> settingAccessor, [NotNull] ComboBox comboBox,
+			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckbox) {
+
+			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
+			_context.SetBinding<AnnotationsDisplayKind>(_lifetime, entry, comboBox, Selector.SelectedItemProperty);
+
+			if (parentCheckbox != null)
+				parentCheckbox.IsCheckedLogically.FlowInto(_lifetime, comboBox, IsEnabledProperty);
+		}
+
 		private void SetIdentifierTooltipSettingsBindings() {
 			CheckBoxDisabledNoCheck2 enabledCheckBox = IdentifierTooltipEnabledCheckBox;
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.Enabled, enabledCheckBox, null);
@@ -54,8 +67,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowObsolete, IdentifierTooltipShowObsoleteCheckBox, enabledCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowExceptions, IdentifierTooltipShowExceptionsCheckBox, enabledCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseTypeKeywords, IdentifierTooltipUseTypeKeywordsCheckBox, enabledCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowIdentifierNullness, IdentifierTooltipShowIdentifierNullnessCheckBox, enabledCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowParametersNullness, IdentifierTooltipShowParametersNullnessCheckBox, enabledCheckBox);
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations, IdentifierTooltipShowIdentifierAnnotationsComboBox, enabledCheckBox);
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowParametersAnnotations, IdentifierTooltipShowParametersAnnotationsComboBox, enabledCheckBox);
 		}
 
 		private void SetIssueTooltipSettingsBindings() {
@@ -67,7 +80,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetCheckBoxBinding((ParameterInfoSettings s) => s.Enabled, enabledCheckBox, null);
 			SetCheckBoxBinding((ParameterInfoSettings s) => s.ShowEmptyParametersText, ParameterInfoShowEmptyParametersTextCheckBox, enabledCheckBox);
 			SetCheckBoxBinding((ParameterInfoSettings s) => s.UseTypeKeywords, ParameterInfoUseTypeKeywordsCheckBox, enabledCheckBox);
-			SetCheckBoxBinding((ParameterInfoSettings s) => s.ShowNullness, ParameterInfoShowNullnessCheckBox, enabledCheckBox);
+#if RS90
+			// ReSharper 9 already has this option built-in
+			ParameterInfoShowAnnotationsComboBox.Visibility = System.Windows.Visibility.Collapsed;
+#elif RS82
+			SetComboBoxBinding((ParameterInfoSettings s) => s.ShowAnnotations, ParameterInfoShowAnnotationsComboBox, enabledCheckBox);
+#endif
 		}
 
 		public EnhancedTooltipOptionsPage([NotNull] Lifetime lifetime, [NotNull] OptionsSettingsSmartContext context) {

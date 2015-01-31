@@ -1,7 +1,9 @@
 ﻿using System.Linq;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
+using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExpectedTypes;
@@ -14,11 +16,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	/// Wraps an existing <see cref="ParameterInfoCandidate"/>
 	/// and override its <see cref="ICandidate.GetSignature"/> method to provide colored parameter info.
 	/// </summary>
-	public class EnhancedParameterInfoCandidate : ICandidate {
+	public partial class EnhancedParameterInfoCandidate : ICandidate {
 
-		private readonly ParameterInfoCandidate _candidate;
-		private readonly ColorizerPresenter _colorizerPresenter;
-		private readonly IContextBoundSettingsStore _settings;
+		[NotNull] private readonly ParameterInfoCandidate _candidate;
+		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
+		[NotNull] private readonly IContextBoundSettingsStore _settings;
 
 		public RichTextBlock GetDescription() {
 			return _candidate.GetDescription();
@@ -27,25 +29,29 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public void GetParametersInfo(out string[] paramNames, out RichTextBlock[] paramDescriptions, out bool isParamsArray) {
 			_candidate.GetParametersInfo(out paramNames, out paramDescriptions, out isParamsArray);
 		}
-		
-		public RichText GetSignature(string[] namedArguments, out TextRange[] parameterRanges, out int[] mapToOriginalOrder,
+
+		[NotNull]
+		private RichText GetSignatureCore(string[] namedArguments, AnnotationsDisplayKind? showAnnotations, out TextRange[] parameterRanges, out int[] mapToOriginalOrder,
 			out ExtensionMethodInfo extensionMethodInfo) {
+
+			if (showAnnotations == null)
+				showAnnotations = _settings.GetValue((ParameterInfoSettings s) => s.ShowAnnotations);
 
 			// TODO: handle named arguments with reordering; currently falling back to non-colored display
 			if (namedArguments.Any(s => s != null)) {
-				string signature = _candidate.GetSignature(namedArguments, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
+				string signature = _candidate.GetSignature(namedArguments, showAnnotations.Value, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 				if (!IsIdentityMap(mapToOriginalOrder))
 					return signature;
 			}
 
-			var options = PresenterOptions.ForParameterInfo(_settings);
+			var options = PresenterOptions.ForParameterInfo(_settings, showAnnotations.Value);
 			PresentedInfo presentedInfo;
 			InvocationCandidate invocationCandidate = _candidate.InvocationCandidate;
 			var elementInstance = new DeclaredElementInstance(invocationCandidate.Element, invocationCandidate.Substitution);
 			
-			RichText newRichText = _colorizerPresenter.TryPresent(elementInstance, options, _candidate.Language, null, out presentedInfo);
-			if (newRichText == null)
-				return _candidate.GetSignature(namedArguments, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
+			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, _candidate.Language, null, out presentedInfo);
+			if (richText == null)
+				return _candidate.GetSignature(namedArguments, showAnnotations.Value, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 
 			if (presentedInfo.Parameters.Count == 0) {
 				parameterRanges = EmptyArray<TextRange>.Instance;
@@ -64,7 +70,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 				extensionMethodInfo = ExtensionMethodInfo.NoExtension;
 			}
 
-			return newRichText;
+			return richText;
 		}
 
 		[NotNull]

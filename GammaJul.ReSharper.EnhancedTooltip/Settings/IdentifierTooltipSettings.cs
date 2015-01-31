@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Feature.Services.Lookup;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
@@ -23,11 +24,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32).")]
 		public bool UseTypeKeywords { get; set; }
 
-		[SettingsEntry(true, "Display [CanBeNull] and [NotNull] for identifiers.")]
-		public bool ShowIdentifierNullness { get; set; }
+		[SettingsEntry(true, "Display annotations for identifiers.")]
+		public AnnotationsDisplayKind ShowIdentifierAnnotations { get; set; }
 
-		[SettingsEntry(true, "Display [CanBeNull] and [NotNull] for parameters inside calls.")]
-		public bool ShowParametersNullness { get; set; }
+		[SettingsEntry(true, "Display annotations for parameters inside calls.")]
+		public AnnotationsDisplayKind ShowParametersAnnotations { get; set; }
 
 	}
 

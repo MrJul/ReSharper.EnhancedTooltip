@@ -26,6 +26,7 @@ using JetBrains.Platform.VisualStudio.SinceVs10.TextControl.Markup;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.VsIntegration.ProjectDocuments;
+using JetIVsTextBuffer = JetBrains.VsIntegration.Interop.Shim.TextManager.Documents.IVsTextBuffer;
 #elif RS82
 using JetBrains.VsIntegration.DevTen.Interop.Shim;
 using JetBrains.VsIntegration.DevTen.Markup;
@@ -102,7 +103,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				return null;
 			
 			IDocumentMarkup documentMarkup = DocumentMarkupManagerBase.TryGetMarkupModel(document);
-			return documentMarkup is IVsDocumentMarkup ? documentMarkup : null;
+			if (documentMarkup == null || !documentMarkup.GetType().Name.StartsWith("Vs", StringComparison.Ordinal))
+				return null;
+			
+			return documentMarkup;
 		}
 
 		[CanBeNull]
@@ -114,17 +118,18 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			var highlighting = highlighter.UserData as IHighlighting;
 			if (highlighting != null) {
 
+				ISolution solution = TryGetCurrentSolution();
+
 				IDocument document = documentMarkup.Document;
 				IContextBoundSettingsStore settings = document.GetSettings();
 
-				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, document);
+				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, document, solution);
 				IssueTooltipContent issueContent = TryCreateIssueContent(highlighter.RichTextToolTip, severity, settings);
 				if (issueContent != null)
 					return issueContent;
 
 				PsiLanguageType languageType = TryGetIdentifierLanguage(highlighting);
 				if (languageType != null) {
-					ISolution solution = TryGetCurrentSolution();
 					if (solution != null) {
 						IdentifierTooltipContent identifierContent = TryGetIdentifierTooltipContent(highlighter, languageType, solution, settings);
 						if (identifierContent != null)

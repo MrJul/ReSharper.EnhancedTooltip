@@ -1,4 +1,5 @@
 ﻿using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Feature.Services.Lookup;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
@@ -18,7 +19,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		public bool UseTypeKeywords { get; set; }
 
 		[SettingsEntry(true, "Display [CanBeNull] and [NotNull].")]
-		public bool ShowNullness { get; set; }
+		public AnnotationsDisplayKind ShowAnnotations { get; set; }
 
 	}
 

@@ -1,4 +1,5 @@
-using System;
+using System.Linq;
+using JetBrains.ReSharper.Feature.Services.Lookup;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -40,14 +41,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowTypeParameters = TypeParameterStyle.NONE
 		};
 
-		private static readonly string _notNullAttributeName = CodeAnnotationsCache.NotNullAttributeShortName.TrimFromEnd("Attribute", StringComparison.Ordinal);
-		private static readonly string _canBeNullAttributeName = CodeAnnotationsCache.CanBeNullAttributeShortName.TrimFromEnd("Attribute", StringComparison.Ordinal);
-
-		private readonly RichText _richText;
-		private readonly PresenterOptions _options;
-		private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
-		private readonly PresentedInfo _presentedInfo;
-		private readonly CodeAnnotationsCache _codeAnnotationsCache;
+		[NotNull] private readonly RichText _richText;
+		[NotNull] private readonly PresenterOptions _options;
+		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
+		[NotNull] private readonly PresentedInfo _presentedInfo;
+		[NotNull] private readonly CodeAnnotationsCache _codeAnnotationsCache;
 
 		public void AppendDeclaredElement(IDeclaredElement element, ISubstitution substitution, string nameHighlightingAttributeId) {
 			if (!IsClrPresentableElement(element))
@@ -61,11 +59,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (_options.ShowModifiers)
 				AppendModifiers(element);
 
-			if (_options.ShowElementNullness) {
-				var attributesOwner = element as IAttributesOwner;
-				if (attributesOwner != null)
-					AppendNullness(attributesOwner);
-			}
+			var attributesSet = element as IAttributesSet;
+			if (attributesSet != null)
+				AppendAnnotations(attributesSet, _options.ShowElementAnnotations);
 
 			if (_options.ShowElementType == ElementTypeDisplay.Before)
 				AppendElementType(element, substitution, NamespaceDisplays.ElementType, null, " ");
@@ -586,9 +582,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					_presentedInfo.IsExtensionMethod = true;
 			}
 
-			if (_options.ShowParametersNullness)
-				AppendNullness(parameter);
-
+			AppendAnnotations(parameter, _options.ShowParametersAnnotations);
+			
 			if (_options.ShowParametersType)
 				AppendElementType(parameter, substitution, NamespaceDisplays.Parameters, null, _options.ShowParametersName ? " " : null);
 
@@ -601,26 +596,50 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendDefaultValue(parameter, substitution);
 		}
 
-		private void AppendNullness([NotNull] IAttributesOwner attributesOwner) {
-			string nullnessName = GetNullnessName(attributesOwner);
-			if (nullnessName == null)
+		private void AppendAnnotations([NotNull] IAttributesSet attributesSet, AnnotationsDisplayKind showAnnotations) {
+			if (showAnnotations == AnnotationsDisplayKind.None)
 				return;
 
+			IList<IAttributeInstance> attributes = attributesSet.GetAttributeInstances(false);
+			if (attributes.Count == 0)
+				return;
+
+			List<string> annotations = attributes.SelectNotNull(attr => TryGetAnnotationShortName(attr, showAnnotations)).ToList();
+			if (annotations.Count == 0)
+				return;
+
+			string highlighterId = _options.UseReSharperColors ? HighlightingAttributeIds.TYPE_CLASS_ATTRIBUTE : VsHighlightingAttributeIds.Classes;
 			AppendText("[", null);
-			AppendText(nullnessName, _options.UseReSharperColors ? HighlightingAttributeIds.TYPE_CLASS_ATTRIBUTE : VsHighlightingAttributeIds.Classes);
+			for (int i = 0; i < annotations.Count; i++) {
+				if (i > 0)
+					AppendText(", ", null);
+				AppendText(annotations[i], highlighterId);
+			}
 			AppendText("] ", null);
 		}
 
 		[CanBeNull]
-		private string GetNullnessName([NotNull] IAttributesOwner attributesOwner) {
-			CodeAnnotationNullableValue? nullableValue = _codeAnnotationsCache.GetNullableAttribute(attributesOwner);
-			switch (nullableValue) {
-				case CodeAnnotationNullableValue.NOT_NULL:
-					return _notNullAttributeName;
-				case CodeAnnotationNullableValue.CAN_BE_NULL:
-					return _canBeNullAttributeName;
+		private string TryGetAnnotationShortName([CanBeNull] IAttributeInstance attribute, AnnotationsDisplayKind showAnnotations) {
+			if (attribute != null && showAnnotations != AnnotationsDisplayKind.None) {
+				string shortName = attribute.GetClrName().ShortName;
+				if (IsDisplayedAnnotation(attribute, shortName, showAnnotations))
+					return shortName.TrimFromEnd("Attribute");
+			}
+			return null;
+		}
+
+		private bool IsDisplayedAnnotation([CanBeNull] IAttributeInstance attribute, [CanBeNull] string shortName, AnnotationsDisplayKind showAnnotations) {
+			if (attribute == null || shortName == null)
+				return false;
+
+			switch (showAnnotations) {
+				case AnnotationsDisplayKind.Nullness:
+					return shortName == CodeAnnotationsCache.CanBeNullAttributeShortName
+						|| shortName == CodeAnnotationsCache.NotNullAttributeShortName;
+				case AnnotationsDisplayKind.All:
+					return _codeAnnotationsCache.IsAnnotationAttribute(attribute, shortName);
 				default:
-					return null;
+					return false;
 			}
 		}
 

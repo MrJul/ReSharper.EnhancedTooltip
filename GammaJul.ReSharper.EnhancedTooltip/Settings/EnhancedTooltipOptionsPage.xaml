@@ -24,8 +24,8 @@
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowObsoleteCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowExceptionsCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipUseTypeKeywordsCheckBox" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowIdentifierNullnessCheckBox" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowParametersNullnessCheckBox" />
+			<ComboBox x:Name="IdentifierTooltipShowIdentifierAnnotationsComboBox" />
+			<ComboBox x:Name="IdentifierTooltipShowParametersAnnotationsComboBox" />
 		</StackPanel>
 
 		<StackPanel Orientation="Vertical" Margin="10,0,0,0">
@@ -38,7 +38,7 @@
 			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoEnabledCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoShowEmptyParametersTextCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoUseTypeKeywordsCheckBox" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoShowNullnessCheckBox" />
+			<ComboBox x:Name="ParameterInfoShowAnnotationsComboBox" />
 		</StackPanel>
 
 	</StackPanel>

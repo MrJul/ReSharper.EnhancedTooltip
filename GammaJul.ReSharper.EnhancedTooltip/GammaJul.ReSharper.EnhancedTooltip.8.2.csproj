@@ -19,9 +19,12 @@
     <Compile Include="DocumentMarkup\SeverityExtensions.cs" />
     <Compile Include="DocumentMarkup\TextStyleHighlighterManager.cs" />
     <Compile Include="GenericImages\ThemedIcons.Generic.Generated.cs" />
+    <Compile Include="ParameterInfo\CandidateExtensions.8.2.cs" />
+    <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.8.2.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContext.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContextFactory.cs" />
+    <Compile Include="Presentation\AnnotationsDisplayKind.8.2.cs" />
     <Compile Include="Presentation\ColorizerPresenter.cs" />
     <Compile Include="Presentation\CSharpColorizer.cs" />
     <Compile Include="Presentation\ElementTypeDisplay.cs" />
@@ -53,6 +56,7 @@
     <Compile Include="Settings\IdentifierTooltipSettings.cs" />
     <Compile Include="Settings\SettingsExtensions.cs" />
     <Compile Include="VisualStudio\ExposeVsExtensionManager.8.2.cs" />
+    <Compile Include="VisualStudio\HighlightingsSettingsManagerExtensions.8.2.cs" />
     <Compile Include="VisualStudio\QuickInfoSource.cs" />
     <Compile Include="VisualStudio\QuickInfoSourceProvider.cs" />
     <Compile Include="VisualStudio\MultipleTooltipContentPresenter.cs" />
