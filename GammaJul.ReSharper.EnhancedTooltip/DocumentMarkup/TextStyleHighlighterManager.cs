@@ -9,7 +9,11 @@ using JetBrains.TextControl;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
+#if RS90
+using JetBrains.VsIntegration.TextControl;
+#elif RS82
 using JetBrains.VsIntegration;
+#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 

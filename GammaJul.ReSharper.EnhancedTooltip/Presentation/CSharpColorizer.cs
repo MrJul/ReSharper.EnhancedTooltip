@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Text;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using JetBrains.Annotations;
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -18,6 +17,11 @@ using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
+#if RS90
+using JetBrains.ReSharper.Feature.Services.Daemon;
+#elif RS82
+using JetBrains.ReSharper.Daemon;
+#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 

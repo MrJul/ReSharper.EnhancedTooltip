@@ -9,6 +9,7 @@
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <PropertyGroup>
     <AssemblyName>GammaJul.ReSharper.EnhancedTooltip.8.2</AssemblyName>
+    <DefineConstants>$(DefineConstants);RS82</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -39,7 +40,9 @@
     <Compile Include="Presentation\SmallFontConverter.cs" />
     <Compile Include="Presentation\Styling.cs" />
     <Compile Include="Presentation\UIResources.cs" />
+    <Compile Include="Presentation\UriExtensions.8.2.cs" />
     <Compile Include="Presentation\VsHighlightingAttributeIds.cs" />
+    <Compile Include="Properties\AssemblyInfo.8.2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\EnhancedTooltipSettingsRoot.cs" />
     <Compile Include="Settings\EnhancedTooltipOptionsPage.xaml.cs">
@@ -49,13 +52,13 @@
     <Compile Include="Settings\ParameterInfoSettings.cs" />
     <Compile Include="Settings\IdentifierTooltipSettings.cs" />
     <Compile Include="Settings\SettingsExtensions.cs" />
-    <Compile Include="VisualStudio\ExposeVsExtensionManager.cs" />
+    <Compile Include="VisualStudio\ExposeVsExtensionManager.8.2.cs" />
     <Compile Include="VisualStudio\QuickInfoSource.cs" />
     <Compile Include="VisualStudio\QuickInfoSourceProvider.cs" />
     <Compile Include="VisualStudio\MultipleTooltipContentPresenter.cs" />
     <Compile Include="VisualStudio\SpanExtensions.cs" />
     <Compile Include="VisualStudio\TooltipFormattingProvider.cs" />
-    <Compile Include="VisualStudio\VsIntegrationInstaller.cs" />
+    <Compile Include="VisualStudio\VsIntegrationInstaller.8.2.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="JetBrains.Platform.ReSharper.VisualStudio.SinceVs10">

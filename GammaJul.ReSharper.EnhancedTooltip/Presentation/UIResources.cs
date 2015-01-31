@@ -3,6 +3,9 @@ using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.UI.Extensions;
 using JetBrains.Util.Lazy;
+#if RS90
+using JetBrains.ReSharper.Resources.Shell;
+#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
@@ -19,7 +22,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull]
 		private static ResourceDictionary LoadResourceDictionary() {
 			return new ResourceDictionary {
-				Source = UriHelpers.MakeUriToExecutingAssemplyResource("Presentation/UIResources.xaml", typeof(UIResources).Assembly)
+				Source = typeof(UIResources).Assembly.MakeComponentUri("Presentation/UIResources.xaml")
 			};
 		}
 

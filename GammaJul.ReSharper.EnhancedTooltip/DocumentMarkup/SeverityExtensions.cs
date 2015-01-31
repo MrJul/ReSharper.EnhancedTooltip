@@ -1,7 +1,11 @@
 ﻿using JetBrains.Annotations;
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.SolutionAnalysis.UI.Resources;
 using JetBrains.UI.Icons;
+#if RS90
+using JetBrains.ReSharper.Feature.Services.Daemon;
+#elif RS82
+using JetBrains.ReSharper.Daemon;
+#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 

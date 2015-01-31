@@ -27,7 +27,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public void GetParametersInfo(out string[] paramNames, out RichTextBlock[] paramDescriptions, out bool isParamsArray) {
 			_candidate.GetParametersInfo(out paramNames, out paramDescriptions, out isParamsArray);
 		}
-
+		
 		public RichText GetSignature(string[] namedArguments, out TextRange[] parameterRanges, out int[] mapToOriginalOrder,
 			out ExtensionMethodInfo extensionMethodInfo) {
 

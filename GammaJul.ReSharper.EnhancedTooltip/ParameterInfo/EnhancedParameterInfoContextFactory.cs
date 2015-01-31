@@ -3,7 +3,6 @@ using System.Linq;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
-using JetBrains.Application;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
@@ -12,6 +11,11 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.Util;
 using JetBrains.Util.Lazy;
+#if RS90
+using JetBrains.ReSharper.Resources.Shell;
+#elif RS82
+using JetBrains.Application;
+#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 

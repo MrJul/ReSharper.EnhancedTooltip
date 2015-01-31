@@ -9,6 +9,7 @@
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <PropertyGroup>
     <AssemblyName>GammaJul.ReSharper.EnhancedTooltip.9.0</AssemblyName>
+    <DefineConstants>$(DefineConstants);RS90</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="antlr.runtime">
@@ -139,6 +140,8 @@
       <HintPath>..\packages\JetBrains.Platform.Lib.WpfContrib.2.0.20140304.0\lib\WpfContrib.dll</HintPath>
       <Private>False</Private>
     </Reference>
+	<Reference Include="Microsoft.VisualStudio.Text.UI, Version=10.0.0.0" />
+    <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=10.0.0.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -169,6 +172,7 @@
     <Compile Include="Presentation\SmallFontConverter.cs" />
     <Compile Include="Presentation\Styling.cs" />
     <Compile Include="Presentation\UIResources.cs" />
+    <Compile Include="Presentation\UriExtensions.9.0.cs" />
     <Compile Include="Presentation\VsHighlightingAttributeIds.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\EnhancedTooltipSettingsRoot.cs" />
@@ -179,13 +183,11 @@
     <Compile Include="Settings\ParameterInfoSettings.cs" />
     <Compile Include="Settings\IdentifierTooltipSettings.cs" />
     <Compile Include="Settings\SettingsExtensions.cs" />
-    <Compile Include="VisualStudio\ExposeVsExtensionManager.cs" />
     <Compile Include="VisualStudio\QuickInfoSource.cs" />
     <Compile Include="VisualStudio\QuickInfoSourceProvider.cs" />
     <Compile Include="VisualStudio\MultipleTooltipContentPresenter.cs" />
     <Compile Include="VisualStudio\SpanExtensions.cs" />
     <Compile Include="VisualStudio\TooltipFormattingProvider.cs" />
-    <Compile Include="VisualStudio\VsIntegrationInstaller.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="GenericImages\ThemedIcons.Generic.Generated.Xaml">

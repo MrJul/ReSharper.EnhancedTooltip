@@ -2,8 +2,8 @@
 *.user
 bin
 obj
-/_ReSharper.GammaJul.ReSharper.EnhancedTooltip
-/packages/JetBrains.ReSharper.SDK.*
+/_ReSharper*
+/packages/*.*.*
 /*.tss
 /GammaJul.ReSharper.EnhancedTooltip/obj*
 *.nupkg

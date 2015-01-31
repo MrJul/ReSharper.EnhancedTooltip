@@ -1,8 +1,12 @@
 ﻿using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo.Settings;
+#if RS90
+using JetBrains.ReSharper.Feature.Services.Daemon;
+#elif RS82
+using JetBrains.ReSharper.Daemon;
+#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
