@@ -18,7 +18,8 @@
     <Compile Include="DocumentMarkup\IdentifierTooltipContentProvider.cs" />
     <Compile Include="DocumentMarkup\SeverityExtensions.cs" />
     <Compile Include="DocumentMarkup\TextStyleHighlighterManager.cs" />
-    <Compile Include="GenericImages\ThemedIcons.Generic.Generated.cs" />
+    <Compile Include="GenericImages\ThemedIcons.cs" />
+    <Compile Include="GenericImages\ThemedIcons.8.2.cs" />
     <Compile Include="ParameterInfo\CandidateExtensions.8.2.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.8.2.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.cs" />

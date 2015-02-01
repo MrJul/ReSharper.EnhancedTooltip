@@ -18,7 +18,7 @@ using JetBrains.UI.Wpf.Converters;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
-	[OptionsPage(Pid, "Enhanced Tooltip", typeof(GenericThemedIcons.Logo16), ParentId = IntelliSensePage.PID, Sequence = 100)]
+	[OptionsPage(Pid, "Enhanced Tooltip", typeof(ThemedIcons.Logo16), ParentId = IntelliSensePage.PID, Sequence = 100)]
 	public partial class EnhancedTooltipOptionsPage : IOptionsPage {
 
 		public const string Pid = "EnhancedTooltip.OptionsPage";
