@@ -60,6 +60,7 @@
     <Compile Include="VisualStudio\QuickInfoSource.cs" />
     <Compile Include="VisualStudio\QuickInfoSourceProvider.cs" />
     <Compile Include="VisualStudio\MultipleTooltipContentPresenter.cs" />
+    <Compile Include="VisualStudio\QuickInfoSourceProvider.8.2.cs" />
     <Compile Include="VisualStudio\SpanExtensions.cs" />
     <Compile Include="VisualStudio\TooltipFormattingProvider.cs" />
     <Compile Include="VisualStudio\VsIntegrationInstaller.8.2.cs" />

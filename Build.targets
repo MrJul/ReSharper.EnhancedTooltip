@@ -5,13 +5,13 @@
 		Visual Studio doesn't provide a binding redirect for this specific assembly.
 	-->
     
-	<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.8.2.csproj" Properties="Platform=Any CPU;Configuration=Release;TargetVsVersion=11" />
-    <MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip.VsIntegration\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.csproj" Properties="Platform=Any CPU;Configuration=Release;TargetVsVersion=11" />
+	<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.8.2.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=11" />
+    <MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip.VsIntegration\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=11" />
 	
-    <MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.8.2.csproj" Properties="Platform=Any CPU;Configuration=Release;TargetVsVersion=12" />
-	<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip.VsIntegration\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.csproj" Properties="Platform=Any CPU;Configuration=Release;TargetVsVersion=12" />
+    <MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.8.2.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=12" />
+	<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip.VsIntegration\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=12" />
 	
-    <MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.9.0.csproj" Properties="Platform=Any CPU;Configuration=Release;TargetVsVersion=Any" />
+    <MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.9.0.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=Any" />
 	
   </Target>
 </Project>
