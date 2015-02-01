@@ -153,6 +153,7 @@
     <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.9.0.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContext.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContextFactory.cs" />
+    <Compile Include="Presentation\AutoContrastedRichTextPresenter.cs" />
     <Compile Include="Presentation\ColorizerPresenter.cs" />
     <Compile Include="Presentation\CSharpColorizer.cs" />
     <Compile Include="Presentation\ElementTypeDisplay.cs" />

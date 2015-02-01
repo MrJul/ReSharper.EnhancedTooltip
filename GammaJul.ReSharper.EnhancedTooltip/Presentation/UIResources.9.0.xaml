@@ -63,7 +63,7 @@
 								Margin="0,0,4,0" local:IconScaling.IsScalingWithFontSize="True"
 								DockPanel.Dock="Left" VerticalAlignment="Top" HorizontalAlignment="Left" />
 						</Border>
-						<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="False"
+						<controls:RichTextPresenter TextWrapping="Wrap"
 							RichText="{Binding Text}" VerticalAlignment="Center" />
 					</DockPanel>
 
@@ -71,7 +71,7 @@
 						<Path StrokeThickness="1" StrokeDashArray="3,3" RenderOptions.EdgeMode="Aliased"
 							Data="M0,0 H10" Margin="-8,6" Stretch="Uniform"
 							Stroke="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}" />
-						<controls:RichTextPresenter Margin="0" TextWrapping="Wrap" IsAutoContrasted="True"
+						<local:AutoContrastedRichTextPresenter Margin="0" TextWrapping="Wrap"
 							RichText="{Binding Description}" />
 					</StackPanel>
 
@@ -80,7 +80,7 @@
 							<TextBlock Text="Obsolete" Margin="2" Foreground="Gray" FontWeight="Bold" VerticalAlignment="Center"
 								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}" />
 						</Border>
-						<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="True"
+						<local:AutoContrastedRichTextPresenter TextWrapping="Wrap"
 							RichText="{Binding Obsolete}" />
 					</StackPanel>
 
@@ -100,7 +100,7 @@
 									</Border>
 									<TextBlock Text="{Binding Exception}" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="1" />
 									<TextBlock Text=" → " FontWeight="Bold" Grid.Column="2" VerticalAlignment="Center" />
-									<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="True" VerticalAlignment="Center" Grid.Column="3"
+									<local:AutoContrastedRichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="3"
 										RichText="{Binding Description}" />
 								</Grid>
 							</DataTemplate>
@@ -132,7 +132,7 @@
 							Margin="0,0,4,0" local:IconScaling.IsScalingWithFontSize="True"
 							DockPanel.Dock="Left" VerticalAlignment="Top" HorizontalAlignment="Left" />
 					</Border>
-					<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="False"
+					<controls:RichTextPresenter TextWrapping="Wrap"
 						RichText="{Binding Text}" VerticalAlignment="Center" />
 				</DockPanel>
 				<DataTemplate.Triggers>
@@ -144,7 +144,7 @@
 
 			<!-- Style for other content -->
 			<DataTemplate DataType="{x:Type local:MiscTooltipContent}">
-				<controls:RichTextPresenter TextWrapping="Wrap" IsAutoContrasted="True"
+				<local:AutoContrastedRichTextPresenter TextWrapping="Wrap"
 					RichText="{Binding Text}" VerticalAlignment="Center" />
 			</DataTemplate>
 
