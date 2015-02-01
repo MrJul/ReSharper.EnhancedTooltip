@@ -51,6 +51,7 @@
     <Compile Include="Settings\EnhancedTooltipOptionsPage.xaml.cs">
       <DependentUpon>EnhancedTooltipOptionsPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Settings\EnumValue.cs" />
     <Compile Include="Settings\IssueTooltipSettings.cs" />
     <Compile Include="Settings\ParameterInfoSettings.cs" />
     <Compile Include="Settings\IdentifierTooltipSettings.cs" />

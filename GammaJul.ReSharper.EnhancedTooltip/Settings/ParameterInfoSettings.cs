@@ -3,22 +3,22 @@ using JetBrains.ReSharper.Feature.Services.Lookup;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
-	[SettingsKey(typeof(EnhancedTooltipSettingsRoot), "Settings determining how information about parameters are shown when writing a call.")]
+	[SettingsKey(typeof(EnhancedTooltipSettingsRoot), "Settings determining how information about parameters are shown when writing a call")]
 	public class ParameterInfoSettings {
 
-		[SettingsEntry(true, "Enhance parameter information popups.")]
+		[SettingsEntry(true, "Enhance parameter information popups")]
 		public bool Enabled { get; set; }
 
-		[SettingsEntry(true, "Colorize C# calls.")]
+		[SettingsEntry(true, "Colorize C# calls")]
 		public bool ColorizeSupportedLanguages { get; set; }
 
-		[SettingsEntry(true, "Display <no parameters> when there are no parameters.")]
+		[SettingsEntry(true, "Display <no parameters> when there are no parameters")]
 		public bool ShowEmptyParametersText { get; set; }
 
-		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32).")]
+		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
 		public bool UseTypeKeywords { get; set; }
 
-		[SettingsEntry(true, "Display [CanBeNull] and [NotNull].")]
+		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations")]
 		public AnnotationsDisplayKind ShowAnnotations { get; set; }
 
 	}

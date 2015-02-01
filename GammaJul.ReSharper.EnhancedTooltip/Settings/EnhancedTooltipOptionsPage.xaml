@@ -12,6 +12,14 @@
 		<Style TargetType="{x:Type controls:CheckBoxDisabledNoCheck2}">
 			<Setter Property="Margin" Value="8,2,0,1" />
 		</Style>
+		<Style TargetType="{x:Type ComboBox}">
+			<Setter Property="Margin" Value="0,3" />
+		</Style>
+		<Style TargetType="{x:Type Label}">
+			<Setter Property="Margin" Value="0,0,4,0" />
+			<Setter Property="Padding" Value="0" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+		</Style>
 	</ScrollViewer.Resources>
 
 	<StackPanel>
@@ -24,8 +32,14 @@
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowObsoleteCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowExceptionsCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipUseTypeKeywordsCheckBox" />
-			<ComboBox x:Name="IdentifierTooltipShowIdentifierAnnotationsComboBox" />
-			<ComboBox x:Name="IdentifierTooltipShowParametersAnnotationsComboBox" />
+			<StackPanel Orientation="Horizontal" Margin="8,2,0,1">
+				<Label Target="{Binding ElementName=IdentifierTooltipShowIdentifierAnnotationsComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipShowIdentifierAnnotationsComboBox" />
+			</StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="8,2,0,1">
+				<Label Target="{Binding ElementName=IdentifierTooltipShowParametersAnnotationsComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipShowParametersAnnotationsComboBox" />
+			</StackPanel>
 		</StackPanel>
 
 		<StackPanel Orientation="Vertical" Margin="10,0,0,0">
@@ -38,7 +52,10 @@
 			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoEnabledCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoShowEmptyParametersTextCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoUseTypeKeywordsCheckBox" />
-			<ComboBox x:Name="ParameterInfoShowAnnotationsComboBox" />
+			<StackPanel x:Name="ParameterInfoShowAnnotationsPanel" Orientation="Horizontal" Margin="8,2,0,1">
+				<Label Target="{Binding ElementName=ParameterInfoShowAnnotationsComboBox}" />
+				<ComboBox x:Name="ParameterInfoShowAnnotationsComboBox" />
+			</StackPanel>
 		</StackPanel>
 
 	</StackPanel>

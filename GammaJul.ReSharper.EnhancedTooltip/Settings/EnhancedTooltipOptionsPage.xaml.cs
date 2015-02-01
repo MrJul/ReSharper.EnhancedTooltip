@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -9,7 +12,9 @@ using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Features.Intellisense.Options;
 using JetBrains.UI.Controls;
 using JetBrains.UI.CrossFramework;
+using JetBrains.UI.Extensions;
 using JetBrains.UI.Options;
+using JetBrains.UI.Wpf.Converters;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
@@ -18,8 +23,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		public const string Pid = "EnhancedTooltip.OptionsPage";
 
-		private readonly Lifetime _lifetime;
-		private readonly OptionsSettingsSmartContext _context;
+		[NotNull] private readonly List<EnumValue> _annotationsItemsSource = CreateAnnotationsItemsSource();
+		[NotNull] private readonly Lifetime _lifetime;
+		[NotNull] private readonly OptionsSettingsSmartContext _context;
 
 		public string Id {
 			get { return Pid; }
@@ -37,6 +43,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			get { return this; }
 		}
 
+		[NotNull]
+		private static List<EnumValue> CreateAnnotationsItemsSource() {
+			var enumDescriptionConverter = new EnumDescriptionConverter();
+			return Enum.GetValues(typeof(AnnotationsDisplayKind))
+				.Cast<Enum>()
+				.Select(e => new EnumValue(e, enumDescriptionConverter.Convert(e, typeof(string), null, CultureInfo.CurrentUICulture) as string))
+				.ToList();
+		}
+
 		private void SetCheckBoxBinding<TSettings>([NotNull] Expression<Func<TSettings, bool>> settingAccessor, [NotNull] CheckBoxDisabledNoCheck2 checkBox,
 			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckbox) {
 
@@ -49,14 +64,27 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 				parentCheckbox.IsCheckedLogically.FlowInto(_lifetime, checkBox, IsEnabledProperty);
 		}
 
-		private void SetComboBoxBinding<TSettings>([NotNull] Expression<Func<TSettings, AnnotationsDisplayKind>> settingAccessor, [NotNull] ComboBox comboBox,
+		private void SetAnnotationsBinding<TSettings>([NotNull] Expression<Func<TSettings, AnnotationsDisplayKind>> settingAccessor, [NotNull] ComboBox comboBox,
 			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckbox) {
 
-			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
-			_context.SetBinding<AnnotationsDisplayKind>(_lifetime, entry, comboBox, Selector.SelectedItemProperty);
+			comboBox.ItemsSource = _annotationsItemsSource;
+			comboBox.DisplayMemberPath = "Description";
+			comboBox.SelectedValuePath = "Value";
 
+			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
+			_context.SetBinding<object>(_lifetime, entry, comboBox, Selector.SelectedValueProperty);
+			
+			Label label = FindAssociatedLabel(comboBox);
+			if (label != null && label.Content == null)
+				label.Content = entry.Description + ":";
+			
 			if (parentCheckbox != null)
 				parentCheckbox.IsCheckedLogically.FlowInto(_lifetime, comboBox, IsEnabledProperty);
+		}
+
+		[CanBeNull]
+		private static Label FindAssociatedLabel([NotNull] ComboBox comboBox) {
+			return comboBox.Parent != null ? comboBox.Parent.FindDescendant<Label>() : null;
 		}
 
 		private void SetIdentifierTooltipSettingsBindings() {
@@ -67,8 +95,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowObsolete, IdentifierTooltipShowObsoleteCheckBox, enabledCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowExceptions, IdentifierTooltipShowExceptionsCheckBox, enabledCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseTypeKeywords, IdentifierTooltipUseTypeKeywordsCheckBox, enabledCheckBox);
-			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations, IdentifierTooltipShowIdentifierAnnotationsComboBox, enabledCheckBox);
-			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowParametersAnnotations, IdentifierTooltipShowParametersAnnotationsComboBox, enabledCheckBox);
+			SetAnnotationsBinding((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations, IdentifierTooltipShowIdentifierAnnotationsComboBox, enabledCheckBox);
+			SetAnnotationsBinding((IdentifierTooltipSettings s) => s.ShowParametersAnnotations, IdentifierTooltipShowParametersAnnotationsComboBox, enabledCheckBox);
 		}
 
 		private void SetIssueTooltipSettingsBindings() {
@@ -82,9 +110,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetCheckBoxBinding((ParameterInfoSettings s) => s.UseTypeKeywords, ParameterInfoUseTypeKeywordsCheckBox, enabledCheckBox);
 #if RS90
 			// ReSharper 9 already has this option built-in
-			ParameterInfoShowAnnotationsComboBox.Visibility = System.Windows.Visibility.Collapsed;
+			ParameterInfoShowAnnotationsPanel.Visibility = System.Windows.Visibility.Collapsed;
 #elif RS82
-			SetComboBoxBinding((ParameterInfoSettings s) => s.ShowAnnotations, ParameterInfoShowAnnotationsComboBox, enabledCheckBox);
+			SetAnnotationsBinding((ParameterInfoSettings s) => s.ShowAnnotations, ParameterInfoShowAnnotationsComboBox, enabledCheckBox);
 #endif
 		}
 

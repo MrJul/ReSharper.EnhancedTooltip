@@ -604,7 +604,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (attributes.Count == 0)
 				return;
 
-			List<string> annotations = attributes.SelectNotNull(attr => TryGetAnnotationShortName(attr, showAnnotations)).ToList();
+			List<string> annotations = attributes
+				.SelectNotNull(attr => TryGetAnnotationShortName(attr, showAnnotations))
+				.Distinct()
+				.OrderBy(annotation => annotation)
+				.ToList();
 			if (annotations.Count == 0)
 				return;
 
