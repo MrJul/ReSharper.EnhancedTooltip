@@ -2,9 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
 	
 	<metadata>
-		<id>EnhancedTooltip</id>
+		<id>JLebosquain.EnhancedTooltip</id>
 		<version>2.1.0</version>
-		<title>Enhanced Tooltip (for R# 8.2)</title>
+		<title>Enhanced Tooltip (for R# 9.0)</title>
 		<authors>Julien Lebosquain</authors>
 		<description>Colorizes the tooltip as well as the parameter information popup.</description>
 		<releaseNotes>
@@ -16,17 +16,13 @@
 		<copyright>Copyright &#x00A9; 2013-2015 Julien Lebosquain</copyright>
 		<tags>Tooltip Syntax Color Parameter</tags>
 		<dependencies>
-			<dependency id="ReSharper" version="[8.2,8.3)" />
+			<dependency id="Wave" version="[1.0]" />
 		</dependencies>
 	</metadata>
 	
 	<files>
 		
-		<file src="..\bin\Release\Vs11\GammaJul.ReSharper.EnhancedTooltip.8.2.dll" target="ReSharper\v8.2\vs11.0\plugins" />
-		<file src="..\bin\Release\Vs11\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.vsix" target="ReSharper\v8.2\vs11.0\plugins" />
-		
-		<file src="..\bin\Release\Vs12\GammaJul.ReSharper.EnhancedTooltip.8.2.dll" target="ReSharper\v8.2\vs12.0\plugins" />
-		<file src="..\bin\Release\Vs12\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.vsix" target="ReSharper\v8.2\vs12.0\plugins" />
+		<file src="..\bin\Release\VsAny\GammaJul.ReSharper.EnhancedTooltip.9.0.dll" target="DotFiles" />
 		
 	</files>
 	

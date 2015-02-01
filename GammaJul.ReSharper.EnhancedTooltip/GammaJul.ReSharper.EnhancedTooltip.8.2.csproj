@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{C181470B-B767-4DED-B3C8-ACEF50AF4D4F}</ProjectGuid>
     <RootNamespace>GammaJul.ReSharper.EnhancedTooltip</RootNamespace>
-    <IntermediateOutputPath>obj</IntermediateOutputPath>
+    <IntermediateOutputPath>obj82</IntermediateOutputPath>
   </PropertyGroup>
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <PropertyGroup>
@@ -42,8 +42,8 @@
     <Compile Include="Presentation\PresenterOptions.cs" />
     <Compile Include="Presentation\SmallFontConverter.cs" />
     <Compile Include="Presentation\Styling.cs" />
+    <Compile Include="Presentation\UIResources.8.2.cs" />
     <Compile Include="Presentation\UIResources.cs" />
-    <Compile Include="Presentation\UriExtensions.8.2.cs" />
     <Compile Include="Presentation\VsHighlightingAttributeIds.cs" />
     <Compile Include="Properties\AssemblyInfo.8.2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,8 +81,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\UIResources.xaml">
+    <Page Include="Presentation\UIResources.8.2.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\EnhancedTooltipOptionsPage.xaml">
       <SubType>Designer</SubType>
@@ -93,6 +94,7 @@
     <ThemedIconPng Include="GenericImages\Logo16.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="GammaJul.ReSharper.EnhancedTooltip.8.2.nuspec" />
     <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.8.2.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

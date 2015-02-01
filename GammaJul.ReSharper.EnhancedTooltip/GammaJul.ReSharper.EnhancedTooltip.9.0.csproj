@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{720E321E-0B90-4F09-98B7-FFAC7694D357}</ProjectGuid>
     <RootNamespace>GammaJul.ReSharper.EnhancedTooltip</RootNamespace>
-    <IntermediateOutputPath>obj</IntermediateOutputPath>
+    <IntermediateOutputPath>obj90</IntermediateOutputPath>
   </PropertyGroup>
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <PropertyGroup>
@@ -39,9 +39,6 @@
     <Reference Include="DevExpress.XtraTreeList.v7.1">
       <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20140304.0\lib\DevExpress.XtraTreeList.v7.1.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\packages\SharpZipLib.JetBrains.Stripped.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -172,8 +169,8 @@
     <Compile Include="Presentation\PresenterOptions.cs" />
     <Compile Include="Presentation\SmallFontConverter.cs" />
     <Compile Include="Presentation\Styling.cs" />
+    <Compile Include="Presentation\UIResources.9.0.cs" />
     <Compile Include="Presentation\UIResources.cs" />
-    <Compile Include="Presentation\UriExtensions.9.0.cs" />
     <Compile Include="Presentation\VsHighlightingAttributeIds.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\EnhancedTooltipSettingsRoot.cs" />
@@ -188,16 +185,22 @@
     <Compile Include="VisualStudio\QuickInfoSource.cs" />
     <Compile Include="VisualStudio\QuickInfoSourceProvider.cs" />
     <Compile Include="VisualStudio\MultipleTooltipContentPresenter.cs" />
+    <Compile Include="VisualStudio\QuickInfoSourceProvider.9.0.cs" />
     <Compile Include="VisualStudio\SpanExtensions.cs" />
     <Compile Include="VisualStudio\TooltipFormattingProvider.cs" />
+    <Compile Include="ZoneMarker.v9.0.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="GenericImages\ThemedIcons.Generic.Generated.Xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\UIResources.xaml">
+    <Page Include="Presentation\UIResources.9.0.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UIResources.9.0.tt</DependentUpon>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\EnhancedTooltipOptionsPage.xaml">
       <SubType>Designer</SubType>
@@ -208,7 +211,17 @@
     <ThemedIconPng Include="GenericImages\Logo16.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="GammaJul.ReSharper.EnhancedTooltip.9.0.nuspec" />
     <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.9.0.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Presentation\UIResources.9.0.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>UIResources.9.0.xaml</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -14,6 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VsIntegration {
 	/// This class delegates to the real provider in the main extension assembly if it's available.
 	/// This is in a separate assembly without any reference to ReSharper or the main project.
 	/// Visual Studio can load it without problems even if Enhanced Tooltip or ReSharper are uninstalled.
+	/// Only used in ReSharper 8.2. ReSharper 9 supports exporting MEF components directly.
 	/// </summary>
 	[Name("EnhancedTooltipQuickInfo")]
 	[Order(After = "ReSharperQuickInfo")]

@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.Text.Projection;
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 	[UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-	public sealed class QuickInfoSourceProvider : IQuickInfoSourceProvider {
+	public sealed partial class QuickInfoSourceProvider : IQuickInfoSourceProvider {
 
 		[CanBeNull]
 		private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactoryService;

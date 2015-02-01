@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using JetBrains.Annotations;
 using JetBrains.Application;
-using JetBrains.UI.Extensions;
 using JetBrains.Util.Lazy;
 #if RS90
 using JetBrains.ReSharper.Resources.Shell;
@@ -10,7 +9,7 @@ using JetBrains.ReSharper.Resources.Shell;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	[ShellComponent]
-	internal sealed class UIResources {
+	internal sealed partial class UIResources {
 
 		[NotNull]
 		public static UIResources Instance {
@@ -18,14 +17,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private readonly Lazy<ResourceDictionary> _lazyResourceDictionary = Lazy.Of(LoadResourceDictionary);
-
-		[NotNull]
-		private static ResourceDictionary LoadResourceDictionary() {
-			return new ResourceDictionary {
-				Source = typeof(UIResources).Assembly.MakeComponentUri("Presentation/UIResources.xaml")
-			};
-		}
-
+		
 		[NotNull]
 		public Style HeaderedContentControlStyle {
 			get { return (Style) _lazyResourceDictionary.Value["HeaderedContentControlStyle"]; }
