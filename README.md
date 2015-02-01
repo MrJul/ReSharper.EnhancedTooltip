@@ -3,7 +3,7 @@
 
 What's ReSharper.EnhancedTooltip?
 --------------
-It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) 8.2 that enhances the tooltip and parameter information popup.  
+It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) v8.2 and v9.0 that enhances the tooltip and parameter information popup.  
 
 - Colorizes tooltips and parameter information popups for C#.
 - Displays icons for identifiers and issues in the tooltip.
@@ -14,7 +14,7 @@ It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) 8.2
 Installation
 ------------
 Visual Studio 2012 and 2013 are supported.  
-ReSharper 8.2 must be installed.  
+ReSharper 8.2 or 9.0 must be installed.  
 
 Install the plugin using the built-in Extension Manager from the ReSharper menu.  
 
