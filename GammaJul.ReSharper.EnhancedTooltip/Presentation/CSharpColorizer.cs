@@ -237,7 +237,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return;
 
 			AppendText(before, null);
-			AppendType(elementType, namespaceDisplays, false);
+			AppendTypeWithoutModule(elementType, namespaceDisplays);
 			AppendText(after, null);
 		}
 
@@ -261,8 +261,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return null;
 		}
 
-		public void AppendType([NotNull] IExpressionType type, NamespaceDisplays expectedNamespaceDisplay, bool appendModuleName) {
-			AppendTypeWithoutModule(type, expectedNamespaceDisplay);
+		public void AppendType([CanBeNull] IExpressionType type, bool appendModuleName) {
+			if (type == null)
+				return;
+
+			AppendTypeWithoutModule(type, NamespaceDisplays.Everywhere);
 
 			if (appendModuleName) {
 				IType itype = type.ToIType();
@@ -305,12 +308,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private void AppendArrayType([NotNull] IArrayType arrayType, NamespaceDisplays expectedNamespaceDisplay) {
-			AppendType(arrayType.ElementType, expectedNamespaceDisplay, false);
+			AppendTypeWithoutModule(arrayType.ElementType, expectedNamespaceDisplay);
 			AppendText("[" + new string(',', arrayType.Rank - 1) + "]", null);
 		}
 
 		private void AppendPointerType([NotNull] IPointerType pointerType, NamespaceDisplays expectedNamespaceDisplay) {
-			AppendType(pointerType.ElementType, expectedNamespaceDisplay, false);
+			AppendTypeWithoutModule(pointerType.ElementType, expectedNamespaceDisplay);
 			AppendText("*", VsHighlightingAttributeIds.Operator);
 		}
 
@@ -323,7 +326,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (declaredType.IsNullable()) {
 				IType underlyingType = declaredType.GetNullableUnderlyingType();
 				if (underlyingType != null) {
-					AppendType(underlyingType, expectedNamespaceDisplay, false);
+					AppendTypeWithoutModule(underlyingType, expectedNamespaceDisplay);
 					AppendText("?", VsHighlightingAttributeIds.Operator);
 					return;
 				}
@@ -372,7 +375,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (deleg != null && _options.FormatDelegatesAsLambdas && expectedNamespaceDisplay == NamespaceDisplays.Parameters) {
 				AppendParameters(deleg.InvokeMethod, substitution, false);
 				AppendText(" => ", VsHighlightingAttributeIds.Operator);
-				AppendType(substitution.Apply(deleg.InvokeMethod.ReturnType), expectedNamespaceDisplay, false);
+				AppendTypeWithoutModule(substitution.Apply(deleg.InvokeMethod.ReturnType), expectedNamespaceDisplay);
 				return;
 			}
 
@@ -428,7 +431,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				if (i > 0)
 					AppendText(",", null);
 				ITypeParameter typeParameter = typeParameters[i];
-				AppendType(substitution.Apply(typeParameter), NamespaceDisplays.TypeParameters, false);
+				AppendTypeWithoutModule(substitution.Apply(typeParameter), NamespaceDisplays.TypeParameters);
 			}
 			AppendText(">", VsHighlightingAttributeIds.Operator);
 		}
@@ -759,7 +762,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText(" = ", VsHighlightingAttributeIds.Operator);
 			AppendText("default", VsHighlightingAttributeIds.Keyword);
 			AppendText("(", null);
-			AppendType(defaultType, NamespaceDisplays.Parameters, false);
+			AppendTypeWithoutModule(defaultType, NamespaceDisplays.Parameters);
 			AppendText(")", null);
 		}
 
