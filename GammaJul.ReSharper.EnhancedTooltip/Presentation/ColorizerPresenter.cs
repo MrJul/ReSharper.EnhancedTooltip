@@ -15,8 +15,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	[SolutionComponent]
 	public class ColorizerPresenter {
 
-		private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
-		private readonly CodeAnnotationsCache _codeAnnotationsCache;
+		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
+		[NotNull] private readonly CodeAnnotationsCache _codeAnnotationsCache;
 
 		/// <summary>
 		/// Presents a given <see cref="DeclaredElementInstance"/> using a colorizer.

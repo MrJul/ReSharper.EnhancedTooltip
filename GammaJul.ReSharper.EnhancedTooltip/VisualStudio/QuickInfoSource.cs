@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
+using GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Application;
@@ -30,7 +31,6 @@ using JetIVsTextBuffer = JetBrains.VsIntegration.Interop.Shim.TextManager.Docume
 #elif RS82
 using JetBrains.VsIntegration.DevTen.Interop.Shim;
 using JetBrains.VsIntegration.DevTen.Markup;
-using JetBrains.VsIntegration.Markup;
 using JetBrains.VsIntegration.ProjectModel;
 using JetIVsTextBuffer = JetBrains.VsIntegration.Interop.Shim.TextManager.IVsTextBuffer;
 #endif
@@ -124,7 +124,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				IContextBoundSettingsStore settings = document.GetSettings();
 
 				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, document, solution);
-				IssueTooltipContent issueContent = TryCreateIssueContent(highlighter.RichTextToolTip, severity, settings);
+				IssueTooltipContent issueContent = TryCreateIssueContent(highlighting, highlighter.RichTextToolTip, severity, settings, solution);
 				if (issueContent != null)
 					return issueContent;
 
@@ -157,7 +157,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		[CanBeNull]
 		[Pure]
-		private static IssueTooltipContent TryCreateIssueContent([CanBeNull] RichTextBlock textBlock, Severity severity, [NotNull] IContextBoundSettingsStore settings) {
+		private static IssueTooltipContent TryCreateIssueContent([NotNull] IHighlighting highlighting, [CanBeNull] RichTextBlock textBlock,
+			Severity severity, [NotNull] IContextBoundSettingsStore settings, [CanBeNull] ISolution solution) {
+
 			if (textBlock == null || !severity.IsIssue())
 				return null;
 
@@ -165,12 +167,29 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (text.IsEmpty)
 				return null;
 
+			RichText enhancedText = TryEnhanceHighlighting(highlighting, settings, solution);
+			if (!enhancedText.IsNullOrEmpty())
+				text = enhancedText;
+
 			var issueContent = new IssueTooltipContent { Text = text };
 			if (settings.GetValue((IssueTooltipSettings s) => s.ShowIcon))
 				issueContent.Icon = severity.TryGetIcon();
 			return issueContent;
 		}
-		
+
+		[CanBeNull]
+		private static RichText TryEnhanceHighlighting([NotNull] IHighlighting highlighting, [NotNull] IContextBoundSettingsStore settings,
+			[CanBeNull] ISolution solution) {
+			if (solution == null)
+				return null;
+			
+			var highlightingEnhancerManager = solution.TryGetComponent<HighlightingEnhancerManager>();
+			if (highlightingEnhancerManager == null)
+				return null;
+
+			return highlightingEnhancerManager.TryEnhance(highlighting, settings);
+		}
+
 		[CanBeNull]
 		[Pure]
 		private static MiscTooltipContent TryCreateMiscContent([CanBeNull] RichTextBlock textBlock) {

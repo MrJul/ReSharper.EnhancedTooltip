@@ -71,6 +71,27 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			};
 		}
 
+		[NotNull]
+		public static PresenterOptions ForError([NotNull] IContextBoundSettingsStore settings) {
+			return new PresenterOptions {
+				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas),
+				ShowAccessRights = false,
+				ShowConstantValues = true,
+				ShowElementKind = false,
+				ShowElementAnnotations = AnnotationsDisplayKind.None,
+				ShowElementType = ElementTypeDisplay.Before,
+				ShowEmptyParametersText = false,
+				ShowModifiers = false,
+				ShowName = true,
+				ShowNamespaces = NamespaceDisplays.Everywhere,
+				ShowParametersName = true,
+				ShowParametersAnnotations = AnnotationsDisplayKind.None,
+				ShowParametersType = true,
+				UseReSharperColors = settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled),
+				UseTypeKeywords = true
+			};
+		}
+
 		private PresenterOptions() {
 		}
 

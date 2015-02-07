@@ -31,6 +31,10 @@
     <Compile Include="Presentation\CSharpColorizer.cs" />
     <Compile Include="Presentation\ElementTypeDisplay.cs" />
     <Compile Include="Presentation\ExceptionContent.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\CSharpHighlightingEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\IncorrectArgumentTypeErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\HighlightingEnhancerManager.cs" />
+    <Compile Include="Presentation\Highlightings\IHighlightingEnhancer.cs" />
     <Compile Include="Presentation\IColorizer.cs" />
     <Compile Include="Presentation\IconScaling.cs" />
     <Compile Include="Presentation\IdentifierTooltipContent.cs">
@@ -95,7 +99,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ThemedIconPng Include="GenericImages\Logo16.png" />
+    <None Include="GenericImages\Logo16.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GammaJul.ReSharper.EnhancedTooltip.8.2.nuspec" />
