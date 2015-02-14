@@ -14,10 +14,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	/// </summary>
 	public class EnhancedParameterInfoContext : IParameterInfoContext {
 
-		private readonly IParameterInfoContext _context;
-		private readonly ColorizerPresenter _colorizerPresenter;
-		private readonly IContextBoundSettingsStore _settings;
-		private ICandidate[] _candidates;
+		[NotNull] private readonly IParameterInfoContext _context;
+		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
+		[NotNull] private readonly IContextBoundSettingsStore _settings;
+		[CanBeNull] private ICandidate[] _candidates;
+		[CanBeNull] private ICandidate _defaultCandidate;
 
 		[NotNull]
 		private ICandidate[] Enhance([NotNull] ICandidate[] candidates) {
@@ -45,7 +46,25 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		}
 
 		public ICandidate DefaultCandidate {
-			get { return _context.DefaultCandidate; }
+			get { return _defaultCandidate ?? (_defaultCandidate = FindDefaultCandidate()); }
+		}
+
+		[CanBeNull]
+		private ICandidate FindDefaultCandidate() {
+			ICandidate candidateToFind = _context.DefaultCandidate;
+			if (candidateToFind == null)
+				return null;
+
+			foreach (ICandidate candidate in Candidates) {
+				if (ReferenceEquals(candidateToFind, candidate))
+					return candidate;
+
+				var enhancedCandidate = candidate as EnhancedParameterInfoCandidate;
+				if (enhancedCandidate != null && ReferenceEquals(enhancedCandidate.UnderlyingCandidate, candidateToFind))
+					return enhancedCandidate;
+			}
+			
+			return null;
 		}
 
 		public string[] NamedArguments {

@@ -18,16 +18,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	/// </summary>
 	public partial class EnhancedParameterInfoCandidate : ICandidate {
 
-		[NotNull] private readonly ParameterInfoCandidate _candidate;
+		[NotNull] private readonly ParameterInfoCandidate _underlyingCandidate;
 		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
 		[NotNull] private readonly IContextBoundSettingsStore _settings;
 
+		[NotNull]
+		public ParameterInfoCandidate UnderlyingCandidate {
+			get { return _underlyingCandidate; }
+		}
+
 		public RichTextBlock GetDescription() {
-			return _candidate.GetDescription();
+			return _underlyingCandidate.GetDescription();
 		}
 
 		public void GetParametersInfo(out string[] paramNames, out RichTextBlock[] paramDescriptions, out bool isParamsArray) {
-			_candidate.GetParametersInfo(out paramNames, out paramDescriptions, out isParamsArray);
+			_underlyingCandidate.GetParametersInfo(out paramNames, out paramDescriptions, out isParamsArray);
 		}
 
 		[NotNull]
@@ -39,19 +44,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 
 			// TODO: handle named arguments with reordering; currently falling back to non-colored display
 			if (namedArguments.Any(s => s != null)) {
-				string signature = _candidate.GetSignature(namedArguments, showAnnotations.Value, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
+				string signature = _underlyingCandidate.GetSignature(namedArguments, showAnnotations.Value, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 				if (!IsIdentityMap(mapToOriginalOrder))
 					return signature;
 			}
 
 			var options = PresenterOptions.ForParameterInfo(_settings, showAnnotations.Value);
 			PresentedInfo presentedInfo;
-			InvocationCandidate invocationCandidate = _candidate.InvocationCandidate;
+			InvocationCandidate invocationCandidate = _underlyingCandidate.InvocationCandidate;
 			var elementInstance = new DeclaredElementInstance(invocationCandidate.Element, invocationCandidate.Substitution);
 			
-			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, _candidate.Language, null, out presentedInfo);
+			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, _underlyingCandidate.Language, null, out presentedInfo);
 			if (richText == null)
-				return _candidate.GetSignature(namedArguments, showAnnotations.Value, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
+				return _underlyingCandidate.GetSignature(namedArguments, showAnnotations.Value, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 
 			if (presentedInfo.Parameters.Count == 0) {
 				parameterRanges = EmptyArray<TextRange>.Instance;
@@ -91,29 +96,29 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		}
 
 		public bool IsFilteredOut {
-			get { return _candidate.IsFilteredOut; }
-			set { _candidate.IsFilteredOut = value; }
+			get { return _underlyingCandidate.IsFilteredOut; }
+			set { _underlyingCandidate.IsFilteredOut = value; }
 		}
 
 		public bool IsObsolete {
-			get { return _candidate.IsObsolete; }
+			get { return _underlyingCandidate.IsObsolete; }
 		}
 
 		public bool Matches(IDeclaredElement signature) {
-			return _candidate.Matches(signature);
+			return _underlyingCandidate.Matches(signature);
 		}
 
 		public RichTextBlock ObsoleteDescription {
-			get { return _candidate.ObsoleteDescription; }
+			get { return _underlyingCandidate.ObsoleteDescription; }
 		}
 
 		public int PositionalParameterCount {
-			get { return _candidate.PositionalParameterCount; }
+			get { return _underlyingCandidate.PositionalParameterCount; }
 		}
 
-		public EnhancedParameterInfoCandidate([NotNull] ParameterInfoCandidate candidate, [NotNull] ColorizerPresenter colorizerPresenter,
+		public EnhancedParameterInfoCandidate([NotNull] ParameterInfoCandidate underlyingCandidate, [NotNull] ColorizerPresenter colorizerPresenter,
 			[NotNull] IContextBoundSettingsStore settings) {
-			_candidate = candidate;
+			_underlyingCandidate = underlyingCandidate;
 			_colorizerPresenter = colorizerPresenter;
 			_settings = settings;
 		}
