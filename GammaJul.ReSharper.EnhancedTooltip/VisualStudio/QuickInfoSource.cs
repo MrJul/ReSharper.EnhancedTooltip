@@ -39,8 +39,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 	public class QuickInfoSource : IQuickInfoSource {
 
-		private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactoryService;
-		private readonly ITextBuffer _textBuffer;
+		[NotNull] private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactoryService;
+		[NotNull] private readonly ITextBuffer _textBuffer;
 		
 		public void AugmentQuickInfoSession(IQuickInfoSession session, IList<object> quickInfoContent, out ITrackingSpan applicableToSpan) {
 			applicableToSpan = null;

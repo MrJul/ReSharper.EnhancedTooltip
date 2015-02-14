@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Resolve;
@@ -33,7 +34,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			IList<ISubstitution> substitutions = resolveResult.CandidateSubstitutions;
 
 			for (int i = 0; i < candidates.Count; ++i) {
-				colorizer.AppendPlainText("\r\n  ");
+				colorizer.AppendPlainText(Environment.NewLine);
+				colorizer.AppendPlainText("  ");
 				colorizer.AppendDeclaredElement(candidates[i].EliminateDelegateInvokeMethod(), substitutions[i], PresenterOptions.FullWithoutParameterNames);
 			}
 		}
@@ -51,6 +53,29 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					return;
 				default:
 					colorizer.AppendPlainText("value");
+					return;
+			}
+		}
+		
+		public static void AppendAccessorKind([NotNull] this CSharpColorizer colorizer, AccessorKind accessorKind) {
+			switch (accessorKind) {
+				case AccessorKind.ADDER:
+					colorizer.AppendKeyword("add");
+					return;
+				case AccessorKind.REMOVER:
+					colorizer.AppendKeyword("remove");
+					return;
+				case AccessorKind.GETTER:
+					colorizer.AppendKeyword("get");
+					return;
+				case AccessorKind.SETTER:
+					colorizer.AppendKeyword("set");
+					return;
+				case AccessorKind.RAISER:
+					colorizer.AppendPlainText("raise");
+					return;
+				case AccessorKind.UNKNOWN:
+					colorizer.AppendPlainText("unknown");
 					return;
 			}
 		}

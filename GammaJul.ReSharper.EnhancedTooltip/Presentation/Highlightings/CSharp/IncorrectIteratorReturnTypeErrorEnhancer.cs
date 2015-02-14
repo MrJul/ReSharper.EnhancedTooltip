@@ -4,6 +4,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
+using JetBrains.ReSharper.Psi.Resolve;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
@@ -14,7 +15,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			IFunction function = highlighting.Declaration.DeclaredElement;
 
 			colorizer.AppendPlainText("The body of '");
-			colorizer.AppendDeclaredElement(function, function.IdSubstitution, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(function, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
 			colorizer.AppendPlainText("' cannot be an iterator block because '");
 			colorizer.AppendExpressionType(highlighting.ReturnType, false, PresenterOptions.FullWithoutParameterNames);
 			colorizer.AppendPlainText("' is not an iterator interface type");

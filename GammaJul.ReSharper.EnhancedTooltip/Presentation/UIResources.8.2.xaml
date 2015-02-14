@@ -155,27 +155,8 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type HeaderedContentControl}">
-						<Grid x:Name="Root">
-							<Grid.ColumnDefinitions>
-								<ColumnDefinition Width="Auto" />
-								<ColumnDefinition Width="*" />
-							</Grid.ColumnDefinitions>
-
-<!--							<Border BorderThickness="0,0,1,0" Grid.Column="0"-->
-<!--								BorderBrush="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}">-->
-<!--								<ContentPresenter ContentSource="Header" Margin="2" HorizontalAlignment="Center" VerticalAlignment="Center"-->
-<!--									TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTabSelectedTextBrushKey}}"-->
-<!--									TextElement.FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}">-->
-<!--									<ContentPresenter.LayoutTransform>-->
-<!--										<RotateTransform Angle="-90" />-->
-<!--									</ContentPresenter.LayoutTransform>-->
-<!--								</ContentPresenter>-->
-<!--							</Border>-->
-
-							<ContentPresenter Grid.Column="1"
-								TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTextBrushKey}}" />
-
-						</Grid>
+					<ContentPresenter 
+						TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTextBrushKey}}" />
 				</ControlTemplate>
 			</Setter.Value>
 		</Setter>

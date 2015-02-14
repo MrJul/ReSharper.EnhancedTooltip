@@ -15,13 +15,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public bool ShowElementKind { get; private set; }
 		public AnnotationsDisplayKind ShowElementAnnotations { get; private set; }
 		public ElementTypeDisplay ShowElementType { get; private set; }
+		public bool ShowEmptyParametersText { get; private set; }
+		public bool ShowExplicitInterface { get; private set; }
 		public bool ShowModifiers { get; private set; }
 		public bool ShowName { get; private set; }
 		public NamespaceDisplays ShowNamespaces { get; private set; }
 		public bool ShowParametersName { get; private set; }
 		public AnnotationsDisplayKind ShowParametersAnnotations { get; private set; }
 		public bool ShowParametersType { get; private set; }
-		public bool ShowEmptyParametersText { get; private set; }
 		public bool UseTypeKeywords { get; private set; }
 
 		[NotNull]
@@ -35,6 +36,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowElementAnnotations = settings.GetValue((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations),
 				ShowElementType = ElementTypeDisplay.Before,
 				ShowEmptyParametersText = false,
+				ShowExplicitInterface = false,
 				ShowModifiers = false,
 				ShowName = true,
 				ShowNamespaces = NamespaceDisplays.Member,
@@ -56,6 +58,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowElementAnnotations = AnnotationsDisplayKind.None,
 				ShowElementType = ElementTypeDisplay.After,
 				ShowEmptyParametersText = settings.GetValue((ParameterInfoSettings s) => s.ShowEmptyParametersText),
+				ShowExplicitInterface = false,
 				ShowModifiers = false,
 				ShowName = false,
 				ShowNamespaces = NamespaceDisplays.None,
@@ -76,9 +79,70 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.Before,
 			ShowEmptyParametersText = false,
+			ShowExplicitInterface = true,
 			ShowModifiers = false,
 			ShowName = true,
 			ShowNamespaces = NamespaceDisplays.Everywhere,
+			ShowParametersName = false,
+			ShowParametersAnnotations = AnnotationsDisplayKind.None,
+			ShowParametersType = true,
+			UseTypeKeywords = true
+		};
+
+		[NotNull]
+		public static readonly PresenterOptions QualifiedMember = new PresenterOptions {
+			FormatDelegatesAsLambdas = false,
+			ShowAccessRights = false,
+			ShowConstantValues = true,
+			ShowContainer = true,
+			ShowElementKind = false,
+			ShowElementAnnotations = AnnotationsDisplayKind.None,
+			ShowElementType = ElementTypeDisplay.Before,
+			ShowEmptyParametersText = false,
+			ShowExplicitInterface = false,
+			ShowModifiers = false,
+			ShowName = true,
+			ShowNamespaces = NamespaceDisplays.Member,
+			ShowParametersName = false,
+			ShowParametersAnnotations = AnnotationsDisplayKind.None,
+			ShowParametersType = true,
+			UseTypeKeywords = true
+		};
+
+		[NotNull]
+		public static readonly PresenterOptions QualifiedName = new PresenterOptions {
+			FormatDelegatesAsLambdas = false,
+			ShowAccessRights = false,
+			ShowConstantValues = true,
+			ShowContainer = true,
+			ShowElementKind = false,
+			ShowElementAnnotations = AnnotationsDisplayKind.None,
+			ShowElementType = ElementTypeDisplay.None,
+			ShowEmptyParametersText = false,
+			ShowExplicitInterface = false,
+			ShowModifiers = false,
+			ShowName = true,
+			ShowNamespaces = NamespaceDisplays.Member,
+			ShowParametersName = false,
+			ShowParametersAnnotations = AnnotationsDisplayKind.None,
+			ShowParametersType = false,
+			UseTypeKeywords = true
+		};
+		
+		[NotNull]
+		public static readonly PresenterOptions ForInterfaceMember = new PresenterOptions {
+			FormatDelegatesAsLambdas = false,
+			ShowAccessRights = false,
+			ShowConstantValues = false,
+			ShowContainer = false,
+			ShowElementKind = false,
+			ShowElementAnnotations = AnnotationsDisplayKind.None,
+			ShowElementType = ElementTypeDisplay.Before,
+			ShowEmptyParametersText = false,
+			ShowExplicitInterface = true,
+			ShowModifiers = false,
+			ShowName = true,
+			ShowNamespaces = NamespaceDisplays.None,
 			ShowParametersName = false,
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
@@ -95,6 +159,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.None,
 			ShowEmptyParametersText = false,
+			ShowExplicitInterface = false,
 			ShowModifiers = false,
 			ShowName = true,
 			ShowNamespaces = NamespaceDisplays.None,
@@ -114,6 +179,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.None,
 			ShowEmptyParametersText = false,
+			ShowExplicitInterface = false,
 			ShowModifiers = false,
 			ShowName = false,
 			ShowNamespaces = NamespaceDisplays.None,

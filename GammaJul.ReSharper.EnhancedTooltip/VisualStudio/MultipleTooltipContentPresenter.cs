@@ -11,10 +11,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 	public class MultipleTooltipContentPresenter {
 
-		private readonly List<IdentifierTooltipContent> _identifierContents = new List<IdentifierTooltipContent>();
-		private readonly List<IssueTooltipContent> _issueContents = new List<IssueTooltipContent>();
-		private readonly List<MiscTooltipContent> _miscContents = new List<MiscTooltipContent>();
-		private readonly TextFormattingRunProperties _formatting;
+		[NotNull] private readonly List<IdentifierTooltipContent> _identifierContents = new List<IdentifierTooltipContent>();
+		[NotNull] private readonly List<IssueTooltipContent> _issueContents = new List<IssueTooltipContent>();
+		[NotNull] private readonly List<MiscTooltipContent> _miscContents = new List<MiscTooltipContent>();
+		[NotNull] private readonly TextFormattingRunProperties _formatting;
 
 		public bool TryAddContent([CanBeNull] ITooltipContent content) {
 			if (content == null || content.Text.IsNullOrEmpty())

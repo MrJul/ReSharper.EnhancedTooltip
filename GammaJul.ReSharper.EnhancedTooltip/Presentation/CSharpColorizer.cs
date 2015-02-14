@@ -396,7 +396,18 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return;
 			}
 
-			if (context.Options.ShowContainer) {
+			bool appendedExplicitInterface = false;
+			if (context.Options.ShowExplicitInterface) {
+				var overridableMember = element as IOverridableMember;
+				if (overridableMember != null && overridableMember.IsExplicitImplementation) {
+					IDeclaredType declaredType = CSharpDeclaredElementUtil.InterfaceQualification(overridableMember);
+					AppendDeclaredType(declaredType, NamespaceDisplays.None, context);
+					AppendText(".", VsHighlightingAttributeIds.Operator);
+					appendedExplicitInterface = true;
+				}
+			}
+
+			if (context.Options.ShowContainer && !appendedExplicitInterface) {
 				var typeMember = element as ITypeMember;
 				if (typeMember != null) {
 					ITypeElement containingTypeElement = typeMember.GetContainingType();

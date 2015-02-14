@@ -162,6 +162,11 @@
     <Compile Include="Presentation\ExceptionContent.cs" />
     <Compile Include="Presentation\DeclaredElementExtensions.9.0.cs" />
     <Compile Include="Presentation\CSharpColorizerExtensions.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\AbstractAccessorIsNotImplementedErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\AbstractBaseMemberCallErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\AbstractInheritedMemberIsNotImplementedErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\AccessorAccessRightsShouldBeMoreRestrictiveErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\AccessorIsMissingInImplementationErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CSharpHighlightingEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectArgumentKindErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectArgumentsErrorEnhancer.cs" />
@@ -180,6 +185,7 @@
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectStackAllockInitializerTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectTrueOrFalseOperatorTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectYieldReturnTypeErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\ReturnTypeIsVoidErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\HighlightingEnhancerManager.cs" />
     <Compile Include="Presentation\Highlightings\IHighlightingEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectArgumentTypeErrorEnhancer.cs" />
