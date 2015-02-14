@@ -13,9 +13,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			bool appendModuleName = highlighting.ArgumentType.HasSameFullNameAs(highlighting.ParameterType);
 
 			colorizer.AppendPlainText("Argument type '");
-			colorizer.AppendExpressionType(highlighting.ArgumentType, appendModuleName);
+			colorizer.AppendExpressionType(highlighting.ArgumentType, appendModuleName, PresenterOptions.FullWithoutParameterNames);
 			colorizer.AppendPlainText("' is not assignable to parameter type '");
-			colorizer.AppendExpressionType(highlighting.ParameterType, appendModuleName);
+			colorizer.AppendExpressionType(highlighting.ParameterType, appendModuleName, PresenterOptions.FullWithoutParameterNames);
 			colorizer.AppendPlainText("'");
 		}
 

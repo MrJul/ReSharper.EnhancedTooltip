@@ -13,9 +13,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			bool appendModuleName = highlighting.ElementType.HasSameFullNameAs(highlighting.IteratorType);
 
 			colorizer.AppendPlainText("Cannot convert element type '");
-			colorizer.AppendExpressionType(highlighting.ElementType, appendModuleName);
+			colorizer.AppendExpressionType(highlighting.ElementType, appendModuleName, PresenterOptions.FullWithoutParameterNames);
 			colorizer.AppendPlainText("' to iterator type '");
-			colorizer.AppendExpressionType(highlighting.IteratorType, appendModuleName);
+			colorizer.AppendExpressionType(highlighting.IteratorType, appendModuleName, PresenterOptions.FullWithoutParameterNames);
 			colorizer.AppendPlainText("'");
 		}
 

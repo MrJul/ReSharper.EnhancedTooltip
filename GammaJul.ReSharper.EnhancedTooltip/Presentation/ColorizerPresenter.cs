@@ -24,12 +24,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// <param name="declaredElementInstance">The declared element instance.</param>
 		/// <param name="options">The options to use to present the element.</param>
 		/// <param name="languageType">The type of language used to present the element.</param>
+		/// <param name="useReSharperColors">Whether to use ReSharper colors, or only VS colors.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
 		[CanBeNull]
 		public RichText TryPresent([NotNull] DeclaredElementInstance declaredElementInstance, [NotNull] PresenterOptions options,
-			[NotNull] PsiLanguageType languageType) {
+			[NotNull] PsiLanguageType languageType, bool useReSharperColors) {
 			PresentedInfo presentedInfo;
-			return TryPresent(declaredElementInstance, options, languageType, out presentedInfo);
+			return TryPresent(declaredElementInstance, options, languageType, useReSharperColors, out presentedInfo);
 		}
 
 		/// <summary>
@@ -38,28 +39,29 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// <param name="declaredElementInstance">The declared element instance.</param>
 		/// <param name="options">The options to use to present the element.</param>
 		/// <param name="languageType">The type of language used to present the element.</param>
+		/// <param name="useReSharperColors">Whether to use ReSharper colors, or only VS colors.</param>
 		/// <param name="presentedInfo">When the method returns, a <see cref="PresentedInfo"/> containing range information about the presented element.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
 		[CanBeNull]
 		public RichText TryPresent([NotNull] DeclaredElementInstance declaredElementInstance, [NotNull] PresenterOptions options,
-			[NotNull] PsiLanguageType languageType, [NotNull] out PresentedInfo presentedInfo) {
+			[NotNull] PsiLanguageType languageType, bool useReSharperColors, [NotNull] out PresentedInfo presentedInfo) {
 			
 			var richText = new RichText();
-			presentedInfo = new PresentedInfo();
-			IColorizer colorizer = TryCreateColorizer(richText, options, languageType, presentedInfo);
-			if (colorizer == null)
+			IColorizer colorizer = TryCreateColorizer(richText, languageType, useReSharperColors);
+			if (colorizer == null) {
+				presentedInfo = new PresentedInfo();
 				return null;
+			}
 
-			colorizer.AppendDeclaredElement(declaredElementInstance.Element, declaredElementInstance.Substitution);
+			presentedInfo = colorizer.AppendDeclaredElement(declaredElementInstance.Element, declaredElementInstance.Substitution, options);
 			return richText;
 		}
 
 		[CanBeNull]
-		private IColorizer TryCreateColorizer([NotNull] RichText richText, [NotNull] PresenterOptions options,
-			[NotNull] PsiLanguageType languageType, [NotNull] PresentedInfo presentedInfo) {
-			// TODO: remove constructor parameters and resolve as a language service
+		private IColorizer TryCreateColorizer([NotNull] RichText richText, [NotNull] PsiLanguageType languageType, bool useReSharperColors) {
+			// TODO: add a language service instead of checking the language
 			if (languageType.Is<CSharpLanguage>())
-				return new CSharpColorizer(richText, options, presentedInfo, _textStyleHighlighterManager, _codeAnnotationsCache);
+				return new CSharpColorizer(richText, _textStyleHighlighterManager, _codeAnnotationsCache, useReSharperColors);
 			return null;
 		}
 

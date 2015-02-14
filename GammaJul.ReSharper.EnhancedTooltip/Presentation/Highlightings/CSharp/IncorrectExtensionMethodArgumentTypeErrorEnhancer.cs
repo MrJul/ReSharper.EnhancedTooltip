@@ -13,9 +13,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			bool appendModuleName = highlighting.ArgumentType.HasSameFullNameAs(highlighting.ParameterType);
 
 			colorizer.AppendPlainText("Cannot use conversion from '");
-			colorizer.AppendExpressionType(highlighting.ArgumentType, appendModuleName);
+			colorizer.AppendExpressionType(highlighting.ArgumentType, appendModuleName, PresenterOptions.FullWithoutParameterNames);
 			colorizer.AppendPlainText("' to '");
-			colorizer.AppendExpressionType(highlighting.ParameterType, appendModuleName);
+			colorizer.AppendExpressionType(highlighting.ParameterType, appendModuleName, PresenterOptions.FullWithoutParameterNames);
 			colorizer.AppendPlainText("' in this context");
 		}
 

@@ -30,9 +30,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 				return null;
 			
 			var richText = new RichText();
-			PresenterOptions options = PresenterOptions.ForError(settings);
-			var presentedInfo = new PresentedInfo();
-			var colorizer = new CSharpColorizer(richText, options, presentedInfo, _textStyleHighlighterManager, _codeAnnotationsCache);
+			bool useReSharperColors = settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled);
+			var colorizer = new CSharpColorizer(richText, _textStyleHighlighterManager, _codeAnnotationsCache, useReSharperColors);
 			AppendTooltip(typedHighlighting, colorizer);
 			return richText;
 		}

@@ -172,6 +172,7 @@
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectExtensionMethodArgumentTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectForeachVariableTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectInitializerTypeErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\IncorrectIteratorReturnTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\HighlightingEnhancerManager.cs" />
     <Compile Include="Presentation\Highlightings\IHighlightingEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectArgumentTypeErrorEnhancer.cs" />

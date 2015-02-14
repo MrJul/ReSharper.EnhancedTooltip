@@ -3,11 +3,6 @@ using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo.Settings;
-#if RS90
-using JetBrains.ReSharper.Feature.Services.Daemon;
-#elif RS82
-using JetBrains.ReSharper.Daemon;
-#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
@@ -16,6 +11,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public bool FormatDelegatesAsLambdas { get; private set; }
 		public bool ShowAccessRights { get; private set; }
 		public bool ShowConstantValues { get; private set; }
+		public bool ShowContainer { get; private set; }
 		public bool ShowElementKind { get; private set; }
 		public AnnotationsDisplayKind ShowElementAnnotations { get; private set; }
 		public ElementTypeDisplay ShowElementType { get; private set; }
@@ -26,14 +22,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public AnnotationsDisplayKind ShowParametersAnnotations { get; private set; }
 		public bool ShowParametersType { get; private set; }
 		public bool ShowEmptyParametersText { get; private set; }
-		public bool UseReSharperColors { get; private set; }
 		public bool UseTypeKeywords { get; private set; }
-		
+
 		[NotNull]
 		public static PresenterOptions ForToolTip([NotNull] IContextBoundSettingsStore settings) {
 			return new PresenterOptions {
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey s) => s.DelegatesAsLambdas),
 				ShowAccessRights = false,
+				ShowContainer = true,
 				ShowConstantValues = true,
 				ShowElementKind = settings.GetValue((IdentifierTooltipSettings s) => s.ShowKind),
 				ShowElementAnnotations = settings.GetValue((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations),
@@ -45,7 +41,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowParametersName = true,
 				ShowParametersAnnotations = settings.GetValue((IdentifierTooltipSettings s) => s.ShowParametersAnnotations),
 				ShowParametersType = true,
-				UseReSharperColors = settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled),
 				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
 			};
 		}
@@ -56,6 +51,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas),
 				ShowAccessRights = false,
 				ShowConstantValues = true,
+				ShowContainer = true,
 				ShowElementKind = false,
 				ShowElementAnnotations = AnnotationsDisplayKind.None,
 				ShowElementType = ElementTypeDisplay.After,
@@ -66,31 +62,47 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowParametersName = true,
 				ShowParametersAnnotations = showAnnotations,
 				ShowParametersType = true,
-				UseReSharperColors = settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled),
 				UseTypeKeywords = settings.GetValue((ParameterInfoSettings s) => s.UseTypeKeywords)
 			};
 		}
 
 		[NotNull]
-		public static PresenterOptions ForError([NotNull] IContextBoundSettingsStore settings) {
-			return new PresenterOptions {
-				FormatDelegatesAsLambdas = false,
-				ShowAccessRights = false,
-				ShowConstantValues = true,
-				ShowElementKind = false,
-				ShowElementAnnotations = AnnotationsDisplayKind.None,
-				ShowElementType = ElementTypeDisplay.Before,
-				ShowEmptyParametersText = false,
-				ShowModifiers = false,
-				ShowName = true,
-				ShowNamespaces = NamespaceDisplays.Everywhere,
-				ShowParametersName = false,
-				ShowParametersAnnotations = AnnotationsDisplayKind.None,
-				ShowParametersType = true,
-				UseReSharperColors = settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled),
-				UseTypeKeywords = true
-			};
-		}
+		public static readonly PresenterOptions FullWithoutParameterNames = new PresenterOptions {
+			FormatDelegatesAsLambdas = false,
+			ShowAccessRights = false,
+			ShowConstantValues = true,
+			ShowContainer = true,
+			ShowElementKind = false,
+			ShowElementAnnotations = AnnotationsDisplayKind.None,
+			ShowElementType = ElementTypeDisplay.Before,
+			ShowEmptyParametersText = false,
+			ShowModifiers = false,
+			ShowName = true,
+			ShowNamespaces = NamespaceDisplays.Everywhere,
+			ShowParametersName = false,
+			ShowParametersAnnotations = AnnotationsDisplayKind.None,
+			ShowParametersType = true,
+			UseTypeKeywords = true
+		};
+
+		[NotNull]
+		public static readonly PresenterOptions NameOnly = new PresenterOptions {
+			FormatDelegatesAsLambdas = false,
+			ShowAccessRights = false,
+			ShowConstantValues = false,
+			ShowContainer = false,
+			ShowElementKind = false,
+			ShowElementAnnotations = AnnotationsDisplayKind.None,
+			ShowElementType = ElementTypeDisplay.None,
+			ShowEmptyParametersText = false,
+			ShowModifiers = false,
+			ShowName = true,
+			ShowNamespaces = NamespaceDisplays.None,
+			ShowParametersName = false,
+			ShowParametersAnnotations = AnnotationsDisplayKind.None,
+			ShowParametersType = false,
+			UseTypeKeywords = false
+		};
 
 		private PresenterOptions() {
 		}

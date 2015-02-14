@@ -8,6 +8,18 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	internal static class CSharpColorizerExtensions {
 
+		public static void AppendPlainText([NotNull] this CSharpColorizer colorizer, [CanBeNull] string text) {
+			colorizer.AppendText(text, null);
+		}
+
+		public static void AppendKeyword([NotNull] this CSharpColorizer colorizer, [CanBeNull] string keyword) {
+			colorizer.AppendText(keyword, VsHighlightingAttributeIds.Keyword);
+		}
+
+		public static void AppendElementKind([NotNull] this CSharpColorizer colorizer, [CanBeNull] IDeclaredElement element) {
+			colorizer.AppendText(element.GetElementKindString(), null);
+		}
+
 		public static void AppendCandidates([NotNull] this CSharpColorizer colorizer, [CanBeNull] IReference reference) {
 			if (reference == null)
 				return;
@@ -22,7 +34,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			for (int i = 0; i < candidates.Count; ++i) {
 				colorizer.AppendPlainText("\r\n  ");
-				colorizer.AppendDeclaredElement(candidates[i].EliminateDelegateInvokeMethod(), substitutions[i]);
+				colorizer.AppendDeclaredElement(candidates[i].EliminateDelegateInvokeMethod(), substitutions[i], PresenterOptions.FullWithoutParameterNames);
 			}
 		}
 

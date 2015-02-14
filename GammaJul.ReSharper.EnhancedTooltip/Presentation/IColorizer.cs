@@ -6,7 +6,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	internal interface IColorizer {
 
-		void AppendDeclaredElement([NotNull] IDeclaredElement element, [NotNull] ISubstitution substitution);
+		[NotNull]
+		PresentedInfo AppendDeclaredElement([NotNull] IDeclaredElement element, [NotNull] ISubstitution substitution, [NotNull] PresenterOptions options);
 
 	}
 

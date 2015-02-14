@@ -9,6 +9,11 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExpectedTypes;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
+#if RS90
+using JetBrains.ReSharper.Feature.Services.Daemon;
+#elif RS82
+using JetBrains.ReSharper.Daemon;
+#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 
@@ -50,11 +55,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			}
 
 			var options = PresenterOptions.ForParameterInfo(_settings, showAnnotations.Value);
+			bool useReSharperColors = _settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled);
 			PresentedInfo presentedInfo;
 			InvocationCandidate invocationCandidate = _underlyingCandidate.InvocationCandidate;
 			var elementInstance = new DeclaredElementInstance(invocationCandidate.Element, invocationCandidate.Substitution);
 			
-			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, _underlyingCandidate.Language, out presentedInfo);
+			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, _underlyingCandidate.Language, useReSharperColors, out presentedInfo);
 			if (richText == null)
 				return _underlyingCandidate.GetSignature(namedArguments, showAnnotations.Value, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 

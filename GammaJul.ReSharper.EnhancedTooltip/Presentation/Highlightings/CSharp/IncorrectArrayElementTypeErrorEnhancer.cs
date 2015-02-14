@@ -15,9 +15,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			bool appendModuleName = sourceType.HasSameFullNameAs(highlighting.TargetType);
 
 			colorizer.AppendPlainText("Cannot convert expression of type '");
-			colorizer.AppendExpressionType(sourceType, appendModuleName);
+			colorizer.AppendExpressionType(sourceType, appendModuleName, PresenterOptions.FullWithoutParameterNames);
 			colorizer.AppendPlainText("' to type '");
-			colorizer.AppendExpressionType(highlighting.TargetType, appendModuleName);
+			colorizer.AppendExpressionType(highlighting.TargetType, appendModuleName, PresenterOptions.FullWithoutParameterNames);
 			colorizer.AppendPlainText("'");
 		}
 		
