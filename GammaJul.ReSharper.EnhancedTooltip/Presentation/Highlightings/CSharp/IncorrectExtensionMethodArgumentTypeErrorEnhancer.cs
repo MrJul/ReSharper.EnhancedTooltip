@@ -7,19 +7,19 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
-	internal sealed class IncorrectArgumentTypeErrorEnhancer : CSharpHighlightingEnhancer<IncorrectArgumentTypeError> {
+	internal sealed class IncorrectExtensionMethodArgumentTypeErrorEnhancer : CSharpHighlightingEnhancer<IncorrectExtensionMethodArgumentTypeError> {
 
-		protected override void AppendTooltip(IncorrectArgumentTypeError highlighting, CSharpColorizer colorizer) {
+		protected override void AppendTooltip(IncorrectExtensionMethodArgumentTypeError highlighting, CSharpColorizer colorizer) {
 			bool appendModuleName = highlighting.ArgumentType.HasSameFullNameAs(highlighting.ParameterType);
 
-			colorizer.AppendPlainText("Argument type '");
+			colorizer.AppendPlainText("Cannot use conversion from '");
 			colorizer.AppendExpressionType(highlighting.ArgumentType, appendModuleName);
-			colorizer.AppendPlainText("' is not assignable to parameter type '");
+			colorizer.AppendPlainText("' to '");
 			colorizer.AppendExpressionType(highlighting.ParameterType, appendModuleName);
-			colorizer.AppendPlainText("'");
+			colorizer.AppendPlainText("' in this context");
 		}
 
-		public IncorrectArgumentTypeErrorEnhancer([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache)
+		public IncorrectExtensionMethodArgumentTypeErrorEnhancer([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache)
 			: base(textStyleHighlighterManager, codeAnnotationsCache) {
 		}
 

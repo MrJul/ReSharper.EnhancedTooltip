@@ -45,6 +45,7 @@
 		<StackPanel Orientation="Vertical" Margin="10,0,0,0">
 			<controls:SectionHeading Text="Issue Tooltip" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IssueTooltipShowIconCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="IssueTooltipColorizeElementsInErrors" />
 		</StackPanel>
 
 		<StackPanel Orientation="Vertical" Margin="10,0,0,0">

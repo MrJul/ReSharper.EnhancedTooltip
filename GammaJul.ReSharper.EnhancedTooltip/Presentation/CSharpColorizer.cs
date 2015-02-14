@@ -100,6 +100,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText(text, null);
 		}
 
+		public void AppendKeyword([CanBeNull] string keyword) {
+			AppendText(keyword, VsHighlightingAttributeIds.Keyword);
+		}
+
 		private void AppendElementKindStylized([CanBeNull] IDeclaredElement element) {
 			AppendText("(" + GetElementKind(element) + ") ", new TextStyle(FontStyle.Italic));
 		}
@@ -265,20 +269,22 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return null;
 		}
 
-		public void AppendType([CanBeNull] IExpressionType type, bool appendModuleName) {
-			if (type == null)
+		public void AppendExpressionType([CanBeNull] IExpressionType expressionType, bool appendModuleName) {
+			if (expressionType == null)
 				return;
 
-			AppendTypeWithoutModule(type, NamespaceDisplays.Everywhere);
-
-			if (appendModuleName) {
-				IType itype = type.ToIType();
-				if (itype != null)
+			IType itype = expressionType.ToIType();
+			if (itype != null) {
+				AppendTypeWithoutModule(itype, NamespaceDisplays.Everywhere);
+				if (appendModuleName)
 					AppendModuleName(itype);
+				return;
 			}
+
+			AppendText(expressionType.GetLongPresentableName(CSharpLanguage.Instance), null);
 		}
 
-		private void AppendTypeWithoutModule([NotNull] IExpressionType type, NamespaceDisplays expectedNamespaceDisplay) {
+		private void AppendTypeWithoutModule([NotNull] IType type, NamespaceDisplays expectedNamespaceDisplay) {
 			var arrayType = type as IArrayType;
 			if (arrayType != null) {
 				AppendArrayType(arrayType, expectedNamespaceDisplay);
@@ -765,7 +771,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			
 			var orderedFields = fields.OrderBy(f => f.ShortName);
 			bool addSeparator = false;
-
+			
 			foreach (IField orderedField in orderedFields) {
 				if (addSeparator)
 					AppendText(" | ", VsHighlightingAttributeIds.Operator);

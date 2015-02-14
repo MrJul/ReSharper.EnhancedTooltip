@@ -101,6 +101,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		private void SetIssueTooltipSettingsBindings() {
 			SetCheckBoxBinding((IssueTooltipSettings s) => s.ShowIcon, IssueTooltipShowIconCheckBox, null);
+			SetCheckBoxBinding((IssueTooltipSettings s) => s.ColorizeElementsInErrors, IssueTooltipColorizeElementsInErrors, null);
 		}
 
 		private void SetParameterInfoSettingsBindings() {

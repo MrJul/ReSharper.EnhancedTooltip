@@ -167,9 +167,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (text.IsEmpty)
 				return null;
 
-			RichText enhancedText = TryEnhanceHighlighting(highlighting, settings, solution);
-			if (!enhancedText.IsNullOrEmpty())
-				text = enhancedText;
+			if (settings.GetValue((IssueTooltipSettings s) => s.ColorizeElementsInErrors)) {
+				RichText enhancedText = TryEnhanceHighlighting(highlighting, settings, solution);
+				if (!enhancedText.IsNullOrEmpty())
+					text = enhancedText;
+			}
 
 			var issueContent = new IssueTooltipContent { Text = text };
 			if (settings.GetValue((IssueTooltipSettings s) => s.ShowIcon))

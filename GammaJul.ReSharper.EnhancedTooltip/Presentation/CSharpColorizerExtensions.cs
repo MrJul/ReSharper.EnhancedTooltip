@@ -26,6 +26,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 		}
 
+		public static void AppendParameterKind([NotNull] this CSharpColorizer colorizer, ParameterKind parameterKind) {
+			switch (parameterKind) {
+				case ParameterKind.VALUE:
+					colorizer.AppendPlainText("value");
+					return;
+				case ParameterKind.REFERENCE:
+					colorizer.AppendKeyword("ref");
+					return;
+				case ParameterKind.OUTPUT:
+					colorizer.AppendKeyword("out");
+					return;
+				default:
+					colorizer.AppendPlainText("value");
+					return;
+			}
+		}
+
 	}
 
 }

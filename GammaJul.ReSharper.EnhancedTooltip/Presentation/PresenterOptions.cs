@@ -74,7 +74,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull]
 		public static PresenterOptions ForError([NotNull] IContextBoundSettingsStore settings) {
 			return new PresenterOptions {
-				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas),
+				FormatDelegatesAsLambdas = false,
 				ShowAccessRights = false,
 				ShowConstantValues = true,
 				ShowElementKind = false,
@@ -84,7 +84,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowModifiers = false,
 				ShowName = true,
 				ShowNamespaces = NamespaceDisplays.Everywhere,
-				ShowParametersName = true,
+				ShowParametersName = false,
 				ShowParametersAnnotations = AnnotationsDisplayKind.None,
 				ShowParametersType = true,
 				UseReSharperColors = settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled),

@@ -8,6 +8,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display an icon for issues")]
 		public bool ShowIcon { get; set; }
 
+		[SettingsEntry(true, "Colorize elements in errors when possible")]
+		public bool ColorizeElementsInErrors { get; set; }
+
 	}
 
 }
