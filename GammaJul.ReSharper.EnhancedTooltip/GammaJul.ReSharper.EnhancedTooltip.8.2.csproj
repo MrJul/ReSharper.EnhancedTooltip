@@ -47,6 +47,13 @@
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectForeachVariableTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectInitializerTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectIteratorReturnTypeErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\IncorrectLambdaBodyExpressionTypeError.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\IncorrectPropertyAccessorNameErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\IncorrectReturnTypeErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\IncorrectSignatureInDelegateCreationErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\IncorrectStackAllockInitializerTypeErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\IncorrectTrueOrFalseOperatorTypeErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\IncorrectYieldReturnTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\HighlightingEnhancerManager.cs" />
     <Compile Include="Presentation\Highlightings\IHighlightingEnhancer.cs" />
     <Compile Include="Presentation\IColorizer.cs" />

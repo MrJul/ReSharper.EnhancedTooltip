@@ -104,6 +104,25 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseTypeKeywords = false
 		};
 
+		[NotNull]
+		public static readonly PresenterOptions ParameterTypesOnly = new PresenterOptions {
+			FormatDelegatesAsLambdas = false,
+			ShowAccessRights = false,
+			ShowConstantValues = false,
+			ShowContainer = false,
+			ShowElementKind = false,
+			ShowElementAnnotations = AnnotationsDisplayKind.None,
+			ShowElementType = ElementTypeDisplay.None,
+			ShowEmptyParametersText = false,
+			ShowModifiers = false,
+			ShowName = false,
+			ShowNamespaces = NamespaceDisplays.None,
+			ShowParametersName = false,
+			ShowParametersAnnotations = AnnotationsDisplayKind.None,
+			ShowParametersType = true,
+			UseTypeKeywords = false
+		};
+
 		private PresenterOptions() {
 		}
 
