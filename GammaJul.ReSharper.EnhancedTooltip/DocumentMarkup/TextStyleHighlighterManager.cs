@@ -23,8 +23,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 	[SolutionComponent]
 	public class TextStyleHighlighterManager {
 
-		private readonly Dictionary<string, HighlighterAttributes> _vsAttributesByName = new Dictionary<string, HighlighterAttributes>();
-		private readonly IHighlighterCustomization _highlighterCustomization;
+		[NotNull] private readonly Dictionary<string, HighlighterAttributes> _vsAttributesByName = new Dictionary<string, HighlighterAttributes>();
+		[NotNull] private readonly IHighlighterCustomization _highlighterCustomization;
 		private readonly DTE _dte;
 
 		[NotNull]

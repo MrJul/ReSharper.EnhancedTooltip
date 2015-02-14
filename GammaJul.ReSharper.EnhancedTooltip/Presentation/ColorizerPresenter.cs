@@ -24,13 +24,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// <param name="declaredElementInstance">The declared element instance.</param>
 		/// <param name="options">The options to use to present the element.</param>
 		/// <param name="languageType">The type of language used to present the element.</param>
-		/// <param name="nameHighlightingAttributeId">The highlighting attribute identifier used to colorize the name.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
 		[CanBeNull]
 		public RichText TryPresent([NotNull] DeclaredElementInstance declaredElementInstance, [NotNull] PresenterOptions options,
-			[NotNull] PsiLanguageType languageType, [CanBeNull] string nameHighlightingAttributeId) {
+			[NotNull] PsiLanguageType languageType) {
 			PresentedInfo presentedInfo;
-			return TryPresent(declaredElementInstance, options, languageType, nameHighlightingAttributeId, out presentedInfo);
+			return TryPresent(declaredElementInstance, options, languageType, out presentedInfo);
 		}
 
 		/// <summary>
@@ -39,12 +38,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// <param name="declaredElementInstance">The declared element instance.</param>
 		/// <param name="options">The options to use to present the element.</param>
 		/// <param name="languageType">The type of language used to present the element.</param>
-		/// <param name="nameHighlightingAttributeId">The highlighting attribute identifier used to colorize the name.</param>
 		/// <param name="presentedInfo">When the method returns, a <see cref="PresentedInfo"/> containing range information about the presented element.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
 		[CanBeNull]
 		public RichText TryPresent([NotNull] DeclaredElementInstance declaredElementInstance, [NotNull] PresenterOptions options,
-			[NotNull] PsiLanguageType languageType, [CanBeNull] string nameHighlightingAttributeId, [NotNull] out PresentedInfo presentedInfo) {
+			[NotNull] PsiLanguageType languageType, [NotNull] out PresentedInfo presentedInfo) {
 			
 			var richText = new RichText();
 			presentedInfo = new PresentedInfo();
@@ -52,7 +50,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (colorizer == null)
 				return null;
 
-			colorizer.AppendDeclaredElement(declaredElementInstance.Element, declaredElementInstance.Substitution, nameHighlightingAttributeId);
+			colorizer.AppendDeclaredElement(declaredElementInstance.Element, declaredElementInstance.Substitution);
 			return richText;
 		}
 

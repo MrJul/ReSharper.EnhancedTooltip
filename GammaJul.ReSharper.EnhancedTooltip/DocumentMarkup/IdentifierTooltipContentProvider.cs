@@ -55,15 +55,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (elementInstance == null)
 				return null;
 			
-			return TryPresentColorized(elementInstance, languageType, psiSourceFile, settings, highlighter.AttributeId)
+			return TryPresentColorized(elementInstance, languageType, psiSourceFile, settings)
 				?? TryPresentNonColorized(highlighter, elementInstance.Element, settings);
 		}
 
 		[CanBeNull]
 		private IdentifierTooltipContent TryPresentColorized([NotNull] DeclaredElementInstance elementInstance, [NotNull] PsiLanguageType languageType,
-			[NotNull] IPsiSourceFile psiSourceFile, [NotNull] IContextBoundSettingsStore settings, [CanBeNull] string highlighterAttributeId) {
+			[NotNull] IPsiSourceFile psiSourceFile, [NotNull] IContextBoundSettingsStore settings) {
 			
-			RichText identifierText = _colorizerPresenter.TryPresent(elementInstance, PresenterOptions.ForToolTip(settings), languageType, highlighterAttributeId);
+			RichText identifierText = _colorizerPresenter.TryPresent(elementInstance, PresenterOptions.ForToolTip(settings), languageType);
 			if (identifierText == null || identifierText.IsEmpty)
 				return null;
 

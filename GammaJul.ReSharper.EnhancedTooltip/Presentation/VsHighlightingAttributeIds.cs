@@ -12,10 +12,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public const string Delegates = "User Types(Delegates)";
 		public const string Enums = "User Types(Enums)";
 		public const string Keyword = "Keyword";
+		public const string Identifier = "Identifier";
 		public const string Interfaces = "User Types(Interfaces)";
 		public const string Operator = "Operator";
 		public const string ValueTypes = "User Types(Value types)";
-
+		
 		[CanBeNull]
 		public static string GetForTypeElement([CanBeNull] ITypeElement typeElement) {
 			if (typeElement is IDelegate)

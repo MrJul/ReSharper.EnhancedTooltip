@@ -29,9 +29,13 @@
     <Compile Include="Presentation\AutoContrastedRichTextPresenter.cs" />
     <Compile Include="Presentation\ColorizerPresenter.cs" />
     <Compile Include="Presentation\CSharpColorizer.cs" />
+    <Compile Include="Presentation\DeclaredElementExtensions.8.2.cs" />
+    <Compile Include="Presentation\CSharpColorizerExtensions.cs" />
+    <Compile Include="Presentation\DeclaredElementExtensions.cs" />
     <Compile Include="Presentation\ElementTypeDisplay.cs" />
     <Compile Include="Presentation\ExceptionContent.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CSharpHighlightingEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\IncorrectArgumentsErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\IncorrectArgumentTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\HighlightingEnhancerManager.cs" />
     <Compile Include="Presentation\Highlightings\IHighlightingEnhancer.cs" />
