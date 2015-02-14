@@ -525,56 +525,32 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[CanBeNull]
 		private static string GetSignOperator([CanBeNull] string operatorName) {
 			switch (operatorName) {
-				case "op_UnaryPlus":
-					return "+";
-				case "op_UnaryNegation":
-					return "-";
-				case "op_LogicalNot":
-					return "!";
-				case "op_OnesComplement":
-					return "~";
-				case "op_Increment":
-					return "++";
-				case "op_Decrement":
-					return "--";
-				case "op_True":
-					return "true";
-				case "op_False":
-					return "false";
-				case "op_Addition":
-					return "+";
-				case "op_Subtraction":
-					return "-";
-				case "op_Multiply":
-					return "*";
-				case "op_Division":
-					return "/";
-				case "op_Modulus":
-					return "%";
-				case "op_BitwiseAnd":
-					return "&";
-				case "op_BitwiseOr":
-					return "|";
-				case "op_ExclusiveOr":
-					return "^";
-				case "op_LeftShift":
-					return "<<";
-				case "op_RightShift":
-					return ">>";
-				case "op_Equality":
-					return "==";
-				case "op_Inequality":
-					return "!=";
-				case "op_LessThan":
-					return "<";
-				case "op_LessThanOrEqual":
-					return "<=";
-				case "op_GreaterThan":
-					return ">";
-				case "op_GreaterThanOrEqual":
-					return ">=";
+				case OperatorName.UNARY_PLUS: return "+";
+				case OperatorName.UNARY_MINUS: return "-";
+				case OperatorName.UNARY_LOGNOT: return "!";
+				case OperatorName.UNARY_COMPLEMENT: return "~";
+				case OperatorName.UNARY_INCREMENT: return "++";
+				case OperatorName.UNARY_DECREMENT: return "--";
+				case OperatorName.UNARY_TRUE: return "true";
+				case OperatorName.UNARY_FALSE: return "false";
+				case OperatorName.BINARY_PLUS: return "+";
+				case OperatorName.BINARY_MINUS: return "-";
+				case OperatorName.BINARY_MULTIPLY: return "*";
+				case OperatorName.BINARY_DIVIDE: return "/";
+				case OperatorName.BINARY_MODULUS: return "%";
+				case OperatorName.BINARY_BITWISE_AND: return "&";
+				case OperatorName.BINARY_BITWISE_OR: return "|";
+				case OperatorName.BINARY_EXCLUSIVE_OR: return "^";
+				case OperatorName.BINARY_LEFTSHIFT: return "<<";
+				case OperatorName.BINARY_RIGHTSHIFT: return ">>";
+				case OperatorName.BINARY_EQUALITY: return "==";
+				case OperatorName.BINARY_INEQUALITY: return "!=";
+				case OperatorName.BINARY_LT: return "<";
+				case OperatorName.BINARY_LE: return "<=";
+				case OperatorName.BINARY_GT: return ">";
+				case OperatorName.BINARY_GE: return ">=";
+				default: return operatorName;
 			}
-			return null;
 		}
 
 		private void AppendParameters([NotNull] IDeclaredElement element, [NotNull] ISubstitution substitution, bool isTopLevel) {
@@ -744,8 +720,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (defaultValue.IsConstant) {
 				AppendText(" = ", VsHighlightingAttributeIds.Operator);
-				string presentation = defaultValue.ConstantValue.GetPresentation(CSharpLanguage.Instance);
-				AppendText(presentation, CSharpLexer.IsKeyword(presentation) ? VsHighlightingAttributeIds.Keyword : null);
+
+				ConstantValue constantValue = defaultValue.ConstantValue;
+				IEnum enumType = constantValue.Type.GetEnumType();
+				if (enumType == null || !AppendEnumValue(constantValue, enumType)) {
+					string presentation = constantValue.GetPresentation(CSharpLanguage.Instance);
+					AppendText(presentation, CSharpLexer.IsKeyword(presentation) ? VsHighlightingAttributeIds.Keyword : null);
+				}
 				return;
 			}
 
@@ -764,6 +745,30 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText("(", null);
 			AppendTypeWithoutModule(defaultType, NamespaceDisplays.Parameters);
 			AppendText(")", null);
+		}
+
+		private bool AppendEnumValue([NotNull] ConstantValue constantValue, [NotNull] IEnum enumType) {
+			IList<IField> fields = CSharpEnumUtil.CalculateEnumMembers(constantValue, enumType);
+			if (fields.Count == 0)
+				return false;
+
+			string enumTypeHighlightingId = _options.UseReSharperColors ? HighlightingAttributeIds.TYPE_ENUM_ATTRIBUTE : VsHighlightingAttributeIds.Enums;
+			string enumValueHighlightingId = _options.UseReSharperColors ? HighlightingAttributeIds.CONSTANT_IDENTIFIER_ATTRIBUTE : null;
+			
+			var orderedFields = fields.OrderBy(f => f.ShortName);
+			bool addSeparator = false;
+
+			foreach (IField orderedField in orderedFields) {
+				if (addSeparator)
+					AppendText(" | ", VsHighlightingAttributeIds.Operator);
+
+				AppendText(enumType.ShortName, enumTypeHighlightingId);
+				AppendText(".", VsHighlightingAttributeIds.Operator);
+				AppendText(orderedField.ShortName, enumValueHighlightingId);
+
+				addSeparator = true;
+			}
+			return true;
 		}
 
 		public CSharpColorizer([NotNull] RichText richText, [NotNull] PresenterOptions options,
