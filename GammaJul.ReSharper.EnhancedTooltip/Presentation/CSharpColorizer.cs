@@ -58,6 +58,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull] private readonly CodeAnnotationsCache _codeAnnotationsCache;
 		private readonly bool _useReSharperColors;
 
+		public bool UseReSharperColors {
+			get { return _useReSharperColors; }
+		}
+
 		public PresentedInfo AppendDeclaredElement(IDeclaredElement element, ISubstitution substitution, PresenterOptions options) {
 			var context = new Context(options, new PresentedInfo());
 
@@ -68,7 +72,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendElementKindStylized(element);
 
 			if (options.ShowAccessRights)
-				AppendAccessRights(element);
+				AppendAccessRights(element, true);
 			if (options.ShowModifiers)
 				AppendModifiers(element);
 
@@ -112,15 +116,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		private void AppendElementKindStylized([CanBeNull] IDeclaredElement element) {
 			AppendText("(" + element.GetElementKindString() + ") ", new TextStyle(FontStyle.Italic));
 		}
-		
-		private void AppendAccessRights([NotNull] IDeclaredElement element) {
+
+		public void AppendAccessRights([NotNull] IDeclaredElement element, bool addSpaceAfter) {
 			var accessRightsOwner = element as IAccessRightsOwner;
 			if (accessRightsOwner == null)
 				return;
 
 			string accessRights = CSharpDeclaredElementPresenter.Instance.Format(accessRightsOwner.GetAccessRights());
-			if (!accessRights.IsEmpty())
-				AppendText(accessRights + " ", VsHighlightingAttributeIds.Keyword);
+			if (accessRights.IsEmpty())
+				return;
+
+			AppendText(accessRights, VsHighlightingAttributeIds.Keyword);
+			if (addSpaceAfter)
+				AppendText(" ", null);
 		}
 
 		private void AppendModifiers([NotNull] IDeclaredElement element) {
@@ -401,9 +409,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				var overridableMember = element as IOverridableMember;
 				if (overridableMember != null && overridableMember.IsExplicitImplementation) {
 					IDeclaredType declaredType = CSharpDeclaredElementUtil.InterfaceQualification(overridableMember);
-					AppendDeclaredType(declaredType, NamespaceDisplays.None, context);
-					AppendText(".", VsHighlightingAttributeIds.Operator);
-					appendedExplicitInterface = true;
+					if (declaredType != null) {
+						AppendDeclaredType(declaredType, NamespaceDisplays.None, context);
+						AppendText(".", VsHighlightingAttributeIds.Operator);
+						appendedExplicitInterface = true;
+					}
 				}
 			}
 

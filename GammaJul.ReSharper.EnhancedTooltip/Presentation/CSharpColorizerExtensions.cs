@@ -4,6 +4,11 @@ using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Resolve;
 using JetBrains.ReSharper.Psi.Resolve;
+#if RS90
+using JetBrains.ReSharper.Feature.Services.Daemon;
+#elif RS82
+using JetBrains.ReSharper.Daemon;
+#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
@@ -15,6 +20,22 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public static void AppendKeyword([NotNull] this CSharpColorizer colorizer, [CanBeNull] string keyword) {
 			colorizer.AppendText(keyword, VsHighlightingAttributeIds.Keyword);
+		}
+		
+		public static void AppendOperator([NotNull] this CSharpColorizer colorizer, [CanBeNull] string @operator) {
+			colorizer.AppendText(@operator, VsHighlightingAttributeIds.Operator);
+		}
+
+		public static void AppendNamespaceName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string className) {
+			colorizer.AppendText(className, colorizer.UseReSharperColors ? HighlightingAttributeIds.NAMESPACE_IDENTIFIER_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
+		}
+
+		public static void AppendClassName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string className) {
+			colorizer.AppendText(className, colorizer.UseReSharperColors ? HighlightingAttributeIds.TYPE_CLASS_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
+		}
+
+		public static void AppendMethodName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string className) {
+			colorizer.AppendText(className, colorizer.UseReSharperColors ? HighlightingAttributeIds.METHOD_IDENTIFIER_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
 		}
 
 		public static void AppendElementKind([NotNull] this CSharpColorizer colorizer, [CanBeNull] IDeclaredElement element) {
@@ -72,7 +93,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					colorizer.AppendKeyword("set");
 					return;
 				case AccessorKind.RAISER:
-					colorizer.AppendPlainText("raise");
+					colorizer.AppendPlainText("fire");
 					return;
 				case AccessorKind.UNKNOWN:
 					colorizer.AppendPlainText("unknown");

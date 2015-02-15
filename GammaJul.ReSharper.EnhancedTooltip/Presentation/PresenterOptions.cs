@@ -166,7 +166,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersName = false,
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = false,
-			UseTypeKeywords = false
+			UseTypeKeywords = true
 		};
 
 		[NotNull]
@@ -186,7 +186,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersName = false,
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
-			UseTypeKeywords = false
+			UseTypeKeywords = true
 		};
 
 		private PresenterOptions() {

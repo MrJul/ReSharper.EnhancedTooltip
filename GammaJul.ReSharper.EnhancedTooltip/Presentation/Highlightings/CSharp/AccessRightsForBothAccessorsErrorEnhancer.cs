@@ -1,0 +1,27 @@
+using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+using JetBrains.Annotations;
+using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
+using JetBrains.ReSharper.Psi.CodeAnnotations;
+using JetBrains.ReSharper.Psi.Resolve;
+
+namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
+
+	[SolutionComponent]
+	internal sealed class AccessRightsForBothAccessorsErrorEnhancer : CSharpHighlightingEnhancer<AccessRightsForBothAccessorsError> {
+
+		protected override void AppendTooltip(AccessRightsForBothAccessorsError highlighting, CSharpColorizer colorizer) {
+			colorizer.AppendPlainText("Cannot specify accessibility modifiers for both accessors of the ");
+			colorizer.AppendElementKind(highlighting.TypeMember);
+			colorizer.AppendPlainText(" '");
+			colorizer.AppendDeclaredElement(highlighting.TypeMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName);
+			colorizer.AppendPlainText("'");
+		}
+
+		public AccessRightsForBothAccessorsErrorEnhancer([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache)
+			: base(textStyleHighlighterManager, codeAnnotationsCache) {
+		}
+
+	}
+
+}
