@@ -12,8 +12,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(CannotInheritFromSpecialTypeError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("Cannot derive from special class '");
-			colorizer.AppendPlainText(" '");
-			colorizer.AppendExpressionType(TypeFactory.CreateType(highlighting.TypeElement), false, PresenterOptions.NameOnly);
+			colorizer.AppendExpressionType(TypeFactory.CreateType(highlighting.TypeElement), false, PresenterOptions.QualifiedName);
 			colorizer.AppendPlainText("'");
 		}
 		
