@@ -3,7 +3,7 @@
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	[Flags]
-	public enum TypeContainerDisplays {
+	public enum QualifierDisplays {
 		None = 0x0,
 		Member = 0x1,
 		ElementType = 0x2,

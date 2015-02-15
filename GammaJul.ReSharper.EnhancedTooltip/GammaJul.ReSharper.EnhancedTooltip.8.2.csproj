@@ -120,12 +120,11 @@
     <Compile Include="Presentation\IssueTooltipContent.cs" />
     <Compile Include="Presentation\ITooltipContent.cs" />
     <Compile Include="Presentation\MiscTooltipContent.cs" />
-    <Compile Include="Presentation\NamespaceDisplayMode.cs" />
+    <Compile Include="Presentation\QualifierDisplays.cs" />
     <Compile Include="Presentation\PresentedInfo.cs" />
     <Compile Include="Presentation\PresenterOptions.cs" />
     <Compile Include="Presentation\SmallFontConverter.cs" />
     <Compile Include="Presentation\Styling.cs" />
-    <Compile Include="Presentation\TypeContainerDisplays.cs" />
     <Compile Include="Presentation\UIResources.8.2.cs" />
     <Compile Include="Presentation\UIResources.cs" />
     <Compile Include="Presentation\VsHighlightingAttributeIds.cs" />

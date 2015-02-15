@@ -11,7 +11,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public bool FormatDelegatesAsLambdas { get; private set; }
 		public bool ShowAccessRights { get; private set; }
 		public bool ShowConstantValues { get; private set; }
-		public TypeContainerDisplays ShowTypeContainers { get; private set; }
 		public bool ShowElementKind { get; private set; }
 		public AnnotationsDisplayKind ShowElementAnnotations { get; private set; }
 		public ElementTypeDisplay ShowElementType { get; private set; }
@@ -19,10 +18,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public bool ShowExplicitInterface { get; private set; }
 		public bool ShowModifiers { get; private set; }
 		public bool ShowName { get; private set; }
-		public NamespaceDisplays ShowNamespaces { get; private set; }
 		public bool ShowParametersName { get; private set; }
 		public AnnotationsDisplayKind ShowParametersAnnotations { get; private set; }
 		public bool ShowParametersType { get; private set; }
+		public QualifierDisplays ShowQualifiers { get; private set; }
 		public bool UseTypeKeywords { get; private set; }
 
 		[NotNull]
@@ -30,7 +29,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return new PresenterOptions {
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey s) => s.DelegatesAsLambdas),
 				ShowAccessRights = false,
-				ShowTypeContainers = TypeContainerDisplays.Member,
 				ShowConstantValues = true,
 				ShowElementKind = settings.GetValue((IdentifierTooltipSettings s) => s.ShowKind),
 				ShowElementAnnotations = settings.GetValue((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations),
@@ -39,10 +37,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowExplicitInterface = false,
 				ShowModifiers = false,
 				ShowName = true,
-				ShowNamespaces = NamespaceDisplays.Member,
 				ShowParametersName = true,
 				ShowParametersAnnotations = settings.GetValue((IdentifierTooltipSettings s) => s.ShowParametersAnnotations),
 				ShowParametersType = true,
+				ShowQualifiers = QualifierDisplays.Member,
 				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
 			};
 		}
@@ -53,7 +51,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas),
 				ShowAccessRights = false,
 				ShowConstantValues = true,
-				ShowTypeContainers = TypeContainerDisplays.None,
 				ShowElementKind = false,
 				ShowElementAnnotations = AnnotationsDisplayKind.None,
 				ShowElementType = ElementTypeDisplay.After,
@@ -61,10 +58,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowExplicitInterface = false,
 				ShowModifiers = false,
 				ShowName = false,
-				ShowNamespaces = NamespaceDisplays.None,
 				ShowParametersName = true,
 				ShowParametersAnnotations = showAnnotations,
 				ShowParametersType = true,
+				ShowQualifiers = QualifierDisplays.None,
 				UseTypeKeywords = settings.GetValue((ParameterInfoSettings s) => s.UseTypeKeywords)
 			};
 		}
@@ -74,7 +71,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			FormatDelegatesAsLambdas = false,
 			ShowAccessRights = false,
 			ShowConstantValues = true,
-			ShowTypeContainers = TypeContainerDisplays.Everywhere,
 			ShowElementKind = false,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.Before,
@@ -82,10 +78,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowExplicitInterface = true,
 			ShowModifiers = false,
 			ShowName = true,
-			ShowNamespaces = NamespaceDisplays.Everywhere,
 			ShowParametersName = false,
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
+			ShowQualifiers = QualifierDisplays.Everywhere,
 			UseTypeKeywords = true
 		};
 
@@ -94,7 +90,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			FormatDelegatesAsLambdas = false,
 			ShowAccessRights = false,
 			ShowConstantValues = true,
-			ShowTypeContainers = TypeContainerDisplays.Member,
 			ShowElementKind = false,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.Before,
@@ -102,10 +97,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowExplicitInterface = false,
 			ShowModifiers = false,
 			ShowName = true,
-			ShowNamespaces = NamespaceDisplays.Member,
 			ShowParametersName = false,
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
+			ShowQualifiers = QualifierDisplays.Member,
 			UseTypeKeywords = true
 		};
 
@@ -114,7 +109,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			FormatDelegatesAsLambdas = false,
 			ShowAccessRights = false,
 			ShowConstantValues = true,
-			ShowTypeContainers = TypeContainerDisplays.Member,
 			ShowElementKind = false,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.None,
@@ -122,10 +116,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowExplicitInterface = false,
 			ShowModifiers = false,
 			ShowName = true,
-			ShowNamespaces = NamespaceDisplays.Member,
 			ShowParametersName = false,
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = false,
+			ShowQualifiers = QualifierDisplays.Member,
 			UseTypeKeywords = true
 		};
 		
@@ -134,7 +128,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			FormatDelegatesAsLambdas = false,
 			ShowAccessRights = false,
 			ShowConstantValues = false,
-			ShowTypeContainers = TypeContainerDisplays.None,
 			ShowElementKind = false,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.Before,
@@ -142,10 +135,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowExplicitInterface = true,
 			ShowModifiers = false,
 			ShowName = true,
-			ShowNamespaces = NamespaceDisplays.None,
 			ShowParametersName = false,
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
+			ShowQualifiers = QualifierDisplays.None,
 			UseTypeKeywords = true
 		};
 
@@ -154,7 +147,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			FormatDelegatesAsLambdas = false,
 			ShowAccessRights = false,
 			ShowConstantValues = false,
-			ShowTypeContainers = TypeContainerDisplays.None,
 			ShowElementKind = false,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.None,
@@ -162,10 +154,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowExplicitInterface = false,
 			ShowModifiers = false,
 			ShowName = true,
-			ShowNamespaces = NamespaceDisplays.None,
 			ShowParametersName = false,
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = false,
+			ShowQualifiers = QualifierDisplays.None,
 			UseTypeKeywords = true
 		};
 
@@ -174,7 +166,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			FormatDelegatesAsLambdas = false,
 			ShowAccessRights = false,
 			ShowConstantValues = false,
-			ShowTypeContainers = TypeContainerDisplays.None,
 			ShowElementKind = false,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.None,
@@ -182,10 +173,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowExplicitInterface = false,
 			ShowModifiers = false,
 			ShowName = false,
-			ShowNamespaces = NamespaceDisplays.None,
 			ShowParametersName = false,
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
+			ShowQualifiers = QualifierDisplays.None,
 			UseTypeKeywords = true
 		};
 
