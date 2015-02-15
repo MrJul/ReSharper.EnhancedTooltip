@@ -34,6 +34,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			colorizer.AppendText(className, colorizer.UseReSharperColors ? HighlightingAttributeIds.TYPE_CLASS_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
 		}
 
+		public static void AppendInterfaceName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string interfaceName) {
+			colorizer.AppendText(interfaceName, colorizer.UseReSharperColors ? HighlightingAttributeIds.TYPE_INTERFACE_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
+		}
+
 		public static void AppendMethodName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string className) {
 			colorizer.AppendText(className, colorizer.UseReSharperColors ? HighlightingAttributeIds.METHOD_IDENTIFIER_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
 		}
