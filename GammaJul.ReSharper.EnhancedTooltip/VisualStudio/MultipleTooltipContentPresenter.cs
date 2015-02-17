@@ -16,9 +16,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		[NotNull] private readonly List<MiscTooltipContent> _miscContents = new List<MiscTooltipContent>();
 		[NotNull] private readonly TextFormattingRunProperties _formatting;
 
+		[ContractAnnotation("null => false")]
 		public bool TryAddContent([CanBeNull] ITooltipContent content) {
 			if (content == null || content.Text.IsNullOrEmpty())
-				return true;
+				return false;
 
 			var identifierContent = content as IdentifierTooltipContent;
 			if (identifierContent != null) {

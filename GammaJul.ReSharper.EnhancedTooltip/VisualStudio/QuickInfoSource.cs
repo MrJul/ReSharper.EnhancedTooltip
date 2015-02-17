@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings;
@@ -11,8 +10,6 @@ using JetBrains.Application;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.UI.Avalon.Controls;
 using JetBrains.UI.RichText;
@@ -29,6 +26,8 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.VsIntegration.ProjectDocuments;
 using JetIVsTextBuffer = JetBrains.VsIntegration.Interop.Shim.TextManager.Documents.IVsTextBuffer;
 #elif RS82
+using JetBrains.DocumentManagers.Transactions;
+using JetBrains.ReSharper.Daemon;
 using JetBrains.VsIntegration.DevTen.Interop.Shim;
 using JetBrains.VsIntegration.DevTen.Markup;
 using JetBrains.VsIntegration.ProjectModel;
@@ -52,7 +51,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (documentMarkup == null)
 				return;
 
-			// If this fail, it means the extension is disabled and none of are components are available.
+			// If this fail, it means the extension is disabled and none of the components are available.
 			var tooltipFontProvider = Shell.Instance.TryGetComponent<TooltipFormattingProvider>();
 			if (tooltipFontProvider == null)
 				return;
@@ -66,18 +65,39 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				using (shellLocks.UsingReadLock()) {
 					
 					var presenter = new MultipleTooltipContentPresenter(tooltipFontProvider.GetTooltipFormatting());
+					IContextBoundSettingsStore settings = documentMarkup.Document.GetSettings();
+					ISolution solution = TryGetCurrentSolution();
+
+					ITooltipContent identifierTooltipContent = null;
+					if (solution != null) {
+						DocumentRange documentRange = textRange.CreateDocumentRange(documentMarkup.Document);
+						identifierTooltipContent = TryGetIdentifierTooltipContent(documentRange, solution, settings);
+						if (presenter.TryAddContent(identifierTooltipContent))
+							finalSpan = identifierTooltipContent.TrackingRange.ToSpan();
+					}
 
 					List<Vs10Highlighter> highlighters = documentMarkup.GetHighlightersOver(textRange).OfType<Vs10Highlighter>().ToList();
 					foreach (Vs10Highlighter highlighter in highlighters) {
-						if (presenter.TryAddContent(TryGetTooltipContent(highlighter, documentMarkup)))
-							finalSpan = highlighter.Range.ToSpan().Union(finalSpan);
+						ITooltipContent tooltipContent = TryGetTooltipContent(highlighter, highlighter.Range, documentMarkup, solution, identifierTooltipContent != null);
+						if (presenter.TryAddContent(tooltipContent))
+							finalSpan = tooltipContent.TrackingRange.ToSpan().Union(finalSpan);
 					}
 
 					var nonReSharperContents = new List<object>();
+					bool ignoredFirstTextBuffer = false;
 					foreach (object content in quickInfoContent) {
+
 						// ignore existing R# elements
-						if (!(content is RichTextPresenter))
-							nonReSharperContents.Add(content);
+						if (content is RichTextPresenter)
+							continue;
+						
+						// ignore the first VS text is we provided an identifier tooltip
+						if (content is ITextBuffer && identifierTooltipContent != null && !ignoredFirstTextBuffer) {
+							ignoredFirstTextBuffer = true;
+							continue;
+						}
+
+						nonReSharperContents.Add(content);
 					}
 
 					quickInfoContent.Clear();
@@ -110,35 +130,40 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		}
 
 		[CanBeNull]
+		private static ITooltipContent TryGetIdentifierTooltipContent(DocumentRange documentRange, [NotNull] ISolution solution, [NotNull] IContextBoundSettingsStore settings) {
+			var contentProvider = solution.GetComponent<IdentifierTooltipContentProvider>();
+			return contentProvider.TryGetIdentifierContent(documentRange, settings);
+		}
+
+		[CanBeNull]
 		[Pure]
-		private static ITooltipContent TryGetTooltipContent([NotNull] IHighlighter highlighter, [NotNull] IDocumentMarkup documentMarkup) {
+		private static ITooltipContent TryGetTooltipContent([NotNull] IHighlighter highlighter, TextRange range,
+			[NotNull] IDocumentMarkup documentMarkup, [CanBeNull] ISolution solution, bool skipIdentifierHighlighting) {
+
 			if (highlighter.Attributes.Effect.Type == EffectType.GUTTER_MARK)
 				return null;
 
 			var highlighting = highlighter.UserData as IHighlighting;
 			if (highlighting != null) {
-
-				ISolution solution = TryGetCurrentSolution();
-
+				
 				IDocument document = documentMarkup.Document;
 				IContextBoundSettingsStore settings = document.GetSettings();
 
 				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, document, solution);
-				IssueTooltipContent issueContent = TryCreateIssueContent(highlighting, highlighter.RichTextToolTip, severity, settings, solution);
+				IssueTooltipContent issueContent = TryCreateIssueContent(highlighting, range, highlighter.RichTextToolTip, severity, settings, solution);
 				if (issueContent != null)
 					return issueContent;
 
-				PsiLanguageType languageType = TryGetIdentifierLanguage(highlighting);
-				if (languageType != null) {
-					if (solution != null) {
-						IdentifierTooltipContent identifierContent = TryGetIdentifierTooltipContent(highlighter, languageType, solution, settings);
-						if (identifierContent != null)
-							return identifierContent;
-					}
+				if (solution != null && IsIdentifierHighlighting(highlighting)) {
+					if (skipIdentifierHighlighting)
+						return null;
+					IdentifierTooltipContent identifierContent = TryGetIdentifierTooltipContent(highlighter, solution, settings);
+					if (identifierContent != null)
+						return identifierContent;
 				}
 			}
 
-			return TryCreateMiscContent(highlighter.RichTextToolTip);
+			return TryCreateMiscContent(highlighter.RichTextToolTip, range);
 		}
 
 		[CanBeNull]
@@ -149,16 +174,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		[CanBeNull]
 		[Pure]
-		private static IdentifierTooltipContent TryGetIdentifierTooltipContent([NotNull] IHighlighter highlighter, [NotNull] PsiLanguageType languageType,
-			[NotNull] ISolution solution, [NotNull] IContextBoundSettingsStore settings) {
+		private static IdentifierTooltipContent TryGetIdentifierTooltipContent([NotNull] IHighlighter highlighter, [NotNull] ISolution solution, [NotNull] IContextBoundSettingsStore settings) {
 			var contentProvider = solution.GetComponent<IdentifierTooltipContentProvider>();
-			return contentProvider.TryGetIdentifierContent(highlighter, languageType, settings);
+			return contentProvider.TryGetIdentifierContent(highlighter, settings);
 		}
 
 		[CanBeNull]
 		[Pure]
-		private static IssueTooltipContent TryCreateIssueContent([NotNull] IHighlighting highlighting, [CanBeNull] RichTextBlock textBlock,
-			Severity severity, [NotNull] IContextBoundSettingsStore settings, [CanBeNull] ISolution solution) {
+		private static IssueTooltipContent TryCreateIssueContent([NotNull] IHighlighting highlighting, TextRange trackingRange,
+			[CanBeNull] RichTextBlock textBlock, Severity severity, [NotNull] IContextBoundSettingsStore settings, [CanBeNull] ISolution solution) {
 
 			if (textBlock == null || !severity.IsIssue())
 				return null;
@@ -173,7 +197,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					text = enhancedText;
 			}
 
-			var issueContent = new IssueTooltipContent { Text = text };
+			var issueContent = new IssueTooltipContent(text, trackingRange);
 			if (settings.GetValue((IssueTooltipSettings s) => s.ShowIcon))
 				issueContent.Icon = severity.TryGetIcon();
 			return issueContent;
@@ -194,7 +218,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		[CanBeNull]
 		[Pure]
-		private static MiscTooltipContent TryCreateMiscContent([CanBeNull] RichTextBlock textBlock) {
+		private static MiscTooltipContent TryCreateMiscContent([CanBeNull] RichTextBlock textBlock, TextRange range) {
 			if (textBlock == null)
 				return null;
 
@@ -202,7 +226,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (text.IsEmpty)
 				return null;
 
-			return new MiscTooltipContent { Text = text };
+			return new MiscTooltipContent(text, range);
 		}
 
 		[Pure]
@@ -212,21 +236,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			return new TextRange(currentSpan.Start, currentSpan.End);
 		}
 
-		[CanBeNull]
 		[Pure]
-		private static PsiLanguageType TryGetIdentifierLanguage([NotNull] IHighlighting highlighting) {
-			var attribute = highlighting.GetType().GetCustomAttribute<DaemonTooltipProviderAttribute>();
-			if (attribute == null || attribute.Type == null)
-				return null;
-
-			for (Type type = attribute.Type; type != typeof(object) && type != null; type = type.BaseType) {
-				if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(IdentifierTooltipProvider<>)) {
-					Type langType = type.GetGenericArguments()[0];
-					return Languages.Instance.All.FirstOrDefault(lang => lang.GetType() == langType);
-				}
-				
-			}
-			return null;
+		private static bool IsIdentifierHighlighting([NotNull] IHighlighting highlighting) {
+			var attribute = HighlightingSettingsManager.Instance.GetHighlightingAttribute(highlighting) as StaticSeverityHighlightingAttribute;
+			return attribute != null && attribute.GroupId == HighlightingGroupIds.IdentifierHighlightingsGroup;
 		}
 
 		public void Dispose() {

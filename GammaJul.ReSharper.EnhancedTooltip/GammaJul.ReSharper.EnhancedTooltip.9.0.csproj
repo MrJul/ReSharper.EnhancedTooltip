@@ -285,6 +285,7 @@
     <Compile Include="Presentation\QualifierDisplays.cs" />
     <Compile Include="Presentation\SmallFontConverter.cs" />
     <Compile Include="Presentation\Styling.cs" />
+    <Compile Include="Presentation\TooltipContent.cs" />
     <Compile Include="Presentation\UIResources.9.0.cs" />
     <Compile Include="Presentation\UIResources.cs" />
     <Compile Include="Presentation\VsHighlightingAttributeIds.cs" />

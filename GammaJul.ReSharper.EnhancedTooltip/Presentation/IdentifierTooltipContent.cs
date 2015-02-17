@@ -2,14 +2,13 @@
 using JetBrains.Annotations;
 using JetBrains.UI.Icons;
 using JetBrains.UI.RichText;
+using JetBrains.Util;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
-	public class IdentifierTooltipContent : ITooltipContent {
+	public class IdentifierTooltipContent : TooltipContent {
 
-		private readonly IList<ExceptionContent> _exceptions = new List<ExceptionContent>();
-
-		public RichText Text { get; set; }
+		[NotNull] private readonly IList<ExceptionContent> _exceptions = new List<ExceptionContent>();
 
 		[CanBeNull]
 		public IconId Icon { get; set; }
@@ -23,6 +22,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull]
 		public IList<ExceptionContent> Exceptions {
 			get { return _exceptions; }
+		}
+
+		public IdentifierTooltipContent([CanBeNull] RichText text, TextRange trackingRange)
+			: base(text, trackingRange) {
 		}
 
 	}

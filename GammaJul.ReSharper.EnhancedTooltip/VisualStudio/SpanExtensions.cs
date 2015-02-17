@@ -1,11 +1,12 @@
-﻿
-using System;
+﻿using System;
+using JetBrains.Annotations;
 using Microsoft.VisualStudio.Text;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 	public static class SpanExtensions {
 
+		[Pure]
 		public static Span Union(this Span x, Span? y) {
 			if (y == null)
 				return x;
