@@ -28,13 +28,14 @@
     <Compile Include="Presentation\AnnotationsDisplayKind.8.2.cs" />
     <Compile Include="Presentation\AutoContrastedRichTextPresenter.cs" />
     <Compile Include="Presentation\ColorizerPresenter.cs" />
+    <Compile Include="Psi\CSharpInvocatiionCandidateCountProvider.cs" />
     <Compile Include="Presentation\CSharpColorizer.cs" />
-    <Compile Include="Presentation\DeclaredElementExtensions.8.2.cs" />
+    <Compile Include="Psi\DeclaredElementExtensions.8.2.cs" />
     <Compile Include="Presentation\CSharpColorizerExtensions.cs" />
-    <Compile Include="Presentation\DeclaredElementExtensions.cs" />
+    <Compile Include="Psi\DeclaredElementExtensions.cs" />
     <Compile Include="Presentation\ElementTypeDisplay.cs" />
     <Compile Include="Presentation\ExceptionContent.cs" />
-    <Compile Include="Presentation\ExpressionTypeExtensions.cs" />
+    <Compile Include="Psi\ExpressionTypeExtensions.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AbstractAccessorIsNotImplementedErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AbstractBaseMemberCallErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AbstractInheritedMemberIsNotImplementedErrorEnhancer.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Presentation\IdentifierTooltipContent.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Psi\IInvocationCandidateCountProvider.cs" />
     <Compile Include="Presentation\IssueTooltipContent.cs" />
     <Compile Include="Presentation\ITooltipContent.cs" />
     <Compile Include="Presentation\MiscTooltipContent.cs" />

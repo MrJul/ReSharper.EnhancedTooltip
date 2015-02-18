@@ -1,11 +1,12 @@
-using JetBrains.Metadata.Utils;
 using System.Linq;
-using JetBrains.ReSharper.Feature.Services.Lookup;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+using GammaJul.ReSharper.EnhancedTooltip.Psi;
 using JetBrains.Annotations;
+using JetBrains.Metadata.Utils;
+using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;

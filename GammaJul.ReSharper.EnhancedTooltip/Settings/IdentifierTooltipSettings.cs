@@ -21,6 +21,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display documented exceptions that can be thrown")]
 		public bool ShowExceptions { get; set; }
 
+		[SettingsEntry(true, "Display overload count where applicable.")]
+		public bool ShowOverloadCount { get; set; }
+
 		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
 		public bool UseTypeKeywords { get; set; }
 

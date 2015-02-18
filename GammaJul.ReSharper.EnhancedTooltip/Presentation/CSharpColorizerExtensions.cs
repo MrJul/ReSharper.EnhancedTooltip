@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GammaJul.ReSharper.EnhancedTooltip.Psi;
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;

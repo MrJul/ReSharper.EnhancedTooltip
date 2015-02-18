@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using GammaJul.ReSharper.EnhancedTooltip.Presentation;
+using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.CSharp.Tree.Query;
@@ -9,7 +10,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Daemon;
 #endif
 
-namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
+namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 	internal static partial class DeclaredElementExtensions {
 

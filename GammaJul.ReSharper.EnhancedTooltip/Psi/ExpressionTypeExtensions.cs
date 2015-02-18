@@ -2,7 +2,7 @@
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 
-namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
+namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 	public static class ExpressionTypeExtensions {
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GammaJul.ReSharper.EnhancedTooltip.Psi;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
@@ -33,11 +34,30 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 	/// </summary>
 	[SolutionComponent]
 	public class IdentifierTooltipContentProvider {
+		
+		private sealed class DeclaredElementInfo {
+
+			[NotNull] internal readonly IDeclaredElement DeclaredElement;
+			[NotNull] internal readonly ISubstitution Substitution;
+			[NotNull] internal readonly IPsiSourceFile PsiSourceFile;
+			internal readonly TextRange SourceRange;
+			[CanBeNull] internal readonly IReference Reference;
+
+			public DeclaredElementInfo([NotNull] IDeclaredElement declaredElement, [NotNull] ISubstitution substitution, [NotNull] IPsiSourceFile psiSourceFile,
+				TextRange sourceRange, [CanBeNull] IReference reference) {
+				DeclaredElement = declaredElement;
+				Substitution = substitution;
+				PsiSourceFile = psiSourceFile;
+				SourceRange = sourceRange;
+				Reference = reference;
+			}
+
+		}
 
 		[NotNull] private readonly ISolution _solution;
 		[NotNull] private readonly IDeclaredElementDescriptionPresenter _declaredElementDescriptionPresenter;
 		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
-
+		
 		/// <summary>
 		/// Returns a colored <see cref="IdentifierTooltipContent"/> for an identifier represented by a <see cref="IHighlighter"/>.
 		/// </summary>
@@ -51,14 +71,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			var documentRange = new DocumentRange(highlighter.Document, highlighter.Range);
 
-			IPsiSourceFile psiSourceFile;
-			TextRange elementRange;
-			DeclaredElementInstance elementInstance = FindDeclaredElement(documentRange, out psiSourceFile, out elementRange);
-			if (elementInstance == null)
+			DeclaredElementInfo info = FindDeclaredElement(documentRange);
+			if (info == null)
 				return null;
 			
-			return TryPresentColorized(elementInstance, elementRange, psiSourceFile.PrimaryPsiLanguage, psiSourceFile, settings)
-				?? TryPresentNonColorized(highlighter, elementInstance.Element, settings);
+			return TryPresentColorized(info, settings)
+				?? TryPresentNonColorized(highlighter, info.DeclaredElement, settings);
 		}
 
 		/// <summary>
@@ -72,39 +90,62 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (!settings.GetValue((IdentifierTooltipSettings s) => s.Enabled))
 				return null;
 
-			IPsiSourceFile psiSourceFile;
-			TextRange elementRange;
-			DeclaredElementInstance elementInstance = FindDeclaredElement(documentRange, out psiSourceFile, out elementRange);
-			if (elementInstance == null)
+			DeclaredElementInfo info = FindDeclaredElement(documentRange);
+			if (info == null)
 				return null;
 
-			return TryPresentColorized(elementInstance, elementRange, psiSourceFile.PrimaryPsiLanguage, psiSourceFile, settings);
+			return TryPresentColorized(info, settings);
 		}
 
 		[CanBeNull]
-		private IdentifierTooltipContent TryPresentColorized([NotNull] DeclaredElementInstance elementInstance, TextRange range,
-			[NotNull] PsiLanguageType languageType, [NotNull] IPsiSourceFile psiSourceFile, [NotNull] IContextBoundSettingsStore settings) {
+		private IdentifierTooltipContent TryPresentColorized([NotNull] DeclaredElementInfo info, [NotNull] IContextBoundSettingsStore settings) {
+			PsiLanguageType languageType = info.PsiSourceFile.PrimaryPsiLanguage;
+			IDeclaredElement element = info.DeclaredElement;
+			IPsiModule psiModule = info.PsiSourceFile.PsiModule;
 
-			bool useReSharperColors = settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled);
+			RichText identifierText = _colorizerPresenter.TryPresent(
+				new DeclaredElementInstance(element, info.Substitution),
+				PresenterOptions.ForToolTip(settings),
+				languageType,
+				settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled));
 
-			RichText identifierText = _colorizerPresenter.TryPresent(elementInstance, PresenterOptions.ForToolTip(settings), languageType, useReSharperColors);
 			if (identifierText == null || identifierText.IsEmpty)
 				return null;
-
-			IDeclaredElement element = elementInstance.Element;
-			IPsiModule psiModule = psiSourceFile.PsiModule;
-
-			var identifierContent = new IdentifierTooltipContent(identifierText, range) {
+			
+			var identifierContent = new IdentifierTooltipContent(identifierText, info.SourceRange) {
 				Description = TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.NO_OBSOLETE_SUMMARY_STYLE),
 			};
+
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowIcon))
 				identifierContent.Icon = TryGetIcon(element);
+
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowObsolete))
 				identifierContent.Obsolete = TryRemoveObsoletePrefix(TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.OBSOLETE_DESCRIPTION));
+
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowExceptions))
-				identifierContent.Exceptions.AddRange(GetExceptions(element, languageType, psiModule, psiSourceFile.ResolveContext));
+				identifierContent.Exceptions.AddRange(GetExceptions(element, languageType, psiModule, info.PsiSourceFile.ResolveContext));
+
+			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowOverloadCount))
+				identifierContent.OverloadCount = TryGetOverloadCountCount(element as IFunction, info.Reference, languageType);
+
 			return identifierContent;
 		}
+
+		private static int? TryGetOverloadCountCount([CanBeNull] IFunction function, [CanBeNull] IReference reference, PsiLanguageType languageType) {
+			if (function == null || reference == null)
+				return null;
+
+			var candidateCountProvider = LanguageManager.Instance.TryGetService<IInvocationCandidateCountProvider>(languageType);
+			if (candidateCountProvider == null)
+				return null;
+
+			int? candidateCount = candidateCountProvider.TryGetInvocationCandidateCount(reference);
+			if (candidateCount == null || candidateCount.Value <= 1)
+				return null;
+
+			return candidateCount.Value - 1;
+		}
+
 
 		[CanBeNull]
 		private IdentifierTooltipContent TryPresentNonColorized([NotNull] IHighlighter highlighter, [NotNull] IDeclaredElement element, [NotNull] IContextBoundSettingsStore settings) {
@@ -202,15 +243,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// Finds a valid element represented at a given <see cref="DocumentRange"/>.
 		/// </summary>
 		/// <param name="documentRange">The document range where to find a <see cref="IDeclaredElement"/>.</param>
-		/// <param name="psiSourceFile">When the method returns, the <see cref="IPsiSourceFile"/> containing the highlighter.</param>
-		/// /// <param name="elementRange">The range of the returned element.</param>
-		/// <returns>A valid <see cref="DeclaredElementInstance"/>, or <c>null</c>.</returns>
-		[ContractAnnotation("=> null, psiSourceFile: null; => notnull, psiSourceFile: notnull")]
+		/// <returns>A valid <see cref="DeclaredElementInfo"/>, or <c>null</c>.</returns>
 		[CanBeNull]
-		private DeclaredElementInstance FindDeclaredElement(DocumentRange documentRange, [CanBeNull] out IPsiSourceFile psiSourceFile, out TextRange elementRange) {
-			psiSourceFile = null;
-			elementRange = TextRange.InvalidRange;
-			
+		private DeclaredElementInfo FindDeclaredElement(DocumentRange documentRange) {
 			IDocument document = documentRange.Document;
 			if (document == null || !documentRange.IsValid())
 				return null;
@@ -219,13 +254,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (!psiServices.Files.AllDocumentsAreCommitted || psiServices.Caches.HasDirtyFiles)
 				return null;
 			
-			foreach (IPsiSourceFile sourceFile in document.GetPsiSourceFiles(_solution)) {
-				foreach (IFile psiFile in psiServices.Files.GetPsiFiles(sourceFile, documentRange)) {
-					DeclaredElementInstance elementInstance = FindDeclaredElement(documentRange, psiFile, out elementRange);
-					if (elementInstance != null && elementInstance.IsValid()) {
-						psiSourceFile = sourceFile;
-						return elementInstance;
-					}
+			foreach (IPsiSourceFile psiSourceFile in document.GetPsiSourceFiles(_solution)) {
+				foreach (IFile file in psiServices.Files.GetPsiFiles(psiSourceFile, documentRange)) {
+					DeclaredElementInfo info = FindDeclaredElement(documentRange, psiSourceFile, file);
+					if (info != null && info.DeclaredElement.IsValid())
+						return info;
 				}
 			}
 
@@ -236,13 +269,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// Finds an element at a given file range, either a reference or a declaration.
 		/// </summary>
 		/// <param name="range">The range to get the element in <paramref name="file"/>.</param>
-		/// <param name="file">The file.</param>
-		/// <param name="elementRange">The range of the returned element.</param>
-		/// <returns>A <see cref="DeclaredElementInstance"/> at range <paramref name="range"/> in <paramref name="file"/>.</returns>
+		/// <param name="psiSourceFile">The PSI source file containing the range.</param>
+		/// <param name="file">The file to search into.</param>
+		/// <returns>A <see cref="DeclaredElementInfo"/> at range <paramref name="range"/> in <paramref name="file"/>, or <c>null</c>.</returns>
 		[CanBeNull]
-		private static DeclaredElementInstance FindDeclaredElement(DocumentRange range, [NotNull] IFile file, out TextRange elementRange) {
-			elementRange = TextRange.InvalidRange;
-
+		private static DeclaredElementInfo FindDeclaredElement(DocumentRange range, [NotNull] IPsiSourceFile psiSourceFile, [NotNull] IFile file) {
 			if (!file.IsValid())
 				return null;
 
@@ -253,7 +284,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			// First finds a reference.
 			IReference[] references = file.FindReferencesAt(treeTextRange);
 			if (references.Length > 0)
-				return GetBestReference(references, out elementRange);
+				return GetBestReference(references, psiSourceFile);
 
 			// Or a declaration.
 			ITreeNode nodeAt = file.FindNodeAt(treeTextRange);
@@ -261,43 +292,40 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				return null;
 
 			var containingNode = nodeAt.GetContainingNode<IDeclaration>(true);
-			if (containingNode != null) {
-				DocumentRange nameRange = containingNode.GetNameDocumentRange();
-				if (nameRange.Intersects(range)) {
-					IDeclaredElement declaredElement = containingNode.DeclaredElement;
-					if (declaredElement != null) {
-						elementRange = nameRange.TextRange;
-						return new DeclaredElementInstance(declaredElement, EmptySubstitution.INSTANCE);
-					}
-				}
-			}
+			if (containingNode == null)
+				return null;
 
-			return null;
+			DocumentRange nameRange = containingNode.GetNameDocumentRange();
+			if (!nameRange.Intersects(range))
+				return null;
+
+			IDeclaredElement declaredElement = containingNode.DeclaredElement;
+			if (declaredElement == null)
+				return null;
+
+			return new DeclaredElementInfo(declaredElement, EmptySubstitution.INSTANCE, psiSourceFile, nameRange.TextRange, null);
 		}
 
 		/// <summary>
 		/// Gets the best reference (the "deepest" one) from a collection of references.
 		/// </summary>
 		/// <param name="references">A collection of references.</param>
-		/// <param name="elementRange">The range of the returned element.</param>
-		/// <returns>The <see cref="DeclaredElementInstance"/> corresponding to the best reference.</returns>
+		/// <param name="psiSourceFile">The PSI source file containing the references.</param>
+		/// <returns>The <see cref="DeclaredElementInfo"/> corresponding to the best reference.</returns>
 		[CanBeNull]
-		private static DeclaredElementInstance GetBestReference([NotNull] IEnumerable<IReference> references, out TextRange elementRange) {
+		private static DeclaredElementInfo GetBestReference([NotNull] IEnumerable<IReference> references, [NotNull] IPsiSourceFile psiSourceFile) {
 			foreach (IReference reference in references.OrderBy(r => r.GetTreeNode().PathToRoot().Count())) {
 				IResolveResult resolveResult = reference.Resolve().Result;
-				if (reference.CheckResolveResult() == ResolveErrorType.DYNAMIC) {
-					elementRange = TextRange.InvalidRange;
+				if (reference.CheckResolveResult() == ResolveErrorType.DYNAMIC)
 					return null;
-				}
 
 				IDeclaredElement foundElement = resolveResult.DeclaredElement;
 				if (foundElement != null) {
-					elementRange = reference.GetDocumentRange().TextRange;
-					return new DeclaredElementInstance(foundElement, resolveResult.Substitution);
+					var referenceRange = reference.GetDocumentRange().TextRange;
+					return new DeclaredElementInfo(foundElement, resolveResult.Substitution, psiSourceFile, referenceRange, reference);
 				}
 			}
 
-			elementRange = TextRange.InvalidRange;
 			return null;
 		}
 

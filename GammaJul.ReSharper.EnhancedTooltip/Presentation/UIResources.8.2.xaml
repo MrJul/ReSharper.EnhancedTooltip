@@ -63,8 +63,13 @@
 								Margin="0,0,4,0" local:IconScaling.IsScalingWithFontSize="True"
 								DockPanel.Dock="Left" VerticalAlignment="Top" HorizontalAlignment="Left" />
 						</Border>
-						<controls:RichTextPresenter TextWrapping="Wrap"
-							RichText="{Binding Text}" VerticalAlignment="Center" />
+						<StackPanel Orientation="Horizontal">
+							<controls:RichTextPresenter TextWrapping="Wrap"
+								RichText="{Binding Text}" VerticalAlignment="Center" />
+							<TextBlock x:Name="OverloadCountPresenter" VerticalAlignment="Center"
+								Text="{Binding OverloadCount, StringFormat='{} + {0} overload(s)'}" Margin="2" Foreground="Gray" FontStyle="Italic"
+								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}" />
+						</StackPanel>
 					</DockPanel>
 
 					<StackPanel x:Name="DescriptionPresenter" Orientation="Vertical">
@@ -118,8 +123,11 @@
 					<DataTrigger Binding="{Binding Obsolete}" Value="{x:Null}">
 						<Setter TargetName="ObsoletePresenter" Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
-					<DataTrigger Binding="{Binding Path=HasItems, ElementName=ExceptionsPresenter}" Value="False">
+					<DataTrigger Binding="{Binding HasItems, ElementName=ExceptionsPresenter}" Value="False">
 						<Setter TargetName="ExceptionsPresenter" Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+					<DataTrigger Binding="{Binding OverloadCount}" Value="{x:Null}">
+						<Setter TargetName="OverloadCountPresenter" Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
 				</DataTemplate.Triggers>
 			</DataTemplate>

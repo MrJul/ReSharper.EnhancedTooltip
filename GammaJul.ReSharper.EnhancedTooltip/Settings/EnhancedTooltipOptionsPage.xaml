@@ -31,6 +31,7 @@
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowKindCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowObsoleteCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowExceptionsCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowOverloadCountCheckBox" />
 			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipUseTypeKeywordsCheckBox" />
 			<StackPanel Orientation="Horizontal" Margin="8,2,0,1">
 				<Label Target="{Binding ElementName=IdentifierTooltipShowIdentifierAnnotationsComboBox}" />

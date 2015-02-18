@@ -19,6 +19,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[CanBeNull]
 		public RichText Obsolete { get; set; }
 
+		public int? OverloadCount { get; set; }
+
 		[NotNull]
 		public IList<ExceptionContent> Exceptions {
 			get { return _exceptions; }
