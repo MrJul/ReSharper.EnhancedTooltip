@@ -10,7 +10,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public bool FormatDelegatesAsLambdas { get; private set; }
 		public bool ShowAccessRights { get; private set; }
-		public bool ShowConstantValues { get; private set; }
+		public bool ShowConstantValue { get; private set; }
+		public bool ShowDefaultValues { get; private set; }
 		public bool ShowElementKind { get; private set; }
 		public AnnotationsDisplayKind ShowElementAnnotations { get; private set; }
 		public ElementTypeDisplay ShowElementType { get; private set; }
@@ -29,7 +30,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return new PresenterOptions {
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey s) => s.DelegatesAsLambdas),
 				ShowAccessRights = false,
-				ShowConstantValues = true,
+				ShowConstantValue = true,
+				ShowDefaultValues = true,
 				ShowElementKind = settings.GetValue((IdentifierTooltipSettings s) => s.ShowKind),
 				ShowElementAnnotations = settings.GetValue((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations),
 				ShowElementType = ElementTypeDisplay.Before,
@@ -50,7 +52,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return new PresenterOptions {
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas),
 				ShowAccessRights = false,
-				ShowConstantValues = true,
+				ShowConstantValue = false,
+				ShowDefaultValues = true,
 				ShowElementKind = false,
 				ShowElementAnnotations = AnnotationsDisplayKind.None,
 				ShowElementType = ElementTypeDisplay.After,
@@ -70,7 +73,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public static readonly PresenterOptions FullWithoutParameterNames = new PresenterOptions {
 			FormatDelegatesAsLambdas = false,
 			ShowAccessRights = false,
-			ShowConstantValues = true,
+			ShowConstantValue = false,
+			ShowDefaultValues = true,
 			ShowElementKind = false,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.Before,
@@ -89,7 +93,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public static readonly PresenterOptions QualifiedMember = new PresenterOptions {
 			FormatDelegatesAsLambdas = false,
 			ShowAccessRights = false,
-			ShowConstantValues = true,
+			ShowConstantValue = false,
+			ShowDefaultValues = true,
 			ShowElementKind = false,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.Before,
@@ -108,7 +113,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public static readonly PresenterOptions QualifiedName = new PresenterOptions {
 			FormatDelegatesAsLambdas = false,
 			ShowAccessRights = false,
-			ShowConstantValues = true,
+			ShowConstantValue = false,
+			ShowDefaultValues = true,
 			ShowElementKind = false,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.None,
@@ -127,7 +133,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public static readonly PresenterOptions ForInterfaceMember = new PresenterOptions {
 			FormatDelegatesAsLambdas = false,
 			ShowAccessRights = false,
-			ShowConstantValues = false,
+			ShowConstantValue = false,
+			ShowDefaultValues = false,
 			ShowElementKind = false,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.Before,
@@ -146,7 +153,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public static readonly PresenterOptions NameOnly = new PresenterOptions {
 			FormatDelegatesAsLambdas = false,
 			ShowAccessRights = false,
-			ShowConstantValues = false,
+			ShowConstantValue = false,
+			ShowDefaultValues = false,
 			ShowElementKind = false,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.None,
@@ -165,7 +173,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public static readonly PresenterOptions ParameterTypesOnly = new PresenterOptions {
 			FormatDelegatesAsLambdas = false,
 			ShowAccessRights = false,
-			ShowConstantValues = false,
+			ShowConstantValue = false,
+			ShowDefaultValues = false,
 			ShowElementKind = false,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.None,

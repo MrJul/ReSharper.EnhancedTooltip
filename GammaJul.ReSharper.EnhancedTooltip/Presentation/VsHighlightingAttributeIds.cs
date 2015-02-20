@@ -14,7 +14,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public const string Keyword = "Keyword";
 		public const string Identifier = "Identifier";
 		public const string Interfaces = "User Types(Interfaces)";
+		public const string Number = "Number";
 		public const string Operator = "Operator";
+		public const string String = "String";
 		public const string ValueTypes = "User Types(Value types)";
 		
 		[CanBeNull]

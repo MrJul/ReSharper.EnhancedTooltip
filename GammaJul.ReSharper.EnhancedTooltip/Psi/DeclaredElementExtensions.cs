@@ -135,8 +135,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 			if (element is IFunction) {
 				if (element is IAccessor)
 					return "accessor";
-				if (element is IMethod)
-					return CSharpDeclaredElementUtil.IsDestructor(element) ? "destructor" : "method";
+				
+				var method = element as IMethod;
+				if (method != null) {
+					if (method.IsExtensionMethod)
+						return "extension";
+					if (CSharpDeclaredElementUtil.IsDestructor(method))
+						return "destructor";
+					return "method";
+				}
+
 				if (element is IConstructor)
 					return "constructor";
 				if (element is IOperator)
@@ -157,9 +165,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 			if (property != null) {
 				if (CSharpDeclaredElementUtil.IsIndexer(property))
 					return "indexer";
-				return CSharpDeclaredElementUtil.IsIndexedProperty(property) ? "indexed property" : "property";
+				if (CSharpDeclaredElementUtil.IsIndexedProperty(property))
+					return "indexed property";
+				return "property";
 			}
-			
+
 			var localVariable = element as ILocalVariable;
 			if (localVariable != null)
 				return localVariable.IsConstant ? "local constant" : "local variable";

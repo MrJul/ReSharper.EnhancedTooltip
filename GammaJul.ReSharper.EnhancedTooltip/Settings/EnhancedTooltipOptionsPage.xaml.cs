@@ -34,7 +34,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		public bool OnOk() {
 			return true;
 		}
-
+		
 		public bool ValidatePage() {
 			return true;
 		}

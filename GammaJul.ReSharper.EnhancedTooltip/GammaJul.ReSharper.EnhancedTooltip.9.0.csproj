@@ -159,6 +159,7 @@
     <Compile Include="Presentation\CSharpColorizer.cs" />
     <Compile Include="Presentation\ElementTypeDisplay.cs" />
     <Compile Include="Presentation\ExceptionContent.cs" />
+    <Compile Include="Psi\CSharpSpecialDeclaredElementFinder.cs" />
     <Compile Include="Psi\DeclaredElementExtensions.9.0.cs" />
     <Compile Include="Presentation\CSharpColorizerExtensions.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AbstractAccessorIsNotImplementedErrorEnhancer.cs" />
@@ -292,6 +293,7 @@
     <Compile Include="Psi\DeclaredElementExtensions.cs" />
     <Compile Include="Psi\ExpressionTypeExtensions.cs" />
     <Compile Include="Psi\IInvocationCandidateCountProvider.cs" />
+    <Compile Include="Psi\ISpecialDeclaredElementFinder.cs" />
     <Compile Include="Settings\EnhancedTooltipSettingsRoot.cs" />
     <Compile Include="Settings\EnhancedTooltipOptionsPage.xaml.cs">
       <DependentUpon>EnhancedTooltipOptionsPage.xaml</DependentUpon>

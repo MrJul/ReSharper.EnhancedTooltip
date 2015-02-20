@@ -92,6 +92,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (options.ShowElementType == ElementTypeDisplay.After)
 				AppendElementType(element, substitution, QualifierDisplays.ElementType, ":", null, context);
 
+			if (options.ShowConstantValue) {
+				var constantValueOwner = element as IConstantValueOwner;
+				if (constantValueOwner != null)
+					AppendConstantValue(constantValueOwner);
+			}
+
 			return context.PresentedInfo;
 		}
 
@@ -590,7 +596,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendText(FormatShortName(parameter.ShortName), highlighterId);
 			}
 
-			if (options.ShowConstantValues)
+			if (options.ShowDefaultValues)
 				AppendDefaultValue(parameter, substitution, context);
 		}
 
@@ -695,13 +701,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (defaultValue.IsConstant) {
 				AppendText(" = ", VsHighlightingAttributeIds.Operator);
-
-				ConstantValue constantValue = defaultValue.ConstantValue;
-				IEnum enumType = constantValue.Type.GetEnumType();
-				if (enumType == null || !AppendEnumValue(constantValue, enumType)) {
-					string presentation = constantValue.GetPresentation(CSharpLanguage.Instance);
-					AppendText(presentation, CSharpLexer.IsKeyword(presentation) ? VsHighlightingAttributeIds.Keyword : null);
-				}
+				AppendConstantValue(defaultValue.ConstantValue);
 				return;
 			}
 
@@ -720,6 +720,46 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText("(", null);
 			AppendTypeWithoutModule(defaultType, QualifierDisplays.Parameters, context);
 			AppendText(")", null);
+		}
+
+		private void AppendConstantValue([NotNull] IConstantValueOwner constantValueOwner) {
+			AppendText(" = ", VsHighlightingAttributeIds.Operator);
+			AppendConstantValue(constantValueOwner.ConstantValue);
+		}
+
+		private void AppendConstantValue([NotNull] ConstantValue constantValue) {
+			if (constantValue.IsBadValue()) {
+				AppendText("bad value", null);
+				return;
+			}
+
+			IEnum enumType = constantValue.Type.GetEnumType();
+			if (enumType != null && AppendEnumValue(constantValue, enumType))
+				return;
+
+			string presentation = constantValue.GetPresentation(CSharpLanguage.Instance);
+			if (presentation != null && CSharpLexer.IsKeyword(presentation)) {
+				AppendText(presentation, VsHighlightingAttributeIds.Keyword);
+				return;
+			}
+
+			IType type = constantValue.Type;
+			if (type != null && type.IsNullable())
+				type = type.GetNullableUnderlyingType();
+
+			if (type == null) {
+				AppendText(presentation, null);
+				return;
+			}
+			
+			if (type.IsString())
+				AppendText(presentation, VsHighlightingAttributeIds.String);
+			else if (type.IsChar())
+				AppendText(presentation, VsHighlightingAttributeIds.String);
+			else if (type.IsPredefinedNumeric())
+				AppendText(presentation, VsHighlightingAttributeIds.Number);
+			else
+				AppendText(presentation, null);
 		}
 
 		private bool AppendEnumValue([NotNull] ConstantValue constantValue, [NotNull] IEnum enumType) {

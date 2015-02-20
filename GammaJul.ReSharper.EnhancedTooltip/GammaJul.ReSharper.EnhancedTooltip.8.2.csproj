@@ -30,6 +30,7 @@
     <Compile Include="Presentation\ColorizerPresenter.cs" />
     <Compile Include="Psi\CSharpInvocatiionCandidateCountProvider.cs" />
     <Compile Include="Presentation\CSharpColorizer.cs" />
+    <Compile Include="Psi\CSharpSpecialDeclaredElementFinder.cs" />
     <Compile Include="Psi\DeclaredElementExtensions.8.2.cs" />
     <Compile Include="Presentation\CSharpColorizerExtensions.cs" />
     <Compile Include="Psi\DeclaredElementExtensions.cs" />
@@ -158,6 +159,7 @@
     <Compile Include="Presentation\VsHighlightingAttributeIds.cs" />
     <Compile Include="Properties\AssemblyInfo.8.2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Psi\ISpecialDeclaredElementFinder.cs" />
     <Compile Include="Settings\EnhancedTooltipSettingsRoot.cs" />
     <Compile Include="Settings\EnhancedTooltipOptionsPage.xaml.cs">
       <DependentUpon>EnhancedTooltipOptionsPage.xaml</DependentUpon>
