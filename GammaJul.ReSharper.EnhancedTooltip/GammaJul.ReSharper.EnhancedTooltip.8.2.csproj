@@ -207,9 +207,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GenericImages\Logo16.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="GammaJul.ReSharper.EnhancedTooltip.8.2.nuspec" />
     <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.8.2.config" />
   </ItemGroup>

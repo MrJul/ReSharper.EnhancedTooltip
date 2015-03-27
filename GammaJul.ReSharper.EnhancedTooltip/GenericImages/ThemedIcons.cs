@@ -1,5 +1,6 @@
 using System.Windows.Markup;
 using GammaJul.ReSharper.EnhancedTooltip;
+using JetBrains.Annotations;
 using JetBrains.UI.Icons;
 using JetBrains.UI.Icons.CompiledIcons;
 
@@ -10,6 +11,7 @@ using JetBrains.UI.Icons.CompiledIcons;
 
 namespace GammaJul.ReSharper.EnhancedTooltip {
 
+	[UsedImplicitly]
 	public sealed partial class ThemedIcons {
 
 		[CompiledIconClass(IconPackResourceName, 0, "Logo16")]
