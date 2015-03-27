@@ -1,16 +1,20 @@
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using JetBrains.Annotations;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.Resolve;
+#if RS91
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
+#else
+using CannotOverrideNonExistingAccessorError = JetBrains.ReSharper.Daemon.CSharp.Errors.CannotOverrideUnexistingAccessorError;
+#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
-	internal sealed class CannotOverrideUnexistingAccessorErrorEnhancer : CSharpHighlightingEnhancer<CannotOverrideUnexistingAccessorError> {
+	internal sealed class CannotOverrideNonExistingAccessorErrorEnhancer : CSharpHighlightingEnhancer<CannotOverrideNonExistingAccessorError> {
 
-		protected override void AppendTooltip(CannotOverrideUnexistingAccessorError highlighting, CSharpColorizer colorizer) {
+		protected override void AppendTooltip(CannotOverrideNonExistingAccessorError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("'");
 			colorizer.AppendDeclaredElement(highlighting.ExtraAccessor.DeclaredElement, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
 			colorizer.AppendPlainText("': cannot override because '");
@@ -20,7 +24,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText(" accessor");
 		}
 		
-		public CannotOverrideUnexistingAccessorErrorEnhancer([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache)
+		public CannotOverrideNonExistingAccessorErrorEnhancer([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache)
 			: base(textStyleHighlighterManager, codeAnnotationsCache) {
 		}
 

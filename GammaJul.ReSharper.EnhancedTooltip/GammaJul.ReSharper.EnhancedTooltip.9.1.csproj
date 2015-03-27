@@ -121,6 +121,7 @@
     <Compile Include="Presentation\CSharpColorizer.cs" />
     <Compile Include="Presentation\ElementTypeDisplay.cs" />
     <Compile Include="Presentation\ExceptionContent.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\ClassTypeParameterInValueTypeParameterConstraintListErrorEnhancer.cs" />
     <Compile Include="Psi\CSharpSpecialDeclaredElementFinder.cs" />
     <Compile Include="Psi\DeclaredElementExtensions.9.0.cs" />
     <Compile Include="Presentation\CSharpColorizerExtensions.cs" />
@@ -135,7 +136,7 @@
     <Compile Include="Presentation\Highlightings\CSharp\AddedAccessorInPrivateImplementationErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AddressOfManagedTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AddressOfMarshalByRefObjectWarningEnhancer.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\AnnotationRedundanceAtValueTypeWarningEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\AnnotationRedundancyAtValueTypeWarningEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AnonymousMethodParameterParamsErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AnonymousTypePropertyCannotBeVoidErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ArrayElementIsStaticClassErrorEnhancer.cs" />
@@ -183,7 +184,7 @@
     <Compile Include="Presentation\Highlightings\CSharp\CannotInheritFromSealedTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotInheritFromSpecialTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotInstantiateDynamicTypeErrorEnhancer.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\CannotOverrideUnexistingAccessorErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\CannotOverrideNonExistingAccessorErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotSpecifyConstructorConstraintForValueTypeErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotUseConstructorWithoutBracketsErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotUseDefaultMemberAttributeOnTypeWithIndexerErrorEnhancer.cs" />
@@ -194,11 +195,10 @@
     <Compile Include="Presentation\Highlightings\CSharp\CaseLabelOutsideSwitchErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CatchClauseCannotFollowGeneralCatchClauseErrorEnhancer.9.0.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CatchDoesNotExtendExceptionErrorEnhancer.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\CircularDependencyInTypeParameterConstrantErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\CircularDependencyInTypeParameterConstraintErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ClassIsAbstractAndSealedErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ClassOrStructConstraintMustBeFirstErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ClassTypeConstraintMustBeFirstErrorEnhancer.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\ClassTypeParameterInValueTypeParameterConstrantListErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CollectionInitializerAppliedToNonCollectionErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CompareNonConstrainedGenericWithNullWarningEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ConditionalAccessAlwaysNotNullWarningEnhancer.9.0.cs" />
@@ -294,11 +294,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="GenericImages\Logo16.png" />
+    <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.9.1.config" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GammaJul.ReSharper.EnhancedTooltip.9.0.nuspec" />
-    <None Include="packages.config" />
-    <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.9.0.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Presentation\UIResources.9.0.tt">
