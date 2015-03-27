@@ -1,4 +1,5 @@
-﻿using JetBrains.Util.dataStructures;
+﻿using System.Linq.Expressions;
+using JetBrains.Util.dataStructures;
 using GammaJul.ReSharper.EnhancedTooltip.Psi;
 using System;
 using System.Collections.Generic;
@@ -117,13 +118,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		private IdentifierTooltipContent TryGetAdditionalIdentifierContent([NotNull] DeclaredElementInfo info, [NotNull] IContextBoundSettingsStore settings,
 			out bool replacesStandardContent) {
 
-			var constructor = info.DeclaredElement as IConstructor;
-			if (constructor == null) {
-				replacesStandardContent = false;
-				return null;
-			}
+			replacesStandardContent = false;
 
-			ConstructorReferenceDisplay display = settings.GetValue((IdentifierTooltipSettings s) => s.ConstructorReferenceDisplay);
+			var constructor = info.DeclaredElement as IConstructor;
+			if (constructor == null)
+				return null;
+
+			ITypeElement typeElement = constructor.GetContainingType();
+			if (typeElement == null)
+				return null;
+
+			IDeclaredType attributeType = info.File.GetPsiModule().GetPredefinedType(constructor.ResolveContext).Attribute;
+			var settingsKey = GetConstructorSettingsKey(typeElement, info.Substitution, attributeType);
+			ConstructorReferenceDisplay display = settings.GetValue(settingsKey);
 			switch (display) {
 				
 				case ConstructorReferenceDisplay.TypeOnly:
@@ -131,13 +138,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 					return TryGetTypeIdentifierContentFromConstructor(constructor, info, settings);
 				
 				case ConstructorReferenceDisplay.Both:
-					replacesStandardContent = false;
 					return TryGetTypeIdentifierContentFromConstructor(constructor, info, settings);
 			
 				default:
-					replacesStandardContent = false;
 					return null;
+
 			}
+		}
+
+		[NotNull]
+		private static Expression<Func<IdentifierTooltipSettings, ConstructorReferenceDisplay>> GetConstructorSettingsKey(
+			[NotNull] ITypeElement typeElement, [NotNull] ISubstitution substitution, [NotNull] IType attributeType) {
+
+			if (TypeFactory.CreateType(typeElement, substitution).IsSubtypeOf(attributeType))
+				return s => s.AttributeConstructorReferenceDisplay;
+			return s => s.ConstructorReferenceDisplay;
 		}
 
 		[CanBeNull]
