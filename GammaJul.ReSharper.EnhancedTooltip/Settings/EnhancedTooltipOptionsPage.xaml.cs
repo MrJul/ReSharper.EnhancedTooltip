@@ -62,7 +62,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 				parentCheckbox.IsCheckedLogically.FlowInto(_lifetime, checkBox, IsEnabledProperty);
 		}
 
-		private void SetEnumBinding<TSettings, TEnum>([NotNull] Expression<Func<TSettings, TEnum>> settingAccessor, [NotNull] ComboBox comboBox,
+		private void SetComboBoxBinding<TSettings, TEnum>([NotNull] Expression<Func<TSettings, TEnum>> settingAccessor, [NotNull] ComboBox comboBox,
 			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckbox) {
 
 			comboBox.ItemsSource = CreateEnumItemsSource(typeof(TEnum));
@@ -94,9 +94,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowExceptions, IdentifierTooltipShowExceptionsCheckBox, enabledCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowOverloadCount, IdentifierTooltipShowOverloadCountCheckBox, enabledCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseTypeKeywords, IdentifierTooltipUseTypeKeywordsCheckBox, enabledCheckBox);
-			SetEnumBinding((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations, IdentifierTooltipShowIdentifierAnnotationsComboBox, enabledCheckBox);
-			SetEnumBinding((IdentifierTooltipSettings s) => s.ShowParametersAnnotations, IdentifierTooltipShowParametersAnnotationsComboBox, enabledCheckBox);
-			SetEnumBinding((IdentifierTooltipSettings s) => s.ConstructorReferenceDisplay, IdentifierTooltipConstructorReferenceDisplayComboBox, enabledCheckBox);
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations, IdentifierTooltipShowIdentifierAnnotationsComboBox, enabledCheckBox);
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowParametersAnnotations, IdentifierTooltipShowParametersAnnotationsComboBox, enabledCheckBox);
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ConstructorReferenceDisplay, IdentifierTooltipConstructorReferenceDisplayComboBox, enabledCheckBox);
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.AttributeConstructorReferenceDisplay, IdentifierTooltipAttributeConstructorReferenceDisplayComboBox, enabledCheckBox);
 		}
 
 		private void SetIssueTooltipSettingsBindings() {
@@ -113,7 +114,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			// ReSharper 9 already has this option built-in
 			ParameterInfoShowAnnotationsPanel.Visibility = System.Windows.Visibility.Collapsed;
 #elif RS82
-			SetEnumBinding((ParameterInfoSettings s) => s.ShowAnnotations, ParameterInfoShowAnnotationsComboBox, enabledCheckBox);
+			SetComboBoxBinding((ParameterInfoSettings s) => s.ShowAnnotations, ParameterInfoShowAnnotationsComboBox, enabledCheckBox);
 #endif
 		}
 

@@ -6,14 +6,13 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:controls="urn:schemas-jetbrains-com:jetbrains-ui-controls"
 	mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
-	HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+	HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
+	Grid.IsSharedSizeScope="True">
 
 	<ScrollViewer.Resources>
+		<Thickness x:Key="CommonMargin">8,2,0,1</Thickness>
 		<Style TargetType="{x:Type controls:CheckBoxDisabledNoCheck2}">
-			<Setter Property="Margin" Value="8,2,0,1" />
-		</Style>
-		<Style TargetType="{x:Type ComboBox}">
-			<Setter Property="Margin" Value="0,3" />
+			<Setter Property="Margin" Value="{StaticResource CommonMargin}" />
 		</Style>
 		<Style TargetType="{x:Type Label}">
 			<Setter Property="Margin" Value="0,0,4,0" />
@@ -24,45 +23,75 @@
 
 	<StackPanel>
 
-		<StackPanel Orientation="Vertical" Margin="10,0,0,0">
-			<controls:SectionHeading Text="Identifier Tooltip" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipEnabledCheckBox" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowIconCheckBox" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowKindCheckBox" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowObsoleteCheckBox" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowExceptionsCheckBox" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowOverloadCountCheckBox" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipUseTypeKeywordsCheckBox" />
-			<StackPanel Orientation="Horizontal" Margin="8,2,0,1">
+		<Grid Margin="10,0,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+			</Grid.RowDefinitions>
+			<controls:SectionHeading Grid.Row="0" Text="Identifier Tooltip" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="1" x:Name="IdentifierTooltipEnabledCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="2" x:Name="IdentifierTooltipShowIconCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="3" x:Name="IdentifierTooltipShowKindCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="4" x:Name="IdentifierTooltipShowObsoleteCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="5" x:Name="IdentifierTooltipShowExceptionsCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="6" x:Name="IdentifierTooltipShowOverloadCountCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="7" x:Name="IdentifierTooltipUseTypeKeywordsCheckBox" />
+			<StackPanel Grid.Row="8" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
 				<Label Target="{Binding ElementName=IdentifierTooltipShowIdentifierAnnotationsComboBox}" />
 				<ComboBox x:Name="IdentifierTooltipShowIdentifierAnnotationsComboBox" />
 			</StackPanel>
-			<StackPanel Orientation="Horizontal" Margin="8,2,0,1">
+			<StackPanel Grid.Row="9" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
 				<Label Target="{Binding ElementName=IdentifierTooltipShowParametersAnnotationsComboBox}" />
 				<ComboBox x:Name="IdentifierTooltipShowParametersAnnotationsComboBox" />
 			</StackPanel>
-			<StackPanel Orientation="Horizontal" Margin="8,2,0,1">
+			<StackPanel Grid.Row="10" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipAttributeConstructorReferenceDisplayComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipAttributeConstructorReferenceDisplayComboBox" />
+			</StackPanel>
+			<StackPanel Grid.Row="11" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
 				<Label Target="{Binding ElementName=IdentifierTooltipConstructorReferenceDisplayComboBox}" />
 				<ComboBox x:Name="IdentifierTooltipConstructorReferenceDisplayComboBox" />
 			</StackPanel>
-		</StackPanel>
+		</Grid>
 
-		<StackPanel Orientation="Vertical" Margin="10,0,0,0">
-			<controls:SectionHeading Text="Issue Tooltip" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="IssueTooltipShowIconCheckBox" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="IssueTooltipColorizeElementsInErrors" />
-		</StackPanel>
+		<Grid Margin="10,0,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+			</Grid.RowDefinitions>
+			<controls:SectionHeading Grid.Row="0" Text="Issue Tooltip" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="1" x:Name="IssueTooltipShowIconCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="2" x:Name="IssueTooltipColorizeElementsInErrors" />
+		</Grid>
 
-		<StackPanel Orientation="Vertical" Margin="10,0,0,0">
-			<controls:SectionHeading Text="Parameter Info" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoEnabledCheckBox" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoShowEmptyParametersTextCheckBox" />
-			<controls:CheckBoxDisabledNoCheck2 x:Name="ParameterInfoUseTypeKeywordsCheckBox" />
-			<StackPanel x:Name="ParameterInfoShowAnnotationsPanel" Orientation="Horizontal" Margin="8,2,0,1">
+		<Grid Margin="10,0,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+			</Grid.RowDefinitions>
+			<controls:SectionHeading Grid.Row="0" Text="Parameter Info" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="1" x:Name="ParameterInfoEnabledCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="2" x:Name="ParameterInfoShowEmptyParametersTextCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="3" x:Name="ParameterInfoUseTypeKeywordsCheckBox" />
+			<StackPanel Grid.Row="4" x:Name="ParameterInfoShowAnnotationsPanel" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
 				<Label Target="{Binding ElementName=ParameterInfoShowAnnotationsComboBox}" />
 				<ComboBox x:Name="ParameterInfoShowAnnotationsComboBox" />
 			</StackPanel>
-		</StackPanel>
+		</Grid>
 
 	</StackPanel>
 
