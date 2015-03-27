@@ -317,7 +317,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\UIResources.9.0.xaml">
+    <Page Include="Presentation\UIResources.9.0.generated.xaml">
       <Generator>MSBuild:Compile</Generator>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -339,7 +339,7 @@
   <ItemGroup>
     <Content Include="Presentation\UIResources.9.0.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>UIResources.9.0.xaml</LastGenOutput>
+      <LastGenOutput>UIResources.9.0.generated.xaml</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

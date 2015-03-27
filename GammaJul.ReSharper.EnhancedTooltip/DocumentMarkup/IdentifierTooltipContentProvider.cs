@@ -145,8 +145,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			return candidateCount.Value - 1;
 		}
-
-
+		
 		[CanBeNull]
 		private IdentifierTooltipContent TryPresentNonColorized([NotNull] IHighlighter highlighter, [NotNull] IDeclaredElement element, [NotNull] IContextBoundSettingsStore settings) {
 			RichTextBlock richTextToolTip = highlighter.RichTextToolTip;

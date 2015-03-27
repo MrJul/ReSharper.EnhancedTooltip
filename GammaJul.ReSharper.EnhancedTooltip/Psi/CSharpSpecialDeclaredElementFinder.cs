@@ -18,19 +18,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 			TokenNodeType tokenType = node.GetTokenType();
 
 			if (tokenType == CSharpTokenType.VAR_KEYWORD)
-				return FindTypeFromVarKeyword(node, file, out sourceRange);
+				return FindElementFromVarKeyword(node, file, out sourceRange);
 
 			if (tokenType == CSharpTokenType.NEW_KEYWORD)
-				return FindTypeFromNewKeyword(node, file, out sourceRange);
+				return FindElementFromNewKeyword(node, file, out sourceRange);
 
 			sourceRange = TextRange.InvalidRange;
 			return null;
 		}
 
 		[CanBeNull]
-		private static DeclaredElementInstance FindTypeFromVarKeyword([NotNull] ITreeNode varKeyword, [NotNull] IFile file, out TextRange sourceRange) {
+		private static DeclaredElementInstance FindElementFromVarKeyword([NotNull] ITreeNode varKeyword, [NotNull] IFile file, out TextRange sourceRange) {
 			sourceRange = TextRange.InvalidRange;
-
+			
 			var multipleLocalVariableDeclaration = varKeyword.Parent as IMultipleLocalVariableDeclaration;
 			if (multipleLocalVariableDeclaration == null)
 				return null;
@@ -52,7 +52,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 		}
 
 		[CanBeNull]
-		private static DeclaredElementInstance FindTypeFromNewKeyword([NotNull] ITreeNode newKeyword, [NotNull] IFile file, out TextRange sourceRange) {
+		private static DeclaredElementInstance FindElementFromNewKeyword([NotNull] ITreeNode newKeyword, [NotNull] IFile file, out TextRange sourceRange) {
 			sourceRange = TextRange.InvalidRange;
 
 			var creation = newKeyword.Parent as IObjectCreationExpression;
