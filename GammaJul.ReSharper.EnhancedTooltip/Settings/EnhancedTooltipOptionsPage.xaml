@@ -41,6 +41,10 @@
 				<Label Target="{Binding ElementName=IdentifierTooltipShowParametersAnnotationsComboBox}" />
 				<ComboBox x:Name="IdentifierTooltipShowParametersAnnotationsComboBox" />
 			</StackPanel>
+			<StackPanel Orientation="Horizontal" Margin="8,2,0,1">
+				<Label Target="{Binding ElementName=IdentifierTooltipConstructorReferenceDisplayComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipConstructorReferenceDisplayComboBox" />
+			</StackPanel>
 		</StackPanel>
 
 		<StackPanel Orientation="Vertical" Margin="10,0,0,0">

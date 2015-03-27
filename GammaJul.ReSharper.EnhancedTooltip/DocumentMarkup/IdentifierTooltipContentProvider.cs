@@ -1,4 +1,5 @@
-﻿using GammaJul.ReSharper.EnhancedTooltip.Psi;
+﻿using JetBrains.Util.dataStructures;
+using GammaJul.ReSharper.EnhancedTooltip.Psi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,7 +43,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			[NotNull] internal readonly IFile File;
 			internal readonly TextRange SourceRange;
 			[CanBeNull] internal readonly IReference Reference;
-
+			
 			public DeclaredElementInfo([NotNull] IDeclaredElement declaredElement, [NotNull] ISubstitution substitution, [NotNull] IFile file,
 				TextRange sourceRange, [CanBeNull] IReference reference) {
 				DeclaredElement = declaredElement;
@@ -64,19 +65,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// <param name="highlighter">The highlighter representing the identifier.</param>
 		/// <param name="settings">The settings to use.</param>
 		/// <returns>A <see cref="IdentifierTooltipContent"/> representing a colored tooltip, or <c>null</c>.</returns>
-		[CanBeNull]
-		public IdentifierTooltipContent TryGetIdentifierContent([NotNull] IHighlighter highlighter, [NotNull] IContextBoundSettingsStore settings) {
+		[NotNull]
+		public IdentifierTooltipContent[] GetIdentifierContents([NotNull] IHighlighter highlighter, [NotNull] IContextBoundSettingsStore settings) {
 			if (!highlighter.IsValid || !settings.GetValue((IdentifierTooltipSettings s) => s.Enabled))
-				return null;
+				return EmptyArray<IdentifierTooltipContent>.Instance;
 
-			var documentRange = new DocumentRange(highlighter.Document, highlighter.Range);
-
-			DeclaredElementInfo info = FindDeclaredElement(documentRange);
-			if (info == null)
-				return null;
-			
-			return TryPresentColorized(info, settings)
-				?? TryPresentNonColorized(highlighter, info.DeclaredElement, settings);
+			return GetIdentifierContentsCore(new DocumentRange(highlighter.Document, highlighter.Range), settings, highlighter);
 		}
 
 		/// <summary>
@@ -85,16 +79,77 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// <param name="documentRange">The document range where to find a <see cref="IDeclaredElement"/>.</param>
 		/// <param name="settings">The settings to use.</param>
 		/// <returns>A <see cref="IdentifierTooltipContent"/> representing a colored tooltip, or <c>null</c>.</returns>
-		[CanBeNull]
-		public IdentifierTooltipContent TryGetIdentifierContent(DocumentRange documentRange, [NotNull] IContextBoundSettingsStore settings) {
+		[NotNull]
+		public IdentifierTooltipContent[] GetIdentifierContents(DocumentRange documentRange, [NotNull] IContextBoundSettingsStore settings) {
 			if (!settings.GetValue((IdentifierTooltipSettings s) => s.Enabled))
-				return null;
+				return EmptyArray<IdentifierTooltipContent>.Instance;
+
+			return GetIdentifierContentsCore(documentRange, settings, null);
+		}
+
+		[NotNull]
+		private IdentifierTooltipContent[] GetIdentifierContentsCore(
+			DocumentRange documentRange, [NotNull] IContextBoundSettingsStore settings, [CanBeNull] IHighlighter highlighter) {
 
 			DeclaredElementInfo info = FindDeclaredElement(documentRange);
 			if (info == null)
+				return EmptyArray<IdentifierTooltipContent>.Instance;
+
+			IdentifierTooltipContent standardContent = TryPresentColorized(info, settings)
+				?? TryPresentNonColorized(highlighter, info.DeclaredElement, settings);
+
+			bool replacesStandardContent;
+			IdentifierTooltipContent additionalContent = TryGetAdditionalIdentifierContent(info, settings, out replacesStandardContent);
+			if (replacesStandardContent) {
+				standardContent = additionalContent;
+				additionalContent = null;
+			}
+
+			var results = new FrugalLocalList<IdentifierTooltipContent>();
+			if (standardContent != null)
+				results.Add(standardContent);
+			if (additionalContent != null)
+				results.Add(additionalContent);
+			return results.ToArray();
+		}
+
+		[CanBeNull]
+		private IdentifierTooltipContent TryGetAdditionalIdentifierContent([NotNull] DeclaredElementInfo info, [NotNull] IContextBoundSettingsStore settings,
+			out bool replacesStandardContent) {
+
+			var constructor = info.DeclaredElement as IConstructor;
+			if (constructor == null) {
+				replacesStandardContent = false;
+				return null;
+			}
+
+			ConstructorReferenceDisplay display = settings.GetValue((IdentifierTooltipSettings s) => s.ConstructorReferenceDisplay);
+			switch (display) {
+				
+				case ConstructorReferenceDisplay.TypeOnly:
+					replacesStandardContent = true;
+					return TryGetTypeIdentifierContentFromConstructor(constructor, info, settings);
+				
+				case ConstructorReferenceDisplay.Both:
+					replacesStandardContent = false;
+					return TryGetTypeIdentifierContentFromConstructor(constructor, info, settings);
+			
+				default:
+					replacesStandardContent = false;
+					return null;
+			}
+		}
+
+		[CanBeNull]
+		private IdentifierTooltipContent TryGetTypeIdentifierContentFromConstructor(
+			[NotNull] IConstructor constructor, [NotNull] DeclaredElementInfo constructorInfo, [NotNull] IContextBoundSettingsStore settings) {
+
+			ITypeElement typeElement = constructor.GetContainingType();
+			if (typeElement == null)
 				return null;
 
-			return TryPresentColorized(info, settings);
+			var typeInfo = new DeclaredElementInfo(typeElement, constructorInfo.Substitution, constructorInfo.File, constructorInfo.SourceRange, null);
+			return TryPresentColorized(typeInfo, settings);
 		}
 
 		[CanBeNull]
@@ -147,7 +202,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 		
 		[CanBeNull]
-		private IdentifierTooltipContent TryPresentNonColorized([NotNull] IHighlighter highlighter, [NotNull] IDeclaredElement element, [NotNull] IContextBoundSettingsStore settings) {
+		private IdentifierTooltipContent TryPresentNonColorized([CanBeNull] IHighlighter highlighter, [NotNull] IDeclaredElement element, [NotNull] IContextBoundSettingsStore settings) {
+			if (highlighter == null)
+				return null;
+
 			RichTextBlock richTextToolTip = highlighter.RichTextToolTip;
 			if (richTextToolTip == null)
 				return null;

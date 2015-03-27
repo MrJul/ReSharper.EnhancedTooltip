@@ -294,6 +294,7 @@
     <Compile Include="Psi\ExpressionTypeExtensions.cs" />
     <Compile Include="Psi\IInvocationCandidateCountProvider.cs" />
     <Compile Include="Psi\ISpecialDeclaredElementFinder.cs" />
+    <Compile Include="Settings\ConstructorReferenceDisplay.cs" />
     <Compile Include="Settings\EnhancedTooltipSettingsRoot.cs" />
     <Compile Include="Settings\EnhancedTooltipOptionsPage.xaml.cs">
       <DependentUpon>EnhancedTooltipOptionsPage.xaml</DependentUpon>

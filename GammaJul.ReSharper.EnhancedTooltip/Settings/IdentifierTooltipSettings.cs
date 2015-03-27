@@ -33,6 +33,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations for parameters inside calls")]
 		public AnnotationsDisplayKind ShowParametersAnnotations { get; set; }
 
+		[SettingsEntry(ConstructorReferenceDisplay.ConstructorOnly, "Display constructor references as")]
+		public ConstructorReferenceDisplay ConstructorReferenceDisplay { get; set; }
+
 	}
 
 }
