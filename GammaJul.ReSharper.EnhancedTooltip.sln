@@ -16,6 +16,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GammaJul.ReSharper.Enhanced
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GammaJul.ReSharper.EnhancedTooltip.9.1", "GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.9.1.csproj", "{503F35A4-5A44-4468-8DE2-174F0B7D3D77}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5A327D2D-A7CD-4108-BB31-A2602F0E3742}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\packages.config = .nuget\packages.config
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +39,10 @@ Global
 		{720E321E-0B90-4F09-98B7-FFAC7694D357}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{720E321E-0B90-4F09-98B7-FFAC7694D357}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{720E321E-0B90-4F09-98B7-FFAC7694D357}.Release|Any CPU.Build.0 = Release|Any CPU
+		{503F35A4-5A44-4468-8DE2-174F0B7D3D77}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{503F35A4-5A44-4468-8DE2-174F0B7D3D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{503F35A4-5A44-4468-8DE2-174F0B7D3D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{503F35A4-5A44-4468-8DE2-174F0B7D3D77}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
