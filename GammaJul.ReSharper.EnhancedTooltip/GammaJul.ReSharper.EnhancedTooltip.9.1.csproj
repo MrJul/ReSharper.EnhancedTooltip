@@ -110,7 +110,7 @@
     <Compile Include="DocumentMarkup\IdentifierTooltipContentProvider.cs" />
     <Compile Include="DocumentMarkup\SeverityExtensions.cs" />
     <Compile Include="DocumentMarkup\TextStyleHighlighterManager.cs" />
-    <Compile Include="GenericImages\ThemedIcons.9.0.cs" />
+    <Compile Include="GenericImages\ThemedIcons.9.1.cs" />
     <Compile Include="GenericImages\ThemedIcons.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.9.0.cs" />
@@ -121,6 +121,7 @@
     <Compile Include="Presentation\CSharpColorizer.cs" />
     <Compile Include="Presentation\ElementTypeDisplay.cs" />
     <Compile Include="Presentation\ExceptionContent.cs" />
+    <Compile Include="Presentation\FontSizeScaleConverter.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ClassTypeParameterInValueTypeParameterConstraintListErrorEnhancer.cs" />
     <Compile Include="Psi\CSharpSpecialDeclaredElementFinder.cs" />
     <Compile Include="Psi\DeclaredElementExtensions.9.0.cs" />
@@ -244,7 +245,6 @@
     <Compile Include="Presentation\PresentedInfo.cs" />
     <Compile Include="Presentation\PresenterOptions.cs" />
     <Compile Include="Presentation\QualifierDisplays.cs" />
-    <Compile Include="Presentation\SmallFontConverter.cs" />
     <Compile Include="Presentation\Styling.cs" />
     <Compile Include="Presentation\TooltipContent.cs" />
     <Compile Include="Presentation\UIResources.9.0.cs" />
@@ -293,7 +293,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GenericImages\Logo16.png" />
     <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.9.1.config" />
   </ItemGroup>
   <ItemGroup>

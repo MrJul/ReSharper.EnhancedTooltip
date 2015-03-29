@@ -159,6 +159,7 @@
     <Compile Include="Presentation\CSharpColorizer.cs" />
     <Compile Include="Presentation\ElementTypeDisplay.cs" />
     <Compile Include="Presentation\ExceptionContent.cs" />
+    <Compile Include="Presentation\FontSizeScaleConverter.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AnnotationRedundancyAtValueTypeWarningEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotOverrideNonExistingAccessorErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CircularDependencyInTypeParameterConstraintErrorEnhancer.cs" />
@@ -282,7 +283,6 @@
     <Compile Include="Presentation\PresentedInfo.cs" />
     <Compile Include="Presentation\PresenterOptions.cs" />
     <Compile Include="Presentation\QualifierDisplays.cs" />
-    <Compile Include="Presentation\SmallFontConverter.cs" />
     <Compile Include="Presentation\Styling.cs" />
     <Compile Include="Presentation\TooltipContent.cs" />
     <Compile Include="Presentation\UIResources.9.0.cs" />
@@ -329,9 +329,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="GenericImages\Logo16.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="GammaJul.ReSharper.EnhancedTooltip.9.0.nuspec" />

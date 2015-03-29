@@ -28,6 +28,7 @@
     <Compile Include="Presentation\AnnotationsDisplayKind.8.2.cs" />
     <Compile Include="Presentation\AutoContrastedRichTextPresenter.cs" />
     <Compile Include="Presentation\ColorizerPresenter.cs" />
+    <Compile Include="Presentation\FontSizeScaleConverter.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AnnotationRedundancyAtValueTypeWarningEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotOverrideNonExistingAccessorErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CircularDependencyInTypeParameterConstraintErrorEnhancer.cs" />
@@ -151,7 +152,6 @@
     <Compile Include="Presentation\QualifierDisplays.cs" />
     <Compile Include="Presentation\PresentedInfo.cs" />
     <Compile Include="Presentation\PresenterOptions.cs" />
-    <Compile Include="Presentation\SmallFontConverter.cs" />
     <Compile Include="Presentation\Styling.cs" />
     <Compile Include="Presentation\TooltipContent.cs" />
     <Compile Include="Presentation\UIResources.8.2.cs" />

@@ -6,6 +6,9 @@
 	xmlns:jui="urn:schemas-jetbrains-com:jetbrains-ui-avalon"
 	xmlns:local="clr-namespace:GammaJul.ReSharper.EnhancedTooltip.Presentation">
 
+	<local:FontSizeScaleConverter Scale="0.9" x:Key="MediumFontSizeConverter" />
+	<local:FontSizeScaleConverter Scale="0.8" x:Key="SmallFontSizeConverter" />
+
 	<!-- Style for VS listbox item inside the tooltip -->
 	<Style x:Key="QuickInfoItemStyle" TargetType="{x:Type ListBoxItem}">
 		<Setter Property="BorderThickness" Value="0" />
@@ -68,7 +71,7 @@
 								RichText="{Binding Text}" VerticalAlignment="Center" />
 							<TextBlock x:Name="OverloadCountPresenter" VerticalAlignment="Center"
 								Text="{Binding OverloadCount, StringFormat='{} + {0} overload(s)'}" Margin="2" Foreground="Gray" FontStyle="Italic"
-								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}" />
+								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource MediumFontSizeConverter}}" />
 						</StackPanel>
 					</DockPanel>
 
@@ -83,7 +86,7 @@
 					<StackPanel x:Name="ObsoletePresenter" Orientation="Horizontal" Margin="0,6,0,0">
 						<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0">
 							<TextBlock Text="Obsolete" Margin="2" Foreground="Gray" FontWeight="Bold" VerticalAlignment="Center"
-								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}" />
+								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
 						</Border>
 						<local:AutoContrastedRichTextPresenter TextWrapping="Wrap"
 							RichText="{Binding Obsolete}" />
@@ -101,7 +104,7 @@
 									</Grid.ColumnDefinitions>
 									<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" Grid.Column="0">
 										<TextBlock Text="Exception" Margin="2" Foreground="Gray" FontWeight="Bold"
-											FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={x:Static local:SmallFontConverter.Instance}}" />
+											FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
 									</Border>
 									<TextBlock Text="{Binding Exception}" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="1" />
 									<TextBlock Text=" → " FontWeight="Bold" Grid.Column="2" VerticalAlignment="Center" />
