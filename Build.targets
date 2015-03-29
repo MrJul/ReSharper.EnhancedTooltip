@@ -1,17 +1,19 @@
 <Project ToolsVersion="12.0" DefaultTargets="BuildAll" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Target Name="BuildAll">
-	<!--
-		We have to build two separates assembly because the reference to Microsoft.VisualStudio.ExtensionManager must have the correct version.
-		Visual Studio doesn't provide a binding redirect for this specific assembly.
-	-->
-    
-	<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.8.2.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=11" />
-    <MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip.VsIntegration\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=11" />
-	
-    <MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.8.2.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=12" />
-	<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip.VsIntegration\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=12" />
-	
-    <MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.9.0.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=Any" />
-	
-  </Target>
+	<Target Name="BuildAll">
+		
+		<!--
+			We have to build two separates assembly for R# 8.2 because the reference to Microsoft.VisualStudio.ExtensionManager must have the correct version.
+			Visual Studio doesn't provide a binding redirect for this specific assembly.
+		-->
+		<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.8.2.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=11" />
+		<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip.VsIntegration\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=11" />
+		
+		<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.8.2.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=12" />
+		<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip.VsIntegration\GammaJul.ReSharper.EnhancedTooltip.VsIntegration.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=12" />
+		
+		<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.9.0.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=Any" />
+		
+		<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.9.1.csproj" Properties="Platform=AnyCPU;Configuration=Release;TargetVsVersion=Any" />
+		
+	</Target>
 </Project>
