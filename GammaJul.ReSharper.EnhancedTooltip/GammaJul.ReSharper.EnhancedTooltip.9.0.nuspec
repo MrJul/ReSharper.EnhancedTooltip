@@ -3,14 +3,21 @@
 	
 	<metadata>
 		<id>JLebosquain.EnhancedTooltip</id>
-		<version>2.2.0</version>
+		<version>2.2.1</version>
 		<title>Enhanced Tooltip (for R# 9.0)</title>
 		<authors>Julien Lebosquain</authors>
 		<description>Colorizes the tooltip as well as the parameter information popup.</description>
 		<releaseNotes>
-			Support for ReSharper 9.0 (issue #11).
-			Description is now correctly auto-contrasted (issue #12).
-			Added option to display all annotations.
+			Added colors to more than 100 error messages.
+			Fixed duplicate icon error in package (#13).
+			Default values of enum types now have colors (#14).
+			Fixed parameter info overload selection (#15).
+			Display enhanced tooltips for primitive types and var keyword (#17, #28).
+			Identifier tooltips does not require "color identifiers" to be enabled anymore (#18).
+			Optionally display the number of method overloads in tooltip (#19).
+			Choose whether information about a constructor or its type is displayed for a constructor (#22 #23).
+			New logo, courtesy of dsaf (#29).
+			Fixed incorrect auto-uninstall in VS2013 for ReSharper 8.2 (#35).
 		</releaseNotes>
 		<projectUrl>https://github.com/MrJul/ReSharper.EnhancedTooltip/</projectUrl>
 		<iconUrl>https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Logo/Logo128.png</iconUrl>
