@@ -723,8 +723,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private void AppendConstantValue([NotNull] IConstantValueOwner constantValueOwner) {
+			ConstantValue constantValue = constantValueOwner.ConstantValue;
+			if (constantValue.IsBadValue())
+				return;
+
 			AppendText(" = ", VsHighlightingAttributeIds.Operator);
-			AppendConstantValue(constantValueOwner.ConstantValue);
+			AppendConstantValue(constantValue);
 		}
 
 		private void AppendConstantValue([NotNull] ConstantValue constantValue) {
