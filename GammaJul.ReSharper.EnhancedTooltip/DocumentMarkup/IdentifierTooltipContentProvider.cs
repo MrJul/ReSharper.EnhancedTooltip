@@ -68,8 +68,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// <returns>A <see cref="IdentifierTooltipContent"/> representing a colored tooltip, or <c>null</c>.</returns>
 		[NotNull]
 		public IdentifierTooltipContent[] GetIdentifierContents([NotNull] IHighlighter highlighter, [NotNull] IContextBoundSettingsStore settings) {
-			if (!highlighter.IsValid || !settings.GetValue((IdentifierTooltipSettings s) => s.Enabled))
+			if (!highlighter.IsValid)
 				return EmptyArray<IdentifierTooltipContent>.Instance;
+
+			if (!settings.GetValue((IdentifierTooltipSettings s) => s.Enabled)) {
+				IdentifierTooltipContent content = TryPresentNonColorized(highlighter, null, settings);
+				if (content != null)
+					return new[] { content };
+				return EmptyArray<IdentifierTooltipContent>.Instance;
+			}
 
 			return GetIdentifierContentsCore(new DocumentRange(highlighter.Document, highlighter.Range), settings, highlighter);
 		}
@@ -217,7 +224,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 		
 		[CanBeNull]
-		private IdentifierTooltipContent TryPresentNonColorized([CanBeNull] IHighlighter highlighter, [NotNull] IDeclaredElement element, [NotNull] IContextBoundSettingsStore settings) {
+		private IdentifierTooltipContent TryPresentNonColorized([CanBeNull] IHighlighter highlighter, [CanBeNull] IDeclaredElement element, [NotNull] IContextBoundSettingsStore settings) {
 			if (highlighter == null)
 				return null;
 
@@ -230,7 +237,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				return null;
 
 			var identifierContent = new IdentifierTooltipContent(richText, highlighter.Range);
-			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowIcon))
+			if (element != null && settings.GetValue((IdentifierTooltipSettings s) => s.ShowIcon))
 				identifierContent.Icon = TryGetIcon(element);
 			return identifierContent;
 		}

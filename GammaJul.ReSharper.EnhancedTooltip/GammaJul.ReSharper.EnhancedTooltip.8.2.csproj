@@ -207,7 +207,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GammaJul.ReSharper.EnhancedTooltip.8.2.nuspec" />
+    <None Include="GammaJul.ReSharper.EnhancedTooltip.8.2.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.8.2.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
