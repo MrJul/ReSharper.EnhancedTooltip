@@ -4,7 +4,7 @@
   <PropertyGroup>
     <ProjectGuid>{C181470B-B767-4DED-B3C8-ACEF50AF4D4F}</ProjectGuid>
     <RootNamespace>GammaJul.ReSharper.EnhancedTooltip</RootNamespace>
-    <IntermediateOutputPath>obj82</IntermediateOutputPath>
+    <IntermediateOutputPath>obj82vs$(TargetVsVersion)</IntermediateOutputPath>
   </PropertyGroup>
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <PropertyGroup>

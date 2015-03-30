@@ -293,10 +293,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="GammaJul.ReSharper.EnhancedTooltip.9.1.nuspec" />
     <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.9.1.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="GammaJul.ReSharper.EnhancedTooltip.9.0.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Presentation\UIResources.9.0.tt">

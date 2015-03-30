@@ -2,6 +2,7 @@
 *.user
 bin
 obj
+obj82vs*
 /_ReSharper*
 /packages/*.*.*
 /*.tss

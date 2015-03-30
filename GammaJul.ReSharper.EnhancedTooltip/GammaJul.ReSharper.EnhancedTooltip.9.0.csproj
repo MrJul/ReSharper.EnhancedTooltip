@@ -331,7 +331,9 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="GammaJul.ReSharper.EnhancedTooltip.9.0.nuspec" />
+    <None Include="GammaJul.ReSharper.EnhancedTooltip.9.0.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.9.0.config" />
   </ItemGroup>
   <ItemGroup>

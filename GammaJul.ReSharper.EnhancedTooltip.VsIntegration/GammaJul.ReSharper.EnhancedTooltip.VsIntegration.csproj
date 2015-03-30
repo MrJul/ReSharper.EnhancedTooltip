@@ -20,6 +20,7 @@
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <PropertyGroup>
     <AssemblyName>GammaJul.ReSharper.EnhancedTooltip.VsIntegration</AssemblyName>
+    <IntermediateOutputPath>obj82vs$(TargetVsVersion)</IntermediateOutputPath>
   </PropertyGroup>
   <PropertyGroup>
     <StartAction>Program</StartAction>
