@@ -20,7 +20,7 @@ Install the plugin using the built-in Extension Manager from the ReSharper menu.
 
 Tooltip Highlighting
 --------------------
-The tooltip that appears on mouse over is now syntax highlighted. Note that only the tooltips provided by ReSharper are currently colored. It is strongly suggested that you enable _Color identifiers_ in _ReSharper Options > Code Inspection > Settings_ since there's almost no tooltip at all if this setting is disabled.  
+The tooltip that appears on mouse over is now syntax highlighted. Note that only the tooltips provided by ReSharper are currently colored. 
 ![Tooltip Highlighting](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Screenshots/Tooltip.png "Tooltip Highlighting")
 
 Parameter Info Highlighting
