@@ -165,6 +165,7 @@
     <Compile Include="Presentation\ExceptionContent.cs" />
     <Compile Include="Presentation\FontSizeScaleConverter.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ClassTypeParameterInValueTypeParameterConstraintListErrorEnhancer.cs" />
+    <Compile Include="Presentation\VsContentControl.cs" />
     <Compile Include="Psi\CSharpSpecialDeclaredElementFinder.cs" />
     <Compile Include="Presentation\CSharpColorizerExtensions.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AbstractAccessorIsNotImplementedErrorEnhancer.cs" />

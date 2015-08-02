@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Controls;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings;
@@ -81,7 +80,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 						}
 					}
 
-					var nonReSharperContents = new List<object>();
+					var vsContents = new List<object>();
 					bool ignoredFirstTextBuffer = false;
 					foreach (object content in quickInfoContent) {
 						if (content == null)
@@ -104,24 +103,22 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 							}
 
 						}
-						
-						nonReSharperContents.Add(content);
+
+						// ignore Roslyn's bulb info placeholder (interactive tooltip "press ctrl+.")
+						if (content.GetType().FullName == "Microsoft.VisualStudio.Language.Intellisense.Implementation.LightBulbQuickInfoPlaceHolder")
+							continue;
+
+						vsContents.Add(content);
 					}
 
 					quickInfoContent.Clear();
 					quickInfoContent.AddRange(presenter.PresentContents());
 
-					if (nonReSharperContents.Count > 0) {
-						var control = new HeaderedContentControl {
-							Style = UIResources.Instance.HeaderedContentControlStyle,
-							Focusable = false,
-							Header = "VS",
-							Content = new ItemsControl {
-								Focusable = false,
-								ItemsSource = nonReSharperContents
-							}
-						};
-						quickInfoContent.Add(control);
+					if (vsContents.Count > 0) {
+						var vsContentControl = vsContents.OfType<IInteractiveQuickInfoContent>().Any()
+							? new InteractiveVsContentControl(vsContents)
+							: new VsContentControl(vsContents);
+						quickInfoContent.Add(vsContentControl);
 					}
 
 				}
