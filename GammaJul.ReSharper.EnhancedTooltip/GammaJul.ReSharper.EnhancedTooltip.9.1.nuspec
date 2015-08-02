@@ -8,7 +8,6 @@
 		<authors>Julien Lebosquain</authors>
 		<description>Colorizes the tooltip as well as the parameter information popup.</description>
 		<releaseNotes>
-			Added support for ReSharper 9.1.
 		</releaseNotes>
 		<projectUrl>https://github.com/MrJul/ReSharper.EnhancedTooltip/</projectUrl>
 		<iconUrl>https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Logo/Logo128.png</iconUrl>
@@ -22,7 +21,7 @@
 	
 	<files>
 		
-		<file src="..\bin\Release\VsAny\GammaJul.ReSharper.EnhancedTooltip.9.1.dll" target="DotFiles" />
+		<file src="..\bin\Release\GammaJul.ReSharper.EnhancedTooltip.9.1.dll" target="DotFiles" />
 		
 	</files>
 	

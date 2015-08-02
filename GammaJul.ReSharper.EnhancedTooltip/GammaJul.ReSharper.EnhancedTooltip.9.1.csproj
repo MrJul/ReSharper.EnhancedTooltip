@@ -5,7 +5,6 @@
     <ProjectGuid>{503F35A4-5A44-4468-8DE2-174F0B7D3D77}</ProjectGuid>
     <RootNamespace>GammaJul.ReSharper.EnhancedTooltip</RootNamespace>
     <IntermediateOutputPath>obj91</IntermediateOutputPath>
-    <TargetVsVersion>Any</TargetVsVersion>
     <NuGetPackageImportStamp>27f86cf2</NuGetPackageImportStamp>
   </PropertyGroup>
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
