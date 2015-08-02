@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.TextControl.DocumentMarkup;
+using JetBrains.Util;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
@@ -8,7 +9,7 @@ using Microsoft.VisualStudio.Text;
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 	/// <summary>
-	/// This class only store squiggles added by Roslyn inside the session, so they can be identifier easily later.
+	/// This class only stores squiggles added by Roslyn inside the session, so they can be identified easily later in <see cref="MainQuickInfoSource"/>.
 	/// </summary>
 	public class VsSquiggleCollectorQuickInfoSource : QuickInfoSourceBase {
 
@@ -21,7 +22,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 			applicableToSpan = null;
 
-			session.StoreVsSquiggleContents(new HashSet<object>(quickInfoContent));
+			session.StoreVsSquiggleContents(quickInfoContent.ToArray());
 		}
 		
 		public VsSquiggleCollectorQuickInfoSource([NotNull] IVsEditorAdaptersFactoryService editorAdaptersFactoryService, [NotNull] ITextBuffer textBuffer)

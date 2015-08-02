@@ -160,7 +160,7 @@
 					RichText="{Binding Text}" VerticalAlignment="Center" />
 			</DataTemplate>
 
-			<!-- Style for VS content -->
+			<!-- Style for VS squiggle content -->
 			<DataTemplate DataType="{x:Type local:VsSquiggleContent}">
         <DockPanel>
           <Border DataContext="{x:Static resources:BulbThemedIcons+YellowBulbVS.Id}">
@@ -173,7 +173,12 @@
         </DockPanel>
       </DataTemplate>
 
-		</Style.Resources>
+      <!-- Style for VS identifier content -->
+      <DataTemplate DataType="{x:Type local:VsIdentifierContent}">
+        <ContentPresenter Content="{Binding Content}" />
+      </DataTemplate>
+
+    </Style.Resources>
 
 		<Setter Property="Margin" Value="0" />
 		<Setter Property="local:Styling.ShouldStyleParentListBox" Value="True" />

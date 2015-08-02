@@ -34,7 +34,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			TooltipFormattingProvider tooltipFontProvider,
 			out ITrackingSpan applicableToSpan) {
 
-			applicableToSpan = null;
+			applicableToSpan = session.ApplicableToSpan;
 			
 			ITextSnapshot textSnapshot = TextBuffer.CurrentSnapshot;
 			TextRange textRange = GetCurrentTextRange(session, textSnapshot);
@@ -53,7 +53,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 						DocumentRange documentRange = textRange.CreateDocumentRange(documentMarkup.Document);
 						IdentifierTooltipContent[] contents = GetIdentifierTooltipContents(documentRange, solution, settings);
 						foreach (IdentifierTooltipContent content in contents) {
-							if (presenter.TryAddContent(content)) {
+							if (presenter.TryAddReSharperContent(content)) {
 								finalSpan = content.TrackingRange.ToSpan();
 								hasIdentifierTooltipContent = true;
 							}
@@ -64,14 +64,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					foreach (Vs10Highlighter highlighter in highlighters) {
 						IReSharperTooltipContent[] contents = GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution, hasIdentifierTooltipContent);
 						foreach (IReSharperTooltipContent content in contents) {
-							if (presenter.TryAddContent(content))
+							if (presenter.TryAddReSharperContent(content))
 								finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
 						}
 					}
 
-					HashSet<object> vsSquiggleContents = session.RetrieveVsSquiggleContents();
-
-					var vsContents = new List<object>();
+					var vsSquiggleContents = session.RetrieveVsSquiggleContents()
+						.OfType<string>()
+						.ToHashSet();
+					
 					bool ignoredFirstTextBuffer = false;
 					foreach (object content in quickInfoContent) {
 						if (content == null)
@@ -81,10 +82,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 						if (content is RichTextPresenter)
 							continue;
 
+						var contentFullName = content.GetType().FullName;
+
 						if (hasIdentifierTooltipContent) {
 
 							// ignore Roslyn identifier tooltip (for VS2015)
-							if (content.GetType().FullName == "Microsoft.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo.QuickInfoDisplayPanel")
+							if (contentFullName == VsFullTypeNames.QuickInfoDisplayPanel)
 								continue;
 
 							// ignore the first VS text buffer (for VS2012 and VS2013)
@@ -95,11 +98,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 						}
 
-						// ignore Roslyn's bulb info placeholder (interactive tooltip "press ctrl+.")
-						if (content.GetType().FullName == "Microsoft.VisualStudio.Language.Intellisense.Implementation.LightBulbQuickInfoPlaceHolder")
+						if (contentFullName == VsFullTypeNames.LightBulbQuickInfoPlaceHolder) {
+							// ignore Roslyn's bulb info placeholder (interactive tooltip "press ctrl+.")
 							continue;
+							
+						}
 
-						if (vsSquiggleContents.Contains(content))
+						if (contentFullName == VsFullTypeNames.QuickInfoDisplayPanel)
+							presenter.AddVsIdentifierContent(new VsIdentifierContent(content));
+						else if (vsSquiggleContents.Contains(content))
 							presenter.AddVsSquiggleContent(new VsSquiggleContent(content));
 						else
 							presenter.AddVsUnknownContent(content);

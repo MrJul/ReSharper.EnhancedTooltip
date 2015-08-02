@@ -8,11 +8,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 	[Name(Name)]
 	[Order(After = QuickInfoSourceProviderNames.VsSquiggle)]
-	[Order(Before = QuickInfoSourceProviderNames.VsDefault)]
-	[Order(Before = QuickInfoSourceProviderNames.VsRoslyn)]
-	[Order(Before = QuickInfoSourceProviderNames.VsLightBulb)]
-	[Order(Before = QuickInfoSourceProviderNames.VsSyntactic)]
-	[Order(Before = QuickInfoSourceProviderNames.VsSemantic)]
 	[Order(Before = QuickInfoSourceProviderNames.ReSharper)]
 	[Order(Before = MainQuickInfoSourceProvider.Name)]
 	[ContentType("text")]

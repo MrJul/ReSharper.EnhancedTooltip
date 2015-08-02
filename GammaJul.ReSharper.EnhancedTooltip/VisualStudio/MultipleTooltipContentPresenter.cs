@@ -13,12 +13,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		[NotNull] private readonly List<IdentifierTooltipContent> _identifierContents = new List<IdentifierTooltipContent>();
 		[NotNull] private readonly List<IssueTooltipContent> _issueContents = new List<IssueTooltipContent>();
 		[NotNull] private readonly List<MiscTooltipContent> _miscContents = new List<MiscTooltipContent>();
+		[NotNull] private readonly List<VsIdentifierContent> _vsIdentifierContents = new List<VsIdentifierContent>();
 		[NotNull] private readonly List<VsSquiggleContent> _vsSquiggleContents = new List<VsSquiggleContent>();
 		[NotNull] private readonly List<object> _vsUnknownContents = new List<object>();
 		[NotNull] private readonly TextFormattingRunProperties _formatting;
 
 		[ContractAnnotation("null => false")]
-		public bool TryAddContent([CanBeNull] IReSharperTooltipContent content) {
+		public bool TryAddReSharperContent([CanBeNull] IReSharperTooltipContent content) {
 			if (content == null || content.Text.IsNullOrEmpty())
 				return false;
 
@@ -46,6 +47,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		public void AddVsSquiggleContent([NotNull] VsSquiggleContent content)
 			=> _vsSquiggleContents.Add(content);
 
+		public void AddVsIdentifierContent([NotNull] VsIdentifierContent content)
+			=> _vsIdentifierContents.Add(content);
+
 		public void AddVsUnknownContent([NotNull] object content)
 			=> _vsUnknownContents.Add(content);
 
@@ -54,17 +58,20 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			foreach (IdentifierTooltipContent identifierContent in _identifierContents)
 				yield return PresentTooltipContents("Id", new[] { identifierContent });
 
+			foreach (VsIdentifierContent identifierContent in _vsIdentifierContents)
+				yield return PresentTooltipContents("Id", new[] { identifierContent });
+
 			if (_issueContents.Count > 0)
 				yield return PresentTooltipContents(_issueContents.Count == 1 ? "Issue" : "Issues", _issueContents);
-
-			if (_vsSquiggleContents.Count > 0)
-				yield return PresentTooltipContents("VS", _vsSquiggleContents);
 
 			foreach (MiscTooltipContent miscContent in _miscContents)
 				yield return PresentTooltipContents("Misc", new[] { miscContent });
 
 			foreach (object vsUnknownContent in _vsUnknownContents)
 				yield return vsUnknownContent;
+
+			if (_vsSquiggleContents.Count > 0)
+				yield return PresentTooltipContents("VS", _vsSquiggleContents);
 		}
 
 		[NotNull]
