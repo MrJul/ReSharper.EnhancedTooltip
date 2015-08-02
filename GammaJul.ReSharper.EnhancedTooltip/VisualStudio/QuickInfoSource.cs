@@ -9,30 +9,21 @@ using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
+using JetBrains.Platform.VisualStudio.SinceVs10.Interop.Shim.IDE;
+using JetBrains.Platform.VisualStudio.SinceVs10.TextControl.Markup;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.UI.Avalon.Controls;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
+using JetBrains.VsIntegration.ProjectDocuments;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using VSIVsTextBuffer = Microsoft.VisualStudio.TextManager.Interop.IVsTextBuffer;
-#if RS90
-using JetBrains.Platform.VisualStudio.SinceVs10.Interop.Shim.IDE;
-using JetBrains.Platform.VisualStudio.SinceVs10.TextControl.Markup;
-using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.Resources.Shell;
-using JetBrains.VsIntegration.ProjectDocuments;
 using JetIVsTextBuffer = JetBrains.VsIntegration.Interop.Shim.TextManager.Documents.IVsTextBuffer;
-#elif RS82
-using JetBrains.DocumentManagers.Transactions;
-using JetBrains.ReSharper.Daemon;
-using JetBrains.VsIntegration.DevTen.Interop.Shim;
-using JetBrains.VsIntegration.DevTen.Markup;
-using JetBrains.VsIntegration.ProjectModel;
-using JetIVsTextBuffer = JetBrains.VsIntegration.Interop.Shim.TextManager.IVsTextBuffer;
-#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
@@ -155,7 +146,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				IDocument document = documentMarkup.Document;
 				IContextBoundSettingsStore settings = document.GetSettings();
 
-				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, document, solution);
+				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, solution);
 				IssueTooltipContent issueContent = TryCreateIssueContent(highlighting, range, highlighter.RichTextToolTip, severity, settings, solution);
 				if (issueContent != null)
 					return new ITooltipContent[] { issueContent };

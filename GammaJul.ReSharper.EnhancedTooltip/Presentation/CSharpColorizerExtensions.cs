@@ -2,14 +2,10 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Resolve;
 using JetBrains.ReSharper.Psi.Resolve;
-#if RS90
-using JetBrains.ReSharper.Feature.Services.Daemon;
-#elif RS82
-using JetBrains.ReSharper.Daemon;
-#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 

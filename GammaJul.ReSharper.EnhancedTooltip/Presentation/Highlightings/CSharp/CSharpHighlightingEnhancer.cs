@@ -2,15 +2,10 @@
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Psi.CodeAnnotations;
-using JetBrains.UI.RichText;
-#if RS90
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.CSharp.Daemon;
-#elif RS82
-using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
-#endif
+using JetBrains.ReSharper.Psi.CodeAnnotations;
+using JetBrains.UI.RichText;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 

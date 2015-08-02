@@ -1,18 +1,15 @@
 ﻿using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using JetBrains.Annotations;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.CSharp.Tree.Query;
 using JetBrains.ReSharper.Psi.CSharp.Util;
-#if RS90
-using JetBrains.ReSharper.Feature.Services.Daemon;
-#elif RS82
-using JetBrains.ReSharper.Daemon;
-#endif
+using JetBrains.ReSharper.Psi.Util;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
-	internal static partial class DeclaredElementExtensions {
+	internal static class DeclaredElementExtensions {
 
 		[CanBeNull]
 		public static string GetHighlightingAttributeId([CanBeNull] this IDeclaredElement declaredElement, bool useReSharperColors) {
@@ -165,7 +162,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 			if (property != null) {
 				if (CSharpDeclaredElementUtil.IsIndexer(property))
 					return "indexer";
-				if (CSharpDeclaredElementUtil.IsIndexedProperty(property))
+				if (property.IsIndexedProperty())
 					return "indexed property";
 				return "property";
 			}
@@ -175,6 +172,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 				return localVariable.IsConstant ? "local constant" : "local variable";
 			
 			return "unknown";
+		}
+
+		[Pure]
+		[NotNull]
+		public static IDeclaredElement EliminateDelegateInvokeMethod([NotNull] this IDeclaredElement declaredElement) {
+			return DeclaredElementUtil.EliminateDelegateInvokeMethod(declaredElement);
 		}
 
 	}

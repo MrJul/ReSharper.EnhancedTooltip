@@ -6,14 +6,18 @@ using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Projection;
+using Microsoft.VisualStudio.Utilities;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
-	[UsedImplicitly(ImplicitUseKindFlags.InstantiatedNoFixedConstructorSignature)]
-	public sealed partial class QuickInfoSourceProvider : IQuickInfoSourceProvider {
+	[Name("EnhancedTooltipQuickInfo")]
+	[Order(After = "ReSharperQuickInfo")]
+	[ContentType("text")]
+	[Export(typeof(IQuickInfoSourceProvider))]
+	public sealed class QuickInfoSourceProvider : IQuickInfoSourceProvider {
 
 		[CanBeNull]
-		[Import(AllowDefault = true)] /* import is only for R# 9 */
+		[Import(AllowDefault = true)]
 		public IVsEditorAdaptersFactoryService VsEditorAdaptersFactoryService { get; set; }
 		
 		public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer) {

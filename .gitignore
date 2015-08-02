@@ -8,3 +8,4 @@ obj82vs*
 /*.tss
 /GammaJul.ReSharper.EnhancedTooltip/obj*
 *.nupkg
+.vs

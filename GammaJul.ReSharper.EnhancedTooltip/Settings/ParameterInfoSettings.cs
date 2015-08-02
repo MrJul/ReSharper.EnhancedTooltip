@@ -1,5 +1,4 @@
 ﻿using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Feature.Services.Lookup;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
@@ -17,9 +16,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
 		public bool UseTypeKeywords { get; set; }
-
-		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations")]
-		public AnnotationsDisplayKind ShowAnnotations { get; set; }
 
 	}
 

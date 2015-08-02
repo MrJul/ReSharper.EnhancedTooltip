@@ -9,13 +9,9 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.Util;
 using JetBrains.Util.Lazy;
-#if RS90
-using JetBrains.ReSharper.Resources.Shell;
-#elif RS82
-using JetBrains.Application;
-#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 

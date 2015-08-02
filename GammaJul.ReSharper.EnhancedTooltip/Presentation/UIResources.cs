@@ -1,15 +1,14 @@
 ﻿using System.Windows;
 using JetBrains.Annotations;
 using JetBrains.Application;
-using JetBrains.Util.Lazy;
-#if RS90
 using JetBrains.ReSharper.Resources.Shell;
-#endif
+using JetBrains.UI.Extensions;
+using JetBrains.Util.Lazy;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	[ShellComponent]
-	internal sealed partial class UIResources {
+	internal sealed class UIResources {
 
 		[NotNull]
 		public static UIResources Instance {
@@ -36,6 +35,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull]
 		public DataTemplate QuickInfoItemDataTemplate {
 			get { return (DataTemplate) _lazyResourceDictionary.Value["QuickInfoItemDataTemplate"]; }
+		}
+		
+		[NotNull]
+		private static ResourceDictionary LoadResourceDictionary() {
+			return new ResourceDictionary {
+				Source = UriHelpers.MakeUri("Presentation/UIResources.xaml", typeof(UIResources).Assembly)
+			};
 		}
 
 	}

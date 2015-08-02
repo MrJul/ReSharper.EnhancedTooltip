@@ -1,12 +1,8 @@
 ﻿using System;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
-using JetBrains.UI.RichText;
-#if RS90
 using JetBrains.ReSharper.Feature.Services.Daemon;
-#elif RS82
-using JetBrains.ReSharper.Daemon;
-#endif
+using JetBrains.UI.RichText;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings {
 

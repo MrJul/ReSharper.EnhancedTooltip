@@ -1,13 +1,9 @@
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using JetBrains.Annotations;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.Resolve;
-#if RS91
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
-#else
-using CircularDependencyInTypeParameterConstraintError = JetBrains.ReSharper.Daemon.CSharp.Errors.CircularDependencyInTypeParameterConstrantError;
-#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 

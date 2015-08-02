@@ -1,19 +1,14 @@
 ﻿using System.Linq;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
-using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
+using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExpectedTypes;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
-#if RS90
-using JetBrains.ReSharper.Feature.Services.Daemon;
-#elif RS82
-using JetBrains.ReSharper.Daemon;
-#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 
@@ -21,7 +16,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	/// Wraps an existing <see cref="ParameterInfoCandidate"/>
 	/// and override its <see cref="ICandidate.GetSignature"/> method to provide colored parameter info.
 	/// </summary>
-	public partial class EnhancedParameterInfoCandidate : ICandidate {
+	public class EnhancedParameterInfoCandidate : ICandidate {
 
 		[NotNull] private readonly ParameterInfoCandidate _underlyingCandidate;
 		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
@@ -39,22 +34,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public void GetParametersInfo(out string[] paramNames, out RichTextBlock[] paramDescriptions, out bool isParamsArray) {
 			_underlyingCandidate.GetParametersInfo(out paramNames, out paramDescriptions, out isParamsArray);
 		}
-
+		
 		[NotNull]
-		private RichText GetSignatureCore(string[] namedArguments, AnnotationsDisplayKind? showAnnotations, out TextRange[] parameterRanges, out int[] mapToOriginalOrder,
-			out ExtensionMethodInfo extensionMethodInfo) {
-
-			if (showAnnotations == null)
-				showAnnotations = _settings.GetValue((ParameterInfoSettings s) => s.ShowAnnotations);
-
+		public RichText GetSignature(string[] namedArguments, AnnotationsDisplayKind showAnnotations,
+			out TextRange[] parameterRanges, out int[] mapToOriginalOrder, out ExtensionMethodInfo extensionMethodInfo) {
+			
 			// TODO: handle named arguments with reordering; currently falling back to non-colored display
 			if (namedArguments.Any(s => s != null)) {
-				string signature = _underlyingCandidate.GetSignature(namedArguments, showAnnotations.Value, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
+				string signature = _underlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 				if (!IsIdentityMap(mapToOriginalOrder))
 					return signature;
 			}
 
-			var options = PresenterOptions.ForParameterInfo(_settings, showAnnotations.Value);
+			var options = PresenterOptions.ForParameterInfo(_settings, showAnnotations);
 			bool useReSharperColors = _settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled);
 			PresentedInfo presentedInfo;
 			InvocationCandidate invocationCandidate = _underlyingCandidate.InvocationCandidate;
@@ -62,7 +54,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			
 			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, _underlyingCandidate.Language, useReSharperColors, out presentedInfo);
 			if (richText == null)
-				return _underlyingCandidate.GetSignature(namedArguments, showAnnotations.Value, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
+				return _underlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 
 			if (presentedInfo.Parameters.Count == 0) {
 				parameterRanges = EmptyArray<TextRange>.Instance;

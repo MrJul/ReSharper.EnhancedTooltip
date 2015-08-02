@@ -11,7 +11,7 @@
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <PropertyGroup>
     <AssemblyName>GammaJul.ReSharper.EnhancedTooltip.9.1</AssemblyName>
-    <DefineConstants>$(DefineConstants);RS90;RS91</DefineConstants>
+    <DefineConstants>$(DefineConstants);RS91</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="antlr.runtime">
@@ -50,12 +50,56 @@
     <Reference Include="Microsoft.Deployment.Compression.Cab">
       <HintPath>..\packages\JetBrains.Platform.Lib.Microsoft.Deployment.Compression.Cab.2.0.20140304.0\lib\Microsoft.Deployment.Compression.Cab.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <Private>True</Private>
-      <HintPath>..\packages\JetBrains.Platform.Lib.VisualStudio.AnyVs.ShellInterop.PrivateBuild.2.0.20140304.0\lib\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+    <Reference Include="Microsoft.VisualStudio.CoreUtility">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.VisualStudio.CoreUtility.14.0.23107\lib\net45\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.VisualStudio.Text.UI, Version=10.0.0.0" />
-    <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=10.0.0.0" />
+    <Reference Include="Microsoft.VisualStudio.Editor">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.VisualStudio.Editor.14.0.23107\lib\Microsoft.VisualStudio.Editor.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Language.Intellisense">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.VisualStudio.OLE.Interop.7.10.6070\lib\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.7.10.6071\lib\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.8.0.8.0.50727\lib\Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.Data">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.VisualStudio.Text.Data.14.0.23107\lib\net45\Microsoft.VisualStudio.Text.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.Logic">
+      <HintPath>..\packages\Microsoft.VisualStudio.Text.Logic.14.0.23107\lib\net45\Microsoft.VisualStudio.Text.Logic.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.UI">
+      <HintPath>..\packages\Microsoft.VisualStudio.Text.UI.14.0.23107\lib\net45\Microsoft.VisualStudio.Text.UI.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf">
+      <HintPath>..\packages\Microsoft.VisualStudio.Text.UI.Wpf.14.0.23107\lib\net45\Microsoft.VisualStudio.Text.UI.Wpf.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.VisualStudio.TextManager.Interop.7.10.6070\lib\Microsoft.VisualStudio.TextManager.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\Microsoft.VisualStudio.TextManager.Interop.8.0.8.0.50727\lib\Microsoft.VisualStudio.TextManager.Interop.8.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Web.XmlTransform">
       <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
     </Reference>
@@ -113,7 +157,6 @@
     <Compile Include="GenericImages\ThemedIcons.9.1.cs" />
     <Compile Include="GenericImages\ThemedIcons.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.cs" />
-    <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.9.0.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContext.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContextFactory.cs" />
     <Compile Include="Presentation\AutoContrastedRichTextPresenter.cs" />
@@ -124,7 +167,6 @@
     <Compile Include="Presentation\FontSizeScaleConverter.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ClassTypeParameterInValueTypeParameterConstraintListErrorEnhancer.cs" />
     <Compile Include="Psi\CSharpSpecialDeclaredElementFinder.cs" />
-    <Compile Include="Psi\DeclaredElementExtensions.9.0.cs" />
     <Compile Include="Presentation\CSharpColorizerExtensions.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AbstractAccessorIsNotImplementedErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AbstractBaseMemberCallErrorEnhancer.cs" />
@@ -165,11 +207,11 @@
     <Compile Include="Presentation\Highlightings\CSharp\CannotApplyEqualityOperatorToTypeWarningEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotApplyUnaryOperatorErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotApplyUnaryOperatorMultipleCandidatesErrorEnhancer.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\CannotAwaitInCatchOrFinallyErrorEnhancer.9.0.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\CannotAwaitInExceptionFilterExpressionErrorEnhancer.9.0.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\CannotAwaitInLockStatementErrorEnhancer.9.0.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\CannotAwaitInUnsafeContextErrorEnhancer.9.0.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\CannotAwaitUnderQueryExpressionErrorEnhancer.9.0.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\CannotAwaitInCatchOrFinallyErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\CannotAwaitInExceptionFilterExpressionErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\CannotAwaitInLockStatementErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\CannotAwaitInUnsafeContextErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\CannotAwaitUnderQueryExpressionErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotChangeReturnTypeInOverrideErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotConstructVoidErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotCreateInstanceOfAbstractClassErrorEnhancer.cs" />
@@ -194,7 +236,7 @@
     <Compile Include="Presentation\Highlightings\CSharp\CannotUseThisInAnonymousMethodInStructErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotUseTypeArgumentWithElementErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CaseLabelOutsideSwitchErrorEnhancer.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\CatchClauseCannotFollowGeneralCatchClauseErrorEnhancer.9.0.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\CatchClauseCannotFollowGeneralCatchClauseErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CatchDoesNotExtendExceptionErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CircularDependencyInTypeParameterConstraintErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ClassIsAbstractAndSealedErrorEnhancer.cs" />
@@ -202,8 +244,8 @@
     <Compile Include="Presentation\Highlightings\CSharp\ClassTypeConstraintMustBeFirstErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CollectionInitializerAppliedToNonCollectionErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CompareNonConstrainedGenericWithNullWarningEnhancer.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\ConditionalAccessAlwaysNotNullWarningEnhancer.9.0.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\ConditionalAccessAlwaysNullWarningEnhancer.9.0.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\ConditionalAccessAlwaysNotNullWarningEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\ConditionalAccessAlwaysNullWarningEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ConditionalLogicOperatorTypesMismatchErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ConditionalLogicTrueFalseOperatorMissingErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ConditionIsAlwaysTrueOrFalseWarningEnhancer.cs" />
@@ -247,7 +289,6 @@
     <Compile Include="Presentation\QualifierDisplays.cs" />
     <Compile Include="Presentation\Styling.cs" />
     <Compile Include="Presentation\TooltipContent.cs" />
-    <Compile Include="Presentation\UIResources.9.0.cs" />
     <Compile Include="Presentation\UIResources.cs" />
     <Compile Include="Presentation\VsHighlightingAttributeIds.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -266,25 +307,20 @@
     <Compile Include="Settings\ParameterInfoSettings.cs" />
     <Compile Include="Settings\IdentifierTooltipSettings.cs" />
     <Compile Include="Settings\SettingsExtensions.cs" />
-    <Compile Include="VisualStudio\HighlightingsSettingsManagerExtensions.9.0.cs" />
     <Compile Include="VisualStudio\QuickInfoSource.cs" />
     <Compile Include="VisualStudio\QuickInfoSourceProvider.cs" />
     <Compile Include="VisualStudio\MultipleTooltipContentPresenter.cs" />
-    <Compile Include="VisualStudio\QuickInfoSourceProvider.9.0.cs" />
     <Compile Include="VisualStudio\SpanExtensions.cs" />
     <Compile Include="VisualStudio\TooltipFormattingProvider.cs" />
-    <Compile Include="ZoneMarker.v9.0.cs" />
+    <Compile Include="ZoneMarker.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="GenericImages\ThemedIcons.Generic.Generated.Xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Presentation\UIResources.9.0.generated.xaml">
+    <Page Include="Presentation\UIResources.xaml">
       <Generator>MSBuild:Compile</Generator>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>UIResources.9.0.tt</DependentUpon>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Settings\EnhancedTooltipOptionsPage.xaml">
@@ -297,12 +333,6 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="packages.GammaJul.ReSharper.EnhancedTooltip.9.1.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Presentation\UIResources.9.0.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>UIResources.9.0.generated.xaml</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

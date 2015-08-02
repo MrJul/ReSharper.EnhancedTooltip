@@ -1,12 +1,8 @@
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using JetBrains.Annotations;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Psi.CodeAnnotations;
-#if RS91
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
-#else
-using AnnotationRedundancyAtValueTypeWarning = JetBrains.ReSharper.Daemon.CSharp.Errors.AnnotationRedundanceAtValueTypeWarning;
-#endif
+using JetBrains.ReSharper.Psi.CodeAnnotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 

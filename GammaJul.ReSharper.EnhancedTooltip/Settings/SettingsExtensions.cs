@@ -1,11 +1,7 @@
 ﻿using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
-#if RS90
 using JetBrains.ReSharper.Resources.Shell;
-#elif RS82
-using JetBrains.Application;
-#endif
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
