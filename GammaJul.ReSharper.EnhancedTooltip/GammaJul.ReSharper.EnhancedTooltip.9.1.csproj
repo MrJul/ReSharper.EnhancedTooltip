@@ -165,6 +165,7 @@
     <Compile Include="Presentation\ExceptionContent.cs" />
     <Compile Include="Presentation\FontSizeScaleConverter.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ClassTypeParameterInValueTypeParameterConstraintListErrorEnhancer.cs" />
+    <Compile Include="Presentation\VsSquiggleContent.cs" />
     <Compile Include="Presentation\VsContentControl.cs" />
     <Compile Include="Psi\CSharpSpecialDeclaredElementFinder.cs" />
     <Compile Include="Presentation\CSharpColorizerExtensions.cs" />
@@ -282,7 +283,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Presentation\IssueTooltipContent.cs" />
-    <Compile Include="Presentation\ITooltipContent.cs" />
+    <Compile Include="Presentation\IReSharperTooltipContent.cs" />
     <Compile Include="Presentation\MiscTooltipContent.cs" />
     <Compile Include="Presentation\PresentedInfo.cs" />
     <Compile Include="Presentation\PresenterOptions.cs" />
@@ -307,11 +308,17 @@
     <Compile Include="Settings\ParameterInfoSettings.cs" />
     <Compile Include="Settings\IdentifierTooltipSettings.cs" />
     <Compile Include="Settings\SettingsExtensions.cs" />
-    <Compile Include="VisualStudio\QuickInfoSource.cs" />
-    <Compile Include="VisualStudio\QuickInfoSourceProvider.cs" />
+    <Compile Include="VisualStudio\MainQuickInfoSource.cs" />
+    <Compile Include="VisualStudio\QuickInfoSessionExtensions.cs" />
+    <Compile Include="VisualStudio\QuickInfoSourceBase.cs" />
+    <Compile Include="VisualStudio\MainQuickInfoSourceProvider.cs" />
     <Compile Include="VisualStudio\MultipleTooltipContentPresenter.cs" />
+    <Compile Include="VisualStudio\QuickInfoSourceProviderBase.cs" />
+    <Compile Include="VisualStudio\QuickInfoSourceProviderNames.cs" />
     <Compile Include="VisualStudio\SpanExtensions.cs" />
     <Compile Include="VisualStudio\TooltipFormattingProvider.cs" />
+    <Compile Include="VisualStudio\VsSquiggleCollectorQuickInfoSource.cs" />
+    <Compile Include="VisualStudio\VsSquiggleCollectorQuickInfoSourceProvider.cs" />
     <Compile Include="ZoneMarker.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
@@ -14,10 +13,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		[NotNull] private readonly List<IdentifierTooltipContent> _identifierContents = new List<IdentifierTooltipContent>();
 		[NotNull] private readonly List<IssueTooltipContent> _issueContents = new List<IssueTooltipContent>();
 		[NotNull] private readonly List<MiscTooltipContent> _miscContents = new List<MiscTooltipContent>();
+		[NotNull] private readonly List<VsSquiggleContent> _vsSquiggleContents = new List<VsSquiggleContent>();
+		[NotNull] private readonly List<object> _vsUnknownContents = new List<object>();
 		[NotNull] private readonly TextFormattingRunProperties _formatting;
 
 		[ContractAnnotation("null => false")]
-		public bool TryAddContent([CanBeNull] ITooltipContent content) {
+		public bool TryAddContent([CanBeNull] IReSharperTooltipContent content) {
 			if (content == null || content.Text.IsNullOrEmpty())
 				return false;
 
@@ -41,22 +42,34 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 			return false;
 		}
-		
+
+		public void AddVsSquiggleContent([NotNull] VsSquiggleContent content)
+			=> _vsSquiggleContents.Add(content);
+
+		public void AddVsUnknownContent([NotNull] object content)
+			=> _vsUnknownContents.Add(content);
+
 		[NotNull]
-		public IEnumerable<UIElement> PresentContents() {
+		public IEnumerable<object> PresentContents() {
 			foreach (IdentifierTooltipContent identifierContent in _identifierContents)
 				yield return PresentTooltipContents("Id", new[] { identifierContent });
 
 			if (_issueContents.Count > 0)
 				yield return PresentTooltipContents(_issueContents.Count == 1 ? "Issue" : "Issues", _issueContents);
 
+			if (_vsSquiggleContents.Count > 0)
+				yield return PresentTooltipContents("VS", _vsSquiggleContents);
+
 			foreach (MiscTooltipContent miscContent in _miscContents)
 				yield return PresentTooltipContents("Misc", new[] { miscContent });
+
+			foreach (object vsUnknownContent in _vsUnknownContents)
+				yield return vsUnknownContent;
 		}
 
 		[NotNull]
 		[Pure]
-		private HeaderedContentControl PresentTooltipContents([CanBeNull] object header, [NotNull] IEnumerable<ITooltipContent> tooltipContents) {
+		private HeaderedContentControl PresentTooltipContents([CanBeNull] object header, [NotNull] IEnumerable<object> tooltipContents) {
 			var control = new HeaderedContentControl {
 				Style = UIResources.Instance.HeaderedContentControlStyle,
 				Focusable = false,

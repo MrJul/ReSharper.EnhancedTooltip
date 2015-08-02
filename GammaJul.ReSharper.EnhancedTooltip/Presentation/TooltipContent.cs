@@ -4,7 +4,7 @@ using JetBrains.Util;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
-	public abstract class TooltipContent : ITooltipContent {
+	public abstract class TooltipContent : IReSharperTooltipContent {
 
 		public RichText Text { get; }
 

@@ -4,7 +4,8 @@
 	xmlns:theming="clr-namespace:JetBrains.Platform.VisualStudio.SinceVs11.Shell.Theming;assembly=JetBrains.Platform.VisualStudio.SinceVs11"
 	xmlns:controls="clr-namespace:JetBrains.UI.Avalon.Controls;assembly=JetBrains.Platform.UI"
 	xmlns:jui="urn:schemas-jetbrains-com:jetbrains-ui-avalon"
-	xmlns:local="clr-namespace:GammaJul.ReSharper.EnhancedTooltip.Presentation">
+	xmlns:local="clr-namespace:GammaJul.ReSharper.EnhancedTooltip.Presentation"
+	xmlns:resources="urn:shemas-jetbrains-com:ui-application-icons-altering-featu">
 
 	<local:FontSizeScaleConverter Scale="0.9" x:Key="MediumFontSizeConverter" />
 	<local:FontSizeScaleConverter Scale="0.8" x:Key="SmallFontSizeConverter" />
@@ -158,6 +159,19 @@
 				<local:AutoContrastedRichTextPresenter TextWrapping="Wrap"
 					RichText="{Binding Text}" VerticalAlignment="Center" />
 			</DataTemplate>
+
+			<!-- Style for VS content -->
+			<DataTemplate DataType="{x:Type local:VsSquiggleContent}">
+        <DockPanel>
+          <Border DataContext="{x:Static resources:BulbThemedIcons+YellowBulbVS.Id}">
+            <jui:ThemedIconViewImage x:Name="IconPresenter" Stretch="Uniform"
+							Margin="0,0,4,0" local:IconScaling.IsScalingWithFontSize="True"
+							DockPanel.Dock="Left" VerticalAlignment="Top" HorizontalAlignment="Left" />
+          </Border>
+          <ContentPresenter VerticalAlignment="Center"
+						Content="{Binding Content}" />
+        </DockPanel>
+      </DataTemplate>
 
 		</Style.Resources>
 
