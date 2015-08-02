@@ -11,6 +11,10 @@ using Microsoft.VisualStudio.Utilities;
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 	[Name("EnhancedTooltipQuickInfo")]
+	[Order(After = "squiggle")]
+	[Order(After = "default")]
+	[Order(After = "Roslyn Quick Info Presenter")]
+	[Order(After = "Default LightBulb QuickInfo Provider")]
 	[Order(After = "ReSharperQuickInfo")]
 	[ContentType("text")]
 	[Export(typeof(IQuickInfoSourceProvider))]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Controls;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings;
@@ -37,7 +38,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 			if (session == null || quickInfoContent == null || quickInfoContent.IsReadOnly)
 				return;
-			
+
 			IDocumentMarkup documentMarkup = TryGetDocumentMarkup();
 			if (documentMarkup == null)
 				return;
@@ -83,23 +84,45 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					var nonReSharperContents = new List<object>();
 					bool ignoredFirstTextBuffer = false;
 					foreach (object content in quickInfoContent) {
+						if (content == null)
+							continue;
 
 						// ignore existing R# elements
 						if (content is RichTextPresenter)
 							continue;
-						
-						// ignore the first VS text is we provided an identifier tooltip
-						if (content is ITextBuffer && hasIdentifierTooltipContent && !ignoredFirstTextBuffer) {
-							ignoredFirstTextBuffer = true;
-							continue;
-						}
 
+						if (hasIdentifierTooltipContent) {
+
+							// ignore Roslyn identifier tooltip (for VS2015)
+							if (content.GetType().FullName == "Microsoft.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo.QuickInfoDisplayPanel")
+								continue;
+
+							// ignore the first VS text buffer (for VS2012 and VS2013)
+							if (content is ITextBuffer && !ignoredFirstTextBuffer) {
+								ignoredFirstTextBuffer = true;
+								continue;
+							}
+
+						}
+						
 						nonReSharperContents.Add(content);
 					}
 
 					quickInfoContent.Clear();
 					quickInfoContent.AddRange(presenter.PresentContents());
-					quickInfoContent.AddRange(nonReSharperContents);
+
+					if (nonReSharperContents.Count > 0) {
+						var control = new HeaderedContentControl {
+							Style = UIResources.Instance.HeaderedContentControlStyle,
+							Focusable = false,
+							Header = "VS",
+							Content = new ItemsControl {
+								Focusable = false,
+								ItemsSource = nonReSharperContents
+							}
+						};
+						quickInfoContent.Add(control);
+					}
 
 				}
 			};
