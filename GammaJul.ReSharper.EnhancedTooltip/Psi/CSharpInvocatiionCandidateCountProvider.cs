@@ -13,8 +13,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 	internal sealed class CSharpInvocatiionCandidateCountProvider : IInvocationCandidateCountProvider {
 
 		public int? TryGetInvocationCandidateCount(IReference reference) {
-			ICSharpInvocationReference invocationReference = FindInvocationReference(reference);
-			return invocationReference != null ? invocationReference.GetCandidates().Count() : (int?) null;
+			return FindInvocationReference(reference)?.GetCandidates().Count();
 		}
 		
 		[CanBeNull]
@@ -25,11 +24,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 			ITreeNode treeNode = reference.GetTreeNode();
 			var argumentsOwner = treeNode.GetContainingNode<ICSharpArgumentsOwner>();
-			if (argumentsOwner != null) {
-				ITokenNode lBound = argumentsOwner.LBound;
-				if (lBound != null && treeNode.GetTreeEndOffset() <= lBound.GetTreeStartOffset())
-					return argumentsOwner.Reference;
-			}
+			ITokenNode lBound = argumentsOwner?.LBound;
+			if (lBound != null && treeNode.GetTreeEndOffset() <= lBound.GetTreeStartOffset())
+				return argumentsOwner.Reference;
 
 			return null;
 		}

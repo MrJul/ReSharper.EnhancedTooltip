@@ -27,8 +27,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// <param name="useReSharperColors">Whether to use ReSharper colors, or only VS colors.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
 		[CanBeNull]
-		public RichText TryPresent([NotNull] DeclaredElementInstance declaredElementInstance, [NotNull] PresenterOptions options,
-			[NotNull] PsiLanguageType languageType, bool useReSharperColors) {
+		public RichText TryPresent(
+			[NotNull] DeclaredElementInstance declaredElementInstance,
+			[NotNull] PresenterOptions options,
+			[NotNull] PsiLanguageType languageType,
+			bool useReSharperColors) {
+
 			PresentedInfo presentedInfo;
 			return TryPresent(declaredElementInstance, options, languageType, useReSharperColors, out presentedInfo);
 		}
@@ -43,9 +47,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// <param name="presentedInfo">When the method returns, a <see cref="PresentedInfo"/> containing range information about the presented element.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
 		[CanBeNull]
-		public RichText TryPresent([NotNull] DeclaredElementInstance declaredElementInstance, [NotNull] PresenterOptions options,
-			[NotNull] PsiLanguageType languageType, bool useReSharperColors, [NotNull] out PresentedInfo presentedInfo) {
-			
+		public RichText TryPresent(
+			[NotNull] DeclaredElementInstance declaredElementInstance,
+			[NotNull] PresenterOptions options,
+			[NotNull] PsiLanguageType languageType,
+			bool useReSharperColors,
+			[NotNull] out PresentedInfo presentedInfo) {
+
 			var richText = new RichText();
 			IColorizer colorizer = TryCreateColorizer(richText, languageType, useReSharperColors);
 			if (colorizer == null) {
@@ -53,7 +61,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return null;
 			}
 
-			presentedInfo = colorizer.AppendDeclaredElement(declaredElementInstance.Element, declaredElementInstance.Substitution, options);
+			presentedInfo = colorizer.AppendDeclaredElement(declaredElementInstance.Element, declaredElementInstance.Substitution,
+				options);
 			return richText;
 		}
 

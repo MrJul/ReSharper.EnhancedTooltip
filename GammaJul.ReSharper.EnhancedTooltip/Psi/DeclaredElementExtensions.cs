@@ -55,7 +55,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 			if (!useReSharperColors)
 				return VsHighlightingAttributeIds.Identifier;
 
-			if (CSharpDeclaredElementUtil.IsProperty(declaredElement) || CSharpDeclaredElementUtil.IsIndexedProperty(declaredElement))
+			if (CSharpDeclaredElementUtil.IsProperty(declaredElement) || declaredElement.IsIndexedProperty())
 				return HighlightingAttributeIds.FIELD_IDENTIFIER_ATTRIBUTE;
 
 			if (declaredElement is IEvent)
@@ -176,9 +176,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 		[Pure]
 		[NotNull]
-		public static IDeclaredElement EliminateDelegateInvokeMethod([NotNull] this IDeclaredElement declaredElement) {
-			return DeclaredElementUtil.EliminateDelegateInvokeMethod(declaredElement);
-		}
+		public static IDeclaredElement EliminateDelegateInvokeMethod([NotNull] this IDeclaredElement declaredElement)
+			=> DeclaredElementUtil.EliminateDelegateInvokeMethod(declaredElement);
 
 	}
 

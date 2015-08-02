@@ -6,11 +6,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 	public static class ExpressionTypeExtensions {
 
-		public static bool HasSameFullNameAs([CanBeNull] this IExpressionType source, [CanBeNull] IExpressionType other) {
-			return source != null
+		public static bool HasSameFullNameAs([CanBeNull] this IExpressionType source, [CanBeNull] IExpressionType other)
+			=> source != null
 				&& other != null
 				&& source.GetLongPresentableName(CSharpLanguage.Instance) == other.GetLongPresentableName(CSharpLanguage.Instance);
-		}
 
 	}
 

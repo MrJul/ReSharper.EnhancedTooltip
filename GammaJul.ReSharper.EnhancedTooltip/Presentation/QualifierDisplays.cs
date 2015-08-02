@@ -4,11 +4,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	[Flags]
 	public enum QualifierDisplays {
-		None = 0x0,
-		Member = 0x1,
-		ElementType = 0x2,
-		TypeParameters = 0x4,
-		Parameters = 0x8,
+		None = 0,
+		Member = 1 << 0,
+		ElementType = 1 << 1,
+		TypeParameters = 1 << 2,
+		Parameters = 1 << 3,
 		Everywhere = Member | ElementType | TypeParameters | Parameters
 	}
 

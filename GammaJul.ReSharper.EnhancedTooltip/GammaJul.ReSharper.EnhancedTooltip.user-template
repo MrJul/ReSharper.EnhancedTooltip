@@ -1,13 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
   <!-- Rename this file to .csproj.user to automatically copy the plugin and update VS -->
   <!-- Edit the paths if needed -->
+  <PropertyGroup>
+	<RsInstallTargetFolder>$(LOCALAPPDATA)\JetBrains\Installations\ReSharperPlatformVs14RsDev_000</RsInstallTargetFolder>
+  </PropertyGroup>
   <Target Name="CopyPluginLocally" AfterTargets="AfterBuild">
-    <Message Text="Copying assembly locally @(InstallFolder)" Importance="High" />
-    <Copy SourceFiles="@(MainAssembly)" DestinationFolder="$(LOCALAPPDATA)\JetBrains\Installations\ReSharperPlatformVs12Plugins" />
-    <Exec Command="&quot;C:\Program Files (x86)\Microsoft Visual Studio 12.0\Common7\IDE\devenv.exe&quot; /RootSuffix Plugins /updateconfiguration" />
+    <Message Text="Copying assembly @(MainAssembly) to $(RsInstallTargetFolder)" Importance="High" />
+    <Copy SourceFiles="@(MainAssembly)" DestinationFolder="$(RsInstallTargetFolder)" />
+    <Exec Command="&quot;C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe&quot; /RootSuffix Plugins /updateconfiguration" />
   </Target>
 </Project>

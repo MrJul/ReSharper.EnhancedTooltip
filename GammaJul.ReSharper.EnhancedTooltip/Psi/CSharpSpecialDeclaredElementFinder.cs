@@ -30,20 +30,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 		[CanBeNull]
 		private static DeclaredElementInstance FindElementFromVarKeyword([NotNull] ITreeNode varKeyword, [NotNull] IFile file, out TextRange sourceRange) {
 			sourceRange = TextRange.InvalidRange;
-			
-			var multipleLocalVariableDeclaration = varKeyword.Parent as IMultipleLocalVariableDeclaration;
-			if (multipleLocalVariableDeclaration == null)
-				return null;
 
-			IMultipleDeclarationMember member = multipleLocalVariableDeclaration.DeclaratorsEnumerable.FirstOrDefault();
-			if (member == null)
-				return null;
+			var type = (varKeyword.Parent as IMultipleLocalVariableDeclaration)
+				?.DeclaratorsEnumerable
+				.FirstOrDefault()
+				?.Type as IDeclaredType;
 
-			var type = member.Type as IDeclaredType;
-			if (type == null)
-				return null;
-
-			ITypeElement typeElement = type.GetTypeElement();
+			ITypeElement typeElement = type?.GetTypeElement();
 			if (typeElement == null)
 				return null;
 
@@ -69,11 +62,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 		[CanBeNull]
 		private static DeclaredElementInstance TryResolveReference([CanBeNull] IReference reference) {
-			if (reference != null) {
-				IResolveResult resolveResult = reference.Resolve().Result;
-				if (resolveResult.DeclaredElement != null)
-					return new DeclaredElementInstance(resolveResult.DeclaredElement, resolveResult.Substitution);
-			}
+			IResolveResult resolveResult = reference?.Resolve().Result;
+			if (resolveResult?.DeclaredElement != null)
+				return new DeclaredElementInstance(resolveResult.DeclaredElement, resolveResult.Substitution);
 			return null;
 		}
 

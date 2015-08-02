@@ -124,10 +124,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			replacesStandardContent = false;
 
 			var constructor = info.DeclaredElement as IConstructor;
-			if (constructor == null)
-				return null;
-
-			ITypeElement typeElement = constructor.GetContainingType();
+			ITypeElement typeElement = constructor?.GetContainingType();
 			if (typeElement == null)
 				return null;
 
@@ -209,10 +206,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				return null;
 
 			var candidateCountProvider = LanguageManager.Instance.TryGetService<IInvocationCandidateCountProvider>(languageType);
-			if (candidateCountProvider == null)
-				return null;
-
-			int? candidateCount = candidateCountProvider.TryGetInvocationCandidateCount(reference);
+			int? candidateCount = candidateCountProvider?.TryGetInvocationCandidateCount(reference);
 			if (candidateCount == null || candidateCount.Value <= 1)
 				return null;
 
@@ -221,10 +215,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		
 		[CanBeNull]
 		private IdentifierTooltipContent TryPresentNonColorized([CanBeNull] IHighlighter highlighter, [CanBeNull] IDeclaredElement element, [NotNull] IContextBoundSettingsStore settings) {
-			if (highlighter == null)
-				return null;
-
-			RichTextBlock richTextToolTip = highlighter.RichTextToolTip;
+			RichTextBlock richTextToolTip = highlighter?.RichTextToolTip;
 			if (richTextToolTip == null)
 				return null;
 
@@ -241,11 +232,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		[NotNull]
 		private static IEnumerable<ExceptionContent> GetExceptions([NotNull] IDeclaredElement element, [NotNull] PsiLanguageType languageType,
 			[NotNull] IPsiModule psiModule, [NotNull] IModuleReferenceResolveContext resolveContext) {
-			XmlNode xmlDoc = element.GetXMLDoc(true);
-			if (xmlDoc == null)
-				return EmptyList<ExceptionContent>.InstanceList;
 
-			XmlNodeList exceptionNodes = xmlDoc.SelectNodes("exception");
+			XmlNode xmlDoc = element.GetXMLDoc(true);
+			XmlNodeList exceptionNodes = xmlDoc?.SelectNodes("exception");
 			if (exceptionNodes == null || exceptionNodes.Count == 0)
 				return EmptyList<ExceptionContent>.InstanceList;
 
@@ -261,10 +250,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		[CanBeNull]
 		private static ExceptionContent TryExtractException([CanBeNull] XmlElement exceptionElement, [NotNull] PsiLanguageType languageType,
 			[NotNull] IPsiModule psiModule, IModuleReferenceResolveContext resolveContext) {
-			if (exceptionElement == null)
-				return null;
 
-			string cref = exceptionElement.GetAttribute("cref");
+			string cref = exceptionElement?.GetAttribute("cref");
 			if (String.IsNullOrEmpty(cref))
 				return null;
 
@@ -291,8 +278,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		[CanBeNull]
 		private RichText TryGetDescription([NotNull] IDeclaredElement element, [NotNull] IPsiModule psiModule, [NotNull] PsiLanguageType languageType,
 			[NotNull] DeclaredElementDescriptionStyle style) {
-			RichTextBlock description = _declaredElementDescriptionPresenter.GetDeclaredElementDescription(element, style, languageType, psiModule);
-			return description != null ? description.RichText : null;
+			return _declaredElementDescriptionPresenter
+				.GetDeclaredElementDescription(element, style, languageType, psiModule)
+				?.RichText;
 		}
 
 		[CanBeNull]
@@ -417,10 +405,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				return null;
 
 			var declaredType = literalExpression.ConstantValue.Type as IDeclaredType;
-			if (declaredType == null)
-				return null;
-
-			ITypeElement typeElement = declaredType.GetTypeElement();
+			ITypeElement typeElement = declaredType?.GetTypeElement();
 			if (typeElement == null)
 				return null;
 

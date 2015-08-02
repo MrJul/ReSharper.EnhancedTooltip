@@ -27,20 +27,20 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	[ParameterInfoContextFactory(typeof(CSharpLanguage))]
 	public class EnhancedParameterInfoContextFactory : IParameterInfoContextFactory {
 
-		private readonly Lazy<IParameterInfoContextFactory> _csParameterInfoContextFactory;
+		[NotNull] [ItemCanBeNull] private readonly Lazy<IParameterInfoContextFactory> _csParameterInfoContextFactory;
 
-		public bool IsIntellisenseEnabled(ISolution solution, IContextBoundSettingsStore contextBoundSettingsStore) {
-			IParameterInfoContextFactory factory = _csParameterInfoContextFactory.Value;
-			return factory != null && factory.IsIntellisenseEnabled(solution, contextBoundSettingsStore);
-		}
+		public bool IsIntellisenseEnabled(ISolution solution, IContextBoundSettingsStore contextBoundSettingsStore)
+			=> _csParameterInfoContextFactory.Value?.IsIntellisenseEnabled(solution, contextBoundSettingsStore) == true;
 
-		public IParameterInfoContext CreateContext(ISolution solution, IDocument document, int caretOffset, int expectedLParenthOffset, char invocationChar,
+		public IParameterInfoContext CreateContext(ISolution solution,
+			IDocument document,
+			int caretOffset,
+			int expectedLParenthOffset,
+			char invocationChar,
 			IContextBoundSettingsStore contextBoundSettingsStore) {
-			IParameterInfoContextFactory factory = _csParameterInfoContextFactory.Value;
-			IParameterInfoContext context = factory != null
-				? factory.CreateContext(solution, document, caretOffset, expectedLParenthOffset, invocationChar, contextBoundSettingsStore)
-				: null;
 
+			IParameterInfoContext context = _csParameterInfoContextFactory.Value?.CreateContext(
+				solution, document, caretOffset, expectedLParenthOffset, invocationChar, contextBoundSettingsStore);
 			return Enhance(context, solution, contextBoundSettingsStore);
 		}
 
@@ -54,22 +54,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 				: new EnhancedParameterInfoContext(context, solution.GetComponent<ColorizerPresenter>(), settings);
 		}
 
-		public bool ShouldPopup(IDocument document, int caretOffset, char c, ISolution solution, IContextBoundSettingsStore contextBoundSettingsStore) {
-			IParameterInfoContextFactory factory = _csParameterInfoContextFactory.Value;
-			return factory != null && factory.ShouldPopup(document, caretOffset, c, solution, contextBoundSettingsStore);
-		}
+		public bool ShouldPopup(IDocument document, int caretOffset, char c, ISolution solution, IContextBoundSettingsStore contextBoundSettingsStore)
+			=> _csParameterInfoContextFactory.Value?.ShouldPopup(document, caretOffset, c, solution, contextBoundSettingsStore) == true;
 
-		public PsiLanguageType Language {
-			get { return CSharpLanguage.Instance; }
-		}
+		public PsiLanguageType Language
+			=> CSharpLanguage.Instance;
 
-		public IEnumerable<char> ImportantChars {
-			get {
-				IParameterInfoContextFactory factory = _csParameterInfoContextFactory.Value;
-				return factory != null ? factory.ImportantChars : EmptyList<char>.InstanceList;
-			}
-		}
-		
+		public IEnumerable<char> ImportantChars
+			=> _csParameterInfoContextFactory.Value?.ImportantChars ?? EmptyList<char>.InstanceList;
+
 		public EnhancedParameterInfoContextFactory() {
 			_csParameterInfoContextFactory =
 				Lazy.Of(() => Shell.Instance.GetComponent<ILanguageManager>()

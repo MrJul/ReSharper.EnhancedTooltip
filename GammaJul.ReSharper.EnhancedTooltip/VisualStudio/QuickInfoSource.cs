@@ -127,10 +127,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		}
 
 		[NotNull]
-		private static IdentifierTooltipContent[] GetIdentifierTooltipContents(DocumentRange documentRange, [NotNull] ISolution solution, [NotNull] IContextBoundSettingsStore settings) {
-			var contentProvider = solution.GetComponent<IdentifierTooltipContentProvider>();
-			return contentProvider.GetIdentifierContents(documentRange, settings);
-		}
+		private static IdentifierTooltipContent[] GetIdentifierTooltipContents(
+			DocumentRange documentRange,
+			[NotNull] ISolution solution,
+			[NotNull] IContextBoundSettingsStore settings)
+			=> solution
+				.GetComponent<IdentifierTooltipContentProvider>()
+				.GetIdentifierContents(documentRange, settings);
 
 		[NotNull]
 		[Pure]
@@ -168,17 +171,20 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		}
 
 		[CanBeNull]
-		private static ISolution TryGetCurrentSolution() {
-			var solutionManager = Shell.Instance.TryGetComponent<VSSolutionManager>();
-			return solutionManager != null ? solutionManager.CurrentSolution : null;
-		}
+		private static ISolution TryGetCurrentSolution()
+			=> Shell.Instance
+				.TryGetComponent<VSSolutionManager>()
+				?.CurrentSolution;
 
 		[NotNull]
 		[Pure]
-		private static IdentifierTooltipContent[] GetIdentifierTooltipContents([NotNull] IHighlighter highlighter, [NotNull] ISolution solution, [NotNull] IContextBoundSettingsStore settings) {
-			var contentProvider = solution.GetComponent<IdentifierTooltipContentProvider>();
-			return contentProvider.GetIdentifierContents(highlighter, settings);
-		}
+		private static IdentifierTooltipContent[] GetIdentifierTooltipContents(
+			[NotNull] IHighlighter highlighter,
+			[NotNull] ISolution solution,
+			[NotNull] IContextBoundSettingsStore settings)
+			=> solution
+				.GetComponent<IdentifierTooltipContentProvider>()
+				.GetIdentifierContents(highlighter, settings);
 
 		[CanBeNull]
 		[Pure]
@@ -205,17 +211,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		}
 
 		[CanBeNull]
-		private static RichText TryEnhanceHighlighting([NotNull] IHighlighting highlighting, [NotNull] IContextBoundSettingsStore settings,
-			[CanBeNull] ISolution solution) {
-			if (solution == null)
-				return null;
-			
-			var highlightingEnhancerManager = solution.TryGetComponent<HighlightingEnhancerManager>();
-			if (highlightingEnhancerManager == null)
-				return null;
-
-			return highlightingEnhancerManager.TryEnhance(highlighting, settings);
-		}
+		private static RichText TryEnhanceHighlighting(
+			[NotNull] IHighlighting highlighting,
+			[NotNull] IContextBoundSettingsStore settings,
+			[CanBeNull] ISolution solution)
+			=> solution
+				?.TryGetComponent<HighlightingEnhancerManager>()
+				?.TryEnhance(highlighting, settings);
 
 		[CanBeNull]
 		[Pure]
@@ -240,7 +242,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		[Pure]
 		private static bool IsIdentifierHighlighting([NotNull] IHighlighting highlighting) {
 			var attribute = HighlightingSettingsManager.Instance.GetHighlightingAttribute(highlighting) as StaticSeverityHighlightingAttribute;
-			return attribute != null && attribute.GroupId == HighlightingGroupIds.IdentifierHighlightingsGroup;
+			return attribute?.GroupId == HighlightingGroupIds.IdentifierHighlightingsGroup;
 		}
 
 		public void Dispose() {

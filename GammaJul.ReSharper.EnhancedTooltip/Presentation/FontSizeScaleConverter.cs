@@ -8,7 +8,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public class FontSizeScaleConverter : IValueConverter {
 
-		public double Scale { get; set; }
+		public double Scale { get; set; } = 1.0;
 		
 		[CanBeNull]
 		private static object ScaleDouble([CanBeNull] object value, double scale) {
@@ -23,10 +23,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
 			return ScaleDouble(value, 1.0 / Scale);
-		}
-
-		public FontSizeScaleConverter() {
-			Scale = 1.0;
 		}
 
 	}

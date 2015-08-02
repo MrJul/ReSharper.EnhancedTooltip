@@ -24,9 +24,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		private readonly DTE _dte;
 
 		[NotNull]
-		private HighlighterAttributes GetReSharperHighlighterAttributes([NotNull] string highlighterAttributeId) {
-			return _highlighterCustomization.GetCustomizedRegisteredHighlighterAttributes(highlighterAttributeId);
-		}
+		private HighlighterAttributes GetReSharperHighlighterAttributes([NotNull] string highlighterAttributeId)
+			=> _highlighterCustomization.GetCustomizedRegisteredHighlighterAttributes(highlighterAttributeId);
 
 		[NotNull]
 		private HighlighterAttributes GetVsHighlighterAttributes([NotNull] string highlighterAttributeId) {
@@ -48,22 +47,20 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 
 		[NotNull]
-		private HighlighterAttributes GetHighlighterAttributes([NotNull] string highlighterAttributeId) {
-			return highlighterAttributeId.StartsWith("ReSharper", StringComparison.Ordinal)
+		private HighlighterAttributes GetHighlighterAttributes([NotNull] string highlighterAttributeId)
+			=> highlighterAttributeId.StartsWith("ReSharper", StringComparison.Ordinal)
 				? GetReSharperHighlighterAttributes(highlighterAttributeId)
 				: GetVsHighlighterAttributes(highlighterAttributeId);
-		}
 
 		private static TextStyle ToTextStyle([NotNull] HighlighterAttributes attributes) {
 			FontStyle fontStyle = attributes.FontStyle != HighlighterAttributes.UNDEFINED_FONT_STYLE ? (FontStyle) attributes.FontStyle : FontStyle.Regular;
 			return new TextStyle(fontStyle, attributes.Color, attributes.BackgroundColor);
 		}
 
-		public TextStyle GetHighlighterTextStyle([CanBeNull] string highlighterAttributeId) {
-			if (highlighterAttributeId.IsEmpty())
-				return TextStyle.Default;
-			return ToTextStyle(GetHighlighterAttributes(highlighterAttributeId));
-		}
+		public TextStyle GetHighlighterTextStyle([CanBeNull] string highlighterAttributeId)
+			=> highlighterAttributeId.IsEmpty()
+				? TextStyle.Default
+				: ToTextStyle(GetHighlighterAttributes(highlighterAttributeId));
 
 		private void ResetVsAttributesCache() {
 			lock (_vsAttributesByName)

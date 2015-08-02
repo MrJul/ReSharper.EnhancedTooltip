@@ -18,30 +18,25 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	/// </summary>
 	public class EnhancedParameterInfoCandidate : ICandidate {
 
-		[NotNull] private readonly ParameterInfoCandidate _underlyingCandidate;
 		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
 		[NotNull] private readonly IContextBoundSettingsStore _settings;
 
 		[NotNull]
-		public ParameterInfoCandidate UnderlyingCandidate {
-			get { return _underlyingCandidate; }
-		}
+		public ParameterInfoCandidate UnderlyingCandidate { get; }
 
-		public RichTextBlock GetDescription() {
-			return _underlyingCandidate.GetDescription();
-		}
+		public RichTextBlock GetDescription()
+			=> UnderlyingCandidate.GetDescription();
 
-		public void GetParametersInfo(out string[] paramNames, out RichTextBlock[] paramDescriptions, out bool isParamsArray) {
-			_underlyingCandidate.GetParametersInfo(out paramNames, out paramDescriptions, out isParamsArray);
-		}
-		
+		public void GetParametersInfo(out string[] paramNames, out RichTextBlock[] paramDescriptions, out bool isParamsArray)
+			=> UnderlyingCandidate.GetParametersInfo(out paramNames, out paramDescriptions, out isParamsArray);
+
 		[NotNull]
 		public RichText GetSignature(string[] namedArguments, AnnotationsDisplayKind showAnnotations,
 			out TextRange[] parameterRanges, out int[] mapToOriginalOrder, out ExtensionMethodInfo extensionMethodInfo) {
 			
 			// TODO: handle named arguments with reordering; currently falling back to non-colored display
 			if (namedArguments.Any(s => s != null)) {
-				string signature = _underlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
+				string signature = UnderlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 				if (!IsIdentityMap(mapToOriginalOrder))
 					return signature;
 			}
@@ -49,12 +44,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			var options = PresenterOptions.ForParameterInfo(_settings, showAnnotations);
 			bool useReSharperColors = _settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled);
 			PresentedInfo presentedInfo;
-			InvocationCandidate invocationCandidate = _underlyingCandidate.InvocationCandidate;
+			InvocationCandidate invocationCandidate = UnderlyingCandidate.InvocationCandidate;
 			var elementInstance = new DeclaredElementInstance(invocationCandidate.Element, invocationCandidate.Substitution);
 			
-			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, _underlyingCandidate.Language, useReSharperColors, out presentedInfo);
+			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, useReSharperColors, out presentedInfo);
 			if (richText == null)
-				return _underlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
+				return UnderlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 
 			if (presentedInfo.Parameters.Count == 0) {
 				parameterRanges = EmptyArray<TextRange>.Instance;
@@ -94,29 +89,25 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		}
 
 		public bool IsFilteredOut {
-			get { return _underlyingCandidate.IsFilteredOut; }
-			set { _underlyingCandidate.IsFilteredOut = value; }
+			get { return UnderlyingCandidate.IsFilteredOut; }
+			set { UnderlyingCandidate.IsFilteredOut = value; }
 		}
 
-		public bool IsObsolete {
-			get { return _underlyingCandidate.IsObsolete; }
-		}
+		public bool IsObsolete
+			=> UnderlyingCandidate.IsObsolete;
 
-		public bool Matches(IDeclaredElement signature) {
-			return _underlyingCandidate.Matches(signature);
-		}
+		public bool Matches(IDeclaredElement signature)
+			=> UnderlyingCandidate.Matches(signature);
 
-		public RichTextBlock ObsoleteDescription {
-			get { return _underlyingCandidate.ObsoleteDescription; }
-		}
+		public RichTextBlock ObsoleteDescription
+			=> UnderlyingCandidate.ObsoleteDescription;
 
-		public int PositionalParameterCount {
-			get { return _underlyingCandidate.PositionalParameterCount; }
-		}
+		public int PositionalParameterCount
+			=> UnderlyingCandidate.PositionalParameterCount;
 
 		public EnhancedParameterInfoCandidate([NotNull] ParameterInfoCandidate underlyingCandidate, [NotNull] ColorizerPresenter colorizerPresenter,
 			[NotNull] IContextBoundSettingsStore settings) {
-			_underlyingCandidate = underlyingCandidate;
+			UnderlyingCandidate = underlyingCandidate;
 			_colorizerPresenter = colorizerPresenter;
 			_settings = settings;
 		}

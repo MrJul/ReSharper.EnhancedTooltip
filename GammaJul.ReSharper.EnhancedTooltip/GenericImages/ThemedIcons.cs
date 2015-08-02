@@ -17,7 +17,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip {
 		[CompiledIconClass(IconPackResourceName, 0, "Logo16")]
 		public sealed class Logo16 : CompiledIconClass {
 
-			public static IconId Id = new CompiledIconId(IconPackResourceName, 0, "Logo16");
+			[UsedImplicitly] public static IconId Id = new CompiledIconId(IconPackResourceName, 0, "Logo16");
 
 		}
 

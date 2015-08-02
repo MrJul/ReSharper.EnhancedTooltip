@@ -53,11 +53,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull] private readonly RichText _richText;
 		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
 		[NotNull] private readonly CodeAnnotationsCache _codeAnnotationsCache;
-		private readonly bool _useReSharperColors;
 
-		public bool UseReSharperColors {
-			get { return _useReSharperColors; }
-		}
+		public bool UseReSharperColors { get; }
 
 		public PresentedInfo AppendDeclaredElement(IDeclaredElement element, ISubstitution substitution, PresenterOptions options) {
 			var context = new Context(options, new PresentedInfo());
@@ -335,26 +332,20 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return;
 			}
 
-			string highlighterId = typeElement.GetHighlightingAttributeId(_useReSharperColors);
+			string highlighterId = typeElement.GetHighlightingAttributeId(UseReSharperColors);
 			AppendText(FormatShortName(typeElement.ShortName), highlighterId);
 			AppendTypeParameters(typeElement, substitution, context);
 		}
 
 		[NotNull]
 		private static string GetModuleFullName([NotNull] IType type) {
-			IDeclaredType scalarType = type.GetScalarType();
-			if (scalarType != null) {
-				AssemblyNameInfo assembly = scalarType.Assembly;
-				if (assembly != null)
-					return assembly.FullName;
-			}
+			AssemblyNameInfo assembly = type.GetScalarType()?.Assembly;
+			if (assembly != null)
+				return assembly.FullName;
 
-			var assemblyPsiModule = type.Module as IAssemblyPsiModule;
-			if (assemblyPsiModule != null) {
-				string name = assemblyPsiModule.Assembly.AssemblyName.FullName;
-				if (name != null)
-					return name;
-			}
+			string name = (type.Module as IAssemblyPsiModule)?.Assembly.AssemblyName.FullName;
+			if (name != null)
+				return name;
 
 			return type.Module.DisplayName;
 		}
@@ -364,7 +355,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			for (INamespace iter = ns.GetContainingNamespace(); iter != null && !iter.IsRootNamespace; iter = iter.GetContainingNamespace())
 				containingNamespaces.Push(iter.ShortName);
 
-			string highlighterId = _useReSharperColors
+			string highlighterId = UseReSharperColors
 				? HighlightingAttributeIds.NAMESPACE_IDENTIFIER_ATTRIBUTE
 				: VsHighlightingAttributeIds.Identifier;
 			
@@ -418,13 +409,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 
 			if (!appendedExplicitInterface && (context.Options.ShowQualifiers & QualifierDisplays.Member) != QualifierDisplays.None) {
-				var typeMember = element as ITypeMember;
-				if (typeMember != null) {
-					ITypeElement containingTypeElement = typeMember.GetContainingType();
-					if (containingTypeElement != null) {
-						AppendTypeElement(containingTypeElement, substitution, QualifierDisplays.Member, context);
-						AppendText(".", VsHighlightingAttributeIds.Operator);
-					}
+				ITypeElement containingTypeElement = (element as ITypeMember)?.GetContainingType();
+				if (containingTypeElement != null) {
+					AppendTypeElement(containingTypeElement, substitution, QualifierDisplays.Member, context);
+					AppendText(".", VsHighlightingAttributeIds.Operator);
 				}
 			}
 
@@ -432,7 +420,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private void AppendName([NotNull] IDeclaredElement element) {
-			string highlighterId = element.GetHighlightingAttributeId(_useReSharperColors);
+			string highlighterId = element.GetHighlightingAttributeId(UseReSharperColors);
 
 			if (CSharpDeclaredElementUtil.IsDestructor(element)) {
 				ITypeElement containingType = ((IClrDeclaredElement) element).GetContainingType();
@@ -485,7 +473,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			var constructor = element as IConstructor;
 			if (constructor != null) {
 				ITypeElement containingType = constructor.GetContainingType();
-				string shortName = containingType != null ? containingType.ShortName : constructor.ShortName;
+				string shortName = containingType?.ShortName ?? constructor.ShortName;
 				AppendText(FormatShortName(shortName), highlighterId);
 				return;
 			}
@@ -558,11 +546,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (parametersOwner != null)
 				return parametersOwner;
 
-			var deleg = declaredElement as IDelegate;
-			if (deleg != null)
-				return deleg.InvokeMethod;
-
-			return null;
+			return (declaredElement as IDelegate)?.InvokeMethod;
 		}
 
 		private void AppendParameter([NotNull] IParameter parameter, [NotNull] ISubstitution substitution, Context context) {
@@ -586,7 +570,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendElementType(parameter, substitution, QualifierDisplays.Parameters, null, options.ShowParametersName ? " " : null, context);
 
 			if (options.ShowParametersName) {
-				string highlighterId = _useReSharperColors
+				string highlighterId = UseReSharperColors
 					? HighlightingAttributeIds.PARAMETER_IDENTIFIER_ATTRIBUTE
 					: VsHighlightingAttributeIds.Identifier;
 				AppendText(FormatShortName(parameter.ShortName), highlighterId);
@@ -612,7 +596,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (annotations.Count == 0)
 				return;
 
-			string highlighterId = _useReSharperColors
+			string highlighterId = UseReSharperColors
 				? HighlightingAttributeIds.TYPE_CLASS_ATTRIBUTE
 				: VsHighlightingAttributeIds.Classes;
 			AppendText("[", null);
@@ -664,7 +648,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (accessor != null)
 				element = accessor.OwnerMember;
 
-			return CSharpDeclaredElementUtil.IsIndexer(element) || CSharpDeclaredElementUtil.IsIndexedProperty(element);
+			return CSharpDeclaredElementUtil.IsIndexer(element) || element.IsIndexedProperty();
 		}
 
 		[CanBeNull]
@@ -744,7 +728,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 
 			IType type = constantValue.Type;
-			if (type != null && type.IsNullable())
+			if (type.IsNullable())
 				type = type.GetNullableUnderlyingType();
 
 			if (type == null) {
@@ -767,8 +751,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (fields.Count == 0)
 				return false;
 
-			string typeHighlighterId = _useReSharperColors ? HighlightingAttributeIds.TYPE_ENUM_ATTRIBUTE : VsHighlightingAttributeIds.Enums;
-			string valueHighlighterId = _useReSharperColors ? HighlightingAttributeIds.CONSTANT_IDENTIFIER_ATTRIBUTE : VsHighlightingAttributeIds.Identifier;
+			string typeHighlighterId = UseReSharperColors ? HighlightingAttributeIds.TYPE_ENUM_ATTRIBUTE : VsHighlightingAttributeIds.Enums;
+			string valueHighlighterId = UseReSharperColors ? HighlightingAttributeIds.CONSTANT_IDENTIFIER_ATTRIBUTE : VsHighlightingAttributeIds.Identifier;
 			
 			var orderedFields = fields.OrderBy(f => f.ShortName);
 			bool addSeparator = false;
@@ -791,7 +775,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			_richText = richText;
 			_textStyleHighlighterManager = textStyleHighlighterManager;
 			_codeAnnotationsCache = codeAnnotationsCache;
-			_useReSharperColors = useReSharperColors;
+			UseReSharperColors = useReSharperColors;
 		}
 
 	}

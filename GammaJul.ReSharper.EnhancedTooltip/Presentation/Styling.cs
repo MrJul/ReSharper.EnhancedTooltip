@@ -27,13 +27,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public static bool GetShouldStyleParentListBox([NotNull] DependencyObject owner) {
 			if (owner == null)
-				throw new ArgumentNullException("owner");
+				throw new ArgumentNullException(nameof(owner));
 			return (bool) owner.GetValue(ShouldStyleParentListBoxProperty);
 		}
 
 		public static void SetShouldStyleParentListBox([NotNull] DependencyObject owner, bool value) {
 			if (owner == null)
-				throw new ArgumentNullException("owner");
+				throw new ArgumentNullException(nameof(owner));
 			owner.SetValue(ShouldStyleParentListBoxProperty, value);
 		}
 
@@ -42,10 +42,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return;
 
 			var element = d as FrameworkElement;
-			if (element == null)
-				return;
 			
-			element.WhenLoaded(lifetime => {
+			element?.WhenLoaded(lifetime => {
 
 				// We're styling the parent VS ListBox included inside the tooltip.
 				var listBox = element.FindVisualAncestor<ListBox>();

@@ -6,12 +6,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public class PresentedInfo {
 
-		private readonly List<TextRange> _parameters = new List<TextRange>();
-		
 		[NotNull]
-		public List<TextRange> Parameters {
-			get { return _parameters; }
-		}
+		public List<TextRange> Parameters { get; } = new List<TextRange>();
 
 		public bool IsExtensionMethod { get; set; }
 

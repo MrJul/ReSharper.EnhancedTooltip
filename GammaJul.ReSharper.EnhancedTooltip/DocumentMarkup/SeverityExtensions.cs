@@ -9,10 +9,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 		[Pure]
 		public static bool IsIssue(this Severity severity) {
-			return severity == Severity.HINT
-				|| severity == Severity.SUGGESTION
-				|| severity == Severity.WARNING
-				|| severity == Severity.ERROR;
+			switch (severity) {
+				case Severity.HINT:
+				case Severity.SUGGESTION:
+				case Severity.WARNING:
+				case Severity.ERROR:
+					return true;
+				default:
+					return false;
+			}
 		}
 
 		[CanBeNull]

@@ -11,38 +11,32 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	internal sealed class UIResources {
 
 		[NotNull]
-		public static UIResources Instance {
-			get { return Shell.Instance.GetComponent<UIResources>(); }
-		}
+		public static UIResources Instance
+			=> Shell.Instance.GetComponent<UIResources>();
 
-		private readonly Lazy<ResourceDictionary> _lazyResourceDictionary = Lazy.Of(LoadResourceDictionary);
+		[NotNull] [ItemNotNull] private readonly Lazy<ResourceDictionary> _lazyResourceDictionary = Lazy.Of(LoadResourceDictionary);
 		
 		[NotNull]
-		public Style HeaderedContentControlStyle {
-			get { return (Style) _lazyResourceDictionary.Value["HeaderedContentControlStyle"]; }
-		}
+		public Style HeaderedContentControlStyle
+			=> (Style) _lazyResourceDictionary.Value["HeaderedContentControlStyle"];
 
 		[NotNull]
-		public Style QuickInfoListBoxStyle {
-			get { return (Style) _lazyResourceDictionary.Value["QuickInfoListBoxStyle"]; }
-		}
+		public Style QuickInfoListBoxStyle
+			=> (Style) _lazyResourceDictionary.Value["QuickInfoListBoxStyle"];
 
 		[NotNull]
-		public Style QuickInfoItemStyle {
-			get { return (Style) _lazyResourceDictionary.Value["QuickInfoItemStyle"]; }
-		}
+		public Style QuickInfoItemStyle
+			=> (Style) _lazyResourceDictionary.Value["QuickInfoItemStyle"];
 
 		[NotNull]
-		public DataTemplate QuickInfoItemDataTemplate {
-			get { return (DataTemplate) _lazyResourceDictionary.Value["QuickInfoItemDataTemplate"]; }
-		}
-		
+		public DataTemplate QuickInfoItemDataTemplate
+			=> (DataTemplate) _lazyResourceDictionary.Value["QuickInfoItemDataTemplate"];
+
 		[NotNull]
-		private static ResourceDictionary LoadResourceDictionary() {
-			return new ResourceDictionary {
-				Source = UriHelpers.MakeUri("Presentation/UIResources.xaml", typeof(UIResources).Assembly)
+		private static ResourceDictionary LoadResourceDictionary()
+			=> new ResourceDictionary {
+				Source = UriHelpers.MakeUri("Presentation/UIResources.xaml", typeof (UIResources).Assembly)
 			};
-		}
 
 	}
 

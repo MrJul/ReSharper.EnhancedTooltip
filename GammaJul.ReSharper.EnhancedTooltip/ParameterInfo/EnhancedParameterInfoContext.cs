@@ -37,17 +37,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 				: candidate;
 		}
 
-		public int Argument {
-			get { return _context.Argument; }
-		}
+		public int Argument
+			=> _context.Argument;
 
-		public ICandidate[] Candidates {
-			get { return _candidates ?? (_candidates = Enhance(_context.Candidates)); }
-		}
+		public ICandidate[] Candidates
+			=> _candidates ?? (_candidates = Enhance(_context.Candidates));
 
-		public ICandidate DefaultCandidate {
-			get { return _defaultCandidate ?? (_defaultCandidate = FindDefaultCandidate()); }
-		}
+		public ICandidate DefaultCandidate
+			=> _defaultCandidate ?? (_defaultCandidate = FindDefaultCandidate());
 
 		[CanBeNull]
 		private ICandidate FindDefaultCandidate() {
@@ -72,17 +69,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			set { _context.NamedArguments = value; }
 		}
 
-		public Type ParameterListNodeType {
-			get { return _context.ParameterListNodeType; }
-		}
+		public Type ParameterListNodeType
+			=> _context.ParameterListNodeType;
 
-		public ICollection<Type> ParameterNodeTypes {
-			get { return _context.ParameterNodeTypes; }
-		}
+		public ICollection<Type> ParameterNodeTypes
+			=> _context.ParameterNodeTypes;
 
-		public TextRange Range {
-			get { return _context.Range; }
-		}
+		public TextRange Range
+			=> _context.Range;
 
 		public EnhancedParameterInfoContext([NotNull] IParameterInfoContext context, [NotNull] ColorizerPresenter colorizerPresenter,
 			[NotNull] IContextBoundSettingsStore settings) {

@@ -25,21 +25,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[NotNull] private readonly Lifetime _lifetime;
 		[NotNull] private readonly OptionsSettingsSmartContext _context;
 
-		public string Id {
-			get { return Pid; }
-		}
+		public string Id
+			=> Pid;
 
-		public bool OnOk() {
-			return true;
-		}
-		
-		public bool ValidatePage() {
-			return true;
-		}
+		public bool OnOk()
+			=> true;
 
-		public EitherControl Control {
-			get { return this; }
-		}
+		public bool ValidatePage()
+			=> true;
+
+		public EitherControl Control
+			=> this;
 
 		[NotNull]
 		private static List<EnumValue> CreateEnumItemsSource([NotNull] Type enumType) {
@@ -50,24 +46,25 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 				.ToList();
 		}
 
-		private void SetCheckBoxBinding<TSettings>([NotNull] Expression<Func<TSettings, bool>> settingAccessor, [NotNull] CheckBoxDisabledNoCheck2 checkBox,
+		private void SetCheckBoxBinding<TSettings>(
+			[NotNull] Expression<Func<TSettings, bool>> settingAccessor,
+			[NotNull] CheckBoxDisabledNoCheck2 checkBox,
 			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckbox) {
 
-			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
+			var entry = _context.Schema.GetScalarEntry(settingAccessor);
 			if (checkBox.Content == null)
 				checkBox.Content = entry.Description;
 			_context.SetBinding<bool>(_lifetime, entry, checkBox, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
 
-			if (parentCheckbox != null)
-				parentCheckbox.IsCheckedLogically.FlowInto(_lifetime, checkBox, IsEnabledProperty);
+			parentCheckbox?.IsCheckedLogically.FlowInto(_lifetime, checkBox, IsEnabledProperty);
 		}
 
 		private void SetComboBoxBinding<TSettings, TEnum>([NotNull] Expression<Func<TSettings, TEnum>> settingAccessor, [NotNull] ComboBox comboBox,
 			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckbox) {
 
 			comboBox.ItemsSource = CreateEnumItemsSource(typeof(TEnum));
-			comboBox.DisplayMemberPath = "Description";
-			comboBox.SelectedValuePath = "Value";
+			comboBox.DisplayMemberPath = nameof(EnumValue.Description);
+			comboBox.SelectedValuePath = nameof(EnumValue.Value);
 
 			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
 			_context.SetBinding<object>(_lifetime, entry, comboBox, Selector.SelectedValueProperty);
@@ -75,15 +72,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			Label label = FindAssociatedLabel(comboBox);
 			if (label != null && label.Content == null)
 				label.Content = entry.Description + ":";
-			
-			if (parentCheckbox != null)
-				parentCheckbox.IsCheckedLogically.FlowInto(_lifetime, comboBox, IsEnabledProperty);
+
+			parentCheckbox?.IsCheckedLogically.FlowInto(_lifetime, comboBox, IsEnabledProperty);
 		}
 
 		[CanBeNull]
-		private static Label FindAssociatedLabel([NotNull] ComboBox comboBox) {
-			return comboBox.Parent != null ? comboBox.Parent.FindDescendant<Label>() : null;
-		}
+		private static Label FindAssociatedLabel([NotNull] ComboBox comboBox)
+			=> comboBox.Parent?.FindDescendant<Label>();
 
 		private void SetIdentifierTooltipSettingsBindings() {
 			CheckBoxDisabledNoCheck2 enabledCheckBox = IdentifierTooltipEnabledCheckBox;

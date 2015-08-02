@@ -9,20 +9,35 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	public sealed class PresenterOptions {
 
 		public bool FormatDelegatesAsLambdas { get; private set; }
+
 		public bool ShowAccessRights { get; private set; }
+
 		public bool ShowConstantValue { get; private set; }
+
 		public bool ShowDefaultValues { get; private set; }
+
 		public bool ShowElementKind { get; private set; }
+
 		public AnnotationsDisplayKind ShowElementAnnotations { get; private set; }
+
 		public ElementTypeDisplay ShowElementType { get; private set; }
+
 		public bool ShowEmptyParametersText { get; private set; }
+
 		public bool ShowExplicitInterface { get; private set; }
+
 		public bool ShowModifiers { get; private set; }
+
 		public bool ShowName { get; private set; }
+
 		public bool ShowParametersName { get; private set; }
+
 		public AnnotationsDisplayKind ShowParametersAnnotations { get; private set; }
+
 		public bool ShowParametersType { get; private set; }
+
 		public QualifierDisplays ShowQualifiers { get; private set; }
+
 		public bool UseTypeKeywords { get; private set; }
 
 		[NotNull]

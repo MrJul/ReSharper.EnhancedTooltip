@@ -11,37 +11,29 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	internal static class CSharpColorizerExtensions {
 
-		public static void AppendPlainText([NotNull] this CSharpColorizer colorizer, [CanBeNull] string text) {
-			colorizer.AppendText(text, null);
-		}
+		public static void AppendPlainText([NotNull] this CSharpColorizer colorizer, [CanBeNull] string text)
+			=> colorizer.AppendText(text, null);
 
-		public static void AppendKeyword([NotNull] this CSharpColorizer colorizer, [CanBeNull] string keyword) {
-			colorizer.AppendText(keyword, VsHighlightingAttributeIds.Keyword);
-		}
-		
-		public static void AppendOperator([NotNull] this CSharpColorizer colorizer, [CanBeNull] string @operator) {
-			colorizer.AppendText(@operator, VsHighlightingAttributeIds.Operator);
-		}
+		public static void AppendKeyword([NotNull] this CSharpColorizer colorizer, [CanBeNull] string keyword)
+			=> colorizer.AppendText(keyword, VsHighlightingAttributeIds.Keyword);
 
-		public static void AppendNamespaceName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string className) {
-			colorizer.AppendText(className, colorizer.UseReSharperColors ? HighlightingAttributeIds.NAMESPACE_IDENTIFIER_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
-		}
+		public static void AppendOperator([NotNull] this CSharpColorizer colorizer, [CanBeNull] string @operator)
+			=> colorizer.AppendText(@operator, VsHighlightingAttributeIds.Operator);
 
-		public static void AppendClassName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string className) {
-			colorizer.AppendText(className, colorizer.UseReSharperColors ? HighlightingAttributeIds.TYPE_CLASS_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
-		}
+		public static void AppendNamespaceName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string className)
+			=> colorizer.AppendText(className, colorizer.UseReSharperColors ? HighlightingAttributeIds.NAMESPACE_IDENTIFIER_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
 
-		public static void AppendInterfaceName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string interfaceName) {
-			colorizer.AppendText(interfaceName, colorizer.UseReSharperColors ? HighlightingAttributeIds.TYPE_INTERFACE_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
-		}
+		public static void AppendClassName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string className)
+			=> colorizer.AppendText(className, colorizer.UseReSharperColors ? HighlightingAttributeIds.TYPE_CLASS_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
 
-		public static void AppendMethodName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string className) {
-			colorizer.AppendText(className, colorizer.UseReSharperColors ? HighlightingAttributeIds.METHOD_IDENTIFIER_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
-		}
+		public static void AppendInterfaceName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string interfaceName)
+			=> colorizer.AppendText(interfaceName, colorizer.UseReSharperColors ? HighlightingAttributeIds.TYPE_INTERFACE_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
 
-		public static void AppendElementKind([NotNull] this CSharpColorizer colorizer, [CanBeNull] IDeclaredElement element) {
-			colorizer.AppendText(element.GetElementKindString(), null);
-		}
+		public static void AppendMethodName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string className)
+			=> colorizer.AppendText(className, colorizer.UseReSharperColors ? HighlightingAttributeIds.METHOD_IDENTIFIER_ATTRIBUTE : VsHighlightingAttributeIds.Identifier);
+
+		public static void AppendElementKind([NotNull] this CSharpColorizer colorizer, [CanBeNull] IDeclaredElement element)
+			=> colorizer.AppendText(element.GetElementKindString(), null);
 
 		public static void AppendCandidates([NotNull] this CSharpColorizer colorizer, [CanBeNull] IReference reference) {
 			if (reference == null)

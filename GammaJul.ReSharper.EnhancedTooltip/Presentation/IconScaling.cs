@@ -17,13 +17,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public static double GetIsScalingWithFontSize([NotNull] DependencyObject owner) {
 			if (owner == null)
-				throw new ArgumentNullException("owner");
+				throw new ArgumentNullException(nameof(owner));
 			return (double) owner.GetValue(IsScalingWithFontSizeProperty);
 		}
 
 		public static void SetIsScalingWithFontSize([NotNull] DependencyObject owner, bool value) {
 			if (owner == null)
-				throw new ArgumentNullException("owner");
+				throw new ArgumentNullException(nameof(owner));
 			owner.SetValue(IsScalingWithFontSizeProperty, value);
 		}
 

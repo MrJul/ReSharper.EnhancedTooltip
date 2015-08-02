@@ -10,20 +10,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 	[ShellComponent]
 	public class TooltipFormattingProvider {
 
-		private readonly Lazy<Optional<IClassificationFormatMapService>> _lazyFormatMapService;
-		private readonly Lazy<IClassificationFormatMap> _lazyFormatMap;
+		[NotNull] [ItemCanBeNull] private readonly Lazy<Optional<IClassificationFormatMapService>> _lazyFormatMapService;
+		[NotNull] [ItemCanBeNull] private readonly Lazy<IClassificationFormatMap> _lazyFormatMap;
 
 		[NotNull]
-		public TextFormattingRunProperties GetTooltipFormatting() {
-			IClassificationFormatMap formatMap = _lazyFormatMap.Value;
-			return formatMap != null ? formatMap.DefaultTextProperties : TextFormattingRunProperties.CreateTextFormattingRunProperties();
-		}
+		public TextFormattingRunProperties GetTooltipFormatting()
+			=> _lazyFormatMap.Value?.DefaultTextProperties ?? TextFormattingRunProperties.CreateTextFormattingRunProperties();
 
 		[CanBeNull]
-		private IClassificationFormatMap FindFormatMap() {
-			IClassificationFormatMapService formatMapService = _lazyFormatMapService.Value.CanBeNull;
-			return formatMapService != null ? formatMapService.GetClassificationFormatMap("tooltip") : null;
-		}
+		private IClassificationFormatMap FindFormatMap()
+			=> _lazyFormatMapService.Value.CanBeNull?.GetClassificationFormatMap("tooltip");
 
 		public TooltipFormattingProvider([NotNull] Lazy<Optional<IClassificationFormatMapService>> lazyFormatMapService) {
 			_lazyFormatMapService = lazyFormatMapService;
