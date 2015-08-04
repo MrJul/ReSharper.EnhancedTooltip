@@ -31,7 +31,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			IQuickInfoSession session,
 			IList<object> quickInfoContent,
 			IDocumentMarkup documentMarkup,
-			TooltipFormattingProvider tooltipFontProvider,
+			TooltipFormattingProvider tooltipFormattingProvider,
 			out ITrackingSpan applicableToSpan) {
 
 			applicableToSpan = session.ApplicableToSpan;
@@ -44,7 +44,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			Action getEnhancedTooltips = () => {
 				using (shellLocks.UsingReadLock()) {
 					
-					var presenter = new MultipleTooltipContentPresenter(tooltipFontProvider.GetTooltipFormatting());
+					var presenter = new MultipleTooltipContentPresenter(tooltipFormattingProvider.GetTooltipFormatting());
 					IContextBoundSettingsStore settings = documentMarkup.Document.GetSettings();
 					ISolution solution = TryGetCurrentSolution();
 

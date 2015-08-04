@@ -1,7 +1,12 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
+using GammaJul.ReSharper.EnhancedTooltip.VisualStudio;
 using JetBrains.Annotations;
+using JetBrains.Platform.VisualStudio.SinceVs11.Shell.Theming;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.UI.Avalon;
 using JetBrains.UI.Extensions;
 using JetBrains.Util;
@@ -80,8 +85,31 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 
 			listBox.Style = UIResources.Instance.QuickInfoListBoxStyle;
-			listBox.ItemContainerStyle = UIResources.Instance.QuickInfoItemStyle;
 			listBox.ItemTemplate = UIResources.Instance.QuickInfoItemDataTemplate;
+
+			var itemContainerStyle = new Style(typeof(ListBoxItem), UIResources.Instance.QuickInfoItemStyle);
+			if (Shell.HasInstance) {
+				var tooltipFormattingProvider = Shell.Instance.TryGetComponent<TooltipFormattingProvider>();
+
+				if (tooltipFormattingProvider != null) {
+
+					var backgroundBrush = tooltipFormattingProvider.TryGetBackgroundBrush()
+						?? listBox.FindResource(BundledThemeColors.Environment.ToolWindowTabSelectedTabBrushKey) as Brush;
+					if (backgroundBrush != null)
+						itemContainerStyle.Setters.Add(new Setter(Control.BackgroundProperty, backgroundBrush));
+
+					var foregroundBrush = tooltipFormattingProvider.TryGetForegroundBrush();
+					if (foregroundBrush != null)
+						itemContainerStyle.Setters.Add(new Setter(TextElement.ForegroundProperty, foregroundBrush));
+
+				}
+
+			}
+			itemContainerStyle.Seal();
+			
+			listBox.ItemContainerStyle = itemContainerStyle;
+
+			//Shell.Instance.GetComponent<TooltipFormattingProvider>().GetTextFormatting().BackgroundBrush;
 		}
 
 		private static void RestoreOriginalStyles([NotNull] ListBox listBox) {

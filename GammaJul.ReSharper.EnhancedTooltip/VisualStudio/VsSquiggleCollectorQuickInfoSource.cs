@@ -17,7 +17,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			IQuickInfoSession session,
 			IList<object> quickInfoContent,
 			IDocumentMarkup documentMarkup,
-			TooltipFormattingProvider tooltipFontProvider,
+			TooltipFormattingProvider tooltipFormattingProvider,
 			out ITrackingSpan applicableToSpan) {
 
 			applicableToSpan = null;

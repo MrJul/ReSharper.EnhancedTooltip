@@ -100,8 +100,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			}
 			if (!_formatting.FontRenderingEmSizeEmpty)
 				control.FontSize = _formatting.FontRenderingEmSize;
-			if (!_formatting.ForegroundBrushEmpty)
-				control.Foreground = _formatting.ForegroundBrush;
+//			if (!_formatting.ForegroundBrushEmpty)
+//				control.Foreground = _formatting.ForegroundBrush;
 		}
 
 		public MultipleTooltipContentPresenter([NotNull] TextFormattingRunProperties formatting) {

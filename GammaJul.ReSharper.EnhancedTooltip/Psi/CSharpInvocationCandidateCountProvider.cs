@@ -10,7 +10,7 @@ using JetBrains.ReSharper.Psi.Tree;
 namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 	[Language(typeof(CSharpLanguage))]
-	internal sealed class CSharpInvocatiionCandidateCountProvider : IInvocationCandidateCountProvider {
+	internal sealed class CSharpInvocationCandidateCountProvider : IInvocationCandidateCountProvider {
 
 		public int? TryGetInvocationCandidateCount(IReference reference) {
 			return FindInvocationReference(reference)?.GetCandidates().Count();
