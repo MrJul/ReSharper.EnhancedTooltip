@@ -314,8 +314,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		private void AppendTypeElement([NotNull] ITypeElement typeElement, [NotNull] ISubstitution substitution, QualifierDisplays expectedQualifierDisplay, Context context) {
 
 			if (!(typeElement is ITypeParameter) && (context.Options.ShowQualifiers & expectedQualifierDisplay) != QualifierDisplays.None) {
-				AppendNamespace(typeElement.GetContainingNamespace());
-				AppendText(".", VsHighlightingAttributeIds.Operator);
+				INamespace containingNamespace = typeElement.GetContainingNamespace();
+				AppendNamespace(containingNamespace);
+				if (!containingNamespace.IsRootNamespace)
+					AppendText(".", VsHighlightingAttributeIds.Operator);
 
 				ITypeElement containingType = typeElement.GetContainingType();
 				if (containingType != null && !(typeElement is IDelegate && context.Options.FormatDelegatesAsLambdas)) {
