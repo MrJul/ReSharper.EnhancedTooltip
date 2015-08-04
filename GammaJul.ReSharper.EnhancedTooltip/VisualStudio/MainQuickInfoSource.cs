@@ -34,8 +34,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			TooltipFormattingProvider tooltipFormattingProvider,
 			out ITrackingSpan applicableToSpan) {
 
-			applicableToSpan = session.ApplicableToSpan;
-			
+			applicableToSpan = null;
+
 			ITextSnapshot textSnapshot = TextBuffer.CurrentSnapshot;
 			TextRange textRange = GetCurrentTextRange(session, textSnapshot);
 			IShellLocks shellLocks = documentMarkup.Context.Locks;

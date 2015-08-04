@@ -1,53 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using EnvDTE;
+using System.Windows.Media;
 using JetBrains.Annotations;
+using JetBrains.Application.Components;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.TextControl;
 using JetBrains.TextControl.DocumentMarkup;
+using JetBrains.UI.Avalon;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
-using JetBrains.VsIntegration.TextControl;
+using Microsoft.VisualStudio.Text.Classification;
+using Microsoft.VisualStudio.Text.Formatting;
+using Color = System.Drawing.Color;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 	/// <summary>
-	/// A component that retrieve <see cref="HighlighterAttributes"/> from either ReSharper's highlighters or Visual Studio colors.
+	/// A component that retrieve <see cref="TextStyle"/>s from either ReSharper's highlighters or Visual Studio colors.
 	/// </summary>
 	[SolutionComponent]
 	public class TextStyleHighlighterManager {
 
-		[NotNull] private readonly Dictionary<string, HighlighterAttributes> _vsAttributesByName = new Dictionary<string, HighlighterAttributes>();
+		[NotNull] private readonly Dictionary<string, TextStyle> _vsAttributesByName = new Dictionary<string, TextStyle>();
 		[NotNull] private readonly IHighlighterCustomization _highlighterCustomization;
-		private readonly DTE _dte;
+		private readonly JetBrains.Util.Lazy.Lazy<Optional<IClassificationFormatMapService>> _lazyClassificationFormatMapService;
+		private readonly JetBrains.Util.Lazy.Lazy<Optional<IClassificationTypeRegistryService>> _lazyClassificationTypeRegistryService;
 
-		[NotNull]
-		private HighlighterAttributes GetReSharperHighlighterAttributes([NotNull] string highlighterAttributeId)
-			=> _highlighterCustomization.GetCustomizedRegisteredHighlighterAttributes(highlighterAttributeId);
+		private TextStyle GetReSharperHighlighterAttributes([NotNull] string highlighterAttributeId)
+			=> ToTextStyle(_highlighterCustomization.GetCustomizedRegisteredHighlighterAttributes(highlighterAttributeId));
 
-		[NotNull]
-		private HighlighterAttributes GetVsHighlighterAttributes([NotNull] string highlighterAttributeId) {
+		private TextStyle GetVsHighlighterAttributes([NotNull] string highlighterAttributeId) {
 			lock (_vsAttributesByName)
 				return _vsAttributesByName.GetOrCreateValue(highlighterAttributeId, GetVsHighlighterAttributesNoCache);
 		}
 
-		[NotNull]
-		private HighlighterAttributes GetVsHighlighterAttributesNoCache([NotNull] string highlighterAttributeId) {
-			ColorableItems colorableItems = VsColorUtilities.TryGetColorableItemsByName(highlighterAttributeId, _dte);
-			if (colorableItems == null)
-				return HighlighterAttributes.UNDEFINED;
-			
-			Color foregroundColor = ColorTranslator.FromOle((int) colorableItems.Foreground);
-			var attributes = new HighlighterAttributes(foregroundColor);
-			if (colorableItems.Bold)
-				attributes = attributes.Merge(new HighlighterAttributes(FontStyle.Bold));
-			return attributes;
+		private TextStyle GetVsHighlighterAttributesNoCache([NotNull] string highlighterAttributeId) {
+			var map = _lazyClassificationFormatMapService.Value.CanBeNull?.GetClassificationFormatMap("text");
+			if (map == null)
+				return TextStyle.Default;
+
+			IClassificationType classificationType = _lazyClassificationTypeRegistryService.Value.CanBeNull?.GetClassificationType(highlighterAttributeId);
+			if (classificationType == null)
+				return TextStyle.Default;
+
+			var properties = map.GetTextProperties(classificationType);
+			return ToTextStyle(properties);
 		}
 
-		[NotNull]
-		private HighlighterAttributes GetHighlighterAttributes([NotNull] string highlighterAttributeId)
+		private TextStyle GetHighlighterAttributes([NotNull] string highlighterAttributeId)
 			=> highlighterAttributeId.StartsWith("ReSharper", StringComparison.Ordinal)
 				? GetReSharperHighlighterAttributes(highlighterAttributeId)
 				: GetVsHighlighterAttributes(highlighterAttributeId);
@@ -57,20 +59,44 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			return new TextStyle(fontStyle, attributes.Color, attributes.BackgroundColor);
 		}
 
+		private static TextStyle ToTextStyle([CanBeNull] TextFormattingRunProperties properties)
+			=> properties != null
+				? new TextStyle(GetFontStyle(properties), GetColor(properties))
+				: TextStyle.Default;
+
+		private static Color GetColor([NotNull] TextFormattingRunProperties properties) {
+			if (properties.ForegroundBrushEmpty)
+				return Color.Empty;
+
+			var solidColorBrush = properties.ForegroundBrush as SolidColorBrush;
+			if (solidColorBrush == null)
+				return Color.Empty;
+
+			return solidColorBrush.Color.ToWinForms();
+		}
+
+		private static FontStyle GetFontStyle([NotNull] TextFormattingRunProperties properties)
+			=> properties.BoldEmpty || !properties.Bold ? FontStyle.Regular : FontStyle.Bold;
+
 		public TextStyle GetHighlighterTextStyle([CanBeNull] string highlighterAttributeId)
 			=> highlighterAttributeId.IsEmpty()
 				? TextStyle.Default
-				: ToTextStyle(GetHighlighterAttributes(highlighterAttributeId));
+				: GetHighlighterAttributes(highlighterAttributeId);
 
 		private void ResetVsAttributesCache() {
 			lock (_vsAttributesByName)
 				_vsAttributesByName.Clear();
 		}
 
-		public TextStyleHighlighterManager([NotNull] Lifetime lifetime, [NotNull] IHighlighterCustomization highlighterCustomization,
-			[NotNull] DTE dte, [NotNull] DefaultTextControlSchemeManager textControlSchemeManager) {
+		public TextStyleHighlighterManager(
+			[NotNull] Lifetime lifetime,
+			[NotNull] IHighlighterCustomization highlighterCustomization,
+			[NotNull] DefaultTextControlSchemeManager textControlSchemeManager,
+			[NotNull] JetBrains.Util.Lazy.Lazy<Optional<IClassificationFormatMapService>> lazyClassificationFormatMapService,
+			[NotNull] JetBrains.Util.Lazy.Lazy<Optional<IClassificationTypeRegistryService>> lazyClassificationTypeRegistryService) {
 			_highlighterCustomization = highlighterCustomization;
-			_dte = dte;
+			_lazyClassificationFormatMapService = lazyClassificationFormatMapService;
+			_lazyClassificationTypeRegistryService = lazyClassificationTypeRegistryService;
 			textControlSchemeManager.ColorsChanged.Advise(lifetime, ResetVsAttributesCache);
 		}
 

@@ -171,7 +171,6 @@
     <Compile Include="Presentation\Highlightings\CSharp\ClassTypeParameterInValueTypeParameterConstraintListErrorEnhancer.cs" />
     <Compile Include="Presentation\VsIdentifierContent.cs" />
     <Compile Include="Presentation\VsSquiggleContent.cs" />
-    <Compile Include="Presentation\VsContentControl.cs" />
     <Compile Include="Psi\CSharpSpecialDeclaredElementFinder.cs" />
     <Compile Include="Presentation\CSharpColorizerExtensions.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AbstractAccessorIsNotImplementedErrorEnhancer.cs" />
