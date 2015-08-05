@@ -16,6 +16,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 
 		[NotNull] private readonly IParameterInfoContext _context;
 		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
+		[NotNull] private readonly HighlighterIdProviderFactory _highlighterIdProviderFactory;
 		[NotNull] private readonly IContextBoundSettingsStore _settings;
 		[CanBeNull] private ICandidate[] _candidates;
 		[CanBeNull] private ICandidate _defaultCandidate;
@@ -33,7 +34,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		private ICandidate Enhance([NotNull] ICandidate candidate) {
 			var typedCandidate = candidate as ParameterInfoCandidate;
 			return typedCandidate != null
-				? new EnhancedParameterInfoCandidate(typedCandidate, _colorizerPresenter, _settings)
+				? new EnhancedParameterInfoCandidate(typedCandidate, _colorizerPresenter, _settings, _highlighterIdProviderFactory)
 				: candidate;
 		}
 
@@ -78,10 +79,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public TextRange Range
 			=> _context.Range;
 
-		public EnhancedParameterInfoContext([NotNull] IParameterInfoContext context, [NotNull] ColorizerPresenter colorizerPresenter,
+		public EnhancedParameterInfoContext(
+			[NotNull] IParameterInfoContext context,
+			[NotNull] ColorizerPresenter colorizerPresenter,
+			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory,
 			[NotNull] IContextBoundSettingsStore settings) {
 			_context = context;
 			_colorizerPresenter = colorizerPresenter;
+			_highlighterIdProviderFactory = highlighterIdProviderFactory;
 			_settings = settings;
 		}
 

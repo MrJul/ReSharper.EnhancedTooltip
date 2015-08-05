@@ -25,8 +25,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("' here");
 		}
 
-		public AccessRightsErrorEnhancer([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache)
-			: base(textStyleHighlighterManager, codeAnnotationsCache) {
+		public AccessRightsErrorEnhancer(
+			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
+			[NotNull] CodeAnnotationsCache codeAnnotationsCache,
+			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)
+			: base(textStyleHighlighterManager, codeAnnotationsCache, highlighterIdProviderFactory) {
 		}
 
 	}

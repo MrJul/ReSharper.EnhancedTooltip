@@ -20,8 +20,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("' inside an anonymous method body");
 		}
 
-		public AccessToRefOutParameterFromAnonymousMethodErrorEnhancer([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache)
-			: base(textStyleHighlighterManager, codeAnnotationsCache) {
+		public AccessToRefOutParameterFromAnonymousMethodErrorEnhancer(
+			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
+			[NotNull] CodeAnnotationsCache codeAnnotationsCache,
+			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)
+			: base(textStyleHighlighterManager, codeAnnotationsCache, highlighterIdProviderFactory) {
 		}
 
 	}

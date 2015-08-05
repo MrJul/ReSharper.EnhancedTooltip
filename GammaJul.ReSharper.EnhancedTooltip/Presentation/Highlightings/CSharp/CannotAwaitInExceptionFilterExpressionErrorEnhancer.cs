@@ -17,8 +17,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText(" clause");
 		}
 		
-		public CannotAwaitInExceptionFilterExpressionErrorEnhancer([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache)
-			: base(textStyleHighlighterManager, codeAnnotationsCache) {
+		public CannotAwaitInExceptionFilterExpressionErrorEnhancer(
+			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
+			[NotNull] CodeAnnotationsCache codeAnnotationsCache,
+			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)
+			: base(textStyleHighlighterManager, codeAnnotationsCache, highlighterIdProviderFactory) {
 		}
 
 	}

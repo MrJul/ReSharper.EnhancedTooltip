@@ -21,8 +21,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("' signature");
 		}
 
-		public IncorrectSignatureInDelegateCreationErrorEnhancer([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache)
-			: base(textStyleHighlighterManager, codeAnnotationsCache) {
+		public IncorrectSignatureInDelegateCreationErrorEnhancer(
+			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
+			[NotNull] CodeAnnotationsCache codeAnnotationsCache,
+			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)
+			: base(textStyleHighlighterManager, codeAnnotationsCache, highlighterIdProviderFactory) {
 		}
 
 	}

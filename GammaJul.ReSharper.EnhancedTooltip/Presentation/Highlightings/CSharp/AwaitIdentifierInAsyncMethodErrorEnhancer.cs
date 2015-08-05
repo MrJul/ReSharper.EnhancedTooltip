@@ -17,8 +17,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText(" method or lambda expression");
 		}
 		
-		public AwaitIdentifierInAsyncMethodErrorEnhancer([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache)
-			: base(textStyleHighlighterManager, codeAnnotationsCache) {
+		public AwaitIdentifierInAsyncMethodErrorEnhancer(
+			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
+			[NotNull] CodeAnnotationsCache codeAnnotationsCache,
+			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)
+			: base(textStyleHighlighterManager, codeAnnotationsCache, highlighterIdProviderFactory) {
 		}
 
 	}

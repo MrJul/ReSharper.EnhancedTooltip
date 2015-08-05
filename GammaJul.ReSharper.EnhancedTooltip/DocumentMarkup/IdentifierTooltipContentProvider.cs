@@ -12,7 +12,6 @@ using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Descriptions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Files;
@@ -54,6 +53,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 		[NotNull] private readonly ISolution _solution;
 		[NotNull] private readonly IDeclaredElementDescriptionPresenter _declaredElementDescriptionPresenter;
+		[NotNull] private readonly HighlighterIdProviderFactory _highlighterIdProviderFactory;
 		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
 		
 		/// <summary>
@@ -177,7 +177,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				new DeclaredElementInstance(element, info.Substitution),
 				PresenterOptions.ForToolTip(settings),
 				languageType,
-				settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled));
+				_highlighterIdProviderFactory.CreateProvider(settings));
 
 			if (identifierText == null || identifierText.IsEmpty)
 				return null;
@@ -426,11 +426,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			return new DeclaredElementInfo(declaredElementInstance.Element, declaredElementInstance.Substitution, file, sourceRange, null);
 		}
 
-		public IdentifierTooltipContentProvider([NotNull] ISolution solution, [NotNull] ColorizerPresenter colorizerPresenter,
-			[NotNull] IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter) {
+		public IdentifierTooltipContentProvider(
+			[NotNull] ISolution solution,
+			[NotNull] ColorizerPresenter colorizerPresenter,
+			[NotNull] IDeclaredElementDescriptionPresenter declaredElementDescriptionPresenter,
+			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory) {
 			_solution = solution;
-			_declaredElementDescriptionPresenter = declaredElementDescriptionPresenter;
 			_colorizerPresenter = colorizerPresenter;
+			_declaredElementDescriptionPresenter = declaredElementDescriptionPresenter;
+			_highlighterIdProviderFactory = highlighterIdProviderFactory;
 		}
 
 	}

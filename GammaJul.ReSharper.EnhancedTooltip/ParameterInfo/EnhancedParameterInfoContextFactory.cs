@@ -46,12 +46,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 
 		[CanBeNull]
 		private static IParameterInfoContext Enhance([CanBeNull] IParameterInfoContext context, [NotNull] ISolution solution, [NotNull] IContextBoundSettingsStore settings) {
-			if (!settings.GetValue((ParameterInfoSettings s) => s.Enabled))
+			if (context == null || !settings.GetValue((ParameterInfoSettings s) => s.Enabled))
 				return context;
-
-			return context == null
-				? null
-				: new EnhancedParameterInfoContext(context, solution.GetComponent<ColorizerPresenter>(), settings);
+			
+			return new EnhancedParameterInfoContext(
+				context,
+				solution.GetComponent<ColorizerPresenter>(),
+				solution.GetComponent<HighlighterIdProviderFactory>(),
+				settings);
 		}
 
 		public bool ShouldPopup(IDocument document, int caretOffset, char c, ISolution solution, IContextBoundSettingsStore contextBoundSettingsStore)

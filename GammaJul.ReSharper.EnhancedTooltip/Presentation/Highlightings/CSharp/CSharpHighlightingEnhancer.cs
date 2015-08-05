@@ -14,6 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
 		[NotNull] private readonly CodeAnnotationsCache _codeAnnotationsCache;
+		[NotNull] private readonly HighlighterIdProviderFactory _highlighterIdProviderFactory;
 
 		public Type HighlightingType
 			=> typeof(T);
@@ -24,17 +25,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 				return null;
 			
 			var richText = new RichText();
-			bool useReSharperColors = settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled);
-			var colorizer = new CSharpColorizer(richText, _textStyleHighlighterManager, _codeAnnotationsCache, useReSharperColors);
+			var highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(settings);
+			var colorizer = new CSharpColorizer(richText, _textStyleHighlighterManager, _codeAnnotationsCache, highlighterIdProvider);
 			AppendTooltip(typedHighlighting, colorizer);
 			return richText;
 		}
 
 		protected abstract void AppendTooltip([NotNull] T highlighting, [NotNull] CSharpColorizer colorizer);
 
-		protected CSharpHighlightingEnhancer([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache) {
+		protected CSharpHighlightingEnhancer(
+			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
+			[NotNull] CodeAnnotationsCache codeAnnotationsCache,
+			HighlighterIdProviderFactory highlighterIdProviderFactory) {
 			_textStyleHighlighterManager = textStyleHighlighterManager;
 			_codeAnnotationsCache = codeAnnotationsCache;
+			_highlighterIdProviderFactory = highlighterIdProviderFactory;
 		}
 
 	}

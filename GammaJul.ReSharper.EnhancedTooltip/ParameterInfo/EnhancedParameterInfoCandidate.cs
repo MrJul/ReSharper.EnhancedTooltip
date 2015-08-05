@@ -2,7 +2,6 @@
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
-using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo;
 using JetBrains.ReSharper.Psi;
@@ -19,6 +18,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	public class EnhancedParameterInfoCandidate : ICandidate {
 
 		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
+		[NotNull] private readonly HighlighterIdProviderFactory _highlighterIdProviderFactory;
 		[NotNull] private readonly IContextBoundSettingsStore _settings;
 
 		[NotNull]
@@ -42,12 +42,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			}
 
 			var options = PresenterOptions.ForParameterInfo(_settings, showAnnotations);
-			bool useReSharperColors = _settings.GetValue(HighlightingSettingsAccessor.IdentifierHighlightingEnabled);
+			var highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(_settings);
 			PresentedInfo presentedInfo;
 			InvocationCandidate invocationCandidate = UnderlyingCandidate.InvocationCandidate;
 			var elementInstance = new DeclaredElementInstance(invocationCandidate.Element, invocationCandidate.Substitution);
 			
-			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, useReSharperColors, out presentedInfo);
+			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, highlighterIdProvider, out presentedInfo);
 			if (richText == null)
 				return UnderlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 
@@ -106,10 +106,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			=> UnderlyingCandidate.PositionalParameterCount;
 
 		public EnhancedParameterInfoCandidate([NotNull] ParameterInfoCandidate underlyingCandidate, [NotNull] ColorizerPresenter colorizerPresenter,
-			[NotNull] IContextBoundSettingsStore settings) {
+			[NotNull] IContextBoundSettingsStore settings, HighlighterIdProviderFactory highlighterIdProviderFactory) {
 			UnderlyingCandidate = underlyingCandidate;
 			_colorizerPresenter = colorizerPresenter;
 			_settings = settings;
+			_highlighterIdProviderFactory = highlighterIdProviderFactory;
 		}
 
 	}

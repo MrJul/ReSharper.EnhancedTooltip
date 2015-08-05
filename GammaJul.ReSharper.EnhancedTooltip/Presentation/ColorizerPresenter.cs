@@ -24,17 +24,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// <param name="declaredElementInstance">The declared element instance.</param>
 		/// <param name="options">The options to use to present the element.</param>
 		/// <param name="languageType">The type of language used to present the element.</param>
-		/// <param name="useReSharperColors">Whether to use ReSharper colors, or only VS colors.</param>
+		/// <param name="highlighterIdProvider">An object determining which highlightings to use.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
 		[CanBeNull]
 		public RichText TryPresent(
 			[NotNull] DeclaredElementInstance declaredElementInstance,
 			[NotNull] PresenterOptions options,
 			[NotNull] PsiLanguageType languageType,
-			bool useReSharperColors) {
+			[NotNull] HighlighterIdProvider highlighterIdProvider) {
 
 			PresentedInfo presentedInfo;
-			return TryPresent(declaredElementInstance, options, languageType, useReSharperColors, out presentedInfo);
+			return TryPresent(declaredElementInstance, options, languageType, highlighterIdProvider, out presentedInfo);
 		}
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// <param name="declaredElementInstance">The declared element instance.</param>
 		/// <param name="options">The options to use to present the element.</param>
 		/// <param name="languageType">The type of language used to present the element.</param>
-		/// <param name="useReSharperColors">Whether to use ReSharper colors, or only VS colors.</param>
+		/// <param name="highlighterIdProvider">An object determining which highlightings to use.</param>
 		/// <param name="presentedInfo">When the method returns, a <see cref="PresentedInfo"/> containing range information about the presented element.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
 		[CanBeNull]
@@ -51,11 +51,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			[NotNull] DeclaredElementInstance declaredElementInstance,
 			[NotNull] PresenterOptions options,
 			[NotNull] PsiLanguageType languageType,
-			bool useReSharperColors,
+			[NotNull] HighlighterIdProvider highlighterIdProvider,
 			[NotNull] out PresentedInfo presentedInfo) {
 
 			var richText = new RichText();
-			IColorizer colorizer = TryCreateColorizer(richText, languageType, useReSharperColors);
+			IColorizer colorizer = TryCreateColorizer(richText, languageType, highlighterIdProvider);
 			if (colorizer == null) {
 				presentedInfo = new PresentedInfo();
 				return null;
@@ -67,10 +67,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		[CanBeNull]
-		private IColorizer TryCreateColorizer([NotNull] RichText richText, [NotNull] PsiLanguageType languageType, bool useReSharperColors) {
+		private IColorizer TryCreateColorizer([NotNull] RichText richText, [NotNull] PsiLanguageType languageType, [NotNull] HighlighterIdProvider highlighterIdProvider) {
 			// TODO: add a language service instead of checking the language
 			if (languageType.Is<CSharpLanguage>())
-				return new CSharpColorizer(richText, _textStyleHighlighterManager, _codeAnnotationsCache, useReSharperColors);
+				return new CSharpColorizer(richText, _textStyleHighlighterManager, _codeAnnotationsCache, highlighterIdProvider);
 			return null;
 		}
 
