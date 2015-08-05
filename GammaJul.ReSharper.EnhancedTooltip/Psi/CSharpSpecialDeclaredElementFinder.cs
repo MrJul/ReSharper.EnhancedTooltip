@@ -31,17 +31,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 		private static DeclaredElementInstance FindElementFromVarKeyword([NotNull] ITreeNode varKeyword, [NotNull] IFile file, out TextRange sourceRange) {
 			sourceRange = TextRange.InvalidRange;
 
-			var type = (varKeyword.Parent as IMultipleLocalVariableDeclaration)
+			IDeclaredElement declaredElement = (varKeyword.Parent as IMultipleLocalVariableDeclaration)
 				?.DeclaratorsEnumerable
 				.FirstOrDefault()
-				?.Type as IDeclaredType;
+				?.DeclaredElement;
 
-			ITypeElement typeElement = type?.GetTypeElement();
-			if (typeElement == null)
+			if (declaredElement == null)
 				return null;
 
 			sourceRange = file.GetDocumentRange(varKeyword.GetTreeTextRange()).TextRange;
-			return new DeclaredElementInstance(typeElement, type.GetSubstitution());
+			return new DeclaredElementInstance(declaredElement, EmptySubstitution.INSTANCE);
 		}
 
 		[CanBeNull]
