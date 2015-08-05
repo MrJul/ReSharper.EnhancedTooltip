@@ -35,7 +35,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull]
 		private static ResourceDictionary LoadResourceDictionary()
 			=> new ResourceDictionary {
-				Source = UriHelpers.MakeUri("Presentation/UIResources.xaml", typeof (UIResources).Assembly)
+				Source = UriHelpers.MakeUri("Presentation/UIResources.xaml", typeof(UIResources).Assembly)
 			};
 
 	}

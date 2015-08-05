@@ -59,7 +59,7 @@
 
 			<!-- Style for an identifier -->
 			<DataTemplate DataType="{x:Type local:IdentifierTooltipContent}">
-				<StackPanel x:Name="Root" TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType">
+				<StackPanel x:Name="Root" TextOptions.TextFormattingMode="Ideal" Margin="0,1" TextOptions.TextRenderingMode="ClearType">
 					
 					<DockPanel Margin="0">
 						<Border DataContext="{Binding Icon}">
@@ -138,7 +138,7 @@
 
 			<!-- Style for an issue -->
 			<DataTemplate DataType="{x:Type local:IssueTooltipContent}">
-				<DockPanel>
+				<DockPanel Margin="0,1">
 					<Border DataContext="{Binding Icon}">
 						<jui:ThemedIconViewImage x:Name="IconPresenter" Stretch="Uniform"
 							Margin="0,0,4,0" local:IconScaling.IsScalingWithFontSize="True"
@@ -156,13 +156,13 @@
 
 			<!-- Style for other content -->
 			<DataTemplate DataType="{x:Type local:MiscTooltipContent}">
-				<local:AutoContrastedRichTextPresenter TextWrapping="Wrap"
+				<local:AutoContrastedRichTextPresenter Margin="0,1" TextWrapping="Wrap"
 					RichText="{Binding Text}" VerticalAlignment="Center" />
 			</DataTemplate>
 
 			<!-- Style for VS squiggle content -->
 			<DataTemplate DataType="{x:Type local:VsSquiggleContent}">
-        <DockPanel>
+        <DockPanel Margin="0,1">
           <Border DataContext="{x:Static resources:BulbThemedIcons+YellowBulbVS.Id}">
             <jui:ThemedIconViewImage x:Name="IconPresenter" Stretch="Uniform"
 							Margin="0,0,4,0" local:IconScaling.IsScalingWithFontSize="True"
@@ -175,7 +175,7 @@
 
       <!-- Style for VS identifier content -->
       <DataTemplate DataType="{x:Type local:VsIdentifierContent}">
-        <ContentPresenter Content="{Binding Content}" />
+        <ContentPresenter Content="{Binding Content}" Margin="0,1" />
       </DataTemplate>
 
     </Style.Resources>
@@ -185,9 +185,10 @@
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type HeaderedContentControl}">
-					<ContentPresenter 
-						TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTextBrushKey}}" />
-				</ControlTemplate>
+<!--					<ContentPresenter -->
+<!--						TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTextBrushKey}}" />-->
+          <ContentPresenter  />
+        </ControlTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>

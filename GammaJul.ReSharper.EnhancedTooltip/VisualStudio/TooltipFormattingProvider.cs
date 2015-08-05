@@ -13,30 +13,32 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 	public class TooltipFormattingProvider {
 
 		[NotNull] [ItemCanBeNull] private readonly Lazy<IClassificationFormatMap> _lazyTooltipFormatMap;
+		[NotNull] [ItemCanBeNull] private readonly Lazy<IClassificationFormatMap> _lazyTextFormatMap;
 		[NotNull] [ItemCanBeNull] private readonly Lazy<ResourceDictionary> _lazyTextViewBackgroundResources;
-		[NotNull] [ItemCanBeNull] private readonly Lazy<ResourceDictionary> _lazyPlainTextResources;
 
 		[NotNull]
 		public TextFormattingRunProperties GetTooltipFormatting()
 			=> _lazyTooltipFormatMap.Value?.DefaultTextProperties ?? TextFormattingRunProperties.CreateTextFormattingRunProperties();
-		
+
 		[CanBeNull]
 		public Brush TryGetBackgroundBrush()
 			=> _lazyTextViewBackgroundResources.Value?["Background"] as Brush;
 
 		[CanBeNull]
-		public Brush TryGetForegroundBrush()
-			=> _lazyPlainTextResources.Value?["Foreground"] as Brush;
+		public Brush TryGetForegroundBrush() {
+			TextFormattingRunProperties textProperties = _lazyTextFormatMap.Value?.DefaultTextProperties;
+			return textProperties == null || textProperties.ForegroundBrushEmpty ? null : textProperties.ForegroundBrush;
+		}
 
 		public TooltipFormattingProvider(
 			[NotNull] Lazy<Optional<IClassificationFormatMapService>> lazyFormatMapService,
 			[NotNull] Lazy<Optional<IEditorFormatMapService>> lazyEditorFormatMapService) {
 			_lazyTooltipFormatMap = Lazy.Of(
 				() => lazyFormatMapService.Value.CanBeNull?.GetClassificationFormatMap("tooltip"));
+			_lazyTextFormatMap = Lazy.Of(
+				() => lazyFormatMapService.Value.CanBeNull?.GetClassificationFormatMap("text"));
 			_lazyTextViewBackgroundResources = Lazy.Of(
 				() => lazyEditorFormatMapService.Value.CanBeNull?.GetEditorFormatMap("text").GetProperties("TextView Background"));
-			_lazyPlainTextResources = Lazy.Of(
-				() => lazyEditorFormatMapService.Value.CanBeNull?.GetEditorFormatMap("text").GetProperties("Plain Text"));
 		}
 
 	}
