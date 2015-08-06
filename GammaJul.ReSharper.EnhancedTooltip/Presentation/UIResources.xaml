@@ -13,15 +13,16 @@
 	<!-- Style for VS listbox item inside the tooltip -->
 	<Style x:Key="QuickInfoItemStyle" TargetType="{x:Type ListBoxItem}">
 		<Setter Property="BorderThickness" Value="0" />
+		<Setter Property="Background" Value="Transparent" />
 		<Setter Property="Margin" Value="0,0,0,2" />
 		<Setter Property="Padding" Value="0" />
 	</Style>
 
 	<!-- Style for VS listbox item's data inside the tooltip -->
-	<DataTemplate x:Key="QuickInfoItemDataTemplate">
-		<Border BorderThickness="1"
+  <DataTemplate x:Key="QuickInfoItemDataTemplate">
+    <Border BorderThickness="1"
 			BorderBrush="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}"
-			Background="{Binding Background, RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}">
+			Background="{Binding Path=(local:Styling.ItemTemplateBackground), RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}">
 			<!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
 			<ContentPresenter Content="{Binding VisualElement}" Margin="8,6" />
 		</Border>
@@ -57,9 +58,12 @@
 	<Style x:Key="HeaderedContentControlStyle" TargetType="{x:Type HeaderedContentControl}">
 		<Style.Resources>
 
+			<local:DescriptionSeparatorWidthConverter x:Key="DescriptionSeparatorWidthConverter" />
+
 			<!-- Style for an identifier -->
 			<DataTemplate DataType="{x:Type local:IdentifierTooltipContent}">
-				<StackPanel x:Name="Root" TextOptions.TextFormattingMode="Ideal" Margin="0,1" TextOptions.TextRenderingMode="ClearType">
+				<StackPanel x:Name="Root" Orientation="Vertical" Margin="0,1"
+					TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType">
 					
 					<DockPanel Margin="0">
 						<Border DataContext="{Binding Icon}">
@@ -77,8 +81,7 @@
 					</DockPanel>
 
 					<StackPanel x:Name="DescriptionPresenter" Orientation="Vertical">
-						<Path StrokeThickness="1" StrokeDashArray="3,3" RenderOptions.EdgeMode="Aliased"
-							Data="M0,0 H10" Margin="-8,6" Stretch="Uniform"
+						<local:DashedSeparator StrokeThickness="1" StrokeDashArray="3,3" Margin="-8,6" RenderOptions.EdgeMode="Aliased"
 							Stroke="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}" />
 						<local:AutoContrastedRichTextPresenter Margin="0" TextWrapping="Wrap"
 							RichText="{Binding Description}" />
@@ -162,33 +165,30 @@
 
 			<!-- Style for VS squiggle content -->
 			<DataTemplate DataType="{x:Type local:VsSquiggleContent}">
-        <DockPanel Margin="0,1">
-          <Border DataContext="{x:Static resources:BulbThemedIcons+YellowBulbVS.Id}">
-            <jui:ThemedIconViewImage x:Name="IconPresenter" Stretch="Uniform"
+				<DockPanel Margin="0,1">
+					<Border DataContext="{x:Static resources:BulbThemedIcons+YellowBulbVS.Id}">
+						<jui:ThemedIconViewImage x:Name="IconPresenter" Stretch="Uniform"
 							Margin="0,0,4,0" local:IconScaling.IsScalingWithFontSize="True"
 							DockPanel.Dock="Left" VerticalAlignment="Top" HorizontalAlignment="Left" />
-          </Border>
-          <ContentPresenter VerticalAlignment="Center"
-						Content="{Binding Content}" />
-        </DockPanel>
-      </DataTemplate>
+					</Border>
+					<ContentPresenter VerticalAlignment="Center" Content="{Binding Content}" />
+				</DockPanel>
+			</DataTemplate>
 
-      <!-- Style for VS identifier content -->
-      <DataTemplate DataType="{x:Type local:VsIdentifierContent}">
-        <ContentPresenter Content="{Binding Content}" Margin="0,1" />
-      </DataTemplate>
+			<!-- Style for VS identifier content -->
+			<DataTemplate DataType="{x:Type local:VsIdentifierContent}">
+				<ContentPresenter Content="{Binding Content}" Margin="0,1" />
+			</DataTemplate>
 
-    </Style.Resources>
+		</Style.Resources>
 
 		<Setter Property="Margin" Value="0" />
 		<Setter Property="local:Styling.ShouldStyleParentListBox" Value="True" />
 		<Setter Property="Template">
 			<Setter.Value>
 				<ControlTemplate TargetType="{x:Type HeaderedContentControl}">
-<!--					<ContentPresenter -->
-<!--						TextElement.Foreground="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowTextBrushKey}}" />-->
-          <ContentPresenter  />
-        </ControlTemplate>
+					<ContentPresenter />
+				</ControlTemplate>
 			</Setter.Value>
 		</Setter>
 	</Style>

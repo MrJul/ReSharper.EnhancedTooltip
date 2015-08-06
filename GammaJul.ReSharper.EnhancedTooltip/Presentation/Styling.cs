@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Interop;
 using System.Windows.Media;
 using GammaJul.ReSharper.EnhancedTooltip.VisualStudio;
 using JetBrains.Annotations;
@@ -10,20 +11,27 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.UI.Avalon;
 using JetBrains.UI.Extensions;
 using JetBrains.Util;
+using Screen = System.Windows.Forms.Screen;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public static class Styling {
 
-		/// <summary>
-		/// Identifies the attached dependency property <c>IsTransparent</c>.
-		/// </summary>
+		[NotNull]
 		public static readonly DependencyProperty ShouldStyleParentListBoxProperty = DependencyProperty.RegisterAttached(
 			"ShouldStyleParentListBox",
 			typeof(bool),
 			typeof(Styling),
 			new FrameworkPropertyMetadata(BooleanBoxes.False, OnShouldStyleParentListBoxChanged));
 
+		[NotNull]
+		public static readonly DependencyProperty ItemTemplateBackgroundProperty = DependencyProperty.RegisterAttached(
+			"ItemTemplateBackground",
+			typeof(Brush),
+			typeof(Styling),
+			new FrameworkPropertyMetadata(null));
+
+		[NotNull]
 		private static readonly DependencyProperty _originalStylesProperty = DependencyProperty.RegisterAttached(
 			"OriginalStyles",
 			typeof(OriginalStyles),
@@ -40,6 +48,18 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (owner == null)
 				throw new ArgumentNullException(nameof(owner));
 			owner.SetValue(ShouldStyleParentListBoxProperty, value);
+		}
+
+		public static Brush GetItemTemplateBackground([NotNull] DependencyObject owner) {
+			if (owner == null)
+				throw new ArgumentNullException(nameof(owner));
+			return (Brush) owner.GetValue(ItemTemplateBackgroundProperty);
+		}
+
+		public static void SetItemTemplateBackground([NotNull] DependencyObject owner, [CanBeNull] Brush value) {
+			if (owner == null)
+				throw new ArgumentNullException(nameof(owner));
+			owner.SetValue(ItemTemplateBackgroundProperty, value);
 		}
 
 		private static void OnShouldStyleParentListBoxChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
@@ -96,7 +116,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					var backgroundBrush = tooltipFormattingProvider.TryGetBackgroundBrush()
 						?? listBox.FindResource(BundledThemeColors.Environment.ToolWindowTabSelectedTabBrushKey) as Brush;
 					if (backgroundBrush != null)
-						itemContainerStyle.Setters.Add(new Setter(Control.BackgroundProperty, backgroundBrush));
+						itemContainerStyle.Setters.Add(new Setter(ItemTemplateBackgroundProperty, backgroundBrush));
 
 					var foregroundBrush = tooltipFormattingProvider.TryGetForegroundBrush();
 					if (foregroundBrush != null)
@@ -109,7 +129,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			
 			listBox.ItemContainerStyle = itemContainerStyle;
 
-			//Shell.Instance.GetComponent<TooltipFormattingProvider>().GetTextFormatting().BackgroundBrush;
+			var hwndSource = PresentationSource.FromVisual(listBox) as HwndSource;
+			if (hwndSource != null) {
+				Screen screen = Screen.FromHandle(hwndSource.Handle);
+				int maxWidth = screen.Bounds.Width / 2;
+				listBox.MaxWidth = maxWidth;
+			}
 		}
 
 		private static void RestoreOriginalStyles([NotNull] ListBox listBox) {

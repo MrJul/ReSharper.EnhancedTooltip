@@ -5,6 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:controls="urn:schemas-jetbrains-com:jetbrains-ui-controls"
+	xmlns:controls2="urn:schemas-jetbrains-com:jetbrains-ui-wpf-controls"
 	mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
 	HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
 	Grid.IsSharedSizeScope="True">
@@ -89,6 +90,20 @@
 			<controls:CheckBoxDisabledNoCheck2 Grid.Row="3" x:Name="ParameterInfoUseTypeKeywordsCheckBox" />
 		</Grid>
 
-	</StackPanel>
+    <Grid Margin="10,0,0,0">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto" />
+        <RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+        <RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+      </Grid.RowDefinitions>
+      <controls:SectionHeading Grid.Row="0" Text="Display" />
+      <controls:CheckBoxDisabledNoCheck2 Grid.Row="1" x:Name="LimitTooltipWidth" />
+      <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+        <Label Target="{Binding ElementName=DisplayScreenWidthLimitPercent}" />
+        <controls2:NumericUpDown x:Name="DisplayScreenWidthLimitPercent" />
+      </StackPanel>
+    </Grid>
+
+  </StackPanel>
 
 </ScrollViewer>

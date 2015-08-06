@@ -163,6 +163,8 @@
     <Compile Include="ParameterInfo\EnhancedParameterInfoContext.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContextFactory.cs" />
     <Compile Include="Presentation\AutoContrastedRichTextPresenter.cs" />
+    <Compile Include="Presentation\DashedSeparator.cs" />
+    <Compile Include="Presentation\DescriptionSeparatorWidthConverter.cs" />
     <Compile Include="Presentation\HighlighterIdProviderFactory.cs" />
     <Compile Include="Presentation\ColorizerPresenter.cs" />
     <Compile Include="Presentation\CSharpColorizer.cs" />
@@ -304,6 +306,7 @@
     <Compile Include="Psi\IInvocationCandidateCountProvider.cs" />
     <Compile Include="Psi\ISpecialDeclaredElementFinder.cs" />
     <Compile Include="Settings\ConstructorReferenceDisplay.cs" />
+    <Compile Include="Settings\DisplaySettings.cs" />
     <Compile Include="Settings\EnhancedTooltipSettingsRoot.cs" />
     <Compile Include="Settings\EnhancedTooltipOptionsPage.xaml.cs">
       <DependentUpon>EnhancedTooltipOptionsPage.xaml</DependentUpon>
