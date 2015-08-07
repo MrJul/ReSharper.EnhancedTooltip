@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using JetBrains.Annotations;
@@ -13,6 +14,7 @@ using JetBrains.UI.Controls;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Extensions;
 using JetBrains.UI.Options;
+using JetBrains.UI.Wpf.Controls;
 using JetBrains.UI.Wpf.Converters;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
@@ -49,18 +51,25 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		private void SetCheckBoxBinding<TSettings>(
 			[NotNull] Expression<Func<TSettings, bool>> settingAccessor,
 			[NotNull] CheckBoxDisabledNoCheck2 checkBox,
-			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckbox) {
+			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckBox,
+			bool addColonToDescription = false) {
 
 			var entry = _context.Schema.GetScalarEntry(settingAccessor);
-			if (checkBox.Content == null)
-				checkBox.Content = entry.Description;
+			if (checkBox.Content == null) {
+				string description = entry.Description;
+				if (addColonToDescription)
+					description += ":";
+				checkBox.Content = description;
+			}
 			_context.SetBinding<bool>(_lifetime, entry, checkBox, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
 
-			parentCheckbox?.IsCheckedLogically.FlowInto(_lifetime, checkBox, IsEnabledProperty);
+			parentCheckBox?.IsCheckedLogically.FlowInto(_lifetime, checkBox, IsEnabledProperty);
 		}
 
-		private void SetComboBoxBinding<TSettings, TEnum>([NotNull] Expression<Func<TSettings, TEnum>> settingAccessor, [NotNull] ComboBox comboBox,
-			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckbox) {
+		private void SetComboBoxBinding<TSettings, TEnum>(
+			[NotNull] Expression<Func<TSettings, TEnum>> settingAccessor,
+			[NotNull] ComboBox comboBox,
+			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckBox) {
 
 			comboBox.ItemsSource = CreateEnumItemsSource(typeof(TEnum));
 			comboBox.DisplayMemberPath = nameof(EnumValue.Description);
@@ -68,17 +77,30 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
 			_context.SetBinding<object>(_lifetime, entry, comboBox, Selector.SelectedValueProperty);
-			
-			Label label = FindAssociatedLabel(comboBox);
-			if (label != null && label.Content == null)
-				label.Content = entry.Description + ":";
 
-			parentCheckbox?.IsCheckedLogically.FlowInto(_lifetime, comboBox, IsEnabledProperty);
+			SetAssociatedLabel(comboBox, entry.Description);
+			
+			parentCheckBox?.IsCheckedLogically.FlowInto(_lifetime, comboBox, IsEnabledProperty);
 		}
 
-		[CanBeNull]
-		private static Label FindAssociatedLabel([NotNull] ComboBox comboBox)
-			=> comboBox.Parent?.FindDescendant<Label>();
+		private void SetNumericUpDownBinding<TSettings>(
+			[NotNull] Expression<Func<TSettings, int>> settingAccessor,
+			[NotNull] NumericUpDown numericUpDown,
+			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckBox) {
+
+			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
+			_context.SetBinding<int>(_lifetime, entry, numericUpDown, NumericUpDown.ValueProperty);
+
+			SetAssociatedLabel(numericUpDown, entry.Description);
+
+			parentCheckBox?.IsCheckedLogically.FlowInto(_lifetime, numericUpDown, IsEnabledProperty);
+		}
+
+		private static void SetAssociatedLabel([NotNull] FrameworkElement element, [NotNull] string description) {
+			Label label = element.Parent?.FindDescendant<Label>();
+			if (label != null && label.Content == null)
+				label.Content = description + ":";
+		}
 
 		private void SetIdentifierTooltipSettingsBindings() {
 			CheckBoxDisabledNoCheck2 enabledCheckBox = IdentifierTooltipEnabledCheckBox;
@@ -107,6 +129,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetCheckBoxBinding((ParameterInfoSettings s) => s.UseTypeKeywords, ParameterInfoUseTypeKeywordsCheckBox, enabledCheckBox);
 		}
 
+		private void SetDisplaySettingsBindings() {
+			CheckBoxDisabledNoCheck2 enabledCheckBox = DisplayLimitTooltipWidth;
+			SetCheckBoxBinding((DisplaySettings s) => s.LimitTooltipWidth, enabledCheckBox, null, addColonToDescription: true);
+			SetNumericUpDownBinding((DisplaySettings s) => s.ScreenWidthLimitPercent, DisplayScreenWidthLimitPercent, enabledCheckBox);
+		}
+
 		public EnhancedTooltipOptionsPage([NotNull] Lifetime lifetime, [NotNull] OptionsSettingsSmartContext context) {
 			_lifetime = lifetime;
 			_context = context;
@@ -116,6 +144,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetIdentifierTooltipSettingsBindings();
 			SetIssueTooltipSettingsBindings();
 			SetParameterInfoSettingsBindings();
+			SetDisplaySettingsBindings();
 		}
 
 	}

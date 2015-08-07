@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using System.Windows.Media;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using JetBrains.Annotations;
+using JetBrains.DocumentModel;
 using JetBrains.UI.RichText;
 using Microsoft.VisualStudio.Text.Formatting;
 
@@ -17,6 +19,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		[NotNull] private readonly List<VsSquiggleContent> _vsSquiggleContents = new List<VsSquiggleContent>();
 		[NotNull] private readonly List<object> _vsUnknownContents = new List<object>();
 		[NotNull] private readonly TextFormattingRunProperties _formatting;
+		[CanBeNull] private readonly IDocument _document;
 
 		[ContractAnnotation("null => false")]
 		public bool TryAddReSharperContent([CanBeNull] IReSharperTooltipContent content) {
@@ -87,6 +90,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				}
 			};
 			ApplyFormatting(control);
+			Styling.SetDocument(control, new WeakReference<IDocument>(_document));
 			return control;
 		}
 
@@ -100,12 +104,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			}
 			if (!_formatting.FontRenderingEmSizeEmpty)
 				control.FontSize = _formatting.FontRenderingEmSize;
-//			if (!_formatting.ForegroundBrushEmpty)
-//				control.Foreground = _formatting.ForegroundBrush;
 		}
 
-		public MultipleTooltipContentPresenter([NotNull] TextFormattingRunProperties formatting) {
+		public MultipleTooltipContentPresenter([NotNull] TextFormattingRunProperties formatting, [CanBeNull] IDocument document) {
 			_formatting = formatting;
+			_document = document;
 		}
 
 	}

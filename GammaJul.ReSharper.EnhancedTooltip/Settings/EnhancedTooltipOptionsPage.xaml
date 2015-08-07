@@ -82,7 +82,6 @@
 				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
 				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
 				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
-				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
 			</Grid.RowDefinitions>
 			<controls:SectionHeading Grid.Row="0" Text="Parameter Info" />
 			<controls:CheckBoxDisabledNoCheck2 Grid.Row="1" x:Name="ParameterInfoEnabledCheckBox" />
@@ -97,10 +96,11 @@
         <RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
       </Grid.RowDefinitions>
       <controls:SectionHeading Grid.Row="0" Text="Display" />
-      <controls:CheckBoxDisabledNoCheck2 Grid.Row="1" x:Name="LimitTooltipWidth" />
+
       <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
-        <Label Target="{Binding ElementName=DisplayScreenWidthLimitPercent}" />
-        <controls2:NumericUpDown x:Name="DisplayScreenWidthLimitPercent" />
+        <controls:CheckBoxDisabledNoCheck2 VerticalAlignment="Center" x:Name="DisplayLimitTooltipWidth" />
+        <controls2:NumericUpDown x:Name="DisplayScreenWidthLimitPercent" MinValue="10" MaxValue="100" Margin="4,0,0,0" />
+        <Label Target="{Binding ElementName=DisplayScreenWidthLimitPercent}" Content=" %" />
       </StackPanel>
     </Grid>
 

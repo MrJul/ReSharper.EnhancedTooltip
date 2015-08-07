@@ -43,14 +43,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 			Action getEnhancedTooltips = () => {
 				using (shellLocks.UsingReadLock()) {
-					
-					var presenter = new MultipleTooltipContentPresenter(tooltipFormattingProvider.GetTooltipFormatting());
-					IContextBoundSettingsStore settings = documentMarkup.Document.GetSettings();
+
+					IDocument document = documentMarkup.Document;
+					var presenter = new MultipleTooltipContentPresenter(tooltipFormattingProvider.GetTooltipFormatting(), document);
+					IContextBoundSettingsStore settings = document.GetSettings();
 					ISolution solution = TryGetCurrentSolution();
 
 					bool hasIdentifierTooltipContent = false;
 					if (solution != null) {
-						DocumentRange documentRange = textRange.CreateDocumentRange(documentMarkup.Document);
+						DocumentRange documentRange = textRange.CreateDocumentRange(document);
 						IdentifierTooltipContent[] contents = GetIdentifierTooltipContents(documentRange, solution, settings);
 						foreach (IdentifierTooltipContent content in contents) {
 							if (presenter.TryAddReSharperContent(content)) {
