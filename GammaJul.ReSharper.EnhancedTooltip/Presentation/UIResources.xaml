@@ -87,34 +87,34 @@
 							RichText="{Binding Description}" />
 					</StackPanel>
 
-					<StackPanel x:Name="ObsoletePresenter" Orientation="Horizontal" Margin="0,6,0,0">
-						<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0">
+					<DockPanel x:Name="ObsoletePresenter" Margin="0,6,0,0">
+						<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" VerticalAlignment="Top" DockPanel.Dock="Left">
 							<TextBlock Text="Obsolete" Margin="2" Foreground="Gray" FontWeight="Bold" VerticalAlignment="Center"
 								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
 						</Border>
-						<local:AutoContrastedRichTextPresenter TextWrapping="Wrap"
+						<local:AutoContrastedRichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center"
 							RichText="{Binding Obsolete}" />
-					</StackPanel>
+					</DockPanel>
 
 					<ItemsControl x:Name="ExceptionsPresenter" ItemsSource="{Binding Exceptions}" Margin="0,6,0,0" Grid.IsSharedSizeScope="True">
 						<ItemsControl.ItemTemplate>
 							<DataTemplate DataType="{x:Type local:ExceptionContent}">
-								<Grid Margin="0,2,0,0">
-									<Grid.ColumnDefinitions>
-										<ColumnDefinition Width="Auto" />
-										<ColumnDefinition Width="Auto" />
-										<ColumnDefinition Width="Auto" />
-										<ColumnDefinition Width="*" />
-									</Grid.ColumnDefinitions>
-									<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" Grid.Column="0">
-										<TextBlock Text="Exception" Margin="2" Foreground="Gray" FontWeight="Bold"
-											FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
-									</Border>
-									<TextBlock Text="{Binding Exception}" TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="1" />
-									<TextBlock Text=" → " FontWeight="Bold" Grid.Column="2" VerticalAlignment="Center" />
-									<local:AutoContrastedRichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center" Grid.Column="3"
+
+								<DockPanel Margin="0,2,0,0">
+									<StackPanel Orientation="Horizontal" VerticalAlignment="Top" DockPanel.Dock="Left">
+										<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" VerticalAlignment="Center">
+											<TextBlock Text="Exception" Margin="2" Foreground="Gray" FontWeight="Bold"
+												FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
+										</Border>
+										<TextBlock Text="{Binding Exception}" TextWrapping="Wrap" VerticalAlignment="Center" />
+										<TextBlock Text=" → " FontWeight="Bold" VerticalAlignment="Center" />
+									</StackPanel>
+
+									<local:AutoContrastedRichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center"
 										RichText="{Binding Description}" />
-								</Grid>
+
+								</DockPanel>
+
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>
 					</ItemsControl>
