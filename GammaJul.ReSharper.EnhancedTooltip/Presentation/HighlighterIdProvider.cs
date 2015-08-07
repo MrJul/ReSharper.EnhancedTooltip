@@ -101,6 +101,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			=> Get(HighlightingAttributeIds.FIELD_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
 
 		[NotNull]
+		public string StaticClass
+			=> Get(HighlightingAttributeIds.TYPE_STATIC_CLASS_ATTRIBUTE, "class name", "User Types");
+
+		[NotNull]
 		public string String
 			=> "String";
 
@@ -133,10 +137,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return Interface;
 			if (typeElement is IStruct)
 				return Struct;
-			if (typeElement is IClass)
-				return Class;
 			if (typeElement is ITypeParameter)
 				return TypeParameter;
+			var @class = typeElement as IClass;
+			if (@class != null)
+				return @class.IsStatic ? StaticClass : Class;
 
 			return VsIdentifier;
 		}

@@ -63,7 +63,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			}
 			_context.SetBinding<bool>(_lifetime, entry, checkBox, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
 
-			parentCheckBox?.IsCheckedLogically.FlowInto(_lifetime, checkBox, IsEnabledProperty);
+			parentCheckBox?.IsAppearingChecked.FlowInto(_lifetime, checkBox, IsEnabledProperty);
 		}
 
 		private void SetComboBoxBinding<TSettings, TEnum>(
@@ -80,7 +80,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 			SetAssociatedLabel(comboBox, entry.Description);
 			
-			parentCheckBox?.IsCheckedLogically.FlowInto(_lifetime, comboBox, IsEnabledProperty);
+			parentCheckBox?.IsAppearingChecked.FlowInto(_lifetime, comboBox, IsEnabledProperty);
 		}
 
 		private void SetNumericUpDownBinding<TSettings>(
@@ -93,7 +93,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 			SetAssociatedLabel(numericUpDown, entry.Description);
 
-			parentCheckBox?.IsCheckedLogically.FlowInto(_lifetime, numericUpDown, IsEnabledProperty);
+			parentCheckBox?.IsAppearingChecked.FlowInto(_lifetime, numericUpDown, IsEnabledProperty);
 		}
 
 		private static void SetAssociatedLabel([NotNull] FrameworkElement element, [NotNull] string description) {
@@ -103,18 +103,20 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		}
 
 		private void SetIdentifierTooltipSettingsBindings() {
-			CheckBoxDisabledNoCheck2 enabledCheckBox = IdentifierTooltipEnabledCheckBox;
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.Enabled, enabledCheckBox, null);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowIcon, IdentifierTooltipShowIconCheckBox, enabledCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowKind, IdentifierTooltipShowKindCheckBox, enabledCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowObsolete, IdentifierTooltipShowObsoleteCheckBox, enabledCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowExceptions, IdentifierTooltipShowExceptionsCheckBox, enabledCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowOverloadCount, IdentifierTooltipShowOverloadCountCheckBox, enabledCheckBox);
-			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseTypeKeywords, IdentifierTooltipUseTypeKeywordsCheckBox, enabledCheckBox);
-			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations, IdentifierTooltipShowIdentifierAnnotationsComboBox, enabledCheckBox);
-			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowParametersAnnotations, IdentifierTooltipShowParametersAnnotationsComboBox, enabledCheckBox);
-			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ConstructorReferenceDisplay, IdentifierTooltipConstructorReferenceDisplayComboBox, enabledCheckBox);
-			SetComboBoxBinding((IdentifierTooltipSettings s) => s.AttributeConstructorReferenceDisplay, IdentifierTooltipAttributeConstructorReferenceDisplayComboBox, enabledCheckBox);
+			CheckBoxDisabledNoCheck2 rootCheckBox = IdentifierTooltipEnabledCheckBox;
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.Enabled, rootCheckBox, null);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowIcon, IdentifierTooltipShowIconCheckBox, rootCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowKind, IdentifierTooltipShowKindCheckBox, rootCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseExtensionMethodKind, UseExtensionMethodKindCheckBox, IdentifierTooltipShowKindCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseClassModifiersInKind, UseClassModifiersInKindCheckBox, IdentifierTooltipShowKindCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowObsolete, IdentifierTooltipShowObsoleteCheckBox, rootCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowExceptions, IdentifierTooltipShowExceptionsCheckBox, rootCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowOverloadCount, IdentifierTooltipShowOverloadCountCheckBox, rootCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseTypeKeywords, IdentifierTooltipUseTypeKeywordsCheckBox, rootCheckBox);
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations, IdentifierTooltipShowIdentifierAnnotationsComboBox, rootCheckBox);
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowParametersAnnotations, IdentifierTooltipShowParametersAnnotationsComboBox, rootCheckBox);
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ConstructorReferenceDisplay, IdentifierTooltipConstructorReferenceDisplayComboBox, rootCheckBox);
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.AttributeConstructorReferenceDisplay, IdentifierTooltipAttributeConstructorReferenceDisplayComboBox, rootCheckBox);
 		}
 
 		private void SetIssueTooltipSettingsBindings() {
@@ -123,16 +125,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		}
 
 		private void SetParameterInfoSettingsBindings() {
-			CheckBoxDisabledNoCheck2 enabledCheckBox = ParameterInfoEnabledCheckBox;
-			SetCheckBoxBinding((ParameterInfoSettings s) => s.Enabled, enabledCheckBox, null);
-			SetCheckBoxBinding((ParameterInfoSettings s) => s.ShowEmptyParametersText, ParameterInfoShowEmptyParametersTextCheckBox, enabledCheckBox);
-			SetCheckBoxBinding((ParameterInfoSettings s) => s.UseTypeKeywords, ParameterInfoUseTypeKeywordsCheckBox, enabledCheckBox);
+			CheckBoxDisabledNoCheck2 rootCheckBox = ParameterInfoEnabledCheckBox;
+			SetCheckBoxBinding((ParameterInfoSettings s) => s.Enabled, rootCheckBox, null);
+			SetCheckBoxBinding((ParameterInfoSettings s) => s.ShowEmptyParametersText, ParameterInfoShowEmptyParametersTextCheckBox, rootCheckBox);
+			SetCheckBoxBinding((ParameterInfoSettings s) => s.UseTypeKeywords, ParameterInfoUseTypeKeywordsCheckBox, rootCheckBox);
 		}
 
 		private void SetDisplaySettingsBindings() {
-			CheckBoxDisabledNoCheck2 enabledCheckBox = DisplayLimitTooltipWidth;
-			SetCheckBoxBinding((DisplaySettings s) => s.LimitTooltipWidth, enabledCheckBox, null, addColonToDescription: true);
-			SetNumericUpDownBinding((DisplaySettings s) => s.ScreenWidthLimitPercent, DisplayScreenWidthLimitPercent, enabledCheckBox);
+			CheckBoxDisabledNoCheck2 rootCheckBox = DisplayLimitTooltipWidth;
+			SetCheckBoxBinding((DisplaySettings s) => s.LimitTooltipWidth, rootCheckBox, null, addColonToDescription: true);
+			SetNumericUpDownBinding((DisplaySettings s) => s.ScreenWidthLimitPercent, DisplayScreenWidthLimitPercent, rootCheckBox);
 		}
 
 		public EnhancedTooltipOptionsPage([NotNull] Lifetime lifetime, [NotNull] OptionsSettingsSmartContext context) {

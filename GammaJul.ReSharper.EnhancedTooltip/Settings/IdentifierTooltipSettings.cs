@@ -24,6 +24,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display overload count where applicable.")]
 		public bool ShowOverloadCount { get; set; }
 
+		[SettingsEntry(true, "Display extension methods as \"extension\" instead of \"method\"")]
+		public bool UseExtensionMethodKind { get; set; }
+
+		[SettingsEntry(false, "Display class modifiers (abstract/sealed/static/unsafe)")]
+		public bool UseClassModifiersInKind { get; set; }
+
 		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
 		public bool UseTypeKeywords { get; set; }
 

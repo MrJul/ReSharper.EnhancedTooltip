@@ -1,5 +1,4 @@
-﻿using GammaJul.ReSharper.EnhancedTooltip.Presentation;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.CSharp.Tree.Query;
@@ -9,16 +8,18 @@ using JetBrains.ReSharper.Psi.Util;
 namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 	internal static class DeclaredElementExtensions {
-		
+
 		[NotNull]
-		public static string GetElementKindString([CanBeNull] this IDeclaredElement element) {
+		public static string GetElementKindString([CanBeNull] this IDeclaredElement element, bool useExtensionMethodKind, bool useClassModifiersInKind) {
 			if (element == null)
 				return "unknown";
 
+			var @class = element as IClass;
+			if (@class != null)
+				return (useClassModifiersInKind ? GetClassModifiersDisplay(@class) : null) + "class";
+
 			if (element is INamespace)
 				return "namespace";
-			if (element is IClass)
-				return "class";
 			if (element is IInterface)
 				return "interface";
 			if (element is IStruct)
@@ -50,7 +51,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 				
 				var method = element as IMethod;
 				if (method != null) {
-					if (method.IsExtensionMethod)
+					if (useExtensionMethodKind && method.IsExtensionMethod)
 						return "extension";
 					if (CSharpDeclaredElementUtil.IsDestructor(method))
 						return "destructor";
@@ -87,6 +88,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 				return localVariable.IsConstant ? "local constant" : "local variable";
 			
 			return "unknown";
+		}
+
+		[CanBeNull]
+		private static string GetClassModifiersDisplay([NotNull] IModifiersOwner modifiersOwner) {
+			string display = null;
+
+			if (modifiersOwner.IsAbstract)
+				display = modifiersOwner.IsSealed ? "static " : "abstract ";
+			else if (modifiersOwner.IsSealed)
+				display = "sealed ";
+
+			if (modifiersOwner.IsUnsafe)
+				display += "unsafe ";
+
+			return display;
 		}
 
 		[Pure]

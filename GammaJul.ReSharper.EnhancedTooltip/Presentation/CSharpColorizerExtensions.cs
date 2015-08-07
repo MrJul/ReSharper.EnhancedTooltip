@@ -32,7 +32,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			=> colorizer.AppendText(methodName, colorizer.HighlighterIdProvider.Method);
 
 		public static void AppendElementKind([NotNull] this CSharpColorizer colorizer, [CanBeNull] IDeclaredElement element)
-			=> colorizer.AppendText(element.GetElementKindString(), null);
+			=> colorizer.AppendText(element.GetElementKindString(false, false), null);
 
 		public static void AppendCandidates([NotNull] this CSharpColorizer colorizer, [CanBeNull] IReference reference) {
 			if (reference == null)
