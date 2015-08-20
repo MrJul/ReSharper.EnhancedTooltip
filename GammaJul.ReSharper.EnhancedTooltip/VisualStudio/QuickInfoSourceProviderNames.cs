@@ -8,7 +8,7 @@
 		public const string VsLightBulb = "Default LightBulb QuickInfo Provider";
 		public const string VsSemantic = "Semantic Quick Info Provider";
 		public const string VsSyntactic = "Syntactic Quick Info Provider";
-		public const string ReSharper = "ReSharperQuickInfo";
+		public const string ReSharper = "ReSharper Quick Info";
 
 	}
 
