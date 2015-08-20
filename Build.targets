@@ -1,5 +1,5 @@
 <Project ToolsVersion="12.0" DefaultTargets="BuildAll" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Target Name="BuildAll">
-		<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.9.1.csproj" Properties="Platform=AnyCPU;Configuration=Release" />
+		<MSBuild Projects="GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.csproj" Properties="Platform=AnyCPU;Configuration=Release" />
 	</Target>
 </Project>

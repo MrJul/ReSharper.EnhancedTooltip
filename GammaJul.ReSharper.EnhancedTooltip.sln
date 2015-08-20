@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5A327D
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GammaJul.ReSharper.EnhancedTooltip.9.1", "GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.9.1.csproj", "{503F35A4-5A44-4468-8DE2-174F0B7D3D77}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GammaJul.ReSharper.EnhancedTooltip", "GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.csproj", "{503F35A4-5A44-4468-8DE2-174F0B7D3D77}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
