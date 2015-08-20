@@ -1,17 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using GammaJul.ReSharper.EnhancedTooltip.Presentation;
+﻿using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Feature.Services.CSharp.ParameterInfo;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Resources.Shell;
-using JetBrains.Util;
-using JetBrains.Util.Lazy;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 
@@ -25,21 +20,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	///  - <see cref="ParameterInfoCandidate"/> (overridden by <see cref="EnhancedParameterInfoCandidate"/>)
 	/// </remarks>
 	[ParameterInfoContextFactory(typeof(CSharpLanguage))]
-	public class EnhancedParameterInfoContextFactory : IParameterInfoContextFactory {
+	public class EnhancedParameterInfoContextFactory : CSParameterInfoContextFactory, IParameterInfoContextFactory {
 
-		[NotNull] [ItemCanBeNull] private readonly Lazy<IParameterInfoContextFactory> _csParameterInfoContextFactory;
-
-		public bool IsIntellisenseEnabled(ISolution solution, IContextBoundSettingsStore contextBoundSettingsStore)
-			=> _csParameterInfoContextFactory.Value?.IsIntellisenseEnabled(solution, contextBoundSettingsStore) == true;
-
-		public IParameterInfoContext CreateContext(ISolution solution,
+		public new IParameterInfoContext CreateContext(ISolution solution,
 			IDocument document,
 			int caretOffset,
 			int expectedLParenthOffset,
 			char invocationChar,
 			IContextBoundSettingsStore contextBoundSettingsStore) {
 
-			IParameterInfoContext context = _csParameterInfoContextFactory.Value?.CreateContext(
+			IParameterInfoContext context = base.CreateContext(
 				solution, document, caretOffset, expectedLParenthOffset, invocationChar, contextBoundSettingsStore);
 			return Enhance(context, solution, contextBoundSettingsStore);
 		}
@@ -54,22 +44,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 				solution.GetComponent<ColorizerPresenter>(),
 				solution.GetComponent<HighlighterIdProviderFactory>(),
 				settings);
-		}
-
-		public bool ShouldPopup(IDocument document, int caretOffset, char c, ISolution solution, IContextBoundSettingsStore contextBoundSettingsStore)
-			=> _csParameterInfoContextFactory.Value?.ShouldPopup(document, caretOffset, c, solution, contextBoundSettingsStore) == true;
-
-		public PsiLanguageType Language
-			=> CSharpLanguage.Instance;
-
-		public IEnumerable<char> ImportantChars
-			=> _csParameterInfoContextFactory.Value?.ImportantChars ?? EmptyList<char>.InstanceList;
-
-		public EnhancedParameterInfoContextFactory() {
-			_csParameterInfoContextFactory =
-				Lazy.Of(() => Shell.Instance.GetComponent<ILanguageManager>()
-					.GetServices<IParameterInfoContextFactory>(Language)
-					.FirstOrDefault(f => f.GetType().Name == "CSParameterInfoContextFactory" /* unfortunately the original factory is internal so we can't use typeof */));
 		}
 
 	}
