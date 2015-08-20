@@ -96,14 +96,12 @@
     <Grid Margin="10,0,0,0">
       <Grid.RowDefinitions>
         <RowDefinition Height="Auto" />
-        <RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
-        <RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+	      <RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
       </Grid.RowDefinitions>
       <controls:SectionHeading Grid.Row="0" Text="Display" />
-
-      <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+			<StackPanel Grid.Row="1" Orientation="Horizontal">
         <controls:CheckBoxDisabledNoCheck2 VerticalAlignment="Center" x:Name="DisplayLimitTooltipWidth" />
-        <controls2:NumericUpDown x:Name="DisplayScreenWidthLimitPercent" MinValue="10" MaxValue="100" Margin="4,0,0,0" />
+        <controls2:NumericUpDown x:Name="DisplayScreenWidthLimitPercent" MinValue="10" MaxValue="100" Margin="4,2,0,1" />
         <Label Target="{Binding ElementName=DisplayScreenWidthLimitPercent}" Content=" %" />
       </StackPanel>
     </Grid>
