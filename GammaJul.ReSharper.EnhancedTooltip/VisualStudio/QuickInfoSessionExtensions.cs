@@ -13,11 +13,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		}
 
 		[NotNull]
-		public static object[] RetrieveVsSquiggleContents([NotNull] this IQuickInfoSession session) {
-			object[] squiggleContents;
-			if (session.Properties.TryGetProperty(_squiggleContentsPropertyKey, out squiggleContents)) {
-				session.Properties.RemoveProperty(_squiggleContentsPropertyKey);
-				return squiggleContents ?? EmptyArray<object>.Instance;
+		public static object[] RetrieveVsSquiggleContents([CanBeNull] this IQuickInfoSession session) {
+			var properties = session?.Properties;
+			if (properties != null) {
+				object[] squiggleContents;
+				if (properties.TryGetProperty(_squiggleContentsPropertyKey, out squiggleContents)) {
+					properties.RemoveProperty(_squiggleContentsPropertyKey);
+					return squiggleContents ?? EmptyArray<object>.Instance;
+				}
 			}
 			return EmptyArray<object>.Instance;
 		}
