@@ -217,6 +217,7 @@
     <Compile Include="Presentation\ExceptionContent.cs" />
     <Compile Include="Presentation\FontSizeScaleConverter.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ClassTypeParameterInValueTypeParameterConstraintListErrorEnhancer.cs" />
+    <Compile Include="Presentation\IdentifierPresenter.cs" />
     <Compile Include="Presentation\VsIdentifierContent.cs" />
     <Compile Include="Presentation\VsSquiggleContent.cs" />
     <Compile Include="Psi\CSharpSpecialDeclaredElementFinder.cs" />
