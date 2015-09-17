@@ -52,18 +52,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					bool hasIdentifierTooltipContent = false;
 					if (solution != null) {
 						DocumentRange documentRange = textRange.CreateDocumentRange(document);
-						IdentifierTooltipContent[] contents = GetIdentifierTooltipContents(documentRange, solution, settings);
-						foreach (IdentifierTooltipContent content in contents) {
-							if (presenter.TryAddReSharperContent(content)) {
-								finalSpan = content.TrackingRange.ToSpan();
+						IdentifierContentGroup contentGroup = GetIdentifierContentGroup(documentRange, solution, settings);
+						if (contentGroup != null) {
+							foreach (IdentifierTooltipContent content in contentGroup.Identifiers) {
+								presenter.AddIdentifierTooltipContent(content);
+								finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
 								hasIdentifierTooltipContent = true;
+							}
+							if (contentGroup.ArgumentRole != null) {
+								presenter.AddArgumentRoleTooltipContent(contentGroup.ArgumentRole);
+								finalSpan = contentGroup.ArgumentRole.TrackingRange.ToSpan().Union(finalSpan);
 							}
 						}
 					}
 
 					List<Vs10Highlighter> highlighters = documentMarkup.GetHighlightersOver(textRange).OfType<Vs10Highlighter>().ToList();
 					foreach (Vs10Highlighter highlighter in highlighters) {
-						IReSharperTooltipContent[] contents = GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution, hasIdentifierTooltipContent);
+						IEnumerable<IReSharperTooltipContent> contents = GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution, hasIdentifierTooltipContent);
 						foreach (IReSharperTooltipContent content in contents) {
 							if (presenter.TryAddReSharperContent(content))
 								finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
@@ -121,23 +126,28 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (shellLocks.ReentrancyGuard.TryExecute("GetEnhancedTooltips", getEnhancedTooltips) && finalSpan != null)
 				applicableToSpan = textSnapshot.CreateTrackingSpan(finalSpan.Value, SpanTrackingMode.EdgeInclusive);
 		}
-		
-		[NotNull]
-		private static IdentifierTooltipContent[] GetIdentifierTooltipContents(
+
+		[CanBeNull]
+		[Pure]
+		private static IdentifierContentGroup GetIdentifierContentGroup(
 			DocumentRange documentRange,
 			[NotNull] ISolution solution,
 			[NotNull] IContextBoundSettingsStore settings)
 			=> solution
 				.GetComponent<IdentifierTooltipContentProvider>()
-				.GetIdentifierContents(documentRange, settings);
+				.GetIdentifierContentGroup(documentRange, settings);
 
 		[NotNull]
 		[Pure]
-		private static IReSharperTooltipContent[] GetTooltipContents([NotNull] IHighlighter highlighter, TextRange range,
-			[NotNull] IDocumentMarkup documentMarkup, [CanBeNull] ISolution solution, bool skipIdentifierHighlighting) {
+		private static IEnumerable<IReSharperTooltipContent> GetTooltipContents(
+			[NotNull] IHighlighter highlighter,
+			TextRange range,
+			[NotNull] IDocumentMarkup documentMarkup,
+			[CanBeNull] ISolution solution,
+			bool skipIdentifierHighlighting) {
 
 			if (highlighter.Attributes.Effect.Type == EffectType.GUTTER_MARK)
-				return EmptyArray<IReSharperTooltipContent>.Instance;
+				yield break;
 
 			var highlighting = highlighter.UserData as IHighlighting;
 			if (highlighting != null) {
@@ -147,40 +157,43 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, solution);
 				IssueTooltipContent issueContent = TryCreateIssueContent(highlighting, range, highlighter.RichTextToolTip, severity, settings, solution);
-				if (issueContent != null)
-					return new IReSharperTooltipContent[] { issueContent };
+				if (issueContent != null) {
+					yield return issueContent;
+					yield break;
+				}
 
 				if (solution != null && IsIdentifierHighlighting(highlighting)) {
-					if (skipIdentifierHighlighting)
-						return EmptyArray<IReSharperTooltipContent>.Instance;
-					IdentifierTooltipContent[] identifierContents = GetIdentifierTooltipContents(highlighter, solution, settings);
-					// ReSharper disable once CoVariantArrayConversion
-					return identifierContents;
+					if (!skipIdentifierHighlighting) {
+						var identifierContentGroup = GetIdentifierContentGroup(highlighter, solution, settings);
+						if (identifierContentGroup != null) {
+							foreach (IdentifierTooltipContent content in identifierContentGroup.Identifiers)
+								yield return content;
+							if (identifierContentGroup.ArgumentRole != null)
+								yield return identifierContentGroup.ArgumentRole;
+						}
+					}
+					yield break;
 				}
 			}
 
 			MiscTooltipContent miscContent = TryCreateMiscContent(highlighter.RichTextToolTip, range);
 			if (miscContent != null)
-				return new IReSharperTooltipContent[] { miscContent };
-
-			return EmptyArray<IReSharperTooltipContent>.Instance;
+				yield return miscContent;
 		}
 
 		[CanBeNull]
 		private static ISolution TryGetCurrentSolution()
-			=> Shell.Instance
-				.TryGetComponent<VSSolutionManager>()
-				?.CurrentSolution;
+			=> Shell.Instance.TryGetComponent<VSSolutionManager>()?.CurrentSolution;
 
-		[NotNull]
+		[CanBeNull]
 		[Pure]
-		private static IdentifierTooltipContent[] GetIdentifierTooltipContents(
+		private static IdentifierContentGroup GetIdentifierContentGroup(
 			[NotNull] IHighlighter highlighter,
 			[NotNull] ISolution solution,
 			[NotNull] IContextBoundSettingsStore settings)
 			=> solution
 				.GetComponent<IdentifierTooltipContentProvider>()
-				.GetIdentifierContents(highlighter, settings);
+				.GetIdentifierContentGroup(highlighter, settings);
 
 		[CanBeNull]
 		[Pure]

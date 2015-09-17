@@ -21,7 +21,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public List<ExceptionContent> Exceptions { get; } = new List<ExceptionContent>();
-
+		
 		public IdentifierTooltipContent([CanBeNull] RichText text, TextRange trackingRange)
 			: base(text, trackingRange) {
 		}

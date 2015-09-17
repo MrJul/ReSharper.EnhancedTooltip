@@ -10,7 +10,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 	internal static class DeclaredElementExtensions {
 
 		[NotNull]
-		public static string GetElementKindString([CanBeNull] this IDeclaredElement element, bool useExtensionMethodKind, bool useClassModifiersInKind) {
+		public static string GetElementKindString(
+			[CanBeNull] this IDeclaredElement element,
+			bool useExtensionMethodKind,
+			bool useClassModifiersInKind) {
+
 			if (element == null)
 				return "unknown";
 

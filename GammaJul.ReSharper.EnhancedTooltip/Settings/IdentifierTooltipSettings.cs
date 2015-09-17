@@ -33,10 +33,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
 		public bool UseTypeKeywords { get; set; }
 
+		[SettingsEntry(false, "Display the role of arguments inside invocations")]
+		public bool ShowArgumentsRole { get; set; }
+
 		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations for identifiers")]
 		public AnnotationsDisplayKind ShowIdentifierAnnotations { get; set; }
 
-		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations for parameters inside calls")]
+		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations for parameters inside method signatures")]
 		public AnnotationsDisplayKind ShowParametersAnnotations { get; set; }
 
 		[SettingsEntry(ConstructorReferenceDisplay.ConstructorOnly, "Display constructor references for other types as")]

@@ -132,6 +132,39 @@
 				</DataTemplate.Triggers>
 			</DataTemplate>
 
+			<!-- Style for a parameter role -->
+			<DataTemplate DataType="{x:Type local:ArgumentRoleTooltipContent}">
+				<StackPanel x:Name="Root" Orientation="Vertical" Margin="0,1"
+					TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType">
+
+					<DockPanel Margin="0">
+						<Border DataContext="{Binding Icon}">
+							<jui:ThemedIconViewImage x:Name="IconPresenter" Stretch="Uniform"
+								Margin="0,0,4,0" local:IconScaling.IsScalingWithFontSize="True"
+								DockPanel.Dock="Left" VerticalAlignment="Top" HorizontalAlignment="Left" />
+						</Border>
+						<controls:RichTextPresenter
+							RichText="{Binding Text}"
+							TextWrapping="Wrap" VerticalAlignment="Center" />
+					</DockPanel>
+
+					<StackPanel x:Name="DescriptionPresenter" Orientation="Vertical">
+						<local:DashedSeparator StrokeThickness="1" StrokeDashArray="3,3" Margin="-8,6" RenderOptions.EdgeMode="Aliased"
+							Stroke="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}" />
+						<local:AutoContrastedRichTextPresenter Margin="0" TextWrapping="Wrap"
+							RichText="{Binding Description}" />
+					</StackPanel>
+				</StackPanel>
+				<DataTemplate.Triggers>
+					<DataTrigger Binding="{Binding Icon}" Value="{x:Null}">
+						<Setter TargetName="IconPresenter" Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+					<DataTrigger Binding="{Binding Description}" Value="{x:Null}">
+						<Setter TargetName="DescriptionPresenter" Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+				</DataTemplate.Triggers>
+			</DataTemplate>
+
 			<!-- Style for an issue -->
 			<DataTemplate DataType="{x:Type local:IssueTooltipContent}">
 				<DockPanel Margin="0,1">

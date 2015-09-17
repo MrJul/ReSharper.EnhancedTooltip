@@ -13,6 +13,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 	public class MultipleTooltipContentPresenter {
 
 		[NotNull] private readonly List<IdentifierTooltipContent> _identifierContents = new List<IdentifierTooltipContent>();
+		[NotNull] private readonly List<ArgumentRoleTooltipContent> _argumentRoleContents = new List<ArgumentRoleTooltipContent>();
 		[NotNull] private readonly List<IssueTooltipContent> _issueContents = new List<IssueTooltipContent>();
 		[NotNull] private readonly List<MiscTooltipContent> _miscContents = new List<MiscTooltipContent>();
 		[NotNull] private readonly List<VsIdentifierContent> _vsIdentifierContents = new List<VsIdentifierContent>();
@@ -28,24 +29,42 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 			var identifierContent = content as IdentifierTooltipContent;
 			if (identifierContent != null) {
-				_identifierContents.Add(identifierContent);
+				AddIdentifierTooltipContent(identifierContent);
+				return true;
+			}
+
+			var argumentRoleContent = content as ArgumentRoleTooltipContent;
+			if (argumentRoleContent != null) {
+				AddArgumentRoleTooltipContent(argumentRoleContent);
 				return true;
 			}
 
 			var issueContent = content as IssueTooltipContent;
 			if (issueContent != null) {
-				_issueContents.Add(issueContent);
+				AddIssueTooltipContent(issueContent);
 				return true;
 			}
 
-			var rsContent = content as MiscTooltipContent;
-			if (rsContent != null) {
-				_miscContents.Add(rsContent);
+			var miscContent = content as MiscTooltipContent;
+			if (miscContent != null) {
+				AddMiscTooltipContent(miscContent);
 				return true;
 			}
 
 			return false;
 		}
+
+		public void AddIdentifierTooltipContent([NotNull] IdentifierTooltipContent content)
+			=> _identifierContents.Add(content);
+
+		public void AddArgumentRoleTooltipContent([NotNull] ArgumentRoleTooltipContent content)
+			=> _argumentRoleContents.Add(content);
+
+		public void AddIssueTooltipContent([NotNull] IssueTooltipContent content)
+			=> _issueContents.Add(content);
+
+		public void AddMiscTooltipContent([NotNull] MiscTooltipContent content)
+			=> _miscContents.Add(content);
 
 		public void AddVsSquiggleContent([NotNull] VsSquiggleContent content)
 			=> _vsSquiggleContents.Add(content);
@@ -63,6 +82,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 			foreach (VsIdentifierContent identifierContent in _vsIdentifierContents)
 				yield return PresentTooltipContents("Id", new[] { identifierContent });
+
+			foreach (ArgumentRoleTooltipContent argumentRoleContent in _argumentRoleContents)
+				yield return PresentTooltipContents("Role", new[] { argumentRoleContent });
 
 			if (_issueContents.Count > 0)
 				yield return PresentTooltipContents(_issueContents.Count == 1 ? "Issue" : "Issues", _issueContents);

@@ -210,6 +210,7 @@
     <Compile Include="Presentation\AutoContrastedRichTextPresenter.cs" />
     <Compile Include="Presentation\DashedSeparator.cs" />
     <Compile Include="Presentation\DescriptionSeparatorWidthConverter.cs" />
+    <Compile Include="Presentation\ElementKindDisplay.cs" />
     <Compile Include="Presentation\HighlighterIdProviderFactory.cs" />
     <Compile Include="Presentation\ColorizerPresenter.cs" />
     <Compile Include="Presentation\CSharpColorizer.cs" />
@@ -217,7 +218,9 @@
     <Compile Include="Presentation\ExceptionContent.cs" />
     <Compile Include="Presentation\FontSizeScaleConverter.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\ClassTypeParameterInValueTypeParameterConstraintListErrorEnhancer.cs" />
+    <Compile Include="Presentation\IdentifierContentGroup.cs" />
     <Compile Include="Presentation\IdentifierPresenter.cs" />
+    <Compile Include="Presentation\ArgumentRoleTooltipContent.cs" />
     <Compile Include="Presentation\VsIdentifierContent.cs" />
     <Compile Include="Presentation\VsSquiggleContent.cs" />
     <Compile Include="Psi\CSharpSpecialDeclaredElementFinder.cs" />

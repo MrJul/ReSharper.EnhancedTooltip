@@ -16,7 +16,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public bool ShowDefaultValues { get; private set; }
 
-		public bool ShowElementKind { get; private set; }
+		public ElementKindDisplay ShowElementKind { get; private set; }
 
 		public AnnotationsDisplayKind ShowElementAnnotations { get; private set; }
 
@@ -37,7 +37,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public bool ShowParametersType { get; private set; }
 
 		public QualifierDisplays ShowQualifiers { get; private set; }
-
+		
 		public bool UseClassModifiersInKind { get; private set; }
 
 		public bool UseExtensionMethodKind { get; private set; }
@@ -45,13 +45,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public bool UseTypeKeywords { get; private set; }
 
 		[NotNull]
-		public static PresenterOptions ForToolTip([NotNull] IContextBoundSettingsStore settings) {
+		public static PresenterOptions ForIdentifierToolTip([NotNull] IContextBoundSettingsStore settings) {
 			return new PresenterOptions {
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey s) => s.DelegatesAsLambdas),
 				ShowAccessRights = false,
 				ShowConstantValue = true,
 				ShowDefaultValues = true,
-				ShowElementKind = settings.GetValue((IdentifierTooltipSettings s) => s.ShowKind),
+				ShowElementKind = settings.GetValue((IdentifierTooltipSettings s) => s.ShowKind) ? ElementKindDisplay.Stylized : ElementKindDisplay.None,
 				ShowElementAnnotations = settings.GetValue((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations),
 				ShowElementType = ElementTypeDisplay.Before,
 				ShowEmptyParametersText = false,
@@ -69,13 +69,61 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		[NotNull]
+		public static PresenterOptions ForArgumentRoleParametersOwnerToolTip([NotNull] IContextBoundSettingsStore settings) {
+			return new PresenterOptions {
+				FormatDelegatesAsLambdas = false,
+				ShowAccessRights = false,
+				ShowConstantValue = false,
+				ShowDefaultValues = false,
+				ShowElementKind = ElementKindDisplay.Standard,
+				ShowElementAnnotations = AnnotationsDisplayKind.None,
+				ShowElementType = ElementTypeDisplay.None,
+				ShowEmptyParametersText = false,
+				ShowExplicitInterface = false,
+				ShowModifiers = false,
+				ShowName = true,
+				ShowParametersName = false,
+				ShowParametersAnnotations = AnnotationsDisplayKind.None,
+				ShowParametersType = false,
+				ShowQualifiers = QualifierDisplays.None,
+				UseClassModifiersInKind = false,
+				UseExtensionMethodKind = false,
+				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
+			};
+		}
+
+		[NotNull]
+		public static PresenterOptions ForArgumentRoleParameterToolTip([NotNull] IContextBoundSettingsStore settings) {
+			return new PresenterOptions {
+				FormatDelegatesAsLambdas = false,
+				ShowAccessRights = false,
+				ShowConstantValue = false,
+				ShowDefaultValues = false,
+				ShowElementKind = ElementKindDisplay.None,
+				ShowElementAnnotations = AnnotationsDisplayKind.None,
+				ShowElementType = ElementTypeDisplay.Before,
+				ShowEmptyParametersText = false,
+				ShowExplicitInterface = false,
+				ShowModifiers = false,
+				ShowName = true,
+				ShowParametersName = false,
+				ShowParametersAnnotations = AnnotationsDisplayKind.None,
+				ShowParametersType = false,
+				ShowQualifiers = QualifierDisplays.None,
+				UseClassModifiersInKind = false,
+				UseExtensionMethodKind = false,
+				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
+			};
+		}
+
+		[NotNull]
 		public static PresenterOptions ForParameterInfo([NotNull] IContextBoundSettingsStore settings, AnnotationsDisplayKind showAnnotations) {
 			return new PresenterOptions {
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas),
 				ShowAccessRights = false,
 				ShowConstantValue = false,
 				ShowDefaultValues = true,
-				ShowElementKind = false,
+				ShowElementKind = ElementKindDisplay.None,
 				ShowElementAnnotations = AnnotationsDisplayKind.None,
 				ShowElementType = ElementTypeDisplay.After,
 				ShowEmptyParametersText = settings.GetValue((ParameterInfoSettings s) => s.ShowEmptyParametersText),
@@ -98,7 +146,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowAccessRights = false,
 			ShowConstantValue = false,
 			ShowDefaultValues = true,
-			ShowElementKind = false,
+			ShowElementKind = ElementKindDisplay.None,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.Before,
 			ShowEmptyParametersText = false,
@@ -120,7 +168,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowAccessRights = false,
 			ShowConstantValue = false,
 			ShowDefaultValues = true,
-			ShowElementKind = false,
+			ShowElementKind = ElementKindDisplay.None,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.Before,
 			ShowEmptyParametersText = false,
@@ -142,7 +190,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowAccessRights = false,
 			ShowConstantValue = false,
 			ShowDefaultValues = true,
-			ShowElementKind = false,
+			ShowElementKind = ElementKindDisplay.None,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.None,
 			ShowEmptyParametersText = false,
@@ -164,7 +212,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowAccessRights = false,
 			ShowConstantValue = false,
 			ShowDefaultValues = false,
-			ShowElementKind = false,
+			ShowElementKind = ElementKindDisplay.None,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.Before,
 			ShowEmptyParametersText = false,
@@ -186,7 +234,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowAccessRights = false,
 			ShowConstantValue = false,
 			ShowDefaultValues = false,
-			ShowElementKind = false,
+			ShowElementKind = ElementKindDisplay.None,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.None,
 			ShowEmptyParametersText = false,
@@ -208,7 +256,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowAccessRights = false,
 			ShowConstantValue = false,
 			ShowDefaultValues = false,
-			ShowElementKind = false,
+			ShowElementKind = ElementKindDisplay.None,
 			ShowElementAnnotations = AnnotationsDisplayKind.None,
 			ShowElementType = ElementTypeDisplay.None,
 			ShowEmptyParametersText = false,

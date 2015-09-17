@@ -38,7 +38,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 			if (declaredElement == null)
 				return null;
-
+			
 			sourceRange = file.GetDocumentRange(varKeyword.GetTreeTextRange()).TextRange;
 			return new DeclaredElementInstance(declaredElement, EmptySubstitution.INSTANCE);
 		}

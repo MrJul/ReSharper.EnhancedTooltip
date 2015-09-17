@@ -64,8 +64,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (!IsClrPresentableElement(element))
 				return context.PresentedInfo;
 
-			if (options.ShowElementKind)
-				AppendElementKindStylized(element, context);
+			if (options.ShowElementKind != ElementKindDisplay.None)
+				AppendElementKind(element, context, options.ShowElementKind == ElementKindDisplay.Stylized);
 
 			if (options.ShowAccessRights)
 				AppendAccessRights(element, true);
@@ -115,9 +115,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				_richText.Append(text, textStyle);
 		}
 		
-		private void AppendElementKindStylized([CanBeNull] IDeclaredElement element, Context context) {
+		private void AppendElementKind([CanBeNull] IDeclaredElement element, Context context, bool stylized) {
 			string kind = element.GetElementKindString(context.Options.UseExtensionMethodKind, context.Options.UseClassModifiersInKind);
-			AppendText("(" + kind + ") ", new TextStyle(FontStyle.Italic));
+			if (stylized)
+				AppendText("(" + kind + ") ", new TextStyle(FontStyle.Italic));
+			else
+				AppendText(kind + " ", null);
 		}
 
 		public void AppendAccessRights([NotNull] IDeclaredElement element, bool addSpaceAfter) {

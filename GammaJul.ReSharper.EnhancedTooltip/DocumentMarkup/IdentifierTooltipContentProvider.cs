@@ -1,5 +1,4 @@
 ﻿using System.Linq.Expressions;
-using JetBrains.Util.dataStructures;
 using GammaJul.ReSharper.EnhancedTooltip.Psi;
 using System;
 using System.Collections.Generic;
@@ -17,6 +16,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
+using JetBrains.ReSharper.Psi.Resources;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.TextControl.DocumentMarkup;
@@ -36,15 +36,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			[NotNull] internal readonly IDeclaredElement DeclaredElement;
 			[NotNull] internal readonly ISubstitution Substitution;
-			[NotNull] internal readonly IFile File;
+			[NotNull] internal readonly ITreeNode TreeNode;
 			internal readonly TextRange SourceRange;
 			[CanBeNull] internal readonly IReference Reference;
-			
-			public DeclaredElementInfo([NotNull] IDeclaredElement declaredElement, [NotNull] ISubstitution substitution, [NotNull] IFile file,
-				TextRange sourceRange, [CanBeNull] IReference reference) {
+
+			public DeclaredElementInfo(
+				[NotNull] IDeclaredElement declaredElement,
+				[NotNull] ISubstitution substitution,
+				[NotNull] ITreeNode treeNode,
+				TextRange sourceRange,
+				[CanBeNull] IReference reference) {
 				DeclaredElement = declaredElement;
 				Substitution = substitution;
-				File = file;
+				TreeNode = treeNode;
 				SourceRange = sourceRange;
 				Reference = reference;
 			}
@@ -57,48 +61,48 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
 		
 		/// <summary>
-		/// Returns a colored <see cref="IdentifierTooltipContent"/> for an identifier represented by a <see cref="IHighlighter"/>.
+		/// Returns a colored <see cref="IdentifierContentGroup"/> for an identifier represented by a <see cref="IHighlighter"/>.
 		/// </summary>
 		/// <param name="highlighter">The highlighter representing the identifier.</param>
 		/// <param name="settings">The settings to use.</param>
-		/// <returns>A <see cref="IdentifierTooltipContent"/> representing a colored tooltip, or <c>null</c>.</returns>
-		[NotNull]
-		public IdentifierTooltipContent[] GetIdentifierContents([NotNull] IHighlighter highlighter, [NotNull] IContextBoundSettingsStore settings) {
+		/// <returns>An <see cref="IdentifierContentGroup"/> representing a colored tooltip, or <c>null</c>.</returns>
+		[CanBeNull]
+		public IdentifierContentGroup GetIdentifierContentGroup([NotNull] IHighlighter highlighter, [NotNull] IContextBoundSettingsStore settings) {
 			if (!highlighter.IsValid)
-				return EmptyArray<IdentifierTooltipContent>.Instance;
+				return null;
 
 			if (!settings.GetValue((IdentifierTooltipSettings s) => s.Enabled)) {
 				IdentifierTooltipContent content = TryPresentNonColorized(highlighter, null, settings);
 				if (content != null)
-					return new[] { content };
-				return EmptyArray<IdentifierTooltipContent>.Instance;
+					return new IdentifierContentGroup { Identifiers = { content } };
+				return null;
 			}
 
-			return GetIdentifierContentsCore(new DocumentRange(highlighter.Document, highlighter.Range), settings, highlighter);
+			return GetIdentifierContentGroupCore(new DocumentRange(highlighter.Document, highlighter.Range), settings, highlighter);
 		}
 
 		/// <summary>
-		/// Returns a colored <see cref="IdentifierTooltipContent"/> for an identifier at a given <see cref="DocumentRange"/>.
+		/// Returns a colored <see cref="IdentifierContentGroup"/> for an identifier at a given <see cref="DocumentRange"/>.
 		/// </summary>
 		/// <param name="documentRange">The document range where to find a <see cref="IDeclaredElement"/>.</param>
 		/// <param name="settings">The settings to use.</param>
-		/// <returns>A <see cref="IdentifierTooltipContent"/> representing a colored tooltip, or <c>null</c>.</returns>
-		[NotNull]
-		public IdentifierTooltipContent[] GetIdentifierContents(DocumentRange documentRange, [NotNull] IContextBoundSettingsStore settings) {
+		/// <returns>An <see cref="IdentifierContentGroup"/> representing a colored tooltip, or <c>null</c>.</returns>
+		[CanBeNull]
+		public IdentifierContentGroup GetIdentifierContentGroup(DocumentRange documentRange, [NotNull] IContextBoundSettingsStore settings) {
 			if (!settings.GetValue((IdentifierTooltipSettings s) => s.Enabled))
-				return EmptyArray<IdentifierTooltipContent>.Instance;
+				return null;
 
-			return GetIdentifierContentsCore(documentRange, settings, null);
+			return GetIdentifierContentGroupCore(documentRange, settings, null);
 		}
 
-		[NotNull]
-		private IdentifierTooltipContent[] GetIdentifierContentsCore(
+		[CanBeNull]
+		private IdentifierContentGroup GetIdentifierContentGroupCore(
 			DocumentRange documentRange, [NotNull] IContextBoundSettingsStore settings, [CanBeNull] IHighlighter highlighter) {
 
 			DeclaredElementInfo info = FindDeclaredElement(documentRange);
 			if (info == null)
-				return EmptyArray<IdentifierTooltipContent>.Instance;
-
+				return null;
+			
 			IdentifierTooltipContent standardContent = TryPresentColorized(info, settings)
 				?? TryPresentNonColorized(highlighter, info.DeclaredElement, settings);
 
@@ -109,16 +113,22 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				additionalContent = null;
 			}
 
-			var results = new FrugalLocalList<IdentifierTooltipContent>();
+			var result = new IdentifierContentGroup();
+
 			if (standardContent != null)
-				results.Add(standardContent);
+				result.Identifiers.Add(standardContent);
 			if (additionalContent != null)
-				results.Add(additionalContent);
-			return results.ToArray();
+				result.Identifiers.Add(additionalContent);
+
+			result.ArgumentRole = TryGetArgumentRoleContent(info.TreeNode, settings);
+
+			return result;
 		}
 
 		[CanBeNull]
-		private IdentifierTooltipContent TryGetAdditionalIdentifierContent([NotNull] DeclaredElementInfo info, [NotNull] IContextBoundSettingsStore settings,
+		private IdentifierTooltipContent TryGetAdditionalIdentifierContent(
+			[NotNull] DeclaredElementInfo info,
+			[NotNull] IContextBoundSettingsStore settings,
 			out bool replacesStandardContent) {
 
 			replacesStandardContent = false;
@@ -128,7 +138,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (typeElement == null)
 				return null;
 
-			IDeclaredType attributeType = info.File.GetPsiModule().GetPredefinedType(constructor.ResolveContext).Attribute;
+			IDeclaredType attributeType = info.TreeNode.GetPsiModule().GetPredefinedType(constructor.ResolveContext).Attribute;
 			var settingsKey = GetConstructorSettingsKey(typeElement, info.Substitution, attributeType);
 			ConstructorReferenceDisplay display = settings.GetValue(settingsKey);
 			switch (display) {
@@ -163,19 +173,20 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (typeElement == null)
 				return null;
 
-			var typeInfo = new DeclaredElementInfo(typeElement, constructorInfo.Substitution, constructorInfo.File, constructorInfo.SourceRange, null);
+			var typeInfo = new DeclaredElementInfo(typeElement, constructorInfo.Substitution, constructorInfo.TreeNode, constructorInfo.SourceRange, null);
 			return TryPresentColorized(typeInfo, settings);
 		}
 
 		[CanBeNull]
 		private IdentifierTooltipContent TryPresentColorized([NotNull] DeclaredElementInfo info, [NotNull] IContextBoundSettingsStore settings) {
-			PsiLanguageType languageType = info.File.Language;
+
+			PsiLanguageType languageType = info.TreeNode.Language;
 			IDeclaredElement element = info.DeclaredElement;
-			IPsiModule psiModule = info.File.GetPsiModule();
+			IPsiModule psiModule = info.TreeNode.GetPsiModule();
 
 			RichText identifierText = _colorizerPresenter.TryPresent(
 				new DeclaredElementInstance(element, info.Substitution),
-				PresenterOptions.ForToolTip(settings),
+				PresenterOptions.ForIdentifierToolTip(settings),
 				languageType,
 				_highlighterIdProviderFactory.CreateProvider(settings));
 
@@ -193,11 +204,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				identifierContent.Obsolete = TryRemoveObsoletePrefix(TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.OBSOLETE_DESCRIPTION));
 
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowExceptions))
-				identifierContent.Exceptions.AddRange(GetExceptions(element, languageType, psiModule, info.File.GetResolveContext()));
+				identifierContent.Exceptions.AddRange(GetExceptions(element, languageType, psiModule, info.TreeNode.GetResolveContext()));
 
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowOverloadCount))
 				identifierContent.OverloadCount = TryGetOverloadCountCount(element as IFunction, info.Reference, languageType);
-
+			
 			return identifierContent;
 		}
 
@@ -274,14 +285,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// <param name="element">The element whose description will be returned.</param>
 		/// <param name="psiModule">The PSI module of the file containing the identifier.</param>
 		/// <param name="languageType">The type of language used to present the identifier.</param>
-		/// <param name="style"></param>
+		/// <param name="style">The description style to use.</param>
 		[CanBeNull]
-		private RichText TryGetDescription([NotNull] IDeclaredElement element, [NotNull] IPsiModule psiModule, [NotNull] PsiLanguageType languageType,
-			[NotNull] DeclaredElementDescriptionStyle style) {
-			return _declaredElementDescriptionPresenter
+		private RichText TryGetDescription(
+			[NotNull] IDeclaredElement element,
+			[NotNull] IPsiModule psiModule,
+			[NotNull] PsiLanguageType languageType,
+			[NotNull] DeclaredElementDescriptionStyle style)
+			=> _declaredElementDescriptionPresenter
 				.GetDeclaredElementDescription(element, style, languageType, psiModule)
 				?.RichText;
-		}
 
 		[CanBeNull]
 		private static RichText TryRemoveObsoletePrefix([CanBeNull] RichText text) {
@@ -342,7 +355,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			IReference[] references = file.FindReferencesAt(treeTextRange);
 			if (references.Length > 0)
-				return GetBestReference(references, file);
+				return GetBestReference(references);
 
 			// FindNodeAt seems to return the previous node on single-char literals (eg '0'). FindNodesAt is fine.
 			var node = file.FindNodesAt<ITreeNode>(treeTextRange).FirstOrDefault();
@@ -358,10 +371,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// Gets the best reference (the "deepest" one) from a collection of references.
 		/// </summary>
 		/// <param name="references">A collection of references.</param>
-		/// <param name="file">The PSI file containing the references.</param>
 		/// <returns>The <see cref="DeclaredElementInfo"/> corresponding to the best reference.</returns>
 		[CanBeNull]
-		private static DeclaredElementInfo GetBestReference([NotNull] IEnumerable<IReference> references, [NotNull] IFile file) {
+		private static DeclaredElementInfo GetBestReference([NotNull] IEnumerable<IReference> references) {
 			foreach (IReference reference in references.OrderBy(r => r.GetTreeNode().PathToRoot().Count())) {
 				IResolveResult resolveResult = reference.Resolve().Result;
 				if (reference.CheckResolveResult() == ResolveErrorType.DYNAMIC)
@@ -370,7 +382,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				IDeclaredElement foundElement = resolveResult.DeclaredElement;
 				if (foundElement != null) {
 					var referenceRange = reference.GetDocumentRange().TextRange;
-					return new DeclaredElementInfo(foundElement, resolveResult.Substitution, file, referenceRange, reference);
+					return new DeclaredElementInfo(foundElement, resolveResult.Substitution, reference.GetTreeNode(), referenceRange, reference);
 				}
 			}
 
@@ -391,7 +403,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (declaredElement == null)
 				return null;
 
-			return new DeclaredElementInfo(declaredElement, EmptySubstitution.INSTANCE, file, file.GetDocumentRange(nameRange).TextRange, null);
+			return new DeclaredElementInfo(declaredElement, EmptySubstitution.INSTANCE, node, file.GetDocumentRange(nameRange).TextRange, null);
 		}
 
 		[CanBeNull]
@@ -409,7 +421,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (typeElement == null)
 				return null;
 
-			return new DeclaredElementInfo(typeElement, declaredType.GetSubstitution(), file, file.GetDocumentRange(literalRange).TextRange, null);
+			return new DeclaredElementInfo(typeElement, declaredType.GetSubstitution(), node, file.GetDocumentRange(literalRange).TextRange, null);
 		}
 
 		[CanBeNull]
@@ -423,7 +435,48 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (declaredElementInstance == null)
 				return null;
 
-			return new DeclaredElementInfo(declaredElementInstance.Element, declaredElementInstance.Substitution, file, sourceRange, null);
+			return new DeclaredElementInfo(declaredElementInstance.Element, declaredElementInstance.Substitution, node, sourceRange, null);
+		}
+
+		
+		[CanBeNull]
+		private ArgumentRoleTooltipContent TryGetArgumentRoleContent([NotNull] ITreeNode node, [NotNull] IContextBoundSettingsStore settings) {
+			if (!settings.GetValue((IdentifierTooltipSettings s) => s.ShowArgumentsRole))
+				return null;
+
+			var argument = node.GetContainingNode<IArgument>();
+			DeclaredElementInstance<IParameter> parameterInstance = argument?.MatchingParameter;
+			if (parameterInstance == null)
+				return null;
+
+			IParameter parameter = parameterInstance.Element;
+			IParametersOwner parametersOwner = parameter.ContainingParametersOwner;
+			if (parametersOwner == null)
+				return null;
+
+			HighlighterIdProvider highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(settings);
+
+			RichText final = new RichText("Argument of ", TextStyle.Default);
+			final.Append(_colorizerPresenter.TryPresent(
+				new DeclaredElementInstance(parametersOwner, parameterInstance.Substitution),
+				PresenterOptions.ForArgumentRoleParametersOwnerToolTip(settings),
+				argument.Language,
+				highlighterIdProvider));
+			final.Append(": ", TextStyle.Default);
+			final.Append(_colorizerPresenter.TryPresent(
+				parameterInstance,
+				PresenterOptions.ForArgumentRoleParameterToolTip(settings),
+				argument.Language,
+				highlighterIdProvider));
+
+			var content = new ArgumentRoleTooltipContent(final, argument.GetDocumentRange().TextRange) {
+				Description = TryGetDescription(parameter, parameter.Module, argument.Language, DeclaredElementDescriptionStyle.NO_OBSOLETE_SUMMARY_STYLE)
+			};
+
+			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowIcon))
+				content.Icon = PsiSymbolsThemedIcons.Parameter.Id;
+
+			return content;
 		}
 
 		public IdentifierTooltipContentProvider(
