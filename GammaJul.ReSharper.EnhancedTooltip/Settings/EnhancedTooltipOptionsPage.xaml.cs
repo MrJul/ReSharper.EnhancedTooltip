@@ -44,7 +44,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			var enumDescriptionConverter = new EnumDescriptionConverter();
 			return Enum.GetValues(enumType)
 				.Cast<Enum>()
-				.Select(e => new EnumValue(e, enumDescriptionConverter.Convert(e, typeof(string), null, CultureInfo.CurrentUICulture) as string))
+				.Select(e => new EnumValue(e, enumDescriptionConverter.Convert(e, typeof(string), null, CultureInfo.CurrentUICulture) as string ?? e.ToString()))
 				.ToList();
 		}
 
@@ -136,6 +136,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			CheckBoxDisabledNoCheck2 rootCheckBox = DisplayLimitTooltipWidth;
 			SetCheckBoxBinding((DisplaySettings s) => s.LimitTooltipWidth, rootCheckBox, null, addColonToDescription: true);
 			SetNumericUpDownBinding((DisplaySettings s) => s.ScreenWidthLimitPercent, DisplayScreenWidthLimitPercent, rootCheckBox);
+			SetComboBoxBinding((DisplaySettings s) => s.TextFormattingMode, DisplayTextFormattingMode, null);
 		}
 
 		public EnhancedTooltipOptionsPage([NotNull] Lifetime lifetime, [NotNull] OptionsSettingsSmartContext context) {

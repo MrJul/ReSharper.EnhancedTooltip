@@ -1,4 +1,5 @@
-﻿using JetBrains.Application.Settings;
+﻿using System.Windows.Media;
+using JetBrains.Application.Settings;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
@@ -10,6 +11,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		[SettingsEntry(50, "Screen width limit (%)")]
 		public int ScreenWidthLimitPercent { get; set; }
+
+		[SettingsEntry(TextFormattingMode.Ideal, "Text display mode")]
+		public TextFormattingMode TextFormattingMode { get; set; }
 
 	}
 

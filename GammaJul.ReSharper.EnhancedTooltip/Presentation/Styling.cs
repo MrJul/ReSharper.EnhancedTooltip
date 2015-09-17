@@ -134,7 +134,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			listBox.Style = UIResources.Instance.QuickInfoListBoxStyle;
 			listBox.ItemTemplate = UIResources.Instance.QuickInfoItemDataTemplate;
 			listBox.ItemContainerStyle = CreateItemContainerStyle(listBox);
-			listBox.MaxWidth = ComputeListBoxMaxWidth(listBox,  document);
+
+			IContextBoundSettingsStore settings = document.TryGetSettings();
+			listBox.MaxWidth = ComputeListBoxMaxWidth(listBox,  settings);
+			TextOptions.SetTextFormattingMode(listBox, GetTextFormattingMode(settings));
+			TextOptions.SetTextRenderingMode(listBox, TextRenderingMode.Auto);
 		}
 
 		[NotNull]
@@ -161,23 +165,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return itemContainerStyle;
 		}
 
-		private static double ComputeListBoxMaxWidth([NotNull] ListBox listBox, [CanBeNull] IDocument document) {
-			if (document == null || !Shell.HasInstance)
+		private static double ComputeListBoxMaxWidth([NotNull] ListBox listBox, [CanBeNull] IContextBoundSettingsStore settings) {
+			if (settings == null || !settings.GetValue((DisplaySettings s) => s.LimitTooltipWidth))
 				return Double.PositiveInfinity;
-
-			IContextBoundSettingsStore settings = document.GetSettings();
-			if (!settings.GetValue((DisplaySettings s) => s.LimitTooltipWidth))
-				return Double.PositiveInfinity;
-
-			int limitPercent = settings.GetValue((DisplaySettings s) => s.ScreenWidthLimitPercent).Clamp(10, 100);
 
 			var hwndSource = PresentationSource.FromVisual(listBox) as HwndSource;
 			if (hwndSource == null)
 				return Double.PositiveInfinity;
 
+			int limitPercent = settings.GetValue((DisplaySettings s) => s.ScreenWidthLimitPercent).Clamp(10, 100);
 			Screen screen = Screen.FromHandle(hwndSource.Handle);
 			return screen.Bounds.Width * (limitPercent / 100.0);
 		}
+
+		private static TextFormattingMode GetTextFormattingMode([CanBeNull] IContextBoundSettingsStore settings)
+			=> settings?.GetValue((DisplaySettings s) => s.TextFormattingMode) ?? TextFormattingMode.Ideal;
 
 		private static void RestoreOriginalStyles([NotNull] ListBox listBox) {
 			var originalStyles = listBox.GetValue(_originalStylesProperty) as OriginalStyles;

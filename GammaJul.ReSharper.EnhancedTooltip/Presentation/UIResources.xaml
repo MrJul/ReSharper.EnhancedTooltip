@@ -62,9 +62,8 @@
 
 			<!-- Style for an identifier -->
 			<DataTemplate DataType="{x:Type local:IdentifierTooltipContent}">
-				<StackPanel x:Name="Root" Orientation="Vertical" Margin="0,1"
-					TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType">
-					
+				<StackPanel x:Name="Root" Orientation="Vertical" Margin="0,1">
+
 					<DockPanel Margin="0">
 						<Border DataContext="{Binding Icon}">
 							<jui:ThemedIconViewImage x:Name="IconPresenter" Stretch="Uniform"
@@ -134,8 +133,7 @@
 
 			<!-- Style for a parameter role -->
 			<DataTemplate DataType="{x:Type local:ArgumentRoleTooltipContent}">
-				<StackPanel x:Name="Root" Orientation="Vertical" Margin="0,1"
-					TextOptions.TextFormattingMode="Ideal" TextOptions.TextRenderingMode="ClearType">
+				<StackPanel x:Name="Root" Orientation="Vertical" Margin="0,1">
 
 					<DockPanel Margin="0">
 						<Border DataContext="{Binding Icon}">
