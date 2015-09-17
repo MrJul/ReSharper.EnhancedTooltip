@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
@@ -90,7 +91,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (options.ShowConstantValue) {
 				var constantValueOwner = element as IConstantValueOwner;
 				if (constantValueOwner != null)
-					AppendConstantValue(constantValueOwner);
+					AppendConstantValue(constantValueOwner, true);
 			}
 
 			return context.PresentedInfo;
@@ -681,7 +682,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (defaultValue.IsConstant) {
 				AppendText(" = ", _highlighterIdProvider.Operator);
-				AppendConstantValue(defaultValue.ConstantValue);
+				AppendConstantValue(defaultValue.ConstantValue, false);
 				return;
 			}
 
@@ -702,24 +703,30 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText(")", null);
 		}
 
-		private void AppendConstantValue([NotNull] IConstantValueOwner constantValueOwner) {
+		private void AppendConstantValue([NotNull] IConstantValueOwner constantValueOwner, bool treatEnumAsIntegral) {
 			ConstantValue constantValue = constantValueOwner.ConstantValue;
 			if (constantValue.IsBadValue())
 				return;
 
 			AppendText(" = ", _highlighterIdProvider.Operator);
-			AppendConstantValue(constantValue);
+			AppendConstantValue(constantValue, treatEnumAsIntegral);
 		}
 
-		private void AppendConstantValue([NotNull] ConstantValue constantValue) {
+		private void AppendConstantValue([NotNull] ConstantValue constantValue, bool treatEnumAsIntegral) {
 			if (constantValue.IsBadValue()) {
 				AppendText("bad value", null);
 				return;
 			}
 
 			IEnum enumType = constantValue.Type.GetEnumType();
-			if (enumType != null && AppendEnumValue(constantValue, enumType))
-				return;
+			if (enumType != null) {
+				if (treatEnumAsIntegral) {
+					AppendText(constantValue.Value?.ToString() ?? String.Empty, _highlighterIdProvider.Number);
+					return;
+				}
+				if (AppendEnumValue(constantValue, enumType))
+					return;
+			}
 
 			string presentation = constantValue.GetPresentation(CSharpLanguage.Instance);
 			if (presentation != null && CSharpLexer.IsKeyword(presentation)) {
