@@ -30,11 +30,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(false, "Display class modifiers (abstract/sealed/static/unsafe)")]
 		public bool UseClassModifiersInKind { get; set; }
 
-		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
-		public bool UseTypeKeywords { get; set; }
-
 		[SettingsEntry(false, "Display the role of arguments inside invocations")]
 		public bool ShowArgumentsRole { get; set; }
+
+		[SettingsEntry(false, "Display the base type of classes")]
+		public bool ShowBaseType { get; set; }
+
+		[SettingsEntry(false, "Display implemented interfaces of types")]
+		public bool ShowImplementedInterfaces { get; set; }
+
+		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
+		public bool UseTypeKeywords { get; set; }
 
 		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations for identifiers")]
 		public AnnotationsDisplayKind ShowIdentifierAnnotations { get; set; }

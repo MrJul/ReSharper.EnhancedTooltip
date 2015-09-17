@@ -67,8 +67,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		private string GetOverloadCountText(int? overloadCount) {
 			switch (overloadCount) {
 				case null: return null;
+				case 0: return null;
 				case 1: return " + 1 overload";
-				default: return string.Format(CultureInfo.CurrentCulture, " + {0} overloads", overloadCount.Value);
+				default: return String.Format(CultureInfo.CurrentCulture, " + {0} overloads", overloadCount.Value);
 			}
 		}
 

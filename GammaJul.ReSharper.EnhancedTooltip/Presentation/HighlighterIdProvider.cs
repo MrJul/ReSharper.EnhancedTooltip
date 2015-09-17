@@ -141,7 +141,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return TypeParameter;
 			var @class = typeElement as IClass;
 			if (@class != null)
-				return @class.IsStatic ? StaticClass : Class;
+				return @class.IsAbstract && @class.IsSealed ? StaticClass : Class;
 
 			return VsIdentifier;
 		}

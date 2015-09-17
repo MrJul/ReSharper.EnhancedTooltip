@@ -14,6 +14,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Descriptions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Files;
+using JetBrains.ReSharper.Psi.Impl;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Resources;
@@ -184,11 +185,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			IDeclaredElement element = info.DeclaredElement;
 			IPsiModule psiModule = info.TreeNode.GetPsiModule();
 
+			HighlighterIdProvider highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(settings);
+
 			RichText identifierText = _colorizerPresenter.TryPresent(
 				new DeclaredElementInstance(element, info.Substitution),
 				PresenterOptions.ForIdentifierToolTip(settings),
 				languageType,
-				_highlighterIdProviderFactory.CreateProvider(settings));
+				highlighterIdProvider);
 
 			if (identifierText == null || identifierText.IsEmpty)
 				return null;
@@ -208,20 +211,92 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowOverloadCount))
 				identifierContent.OverloadCount = TryGetOverloadCountCount(element as IFunction, info.Reference, languageType);
-			
+
+			var typeElement = info.DeclaredElement as ITypeElement;
+			if (typeElement != null) {
+				bool showBaseType = settings.GetValue((IdentifierTooltipSettings s) => s.ShowBaseType);
+				bool showImplementedInterfaces = settings.GetValue((IdentifierTooltipSettings s) => s.ShowImplementedInterfaces);
+				if (showBaseType || showImplementedInterfaces)
+					AddSuperTypes(identifierContent, typeElement, showBaseType, showImplementedInterfaces, languageType, highlighterIdProvider);
+			}
+
 			return identifierContent;
 		}
 
+		private void AddSuperTypes(
+			[NotNull] IdentifierTooltipContent identifierContent,
+			[NotNull] ITypeElement typeElement,
+			bool showBaseType,
+			bool showImplementedInterfaces,
+			[NotNull] PsiLanguageType languageType,
+			[NotNull] HighlighterIdProvider highlighterIdProvider) {
+
+			DeclaredElementInstance baseType;
+			IList<DeclaredElementInstance> implementedInterfaces;
+			GetSuperTypes(typeElement, showBaseType, showImplementedInterfaces, out baseType, out implementedInterfaces);
+
+			if (baseType != null)
+				identifierContent.BaseType = _colorizerPresenter.TryPresent(baseType, PresenterOptions.QualifiedMember, languageType, highlighterIdProvider);
+
+			if (implementedInterfaces.Count == 0)
+				return;
+
+			var sortedPresentedInterfaces = new SortedDictionary<string, RichText>(StringComparer.Ordinal);
+			foreach (DeclaredElementInstance implementedInterface in implementedInterfaces) {
+				RichText richText = _colorizerPresenter.TryPresent(implementedInterface, PresenterOptions.QualifiedMember, languageType, highlighterIdProvider);
+				if (richText != null)
+					sortedPresentedInterfaces[richText.ToString(false)] = richText;
+			}
+			foreach (RichText richText in sortedPresentedInterfaces.Values)
+				identifierContent.ImplementedInterfaces.Add(richText);
+		}
+
 		private static int? TryGetOverloadCountCount([CanBeNull] IFunction function, [CanBeNull] IReference reference, PsiLanguageType languageType) {
-			if (function == null || reference == null)
+			if (function == null || reference == null || function is PredefinedOperator)
 				return null;
 
 			var candidateCountProvider = LanguageManager.Instance.TryGetService<IInvocationCandidateCountProvider>(languageType);
 			int? candidateCount = candidateCountProvider?.TryGetInvocationCandidateCount(reference);
-			if (candidateCount == null || candidateCount.Value <= 1)
+			if (candidateCount == null || candidateCount.Value <= 0)
 				return null;
 
 			return candidateCount.Value - 1;
+		}
+
+		private static void GetSuperTypes(
+			[NotNull] ITypeElement typeElement,
+			bool getBaseType,
+			bool getImplementedInterfaces,
+			[CanBeNull] out DeclaredElementInstance baseType,
+			[NotNull] out IList<DeclaredElementInstance> implementedInterfaces) {
+
+			baseType = null;
+			implementedInterfaces = EmptyList<DeclaredElementInstance>.InstanceList;
+
+			var searchForBaseType = getBaseType && typeElement is IClass;
+			if (!searchForBaseType && !getImplementedInterfaces)
+				return;
+
+			var foundInterfaces = new LocalList<DeclaredElementInstance>();
+			
+			foreach (var superType in typeElement.GetAllSuperTypes()) {
+				ITypeElement superTypeElement = superType.GetTypeElement();
+
+				if (superTypeElement is IClass || superTypeElement is IDelegate) {
+					if (searchForBaseType) {
+						baseType = new DeclaredElementInstance(superTypeElement, superType.GetSubstitution());
+						searchForBaseType = false;
+						if (!getImplementedInterfaces)
+							return;
+					}
+					continue;
+				}
+
+				if (getImplementedInterfaces && superTypeElement is IInterface)
+					foundInterfaces.Add(new DeclaredElementInstance(superTypeElement, superType.GetSubstitution()));
+			}
+
+			implementedInterfaces = foundInterfaces.ResultingList();
 		}
 		
 		[CanBeNull]
