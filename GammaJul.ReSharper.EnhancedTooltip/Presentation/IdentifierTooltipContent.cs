@@ -27,7 +27,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public List<RichText> ImplementedInterfaces { get; } = new List<RichText>();
-		
+
+		[CanBeNull]
+		public AttributeUsageContent AttributeUsage { get; set; }
+
 		public IdentifierTooltipContent([CanBeNull] RichText text, TextRange trackingRange)
 			: base(text, trackingRange) {
 		}

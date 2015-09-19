@@ -5,11 +5,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public sealed class ExceptionContent {
 
-		[CanBeNull]
-		public string Exception { get; set; }
+		[NotNull]
+		public string Exception { get; }
 
 		[CanBeNull]
 		public RichText Description { get; set; }
+
+		public ExceptionContent([NotNull] string exception) {
+			Exception = exception;
+		}
 
 	}
 

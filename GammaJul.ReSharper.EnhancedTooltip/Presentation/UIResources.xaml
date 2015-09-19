@@ -76,6 +76,21 @@
 							TextWrapping="Wrap" VerticalAlignment="Center" />
 					</DockPanel>
 
+					<StackPanel x:Name="AttributeUsagePresenter" Orientation="Vertical" Margin="0,2,0,0">
+						<DockPanel>
+							<TextBlock DockPanel.Dock="Left" Text="Valid on: " FontWeight="Bold" />
+							<TextBlock Text="{Binding AttributeUsage.ValidOn}" />
+						</DockPanel>
+						<DockPanel>
+							<TextBlock DockPanel.Dock="Left" Text="Allow multiple: " FontWeight="Bold" />
+							<TextBlock Text="{Binding AttributeUsage.AllowMultiple}" />
+						</DockPanel>
+						<DockPanel>
+							<TextBlock DockPanel.Dock="Left" Text="Inherited: " FontWeight="Bold" />
+							<TextBlock Text="{Binding AttributeUsage.Inherited}" />
+						</DockPanel>
+					</StackPanel>
+
 					<StackPanel x:Name="SuperTypesPresenter" Orientation="Vertical">
 						
 						<local:DashedSeparator StrokeThickness="1" StrokeDashArray="3,3" Margin="-8,6" RenderOptions.EdgeMode="Aliased"
@@ -153,8 +168,8 @@
 					<DataTrigger Binding="{Binding Icon}" Value="{x:Null}">
 						<Setter TargetName="IconPresenter" Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
-					<DataTrigger Binding="{Binding Description}" Value="{x:Null}">
-						<Setter TargetName="DescriptionPresenter" Property="Visibility" Value="Collapsed" />
+					<DataTrigger Binding="{Binding AttributeUsage}" Value="{x:Null}">
+						<Setter TargetName="AttributeUsagePresenter" Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
 					<DataTrigger Binding="{Binding BaseType}" Value="{x:Null}">
 						<Setter TargetName="BaseTypePresenter" Property="Visibility" Value="Collapsed" />
@@ -174,6 +189,9 @@
 					</DataTrigger>
 					<DataTrigger Binding="{Binding HasItems, ElementName=ExceptionsPresenter}" Value="False">
 						<Setter TargetName="ExceptionsPresenter" Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+					<DataTrigger Binding="{Binding Description}" Value="{x:Null}">
+						<Setter TargetName="DescriptionPresenter" Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
 					<MultiDataTrigger>
 						<MultiDataTrigger.Conditions>

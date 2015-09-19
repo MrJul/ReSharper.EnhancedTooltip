@@ -38,6 +38,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public QualifierDisplays ShowQualifiers { get; private set; }
 		
+		public bool UseAttributeClassKind { get; private set; }
+
 		public bool UseClassModifiersInKind { get; private set; }
 
 		public bool UseExtensionMethodKind { get; private set; }
@@ -64,6 +66,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowParametersAnnotations = settings.GetValue((IdentifierTooltipSettings s) => s.ShowParametersAnnotations),
 				ShowParametersType = true,
 				ShowQualifiers = QualifierDisplays.Member,
+				UseAttributeClassKind = settings.GetValue((IdentifierTooltipSettings s) => s.UseAttributeClassKind),
 				UseClassModifiersInKind = settings.GetValue((IdentifierTooltipSettings s) => s.UseClassModifiersInKind),
 				UseExtensionMethodKind = settings.GetValue((IdentifierTooltipSettings s) => s.UseExtensionMethodKind),
 				UseMethodModifiersInKind = settings.GetValue((IdentifierTooltipSettings s) => s.UseMethodModifiersInKind),
@@ -89,6 +92,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowParametersAnnotations = AnnotationsDisplayKind.None,
 				ShowParametersType = false,
 				ShowQualifiers = QualifierDisplays.None,
+				UseAttributeClassKind = false,
 				UseClassModifiersInKind = false,
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
@@ -114,6 +118,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowParametersAnnotations = AnnotationsDisplayKind.None,
 				ShowParametersType = false,
 				ShowQualifiers = QualifierDisplays.None,
+				UseAttributeClassKind = false,
 				UseClassModifiersInKind = false,
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
@@ -139,6 +144,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowParametersAnnotations = showAnnotations,
 				ShowParametersType = true,
 				ShowQualifiers = QualifierDisplays.None,
+				UseAttributeClassKind = false,
 				UseClassModifiersInKind = false,
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
@@ -163,6 +169,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
 			ShowQualifiers = QualifierDisplays.Everywhere,
+			UseAttributeClassKind = false,
 			UseClassModifiersInKind = false,
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
@@ -186,6 +193,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
 			ShowQualifiers = QualifierDisplays.Member,
+			UseAttributeClassKind = false,
 			UseClassModifiersInKind = false,
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
@@ -209,6 +217,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = false,
 			ShowQualifiers = QualifierDisplays.Member,
+			UseAttributeClassKind = false,
 			UseClassModifiersInKind = false,
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
@@ -232,6 +241,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
 			ShowQualifiers = QualifierDisplays.None,
+			UseAttributeClassKind = false,
 			UseClassModifiersInKind = false,
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
@@ -255,6 +265,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = false,
 			ShowQualifiers = QualifierDisplays.None,
+			UseAttributeClassKind = false,
 			UseClassModifiersInKind = false,
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
@@ -278,6 +289,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
 			ShowQualifiers = QualifierDisplays.None,
+			UseAttributeClassKind = false,
 			UseClassModifiersInKind = false,
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,

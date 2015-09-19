@@ -207,6 +207,8 @@
     <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContext.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContextFactory.cs" />
+    <Compile Include="Presentation\AttributeUsageContent.cs" />
+    <Compile Include="Presentation\AttributeTargetsExtension.cs" />
     <Compile Include="Presentation\AutoContrastedRichTextPresenter.cs" />
     <Compile Include="Presentation\DashedSeparator.cs" />
     <Compile Include="Presentation\DescriptionSeparatorWidthConverter.cs" />

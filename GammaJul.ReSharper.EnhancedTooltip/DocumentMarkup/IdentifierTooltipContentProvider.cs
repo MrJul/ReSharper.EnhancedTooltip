@@ -139,9 +139,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (typeElement == null)
 				return null;
 
-			IDeclaredType attributeType = info.TreeNode.GetPsiModule().GetPredefinedType(constructor.ResolveContext).Attribute;
-			var settingsKey = GetConstructorSettingsKey(typeElement, info.Substitution, attributeType);
-			ConstructorReferenceDisplay display = settings.GetValue(settingsKey);
+			ConstructorReferenceDisplay display = settings.GetValue(GetConstructorSettingsKey(typeElement.IsAttribute()));
 			switch (display) {
 				
 				case ConstructorReferenceDisplay.TypeOnly:
@@ -158,10 +156,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 
 		[NotNull]
-		private static Expression<Func<IdentifierTooltipSettings, ConstructorReferenceDisplay>> GetConstructorSettingsKey(
-			[NotNull] ITypeElement typeElement, [NotNull] ISubstitution substitution, [NotNull] IType attributeType) {
-
-			if (TypeFactory.CreateType(typeElement, substitution).IsSubtypeOf(attributeType))
+		private static Expression<Func<IdentifierTooltipSettings, ConstructorReferenceDisplay>> GetConstructorSettingsKey(bool isAttribute) {
+			if (isAttribute)
 				return s => s.AttributeConstructorReferenceDisplay;
 			return s => s.ConstructorReferenceDisplay;
 		}
@@ -214,13 +210,30 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			var typeElement = info.DeclaredElement as ITypeElement;
 			if (typeElement != null) {
+
 				bool showBaseType = settings.GetValue((IdentifierTooltipSettings s) => s.ShowBaseType);
 				bool showImplementedInterfaces = settings.GetValue((IdentifierTooltipSettings s) => s.ShowImplementedInterfaces);
 				if (showBaseType || showImplementedInterfaces)
 					AddSuperTypes(identifierContent, typeElement, showBaseType, showImplementedInterfaces, languageType, highlighterIdProvider);
-			}
 
+				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowAttributesUsage) && typeElement.IsAttribute())
+					identifierContent.AttributeUsage = GetAttributeUsage((IClass) info.DeclaredElement);
+
+			}
+			
 			return identifierContent;
+		}
+		
+		private static int? TryGetOverloadCountCount([CanBeNull] IFunction function, [CanBeNull] IReference reference, PsiLanguageType languageType) {
+			if (function == null || reference == null || function is PredefinedOperator)
+				return null;
+
+			var candidateCountProvider = LanguageManager.Instance.TryGetService<IInvocationCandidateCountProvider>(languageType);
+			int? candidateCount = candidateCountProvider?.TryGetInvocationCandidateCount(reference);
+			if (candidateCount == null || candidateCount.Value <= 0)
+				return null;
+
+			return candidateCount.Value - 1;
 		}
 
 		private void AddSuperTypes(
@@ -249,18 +262,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			}
 			foreach (RichText richText in sortedPresentedInterfaces.Values)
 				identifierContent.ImplementedInterfaces.Add(richText);
-		}
-
-		private static int? TryGetOverloadCountCount([CanBeNull] IFunction function, [CanBeNull] IReference reference, PsiLanguageType languageType) {
-			if (function == null || reference == null || function is PredefinedOperator)
-				return null;
-
-			var candidateCountProvider = LanguageManager.Instance.TryGetService<IInvocationCandidateCountProvider>(languageType);
-			int? candidateCount = candidateCountProvider?.TryGetInvocationCandidateCount(reference);
-			if (candidateCount == null || candidateCount.Value <= 0)
-				return null;
-
-			return candidateCount.Value - 1;
 		}
 
 		private static void GetSuperTypes(
@@ -298,7 +299,28 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			implementedInterfaces = foundInterfaces.ResultingList();
 		}
-		
+
+		[NotNull]
+		private static AttributeUsageContent GetAttributeUsage([NotNull] IClass attributeClass) {
+			AttributeTargets targets;
+			bool allowMultiple;
+			bool inherited;
+
+			var attributeUsage = attributeClass.GetAttributeInstances(PredefinedType.ATTRIBUTE_USAGE_ATTRIBUTE_CLASS, true).FirstOrDefault();
+			if (attributeUsage == null) {
+				targets = AttributeTargets.All;
+				allowMultiple = attributeClass.HasAttributeInstance(PredefinedType.WINRT_ALLOW_MULTIPLE_ATTRIBUTE_CLASS, true);
+				inherited = true;
+			}
+			else {
+				targets = ((AttributeTargets?) (attributeUsage.PositionParameter(0).ConstantValue.Value as int?)) ?? AttributeTargets.All;
+				allowMultiple = attributeUsage.NamedParameter(nameof(AttributeUsageAttribute.AllowMultiple)).ConstantValue.Value as bool? ?? false;
+				inherited = attributeUsage.NamedParameter(nameof(AttributeUsageAttribute.Inherited)).ConstantValue.Value as bool? ?? true;
+			}
+
+			return new AttributeUsageContent(targets.ToHumanReadableString(), allowMultiple, inherited);
+		}
+
 		[CanBeNull]
 		private IdentifierTooltipContent TryPresentNonColorized([CanBeNull] IHighlighter highlighter, [CanBeNull] IDeclaredElement element, [NotNull] IContextBoundSettingsStore settings) {
 			RichTextBlock richTextToolTip = highlighter?.RichTextToolTip;
@@ -345,7 +367,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (String.IsNullOrEmpty(cref))
 				return null;
 
-			var exceptionContent = new ExceptionContent { Exception = cref };
+			var exceptionContent = new ExceptionContent(cref);
 			if (exceptionElement.HasChildNodes) {
 				RichText richText = XmlDocRichTextPresenter.Run(exceptionElement, false, languageType, psiModule, resolveContext).RichText;
 				if (!richText.IsNullOrEmpty())

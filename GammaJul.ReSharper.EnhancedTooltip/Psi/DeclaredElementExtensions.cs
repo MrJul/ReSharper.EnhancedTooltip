@@ -13,6 +13,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 		public static string GetElementKindString(
 			[CanBeNull] this IDeclaredElement element,
 			bool useExtensionMethodKind,
+			bool useAttributeTypeKind,
 			bool useClassModifiers,
 			bool useMethodModifiers) {
 
@@ -20,8 +21,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 				return "unknown";
 
 			var @class = element as IClass;
-			if (@class != null)
-				return (useClassModifiers ? GetClassModifiersDisplay(@class) : null) + "class";
+			if (@class != null) {
+				string classModifiers = useClassModifiers ? GetClassModifiersDisplay(@class) : null;
+				string classKind = useAttributeTypeKind && @class.IsAttribute() ? "attribute" : "class";
+				return classModifiers + classKind;
+			}
 
 			if (element is INamespace)
 				return "namespace";
@@ -134,8 +138,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 			return display;
 		}
-
-
+		
 		[Pure]
 		[NotNull]
 		public static IDeclaredElement EliminateDelegateInvokeMethod([NotNull] this IDeclaredElement declaredElement)

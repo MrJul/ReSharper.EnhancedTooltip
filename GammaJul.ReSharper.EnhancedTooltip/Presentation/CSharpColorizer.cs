@@ -117,8 +117,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 		
 		private void AppendElementKind([CanBeNull] IDeclaredElement element, Context context, bool stylized) {
+			PresenterOptions options = context.Options;
 			string kind = element.GetElementKindString(
-				context.Options.UseExtensionMethodKind, context.Options.UseClassModifiersInKind, context.Options.UseMethodModifiersInKind);
+				options.UseExtensionMethodKind, options.UseAttributeClassKind, options.UseClassModifiersInKind, options.UseMethodModifiersInKind);
 			if (stylized)
 				AppendText("(" + kind + ") ", new TextStyle(FontStyle.Italic));
 			else

@@ -27,6 +27,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display extension methods as \"extension\" instead of \"method\"")]
 		public bool UseExtensionMethodKind { get; set; }
 
+		[SettingsEntry(true, "Display attribute classes as \"attribute\" instead of \"class\"")]
+		public bool UseAttributeClassKind { get; set; }
+
 		[SettingsEntry(false, "Display method modifiers (virtual/override/abstract/sealed/static/unsafe)")]
 		public bool UseMethodModifiersInKind { get; set; }
 
@@ -44,6 +47,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
 		public bool UseTypeKeywords { get; set; }
+
+		[SettingsEntry(true, "Display usage for attribute classes")]
+		public bool ShowAttributesUsage { get; set; }
 
 		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations for identifiers")]
 		public AnnotationsDisplayKind ShowIdentifierAnnotations { get; set; }
