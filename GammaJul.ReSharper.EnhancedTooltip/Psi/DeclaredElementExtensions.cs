@@ -13,14 +13,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 		public static string GetElementKindString(
 			[CanBeNull] this IDeclaredElement element,
 			bool useExtensionMethodKind,
-			bool useClassModifiersInKind) {
+			bool useClassModifiers,
+			bool useMethodModifiers) {
 
 			if (element == null)
 				return "unknown";
 
 			var @class = element as IClass;
 			if (@class != null)
-				return (useClassModifiersInKind ? GetClassModifiersDisplay(@class) : null) + "class";
+				return (useClassModifiers ? GetClassModifiersDisplay(@class) : null) + "class";
 
 			if (element is INamespace)
 				return "namespace";
@@ -59,7 +60,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 						return "extension";
 					if (CSharpDeclaredElementUtil.IsDestructor(method))
 						return "destructor";
-					return "method";
+					return (useMethodModifiers ? GetMethodModifiersDisplay(method) : null) + "method";
 				}
 
 				if (element is IConstructor)
@@ -108,6 +109,32 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 			return display;
 		}
+
+		[CanBeNull]
+		private static string GetMethodModifiersDisplay([NotNull] IModifiersOwner modifiersOwner) {
+			string display = null;
+
+			if (modifiersOwner.IsStatic)
+				display = "static ";
+			else {
+				if (modifiersOwner.IsSealed)
+					display = "sealed ";
+				else if (modifiersOwner.IsAbstract)
+					display = "abstract ";
+				if (modifiersOwner.IsOverride)
+					display += "override ";
+				else if (modifiersOwner.IsVirtual && !modifiersOwner.IsAbstract)
+					display += "virtual ";
+			}
+			
+			if (modifiersOwner.IsUnsafe)
+				display += "unsafe ";
+			if (modifiersOwner.IsExtern)
+				display += "extern ";
+
+			return display;
+		}
+
 
 		[Pure]
 		[NotNull]

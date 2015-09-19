@@ -27,6 +27,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display extension methods as \"extension\" instead of \"method\"")]
 		public bool UseExtensionMethodKind { get; set; }
 
+		[SettingsEntry(false, "Display method modifiers (virtual/override/abstract/sealed/static/unsafe)")]
+		public bool UseMethodModifiersInKind { get; set; }
+
 		[SettingsEntry(false, "Display class modifiers (abstract/sealed/static/unsafe)")]
 		public bool UseClassModifiersInKind { get; set; }
 
@@ -36,7 +39,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(false, "Display the base type of classes")]
 		public bool ShowBaseType { get; set; }
 
-		[SettingsEntry(false, "Display implemented interfaces of types")]
+		[SettingsEntry(false, "Display the implemented interfaces of types")]
 		public bool ShowImplementedInterfaces { get; set; }
 
 		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
