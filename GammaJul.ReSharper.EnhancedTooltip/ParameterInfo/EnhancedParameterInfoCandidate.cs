@@ -56,15 +56,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 				mapToOriginalOrder = EmptyArray<int>.Instance;
 				extensionMethodInfo = ExtensionMethodInfo.NoExtension;
 			}
-			else if (presentedInfo.IsExtensionMethod) {
+			else if (presentedInfo.IsExtensionMethod && UnderlyingCandidate.InvocationCandidate.IsExtensionMethod) {
 				parameterRanges = presentedInfo.Parameters.Skip(1).ToArray();
-				mapToOriginalOrder = CreateIdentityMap(presentedInfo.Parameters.Count - 1);
+				mapToOriginalOrder = CreateOffsetMap(presentedInfo.Parameters.Count - 1, 1);
 				TextRange firstParameterRange = presentedInfo.Parameters[0].TrimLeft(5); // keeps "this " highlighted with the keyword color
 				extensionMethodInfo = new ExtensionMethodInfo(firstParameterRange, TextRange.InvalidRange);
 			}
 			else {
 				parameterRanges = presentedInfo.Parameters.ToArray();
-				mapToOriginalOrder = CreateIdentityMap(presentedInfo.Parameters.Count);
+				mapToOriginalOrder = CreateOffsetMap(presentedInfo.Parameters.Count, 0);
 				extensionMethodInfo = ExtensionMethodInfo.NoExtension;
 			}
 
@@ -72,10 +72,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		}
 
 		[NotNull]
-		private static int[] CreateIdentityMap(int length) {
+		private static int[] CreateOffsetMap(int length, int offset) {
 			var map = new int[length];
 			for (int i = 0; i < length; ++i)
-				map[i] = i;
+				map[i] = i + offset;
 			return map;
 		}
 
