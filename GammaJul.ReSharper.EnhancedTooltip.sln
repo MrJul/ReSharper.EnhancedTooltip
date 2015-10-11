@@ -5,7 +5,11 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1652DE84-6932-4A18-A0CA-59D104DBE856}"
 	ProjectSection(SolutionItems) = preProject
+		Build.cmd = Build.cmd
+		Build.targets = Build.targets
 		GammaJul.ReSharper.EnhancedTooltip.props = GammaJul.ReSharper.EnhancedTooltip.props
+		LICENSE = LICENSE
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5A327D2D-A7CD-4108-BB31-A2602F0E3742}"
