@@ -14,18 +14,20 @@ using JetBrains.UI.Controls;
 using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Extensions;
 using JetBrains.UI.Options;
+using JetBrains.UI.Options.OptionsDialog2.SimpleOptions;
 using JetBrains.UI.Wpf.Controls;
 using JetBrains.UI.Wpf.Converters;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 	[OptionsPage(Pid, "Enhanced Tooltip", typeof(ThemedIcons.Logo16), ParentId = IntelliSensePage.PID, Sequence = 100)]
-	public partial class EnhancedTooltipOptionsPage : IOptionsPage {
+	public partial class EnhancedTooltipOptionsPage : IOptionsPage, ISearchablePage {
 
 		public const string Pid = "EnhancedTooltip.OptionsPage";
 
 		[NotNull] private readonly Lifetime _lifetime;
 		[NotNull] private readonly OptionsSettingsSmartContext _context;
+		[NotNull] private readonly List<OptionsPageKeyword> _keywords = new List<OptionsPageKeyword>();
 
 		public string Id
 			=> Pid;
@@ -38,6 +40,18 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		public EitherControl Control
 			=> this;
+
+		public IProperty<OptionsFilterResult> SearchFilter { get; }
+			= new Property<OptionsFilterResult>(String.Format(CultureInfo.InvariantCulture, "Filter for {0}", typeof(EnhancedTooltipOptionsPage)));
+
+		public OptionsPageKeywords GetKeywords()
+			=> new OptionsPageKeywords(_keywords);
+
+		public void HighLightKeyword(OptionsFilterResult text)
+			=> SearchFilter.Value = text;
+
+		public IEnumerable<string> GetTagKeywordsForPage()
+			=> new[] { "Tooltip" };
 
 		[NotNull]
 		private static List<EnumValue> CreateEnumItemsSource([NotNull] Type enumType) {
@@ -57,11 +71,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			var entry = _context.Schema.GetScalarEntry(settingAccessor);
 			if (checkBox.Content == null) {
 				string description = entry.Description;
+				_keywords.Add(new OptionsPageKeyword(description));
 				if (addColonToDescription)
 					description += ":";
 				checkBox.Content = description;
 			}
 			_context.SetBinding<bool>(_lifetime, entry, checkBox, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
+			SearchablePageBehavior.SetSearchFilter(checkBox, true);
 
 			parentCheckBox?.IsAppearingChecked.FlowInto(_lifetime, checkBox, IsEnabledProperty);
 		}
@@ -96,10 +112,22 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			parentCheckBox?.IsAppearingChecked.FlowInto(_lifetime, numericUpDown, IsEnabledProperty);
 		}
 
-		private static void SetAssociatedLabel([NotNull] FrameworkElement element, [NotNull] string description) {
+		private void SetAssociatedLabel([NotNull] FrameworkElement element, [NotNull] string description) {
 			Label label = element.Parent?.FindDescendant<Label>();
-			if (label != null && label.Content == null)
+			if (label == null)
+				return;
+
+			if (label.Content == null) {
 				label.Content = description + ":";
+				_keywords.Add(new OptionsPageKeyword(description));
+			}
+			else {
+				string existingContentString = label.Content as string;
+				if (existingContentString != null)
+					_keywords.Add(new OptionsPageKeyword(existingContentString));
+			}
+
+			SearchablePageBehavior.SetSearchFilter(label, true);
 		}
 
 		private void SetIdentifierTooltipSettingsBindings() {
@@ -148,6 +176,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			_lifetime = lifetime;
 			_context = context;
 
+			DataContext = this;
 			InitializeComponent();
 
 			SetIdentifierTooltipSettingsBindings();
