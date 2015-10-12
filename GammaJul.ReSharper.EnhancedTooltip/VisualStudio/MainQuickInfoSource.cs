@@ -61,7 +61,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 							}
 							if (contentGroup.ArgumentRole != null) {
 								presenter.AddArgumentRoleTooltipContent(contentGroup.ArgumentRole);
-								finalSpan = contentGroup.ArgumentRole.TrackingRange.ToSpan().Union(finalSpan);
+								if (finalSpan == null) {
+									// Only track the argument role if we have nothing else displayed.
+									// See https://github.com/MrJul/ReSharper.EnhancedTooltip/issues/70
+									finalSpan = contentGroup.ArgumentRole.TrackingRange.ToSpan().Union(finalSpan);
+								}
 							}
 						}
 					}
