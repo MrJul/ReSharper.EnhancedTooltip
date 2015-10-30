@@ -25,8 +25,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 		[NotNull] private readonly Dictionary<string, TextStyle> _vsAttributesByName = new Dictionary<string, TextStyle>();
 		[NotNull] private readonly IHighlighterCustomization _highlighterCustomization;
-		private readonly JetBrains.Util.Lazy.Lazy<Optional<IClassificationFormatMapService>> _lazyClassificationFormatMapService;
-		private readonly JetBrains.Util.Lazy.Lazy<Optional<IClassificationTypeRegistryService>> _lazyClassificationTypeRegistryService;
+		[NotNull] private readonly Lazy<Optional<IClassificationFormatMapService>> _lazyClassificationFormatMapService;
+		[NotNull] private readonly Lazy<Optional<IClassificationTypeRegistryService>> _lazyClassificationTypeRegistryService;
 
 		private TextStyle GetReSharperHighlighterAttributes([NotNull] string highlighterAttributeId)
 			=> ToTextStyle(_highlighterCustomization.GetCustomizedRegisteredHighlighterAttributes(highlighterAttributeId));
@@ -92,8 +92,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			[NotNull] Lifetime lifetime,
 			[NotNull] IHighlighterCustomization highlighterCustomization,
 			[NotNull] DefaultTextControlSchemeManager textControlSchemeManager,
-			[NotNull] JetBrains.Util.Lazy.Lazy<Optional<IClassificationFormatMapService>> lazyClassificationFormatMapService,
-			[NotNull] JetBrains.Util.Lazy.Lazy<Optional<IClassificationTypeRegistryService>> lazyClassificationTypeRegistryService) {
+			[NotNull] Lazy<Optional<IClassificationFormatMapService>> lazyClassificationFormatMapService,
+			[NotNull] Lazy<Optional<IClassificationTypeRegistryService>> lazyClassificationTypeRegistryService) {
 			_highlighterCustomization = highlighterCustomization;
 			_lazyClassificationFormatMapService = lazyClassificationFormatMapService;
 			_lazyClassificationTypeRegistryService = lazyClassificationTypeRegistryService;

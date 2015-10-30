@@ -1,9 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Media;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using JetBrains.Util.Lazy;
+using JetBrains.Util;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
 
@@ -34,11 +35,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			[NotNull] Lazy<Optional<IClassificationFormatMapService>> lazyFormatMapService,
 			[NotNull] Lazy<Optional<IEditorFormatMapService>> lazyEditorFormatMapService) {
 			_lazyTooltipFormatMap = Lazy.Of(
-				() => lazyFormatMapService.Value.CanBeNull?.GetClassificationFormatMap("tooltip"));
+				() => lazyFormatMapService.Value.CanBeNull?.GetClassificationFormatMap("tooltip"),
+				true);
 			_lazyTextFormatMap = Lazy.Of(
-				() => lazyFormatMapService.Value.CanBeNull?.GetClassificationFormatMap("text"));
+				() => lazyFormatMapService.Value.CanBeNull?.GetClassificationFormatMap("text"),
+				true);
 			_lazyTextViewBackgroundResources = Lazy.Of(
-				() => lazyEditorFormatMapService.Value.CanBeNull?.GetEditorFormatMap("text").GetProperties("TextView Background"));
+				() => lazyEditorFormatMapService.Value.CanBeNull?.GetEditorFormatMap("text").GetProperties("TextView Background"),
+				true);
 		}
 
 	}

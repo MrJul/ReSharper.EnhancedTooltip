@@ -9,7 +9,6 @@ using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
-using JetBrains.Metadata.Reader.API;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Descriptions;
 using JetBrains.ReSharper.Psi;
@@ -203,7 +202,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				identifierContent.Obsolete = TryRemoveObsoletePrefix(TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.OBSOLETE_DESCRIPTION));
 
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowExceptions))
-				identifierContent.Exceptions.AddRange(GetExceptions(element, languageType, psiModule, info.TreeNode.GetResolveContext()));
+				identifierContent.Exceptions.AddRange(GetExceptions(element, languageType, psiModule));
 
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowOverloadCount))
 				identifierContent.OverloadCount = TryGetOverloadCountCount(element as IFunction, info.Reference, languageType);
@@ -338,8 +337,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 
 		[NotNull]
-		private static IEnumerable<ExceptionContent> GetExceptions([NotNull] IDeclaredElement element, [NotNull] PsiLanguageType languageType,
-			[NotNull] IPsiModule psiModule, [NotNull] IModuleReferenceResolveContext resolveContext) {
+		private static IEnumerable<ExceptionContent> GetExceptions(
+			[NotNull] IDeclaredElement element,
+			[NotNull] PsiLanguageType languageType,
+			[NotNull] IPsiModule psiModule) {
 
 			XmlNode xmlDoc = element.GetXMLDoc(true);
 			XmlNodeList exceptionNodes = xmlDoc?.SelectNodes("exception");
@@ -348,7 +349,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			var exceptions = new LocalList<ExceptionContent>();
 			foreach (XmlNode exceptionNode in exceptionNodes) {
-				ExceptionContent exceptionContent = TryExtractException(exceptionNode as XmlElement, languageType, psiModule, resolveContext);
+				ExceptionContent exceptionContent = TryExtractException(exceptionNode as XmlElement, languageType, psiModule);
 				if (exceptionContent != null)
 					exceptions.Add(exceptionContent);
 			}
@@ -356,8 +357,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 
 		[CanBeNull]
-		private static ExceptionContent TryExtractException([CanBeNull] XmlElement exceptionElement, [NotNull] PsiLanguageType languageType,
-			[NotNull] IPsiModule psiModule, IModuleReferenceResolveContext resolveContext) {
+		private static ExceptionContent TryExtractException(
+			[CanBeNull] XmlElement exceptionElement,
+			[NotNull] PsiLanguageType languageType,
+			[NotNull] IPsiModule psiModule) {
 
 			string cref = exceptionElement?.GetAttribute("cref");
 			if (String.IsNullOrEmpty(cref))
@@ -369,7 +372,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			var exceptionContent = new ExceptionContent(cref);
 			if (exceptionElement.HasChildNodes) {
-				RichText richText = XmlDocRichTextPresenter.Run(exceptionElement, false, languageType, psiModule, resolveContext).RichText;
+				RichText richText = XmlDocRichTextPresenter.Run(exceptionElement, false, languageType, psiModule).RichText;
 				if (!richText.IsNullOrEmpty())
 					exceptionContent.Description = richText;
 			}

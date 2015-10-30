@@ -1,9 +1,10 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.UI.Extensions;
-using JetBrains.Util.Lazy;
+using JetBrains.Util;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
@@ -14,7 +15,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public static UIResources Instance
 			=> Shell.Instance.GetComponent<UIResources>();
 
-		[NotNull] [ItemNotNull] private readonly Lazy<ResourceDictionary> _lazyResourceDictionary = Lazy.Of(LoadResourceDictionary);
+		[NotNull] [ItemNotNull] private readonly Lazy<ResourceDictionary> _lazyResourceDictionary = Lazy.Of(LoadResourceDictionary, true);
 		
 		[NotNull]
 		public Style HeaderedContentControlStyle
