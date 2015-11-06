@@ -15,6 +15,7 @@ using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.UI.Avalon;
 using JetBrains.UI.Extensions;
 using JetBrains.Util;
+using JetBrains.Util.Interop;
 using Screen = System.Windows.Forms.Screen;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
@@ -175,7 +176,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			int limitPercent = settings.GetValue((DisplaySettings s) => s.ScreenWidthLimitPercent).Clamp(10, 100);
 			Screen screen = Screen.FromHandle(hwndSource.Handle);
-			return screen.Bounds.Width * (limitPercent / 100.0);
+			return screen.Bounds.Width * (limitPercent / 100.0) / DpiUtil.DpiHorizontalFactor;
 		}
 
 		private static TextFormattingMode GetTextFormattingMode([CanBeNull] IContextBoundSettingsStore settings)
