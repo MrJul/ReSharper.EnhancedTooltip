@@ -17,6 +17,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
 		[NotNull] private readonly CodeAnnotationsCache _codeAnnotationsCache;
+		private readonly CodeAnnotationsConfiguration _codeAnnotationsConfiguration;
 
 		/// <summary>
 		/// Presents a given <see cref="DeclaredElementInstance"/> using a colorizer.
@@ -74,9 +75,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return null;
 		}
 
-		public ColorizerPresenter([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache) {
+		public ColorizerPresenter([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache, CodeAnnotationsConfiguration codeAnnotationsConfiguration) {
 			_textStyleHighlighterManager = textStyleHighlighterManager;
 			_codeAnnotationsCache = codeAnnotationsCache;
+			_codeAnnotationsConfiguration = codeAnnotationsConfiguration;
 		}
 
 	}
