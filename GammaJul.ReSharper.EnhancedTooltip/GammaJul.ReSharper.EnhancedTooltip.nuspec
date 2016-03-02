@@ -23,7 +23,7 @@
 	
 	<files>
 		
-		<file src="..\bin\Release\GammaJul.ReSharper.EnhancedTooltip.10.0.dll" target="DotFiles" />
+		<file src="..\bin\Release\GammaJul.ReSharper.EnhancedTooltip.10.1.dll" target="DotFiles" />
 		
 	</files>
 	
