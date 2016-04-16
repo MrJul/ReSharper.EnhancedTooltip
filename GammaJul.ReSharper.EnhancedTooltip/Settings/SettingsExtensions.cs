@@ -5,6 +5,8 @@ using JetBrains.ReSharper.Resources.Shell;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
+	using JetBrains.DocumentModel.DataContext;
+
 	public static class SettingsExtensions {
 
 		[NotNull]

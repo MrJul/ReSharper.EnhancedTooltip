@@ -10,7 +10,7 @@ using JetBrains.UI.RichText;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	internal abstract class CSharpHighlightingEnhancer<T> : IHighlightingEnhancer
-	where T : CSharpHighlightingBase {
+	where T : class, IHighlighting {
 
 		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
 		[NotNull] private readonly CodeAnnotationsCache _codeAnnotationsCache;

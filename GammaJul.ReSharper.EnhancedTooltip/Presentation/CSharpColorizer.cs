@@ -54,6 +54,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
 		[NotNull] private readonly CodeAnnotationsCache _codeAnnotationsCache;
 		[NotNull] private readonly HighlighterIdProvider _highlighterIdProvider;
+		[NotNull] private readonly CodeAnnotationsConfiguration _codeAnnotationsConfiguration;
 
 		[NotNull]
 		public HighlighterIdProvider HighlighterIdProvider
@@ -627,10 +628,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			switch (showAnnotations) {
 				case AnnotationsDisplayKind.Nullness:
-					return shortName == CodeAnnotationsCache.CanBeNullAttributeShortName
-						|| shortName == CodeAnnotationsCache.NotNullAttributeShortName;
+					return shortName == typeof(CanBeNullAttribute).Name
+						|| shortName == typeof(NotNullAttribute).Name;
 				case AnnotationsDisplayKind.All:
-					return _codeAnnotationsCache.IsAnnotationAttribute(attribute, shortName);
+					return _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, shortName);
 				default:
 					return false;
 			}
@@ -788,6 +789,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			_textStyleHighlighterManager = textStyleHighlighterManager;
 			_codeAnnotationsCache = codeAnnotationsCache;
 			_highlighterIdProvider = highlighterIdProvider;
+			_codeAnnotationsConfiguration = codeAnnotationsCache.GetProvider<CodeAnnotationsConfiguration>();
 		}
 
 	}

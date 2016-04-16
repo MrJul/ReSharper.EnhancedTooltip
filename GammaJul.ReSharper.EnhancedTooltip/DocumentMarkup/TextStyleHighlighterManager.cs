@@ -8,6 +8,7 @@ using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.TextControl;
 using JetBrains.TextControl.DocumentMarkup;
+using JetBrains.TextControl.Impl;
 using JetBrains.UI.Avalon;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
@@ -16,6 +17,8 @@ using Microsoft.VisualStudio.Text.Formatting;
 using Color = System.Drawing.Color;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
+
+	using NuGet;
 
 	/// <summary>
 	/// A component that retrieve <see cref="TextStyle"/>s from either ReSharper's highlighters or Visual Studio colors.
@@ -91,7 +94,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		public TextStyleHighlighterManager(
 			[NotNull] Lifetime lifetime,
 			[NotNull] IHighlighterCustomization highlighterCustomization,
-			[NotNull] DefaultTextControlSchemeManager textControlSchemeManager,
+			[NotNull] TextControlSchemeManager textControlSchemeManager,
 			[NotNull] Lazy<Optional<IClassificationFormatMapService>> lazyClassificationFormatMapService,
 			[NotNull] Lazy<Optional<IClassificationTypeRegistryService>> lazyClassificationTypeRegistryService) {
 			_highlighterCustomization = highlighterCustomization;
