@@ -3,8 +3,8 @@
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Julien Lebosquain")]
 [assembly: AssemblyProduct("GammaJul.ReSharper.EnhancedTooltip")]
-[assembly: AssemblyCopyright("Copyright © 2013-2015 Julien Lebosquain")]
+[assembly: AssemblyCopyright("Copyright © 2013-2016 Julien Lebosquain")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("2.7.1.0")]
+[assembly: AssemblyVersion("2.8.0.0")]

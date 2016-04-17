@@ -91,7 +91,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		public TextStyleHighlighterManager(
 			[NotNull] Lifetime lifetime,
 			[NotNull] IHighlighterCustomization highlighterCustomization,
-			[NotNull] DefaultTextControlSchemeManager textControlSchemeManager,
+			[NotNull] ITextControlSchemeManager textControlSchemeManager,
 			[NotNull] Lazy<Optional<IClassificationFormatMapService>> lazyClassificationFormatMapService,
 			[NotNull] Lazy<Optional<IClassificationTypeRegistryService>> lazyClassificationTypeRegistryService) {
 			_highlighterCustomization = highlighterCustomization;

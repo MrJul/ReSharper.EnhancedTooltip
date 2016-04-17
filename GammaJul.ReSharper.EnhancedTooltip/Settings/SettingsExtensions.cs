@@ -1,6 +1,7 @@
 ﻿using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
+using JetBrains.DocumentModel.DataContext;
 using JetBrains.ReSharper.Resources.Shell;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {

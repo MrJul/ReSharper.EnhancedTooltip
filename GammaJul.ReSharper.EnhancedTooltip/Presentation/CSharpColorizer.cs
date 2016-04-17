@@ -52,7 +52,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull] private readonly RichText _richText;
 		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
-		[NotNull] private readonly CodeAnnotationsCache _codeAnnotationsCache;
+		[NotNull] private readonly CodeAnnotationsConfiguration _codeAnnotationsConfiguration;
 		[NotNull] private readonly HighlighterIdProvider _highlighterIdProvider;
 
 		[NotNull]
@@ -314,7 +314,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			ITypeElement typeElement = declaredType.GetTypeElement();
 			if (typeElement == null || !typeElement.IsValid()) {
-				AppendText(declaredType.GetPresentableName(CSharpLanguage.Instance), null);
+				PsiLanguageType language = CSharpLanguage.Instance ?? (PsiLanguageType) UnknownLanguage.Instance;
+				AppendText(declaredType.GetPresentableName(language), null);
 			}
 			else
 				AppendTypeElement(typeElement, declaredType.GetSubstitution(), expectedQualifierDisplay, context);
@@ -627,10 +628,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			switch (showAnnotations) {
 				case AnnotationsDisplayKind.Nullness:
-					return shortName == CodeAnnotationsCache.CanBeNullAttributeShortName
-						|| shortName == CodeAnnotationsCache.NotNullAttributeShortName;
+					return shortName == NullnessProvider.CanBeNullAttributeShortName
+						|| shortName == NullnessProvider.NotNullAttributeShortName;
 				case AnnotationsDisplayKind.All:
-					return _codeAnnotationsCache.IsAnnotationAttribute(attribute, shortName);
+					return _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, shortName);
 				default:
 					return false;
 			}
@@ -651,7 +652,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (accessor != null)
 				element = accessor.OwnerMember;
 
-			return CSharpDeclaredElementUtil.IsIndexer(element) || element.IsIndexedProperty();
+			return element.IsIndexer() || element.IsIndexedProperty();
 		}
 
 		[CanBeNull]
@@ -782,11 +783,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public CSharpColorizer(
 			[NotNull] RichText richText,
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
-			[NotNull] CodeAnnotationsCache codeAnnotationsCache,
+			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
 			[NotNull] HighlighterIdProvider highlighterIdProvider) {
 			_richText = richText;
 			_textStyleHighlighterManager = textStyleHighlighterManager;
-			_codeAnnotationsCache = codeAnnotationsCache;
+			_codeAnnotationsConfiguration = codeAnnotationsConfiguration;
 			_highlighterIdProvider = highlighterIdProvider;
 		}
 

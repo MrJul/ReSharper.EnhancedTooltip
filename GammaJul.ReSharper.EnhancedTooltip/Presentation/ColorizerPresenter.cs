@@ -16,7 +16,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	public class ColorizerPresenter {
 
 		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
-		[NotNull] private readonly CodeAnnotationsCache _codeAnnotationsCache;
+		[NotNull] private readonly CodeAnnotationsConfiguration _codeAnnotationsConfiguration;
 
 		/// <summary>
 		/// Presents a given <see cref="DeclaredElementInstance"/> using a colorizer.
@@ -70,13 +70,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		private IColorizer TryCreateColorizer([NotNull] RichText richText, [NotNull] PsiLanguageType languageType, [NotNull] HighlighterIdProvider highlighterIdProvider) {
 			// TODO: add a language service instead of checking the language
 			if (languageType.Is<CSharpLanguage>())
-				return new CSharpColorizer(richText, _textStyleHighlighterManager, _codeAnnotationsCache, highlighterIdProvider);
+				return new CSharpColorizer(richText, _textStyleHighlighterManager, _codeAnnotationsConfiguration, highlighterIdProvider);
 			return null;
 		}
 
-		public ColorizerPresenter([NotNull] TextStyleHighlighterManager textStyleHighlighterManager, [NotNull] CodeAnnotationsCache codeAnnotationsCache) {
+		public ColorizerPresenter(
+			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
+			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration) {
 			_textStyleHighlighterManager = textStyleHighlighterManager;
-			_codeAnnotationsCache = codeAnnotationsCache;
+			_codeAnnotationsConfiguration = codeAnnotationsConfiguration;
 		}
 
 	}

@@ -3,17 +3,16 @@ using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-using JetBrains.ReSharper.Feature.Services.CSharp.Daemon;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.UI.RichText;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	internal abstract class CSharpHighlightingEnhancer<T> : IHighlightingEnhancer
-	where T : CSharpHighlightingBase {
+	where T : class, IHighlighting {
 
 		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
-		[NotNull] private readonly CodeAnnotationsCache _codeAnnotationsCache;
+		[NotNull] private readonly CodeAnnotationsConfiguration _codeAnnotationsConfiguration;
 		[NotNull] private readonly HighlighterIdProviderFactory _highlighterIdProviderFactory;
 
 		public Type HighlightingType
@@ -26,7 +25,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			
 			var richText = new RichText();
 			var highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(settings);
-			var colorizer = new CSharpColorizer(richText, _textStyleHighlighterManager, _codeAnnotationsCache, highlighterIdProvider);
+			var colorizer = new CSharpColorizer(richText, _textStyleHighlighterManager, _codeAnnotationsConfiguration, highlighterIdProvider);
 			AppendTooltip(typedHighlighting, colorizer);
 			return richText;
 		}
@@ -35,10 +34,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected CSharpHighlightingEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
-			[NotNull] CodeAnnotationsCache codeAnnotationsCache,
-			HighlighterIdProviderFactory highlighterIdProviderFactory) {
+			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
+			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory) {
 			_textStyleHighlighterManager = textStyleHighlighterManager;
-			_codeAnnotationsCache = codeAnnotationsCache;
+			_codeAnnotationsConfiguration = codeAnnotationsConfiguration;
 			_highlighterIdProviderFactory = highlighterIdProviderFactory;
 		}
 

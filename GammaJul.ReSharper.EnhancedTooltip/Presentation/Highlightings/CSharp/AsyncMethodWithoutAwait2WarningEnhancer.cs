@@ -26,9 +26,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 		
 		public AsyncMethodWithoutAwait2WarningEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
-			[NotNull] CodeAnnotationsCache codeAnnotationsCache,
+			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
 			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)
-			: base(textStyleHighlighterManager, codeAnnotationsCache, highlighterIdProviderFactory) {
+			: base(textStyleHighlighterManager, codeAnnotationsConfiguration, highlighterIdProviderFactory) {
 		}
 
 	}
