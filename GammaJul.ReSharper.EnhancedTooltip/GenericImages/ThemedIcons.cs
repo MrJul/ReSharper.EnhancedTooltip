@@ -14,7 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip {
 	[UsedImplicitly]
 	public sealed partial class ThemedIcons {
 
-		internal const string IconPackResourceName = "GammaJul.ReSharper.EnhancedTooltip.10.0;component/GenericImages/ThemedIcons.Generic.Generated.Xaml";
+		internal const string IconPackResourceName = "GammaJul.ReSharper.EnhancedTooltip;component/GenericImages/ThemedIcons.Generic.Generated.Xaml";
 
 		[CompiledIconClass(IconPackResourceName, 0, "Logo16")]
 		public sealed class Logo16 : CompiledIconClass {
