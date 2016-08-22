@@ -39,7 +39,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 			ITextSnapshot textSnapshot = TextBuffer.CurrentSnapshot;
 			TextRange textRange = GetCurrentTextRange(session, textSnapshot);
-            IShellLocks shellLocks = Shell.Instance.GetComponent<IShellLocks>();
+			IShellLocks shellLocks = Shell.Instance.GetComponent<IShellLocks>();
 			Span? finalSpan = null;
 
 			Action getEnhancedTooltips = () => {

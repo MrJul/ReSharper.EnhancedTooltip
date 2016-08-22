@@ -50,8 +50,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (document == null)
 				return null;
 
-
-		    IDocumentMarkup documentMarkup = Shell.Instance.GetComponent<IDocumentMarkupManager>().TryGetMarkupModel(document);
+			IDocumentMarkup documentMarkup = Shell.Instance.TryGetComponent<IDocumentMarkupManager>()?.TryGetMarkupModel(document);
 			if (documentMarkup == null || !documentMarkup.GetType().Name.StartsWith("Vs", StringComparison.Ordinal))
 				return null;
 			
