@@ -13,6 +13,7 @@ using JetBrains.Platform.VisualStudio.SinceVs10.Interop.Shim.IDE;
 using JetBrains.Platform.VisualStudio.SinceVs10.TextControl.Markup;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.UI.Avalon.Controls;
@@ -38,7 +39,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 			ITextSnapshot textSnapshot = TextBuffer.CurrentSnapshot;
 			TextRange textRange = GetCurrentTextRange(session, textSnapshot);
-			IShellLocks shellLocks = documentMarkup.Context.Locks;
+			IShellLocks shellLocks = Shell.Instance.GetComponent<IShellLocks>();
 			Span? finalSpan = null;
 
 			Action getEnhancedTooltips = () => {
