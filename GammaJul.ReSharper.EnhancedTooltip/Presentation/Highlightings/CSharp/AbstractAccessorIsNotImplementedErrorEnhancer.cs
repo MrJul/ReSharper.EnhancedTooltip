@@ -12,7 +12,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(AbstractAccessorIsNotImplementedError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("Abstract inherited member '");
-			colorizer.AppendDeclaredElement(highlighting.InheritorDeclaration.DeclaredElement, EmptySubstitution.INSTANCE, PresenterOptions.ForInterfaceMember);
+			colorizer.TryAppendDeclaredElement(highlighting.InheritorDeclaration.DeclaredElement, EmptySubstitution.INSTANCE, PresenterOptions.ForInterfaceMember);
 			colorizer.AppendPlainText("' is missing ");
 			colorizer.AppendAccessorKind(highlighting.MissedAccessor.Kind);
 			colorizer.AppendPlainText(" accessor implementation");

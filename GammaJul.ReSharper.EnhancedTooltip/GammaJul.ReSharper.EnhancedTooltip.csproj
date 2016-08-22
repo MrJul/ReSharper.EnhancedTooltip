@@ -343,6 +343,7 @@
     <Compile Include="Presentation\AttributeUsageContent.cs" />
     <Compile Include="Presentation\AttributeTargetsExtension.cs" />
     <Compile Include="Presentation\AutoContrastedRichTextPresenter.cs" />
+    <Compile Include="Presentation\ColorizerExtensions.cs" />
     <Compile Include="Presentation\DashedSeparator.cs" />
     <Compile Include="Presentation\DescriptionSeparatorWidthConverter.cs" />
     <Compile Include="Presentation\ElementKindDisplay.cs" />

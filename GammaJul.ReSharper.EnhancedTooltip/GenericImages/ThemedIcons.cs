@@ -12,7 +12,7 @@ using JetBrains.UI.Icons.CompiledIcons;
 namespace GammaJul.ReSharper.EnhancedTooltip {
 
 	[UsedImplicitly]
-	public sealed partial class ThemedIcons {
+	public sealed class ThemedIcons {
 
 		internal const string IconPackResourceName = "GammaJul.ReSharper.EnhancedTooltip;component/GenericImages/ThemedIcons.Generic.Generated.Xaml";
 
