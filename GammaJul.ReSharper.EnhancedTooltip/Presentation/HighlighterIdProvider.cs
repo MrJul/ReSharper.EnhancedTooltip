@@ -178,7 +178,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (typeElement != null)
 				return GetForTypeElement(typeElement);
 			
-			if (CSharpDeclaredElementUtil.IsProperty(declaredElement) || declaredElement.IsIndexedProperty())
+			if (CSharpDeclaredElementUtil.IsProperty(declaredElement) || declaredElement.IsCSharpIndexedProperty())
 				return Property;
 
 			if (declaredElement is IEvent)

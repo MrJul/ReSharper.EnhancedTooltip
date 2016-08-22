@@ -87,7 +87,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 			if (property != null) {
 				if (CSharpDeclaredElementUtil.IsIndexer(property))
 					return "indexer";
-				if (property.IsIndexedProperty())
+				if (property.IsCSharpIndexedProperty())
 					return "indexed property";
 				return "property";
 			}

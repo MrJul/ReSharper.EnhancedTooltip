@@ -49,8 +49,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			IDocument document = new JetVsTextBuffer(bufferAdapter).JetDocument.Value;
 			if (document == null)
 				return null;
-			
-			IDocumentMarkup documentMarkup = DocumentMarkupManagerBase.TryGetMarkupModel(document);
+
+
+		    IDocumentMarkup documentMarkup = Shell.Instance.GetComponent<IDocumentMarkupManager>().TryGetMarkupModel(document);
 			if (documentMarkup == null || !documentMarkup.GetType().Name.StartsWith("Vs", StringComparison.Ordinal))
 				return null;
 			

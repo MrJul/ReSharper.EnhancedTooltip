@@ -652,7 +652,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (accessor != null)
 				element = accessor.OwnerMember;
 
-			return element.IsIndexer() || element.IsIndexedProperty();
+			return element.IsCSharpIndexer() || element.IsCSharpIndexedProperty();
 		}
 
 		[CanBeNull]
