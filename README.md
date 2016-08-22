@@ -14,8 +14,8 @@ It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) tha
 Installation
 ------------
 Visual Studio 2012, 2013 and 2015 are supported.  
-ReSharper 2016.1 must be installed.  
-(Note: older versions are still available for ReSharper 8.2, 9.0, 9.1, 9.2 and 10.0.)
+ReSharper 2016.2 must be installed.  
+(Note: older versions are still available for ReSharper 8.2, 9.0, 9.1, 9.2, 10.0 and 2016.1).
 
 Install the plugin using the built-in Extension Manager from the ReSharper menu.  
 
