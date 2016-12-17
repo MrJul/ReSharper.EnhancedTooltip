@@ -15,10 +15,10 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl.DocumentMarkup;
-using JetBrains.UI.Avalon.Controls;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
 using JetBrains.VsIntegration.ProjectDocuments;
+using JetBrains.VsIntegration.TextControl;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
@@ -89,7 +89,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 							continue;
 
 						// ignore existing R# elements
-						if (content is RichTextPresenter)
+						if (content is IQuickInfoContent)
 							continue;
 
 						var contentFullName = content.GetType().FullName;
