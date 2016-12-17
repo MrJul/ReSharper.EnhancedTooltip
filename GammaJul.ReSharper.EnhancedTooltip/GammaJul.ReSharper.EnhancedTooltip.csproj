@@ -490,7 +490,7 @@
     <Compile Include="Presentation\Highlightings\CSharp\CannotUseDefaultMemberAttributeOnTypeWithIndexerErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotUseInvocableErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotUseThisBaseInStaticContextErrorEnhancer.cs" />
-    <Compile Include="Presentation\Highlightings\CSharp\CannotUseThisInAnonymousMethodInStructErrorEnhancer.cs" />
+    <Compile Include="Presentation\Highlightings\CSharp\CannotUseThisInClosureInStructErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CannotUseTypeArgumentWithElementErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CaseLabelOutsideSwitchErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\CatchClauseCannotFollowGeneralCatchClauseErrorEnhancer.cs" />

@@ -732,7 +732,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 
 			string presentation = constantValue.GetPresentation(CSharpLanguage.Instance);
-			if (presentation != null && CSharpLexer.IsKeyword(presentation)) {
+			if (CSharpLexer.IsKeyword(presentation)) {
 				AppendText(presentation, _highlighterIdProvider.Keyword);
 				return;
 			}

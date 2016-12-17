@@ -12,7 +12,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 	internal sealed class IncorrectIteratorReturnTypeErrorEnhancer : CSharpHighlightingEnhancer<IncorrectIteratorReturnTypeError> {
 
 		protected override void AppendTooltip(IncorrectIteratorReturnTypeError highlighting, CSharpColorizer colorizer) {
-			IFunction function = highlighting.Declaration.DeclaredElement;
+			IDeclaredElement function = highlighting.Declaration.DeclaredElement;
 
 			colorizer.AppendPlainText("The body of '");
 			colorizer.TryAppendDeclaredElement(function, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);

@@ -64,7 +64,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			};
 
 		[CanBeNull]
-		private string GetOverloadCountText(int? overloadCount) {
+		[Pure]
+		private static string GetOverloadCountText(int? overloadCount) {
 			switch (overloadCount) {
 				case null: return null;
 				case 0: return null;

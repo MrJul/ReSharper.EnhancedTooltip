@@ -27,12 +27,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public RichTextBlock GetDescription()
 			=> UnderlyingCandidate.GetDescription();
 
-		public void GetParametersInfo(out string[] paramNames, out RichTextBlock[] paramDescriptions, out bool isParamsArray)
-			=> UnderlyingCandidate.GetParametersInfo(out paramNames, out paramDescriptions, out isParamsArray);
+		public void GetParametersInfo(out ParamPresentationInfo[] paramInfos, out bool isParamsArray)
+			=> UnderlyingCandidate.GetParametersInfo(out paramInfos, out isParamsArray);
 
 		[NotNull]
-		public RichText GetSignature(string[] namedArguments, AnnotationsDisplayKind showAnnotations,
-			out TextRange[] parameterRanges, out int[] mapToOriginalOrder, out ExtensionMethodInfo extensionMethodInfo) {
+		public RichText GetSignature(
+			string[] namedArguments,
+			AnnotationsDisplayKind showAnnotations,
+			out TextRange[] parameterRanges,
+			out int[] mapToOriginalOrder,
+			out ExtensionMethodInfo extensionMethodInfo) {
 			
 			// TODO: handle named arguments with reordering; currently falling back to non-colored display
 			if (namedArguments.Any(s => s != null)) {

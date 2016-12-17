@@ -22,23 +22,26 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	[ParameterInfoContextFactory(typeof(CSharpLanguage))]
 	public class EnhancedParameterInfoContextFactory : CSParameterInfoContextFactory, IParameterInfoContextFactory {
 
-		public new IParameterInfoContext CreateContext(ISolution solution,
-			IDocument document,
-			int caretOffset,
-			int expectedLParenthOffset,
+		public new IParameterInfoContext CreateContext(
+			ISolution solution,
+			DocumentOffset caretOffset,
+			DocumentOffset expectedLParenthOffset,
 			char invocationChar,
-			IContextBoundSettingsStore contextBoundSettingsStore) {
+			IContextBoundSettingsStore settingsStore) {
 
-			IParameterInfoContext context = base.CreateContext(
-				solution, document, caretOffset, expectedLParenthOffset, invocationChar, contextBoundSettingsStore);
-			return Enhance(context, solution, contextBoundSettingsStore);
+			IParameterInfoContext context = base.CreateContext(solution, caretOffset, expectedLParenthOffset, invocationChar, settingsStore);
+			return Enhance(context, solution, settingsStore);
 		}
 
 		[CanBeNull]
-		private static IParameterInfoContext Enhance([CanBeNull] IParameterInfoContext context, [NotNull] ISolution solution, [NotNull] IContextBoundSettingsStore settings) {
+		private static IParameterInfoContext Enhance(
+			[CanBeNull] IParameterInfoContext context,
+			[NotNull] ISolution solution,
+			[NotNull] IContextBoundSettingsStore settings) {
+
 			if (context == null || !settings.GetValue((ParameterInfoSettings s) => s.Enabled))
 				return context;
-			
+
 			return new EnhancedParameterInfoContext(
 				context,
 				solution.GetComponent<ColorizerPresenter>(),

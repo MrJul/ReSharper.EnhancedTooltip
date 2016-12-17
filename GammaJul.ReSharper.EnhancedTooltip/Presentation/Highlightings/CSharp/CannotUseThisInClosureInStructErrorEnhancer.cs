@@ -7,17 +7,17 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
-	internal sealed class CannotUseThisInAnonymousMethodInStructErrorEnhancer : CSharpHighlightingEnhancer<CannotUseThisInAnonymousMethodInStructError> {
+	internal sealed class CannotUseThisInClosureInStructErrorEnhancer : CSharpHighlightingEnhancer<CannotUseThisInClosureInStructError> {
 
-		protected override void AppendTooltip(CannotUseThisInAnonymousMethodInStructError highlighting, CSharpColorizer colorizer) {
-			colorizer.AppendPlainText("Anonymous methods inside structs cannot access instance members of '");
+		protected override void AppendTooltip(CannotUseThisInClosureInStructError highlighting, CSharpColorizer colorizer) {
+			colorizer.AppendPlainText("Anonymous methods, lambda expressions, local functions and query expressions inside structs cannot access instance members of '");
 			colorizer.AppendKeyword("this");
 			colorizer.AppendPlainText("'. Consider copying '");
 			colorizer.AppendKeyword("this");
-			colorizer.AppendPlainText("' to a local variable outside the anonymous method and using the local instead.");
+			colorizer.AppendPlainText("' to a local variable outside the anonymous method, lambda expression, local function or query expression and using the local instead.");
 		}
 		
-		public CannotUseThisInAnonymousMethodInStructErrorEnhancer(
+		public CannotUseThisInClosureInStructErrorEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
 			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
 			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)
