@@ -12,9 +12,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(CircularDependencyInTypeParameterConstraintError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("Circular constraint dependency involving '");
-			colorizer.AppendDeclaredElement(highlighting.Origin, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(highlighting.Origin, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.TypeUsageNode);
 			colorizer.AppendPlainText("' and '");
-			colorizer.AppendDeclaredElement(highlighting.Parameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(highlighting.Parameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.TypeUsageNode);
 			colorizer.AppendPlainText("'");
 		}
 		

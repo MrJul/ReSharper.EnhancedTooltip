@@ -11,7 +11,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(ConditionalLogicOperatorTypesMismatchError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("In order to be applicable as a short circuit operator a user-defined logical operator ('");
-			colorizer.AppendDeclaredElement(highlighting.SignOperator, highlighting.Substitution, PresenterOptions.QualifiedName);
+			colorizer.AppendDeclaredElement(highlighting.SignOperator, highlighting.Substitution, PresenterOptions.QualifiedName, highlighting.Reference.GetTreeNode());
 			colorizer.AppendPlainText("') must have the same return type as the type of its 2 parameters");
 		}
 		

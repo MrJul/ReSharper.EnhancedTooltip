@@ -46,6 +46,8 @@
 				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
 				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
 				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
 			</Grid.RowDefinitions>
 			<controls:SectionHeading Grid.Row="0" Text="Identifier Tooltip" />
 			<controls:CheckBoxDisabledNoCheck2 Grid.Row="1" x:Name="IdentifierTooltipEnabledCheckBox" />
@@ -78,6 +80,14 @@
 			<StackPanel Grid.Row="19" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
 				<Label Target="{Binding ElementName=IdentifierTooltipConstructorReferenceDisplayComboBox}" />
 				<ComboBox x:Name="IdentifierTooltipConstructorReferenceDisplayComboBox" />
+			</StackPanel>
+			<StackPanel Grid.Row="20" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipSolutionCodeNamespaceDisplayKindComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipSolutionCodeNamespaceDisplayKindComboBox" />
+			</StackPanel>
+			<StackPanel Grid.Row="21" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipExternalCodeNamespaceDisplayKindComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipExternalCodeNamespaceDisplayKindComboBox" />
 			</StackPanel>
 		</Grid>
 

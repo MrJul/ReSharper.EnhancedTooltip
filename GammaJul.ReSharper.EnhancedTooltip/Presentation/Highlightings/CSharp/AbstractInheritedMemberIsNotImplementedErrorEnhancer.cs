@@ -20,7 +20,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 				colorizer.AppendPlainText("Abstract inherited member '");
 				TypeMemberInstance member = members[i];
-				colorizer.AppendDeclaredElement(member.Element, member.Substitution, PresenterOptions.QualifiedMember);
+				colorizer.AppendDeclaredElement(member.Element, member.Substitution, PresenterOptions.QualifiedMember, highlighting.Declaration);
 				colorizer.AppendPlainText("' is not implemented");
 			}
 		}

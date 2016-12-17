@@ -12,7 +12,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(CannotCreateInstanceOfTypeParameterWithArgumentsError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("Cannot provide arguments when creating an instance of a type parameter '");
-			colorizer.AppendDeclaredElement(highlighting.TypeParameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(highlighting.TypeParameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.ObjectCreationExpression);
 			colorizer.AppendPlainText("'");
 		}
 		

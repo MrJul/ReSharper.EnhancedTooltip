@@ -14,7 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("Base ");
 			colorizer.AppendElementKind(highlighting.BaseMember);
 			colorizer.AppendPlainText(" '");
-			colorizer.AppendDeclaredElement(highlighting.BaseMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName);
+			colorizer.AppendDeclaredElement(highlighting.BaseMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName, highlighting.Declaration);
 			colorizer.AppendPlainText("' last parameter has '");
 			colorizer.AppendKeyword("params");
 			colorizer.AppendPlainText("' modifier");

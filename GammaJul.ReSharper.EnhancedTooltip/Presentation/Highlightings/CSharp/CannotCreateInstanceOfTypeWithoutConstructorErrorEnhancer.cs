@@ -14,7 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("The ");
 			colorizer.AppendElementKind(highlighting.TypeElement);
 			colorizer.AppendPlainText(" '");
-			colorizer.AppendDeclaredElement(highlighting.TypeElement, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName);
+			colorizer.AppendDeclaredElement(highlighting.TypeElement, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName, highlighting.ObjectCreationExpression);
 			colorizer.AppendPlainText("' has no constructors defined");
 		}
 		

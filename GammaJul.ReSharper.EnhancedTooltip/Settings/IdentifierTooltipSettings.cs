@@ -21,7 +21,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display documented exceptions that can be thrown")]
 		public bool ShowExceptions { get; set; }
 
-		[SettingsEntry(true, "Display overload count where applicable.")]
+		[SettingsEntry(true, "Display overload count where applicable")]
 		public bool ShowOverloadCount { get; set; }
 
 		[SettingsEntry(true, "Display extension methods as \"extension\" instead of \"method\"")]
@@ -62,6 +62,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		[SettingsEntry(ConstructorReferenceDisplay.TypeOnly, "Display constructor references for attributes as")]
 		public ConstructorReferenceDisplay AttributeConstructorReferenceDisplay { get; set; }
+
+		[SettingsEntry(SolutionCodeNamespaceDisplayKind.Always, "Display namespaces for member from solution code")]
+		public SolutionCodeNamespaceDisplayKind SolutionCodeNamespaceDisplayKind { get; set; }
+
+		[SettingsEntry(SolutionCodeNamespaceDisplayKind.Always, "Display namespaces for member from external code")]
+		public ExternalCodeNamespaceDisplayKind ExternalCodeNamespaceDisplayKind { get; set; }
 
 	}
 

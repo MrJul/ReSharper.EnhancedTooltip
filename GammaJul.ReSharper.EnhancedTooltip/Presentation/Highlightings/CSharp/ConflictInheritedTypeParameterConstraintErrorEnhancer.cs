@@ -12,7 +12,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(ConflictInheritedTypeParameterConstraintError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("Type parameter '");
-			colorizer.AppendDeclaredElement(highlighting.TypeParameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(highlighting.TypeParameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.Declaration);
 			colorizer.AppendPlainText("' inherits conflicting constraints '");
 			colorizer.AppendExpressionType(highlighting.Type1, false, PresenterOptions.FullWithoutParameterNames);
 			colorizer.AppendPlainText("' and '");

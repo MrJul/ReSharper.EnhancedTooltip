@@ -421,6 +421,8 @@
     <Compile Include="Presentation\IdentifierContentGroup.cs" />
     <Compile Include="Presentation\IdentifierPresenter.cs" />
     <Compile Include="Presentation\ArgumentRoleTooltipContent.cs" />
+    <Compile Include="Settings\SolutionCodeNamespaceDisplayKind.cs" />
+    <Compile Include="Settings\ExternalCodeNamespaceDisplayKind.cs" />
     <Compile Include="Presentation\VsIdentifierContent.cs" />
     <Compile Include="Presentation\VsSquiggleContent.cs" />
     <Compile Include="Psi\CSharpSpecialDeclaredElementFinder.cs" />

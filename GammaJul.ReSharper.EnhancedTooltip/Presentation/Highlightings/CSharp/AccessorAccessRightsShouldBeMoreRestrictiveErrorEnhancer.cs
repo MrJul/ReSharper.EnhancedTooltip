@@ -14,7 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("The accessibility modifier of the accessor must be more restrictive than the ");
 			colorizer.AppendElementKind(highlighting.TypeMember);
 			colorizer.AppendPlainText(" '");
-			colorizer.AppendDeclaredElement(highlighting.TypeMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName);
+			colorizer.AppendDeclaredElement(highlighting.TypeMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName, highlighting.AccessorDeclaration);
 			colorizer.AppendPlainText("'");
 		}
 

@@ -14,7 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("Cannot create an instance of the ");
 			colorizer.AppendKeyword("abstract");
 			colorizer.AppendPlainText(" class '");
-			colorizer.AppendDeclaredElement(highlighting.TypeElement, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName);
+			colorizer.AppendDeclaredElement(highlighting.TypeElement, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName, highlighting.ObjectCreationExpression);
 			colorizer.AppendPlainText("'");
 		}
 		

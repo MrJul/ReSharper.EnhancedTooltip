@@ -14,7 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("Cannot specify accessibility modifiers for both accessors of the ");
 			colorizer.AppendElementKind(highlighting.TypeMember);
 			colorizer.AppendPlainText(" '");
-			colorizer.AppendDeclaredElement(highlighting.TypeMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName);
+			colorizer.AppendDeclaredElement(highlighting.TypeMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName, highlighting.AccessorDeclaration);
 			colorizer.AppendPlainText("'");
 		}
 

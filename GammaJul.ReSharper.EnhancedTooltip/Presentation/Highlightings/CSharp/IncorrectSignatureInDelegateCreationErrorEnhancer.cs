@@ -17,7 +17,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendExpressionType(returnType, false, PresenterOptions.FullWithoutParameterNames);
 			colorizer.AppendPlainText(" ");
 			colorizer.AppendPlainText(highlighting.Reference.GetName());
-			colorizer.AppendDeclaredElement(highlighting.CreatedDelegate, highlighting.DelegateSubstitution, PresenterOptions.ParameterTypesOnly);
+			colorizer.AppendDeclaredElement(highlighting.CreatedDelegate, highlighting.DelegateSubstitution, PresenterOptions.ParameterTypesOnly, highlighting.Reference.GetTreeNode());
 			colorizer.AppendPlainText("' signature");
 		}
 

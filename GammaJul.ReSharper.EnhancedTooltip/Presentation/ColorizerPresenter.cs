@@ -4,6 +4,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.UI.RichText;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
@@ -25,16 +26,18 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// <param name="options">The options to use to present the element.</param>
 		/// <param name="languageType">The type of language used to present the element.</param>
 		/// <param name="highlighterIdProvider">An object determining which highlightings to use.</param>
+		/// <param name="contextualNode">The tree node where the element is presented.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
 		[CanBeNull]
 		public RichText TryPresent(
 			[NotNull] DeclaredElementInstance declaredElementInstance,
 			[NotNull] PresenterOptions options,
 			[NotNull] PsiLanguageType languageType,
-			[NotNull] HighlighterIdProvider highlighterIdProvider) {
+			[NotNull] HighlighterIdProvider highlighterIdProvider,
+			[CanBeNull] ITreeNode contextualNode) {
 
 			PresentedInfo presentedInfo;
-			return TryPresent(declaredElementInstance, options, languageType, highlighterIdProvider, out presentedInfo);
+			return TryPresent(declaredElementInstance, options, languageType, highlighterIdProvider, contextualNode, out presentedInfo);
 		}
 
 		/// <summary>
@@ -44,6 +47,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// <param name="options">The options to use to present the element.</param>
 		/// <param name="languageType">The type of language used to present the element.</param>
 		/// <param name="highlighterIdProvider">An object determining which highlightings to use.</param>
+		/// <param name="contextualNode">The tree node where the element is presented.</param>
 		/// <param name="presentedInfo">When the method returns, a <see cref="PresentedInfo"/> containing range information about the presented element.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
 		[CanBeNull]
@@ -52,6 +56,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			[NotNull] PresenterOptions options,
 			[NotNull] PsiLanguageType languageType,
 			[NotNull] HighlighterIdProvider highlighterIdProvider,
+			[CanBeNull] ITreeNode contextualNode,
 			[NotNull] out PresentedInfo presentedInfo) {
 
 			var richText = new RichText();
@@ -61,8 +66,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return null;
 			}
 
-			presentedInfo = colorizer.AppendDeclaredElement(declaredElementInstance.Element, declaredElementInstance.Substitution,
-				options);
+			presentedInfo = colorizer.AppendDeclaredElement(declaredElementInstance.Element, declaredElementInstance.Substitution, options, contextualNode);
 			return richText;
 		}
 

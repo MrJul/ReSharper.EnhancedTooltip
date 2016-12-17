@@ -12,7 +12,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(AddressOfMarshalByRefObjectWarning highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("Passing '");
-			colorizer.AppendDeclaredElement(highlighting.Field, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName);
+			colorizer.AppendDeclaredElement(highlighting.Field, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName, highlighting.Expression);
 			colorizer.AppendPlainText("' as ref or out or taking its address may cause a runtime exception because it is a field of a marshal-by-reference class");
 		}
 		

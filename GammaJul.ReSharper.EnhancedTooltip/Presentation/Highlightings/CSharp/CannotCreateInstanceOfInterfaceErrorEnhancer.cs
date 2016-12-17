@@ -16,7 +16,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 			colorizer.AppendPlainText("Cannot create an instance of the interface '");
 			if (declaredElement != null)
-				colorizer.AppendDeclaredElement(declaredElement, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName);
+				colorizer.AppendDeclaredElement(declaredElement, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName, highlighting.ReferenceName);
 			else
 				colorizer.AppendInterfaceName(highlighting.ReferenceName.GetText());
 			colorizer.AppendPlainText("'");

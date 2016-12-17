@@ -16,7 +16,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("' or '");
 			colorizer.AppendKeyword("out");
 			colorizer.AppendPlainText("' parameter '");
-			colorizer.AppendDeclaredElement(highlighting.Parameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(highlighting.Parameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.Expression);
 			colorizer.AppendPlainText("' inside an anonymous method body");
 		}
 

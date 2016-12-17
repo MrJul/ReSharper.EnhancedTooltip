@@ -12,11 +12,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(ClassTypeParameterInValueTypeParameterConstraintListError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("Type parameter '");
-			colorizer.AppendDeclaredElement(highlighting.Parameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(highlighting.Parameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.TypeUsageNode);
 			colorizer.AppendPlainText("' has the class-type constraint so '");
-			colorizer.AppendDeclaredElement(highlighting.Parameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(highlighting.Parameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.TypeUsageNode);
 			colorizer.AppendPlainText("' cannot be used as a constraint for '");
-			colorizer.AppendDeclaredElement(highlighting.Origin, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(highlighting.Origin, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.TypeUsageNode);
 			colorizer.AppendPlainText("'");
 		}
 		

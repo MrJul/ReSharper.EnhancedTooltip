@@ -16,7 +16,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (element == null || substitution == null)
 				return new PresentedInfo();
 
-			return colorizer.AppendDeclaredElement(element, substitution, options);
+			return colorizer.AppendDeclaredElement(element, substitution, options, null);
 		}
 
 	}

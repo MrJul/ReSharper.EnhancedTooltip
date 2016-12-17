@@ -151,6 +151,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowParametersAnnotations, IdentifierTooltipShowParametersAnnotationsComboBox, rootCheckBox);
 			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ConstructorReferenceDisplay, IdentifierTooltipConstructorReferenceDisplayComboBox, rootCheckBox);
 			SetComboBoxBinding((IdentifierTooltipSettings s) => s.AttributeConstructorReferenceDisplay, IdentifierTooltipAttributeConstructorReferenceDisplayComboBox, rootCheckBox);
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.SolutionCodeNamespaceDisplayKind, IdentifierTooltipSolutionCodeNamespaceDisplayKindComboBox, rootCheckBox);
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ExternalCodeNamespaceDisplayKind, IdentifierTooltipExternalCodeNamespaceDisplayKindComboBox, rootCheckBox);
 		}
 
 		private void SetIssueTooltipSettingsBindings() {

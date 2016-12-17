@@ -12,7 +12,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(AsOperatorWithUnconstrainedTypeParameterError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("The type parameter '");
-			colorizer.AppendDeclaredElement(highlighting.TypeParameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(highlighting.TypeParameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.TypeUsageNode);
 			colorizer.AppendPlainText("' cannot be used with the '");
 			colorizer.AppendKeyword("as");
 			colorizer.AppendPlainText("' operator because it does not have a class type constraint nor a '");

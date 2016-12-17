@@ -12,9 +12,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(AddedAccessorInPrivateImplementationError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("'");
-			colorizer.AppendDeclaredElement(highlighting.Accessor, EmptySubstitution.INSTANCE, PresenterOptions.ForInterfaceMember);
+			colorizer.AppendDeclaredElement(highlighting.Accessor, EmptySubstitution.INSTANCE, PresenterOptions.ForInterfaceMember, highlighting.InheritorDeclaration);
 			colorizer.AppendPlainText("' adds an accessor not found in interface member '");
-			colorizer.AppendDeclaredElement(highlighting.SuperMember, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(highlighting.SuperMember, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.InheritorDeclaration);
 			colorizer.AppendPlainText("'");
 		}
 

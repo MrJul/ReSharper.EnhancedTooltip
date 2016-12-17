@@ -14,7 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("Interface implementation '");
 			colorizer.TryAppendDeclaredElement(highlighting.InheritorDeclaration.DeclaredElement, EmptySubstitution.INSTANCE, PresenterOptions.ForInterfaceMember);
 			colorizer.AppendPlainText("' is missing accessor '");
-			colorizer.AppendDeclaredElement(highlighting.MissedAccessor, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(highlighting.MissedAccessor, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.InheritorDeclaration);
 			colorizer.AppendPlainText("' implementation");
 		}
 

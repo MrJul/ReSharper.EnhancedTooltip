@@ -12,7 +12,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(CannotCreateInstanceOfTypeParameterWithoutNewConstraintError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("Cannot create an instance of the type parameter '");
-			colorizer.AppendDeclaredElement(highlighting.TypeParameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(highlighting.TypeParameter, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.ObjectCreationExpression);
 			colorizer.AppendPlainText("' because it does not have the ");
 			colorizer.AppendKeyword("new");
 			colorizer.AppendPlainText("() constraint");

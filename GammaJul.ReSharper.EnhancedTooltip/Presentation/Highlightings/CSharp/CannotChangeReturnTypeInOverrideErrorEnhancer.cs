@@ -14,7 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("Cannot change return type when overriding ");
 			colorizer.AppendElementKind(highlighting.OverriddenMember);
 			colorizer.AppendPlainText(" '");
-			colorizer.AppendDeclaredElement(highlighting.OverriddenMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedMember);
+			colorizer.AppendDeclaredElement(highlighting.OverriddenMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedMember, highlighting.Declaration);
 			colorizer.AppendPlainText("'");
 		}
 		

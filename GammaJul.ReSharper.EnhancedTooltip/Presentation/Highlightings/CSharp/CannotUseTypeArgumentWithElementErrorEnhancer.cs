@@ -14,7 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("The ");
 			colorizer.AppendElementKind(highlighting.Element);
 			colorizer.AppendPlainText(" '");
-			colorizer.AppendDeclaredElement(highlighting.Element, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedMember);
+			colorizer.AppendDeclaredElement(highlighting.Element, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedMember, highlighting.TypeArgumentList);
 			colorizer.AppendPlainText("' cannot be used with type arguments");
 		}
 		

@@ -175,7 +175,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 		[CanBeNull]
 		private IdentifierTooltipContent TryPresentColorized([NotNull] DeclaredElementInfo info, [NotNull] IContextBoundSettingsStore settings) {
-
 			PsiLanguageType languageType = info.TreeNode.Language;
 			IDeclaredElement element = info.DeclaredElement;
 			IPsiModule psiModule = info.TreeNode.GetPsiModule();
@@ -186,7 +185,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				new DeclaredElementInstance(element, info.Substitution),
 				PresenterOptions.ForIdentifierToolTip(settings),
 				languageType,
-				highlighterIdProvider);
+				highlighterIdProvider,
+				info.TreeNode);
 
 			if (identifierText == null || identifierText.IsEmpty)
 				return null;
@@ -213,7 +213,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				bool showBaseType = settings.GetValue((IdentifierTooltipSettings s) => s.ShowBaseType);
 				bool showImplementedInterfaces = settings.GetValue((IdentifierTooltipSettings s) => s.ShowImplementedInterfaces);
 				if (showBaseType || showImplementedInterfaces)
-					AddSuperTypes(identifierContent, typeElement, showBaseType, showImplementedInterfaces, languageType, highlighterIdProvider);
+					AddSuperTypes(identifierContent, typeElement, showBaseType, showImplementedInterfaces, languageType, info.TreeNode, highlighterIdProvider, settings);
 
 				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowAttributesUsage) && typeElement.IsAttribute())
 					identifierContent.AttributeUsage = GetAttributeUsage((IClass) info.DeclaredElement);
@@ -241,26 +241,34 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			bool showBaseType,
 			bool showImplementedInterfaces,
 			[NotNull] PsiLanguageType languageType,
-			[NotNull] HighlighterIdProvider highlighterIdProvider) {
+			[NotNull] ITreeNode contextualNode,
+			[NotNull] HighlighterIdProvider highlighterIdProvider,
+			[NotNull] IContextBoundSettingsStore settings) {
 
 			DeclaredElementInstance baseType;
 			IList<DeclaredElementInstance> implementedInterfaces;
 			GetSuperTypes(typeElement, showBaseType, showImplementedInterfaces, out baseType, out implementedInterfaces);
 
-			if (baseType != null)
-				identifierContent.BaseType = _colorizerPresenter.TryPresent(baseType, PresenterOptions.QualifiedMember, languageType, highlighterIdProvider);
-
-			if (implementedInterfaces.Count == 0)
+			if (baseType == null && implementedInterfaces.Count == 0)
 				return;
 
-			var sortedPresentedInterfaces = new SortedDictionary<string, RichText>(StringComparer.Ordinal);
-			foreach (DeclaredElementInstance implementedInterface in implementedInterfaces) {
-				RichText richText = _colorizerPresenter.TryPresent(implementedInterface, PresenterOptions.QualifiedMember, languageType, highlighterIdProvider);
-				if (richText != null)
-					sortedPresentedInterfaces[richText.ToString(false)] = richText;
+			PresenterOptions presenterOptions = PresenterOptions.ForBaseTypeOrImplementedInterfaceTooltip(settings);
+
+			if (baseType != null)
+				identifierContent.BaseType = _colorizerPresenter.TryPresent(baseType, presenterOptions, languageType, highlighterIdProvider, contextualNode);
+
+			if (implementedInterfaces.Count > 0) {
+				var sortedPresentedInterfaces = new SortedDictionary<string, RichText>(StringComparer.Ordinal);
+				foreach (DeclaredElementInstance implementedInterface in implementedInterfaces) {
+					RichText richText = _colorizerPresenter.TryPresent(implementedInterface, presenterOptions, languageType, highlighterIdProvider,
+						contextualNode);
+					if (richText != null)
+						sortedPresentedInterfaces[richText.ToString(false)] = richText;
+				}
+				foreach (RichText richText in sortedPresentedInterfaces.Values)
+					identifierContent.ImplementedInterfaces.Add(richText);
 			}
-			foreach (RichText richText in sortedPresentedInterfaces.Values)
-				identifierContent.ImplementedInterfaces.Add(richText);
+
 		}
 
 		private static void GetSuperTypes(
@@ -561,13 +569,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				new DeclaredElementInstance(parametersOwner, parameterInstance.Substitution),
 				PresenterOptions.ForArgumentRoleParametersOwnerToolTip(settings),
 				argument.Language,
-				highlighterIdProvider));
+				highlighterIdProvider,
+				node));
 			final.Append(": ", TextStyle.Default);
 			final.Append(_colorizerPresenter.TryPresent(
 				parameterInstance,
 				PresenterOptions.ForArgumentRoleParameterToolTip(settings),
 				argument.Language,
-				highlighterIdProvider));
+				highlighterIdProvider,
+				node));
 
 			var content = new ArgumentRoleTooltipContent(final, argument.GetDocumentRange().TextRange) {
 				Description = TryGetDescription(parameter, parameter.Module, argument.Language, DeclaredElementDescriptionStyle.NO_OBSOLETE_SUMMARY_STYLE)

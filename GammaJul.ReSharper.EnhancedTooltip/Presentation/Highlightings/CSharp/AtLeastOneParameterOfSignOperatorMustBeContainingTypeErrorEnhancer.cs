@@ -12,7 +12,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(AtLeastOneParameterOfSignOperatorMustBeContainingTypeError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("At least one parameter should be '");
-			colorizer.AppendDeclaredElement(highlighting.ContainingType, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName);
+			colorizer.AppendDeclaredElement(highlighting.ContainingType, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName, highlighting.Declaration);
 			colorizer.AppendPlainText("'");
 		}
 		

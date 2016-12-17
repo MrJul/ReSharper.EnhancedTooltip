@@ -14,7 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("'");
 			colorizer.TryAppendDeclaredElement(highlighting.ExtraAccessor.DeclaredElement, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
 			colorizer.AppendPlainText("': cannot override because '");
-			colorizer.AppendDeclaredElement(highlighting.OverriddenMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedMember);
+			colorizer.AppendDeclaredElement(highlighting.OverriddenMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedMember, highlighting.ExtraAccessor);
 			colorizer.AppendPlainText("' does not have an overridable ");
 			colorizer.AppendAccessorKind(highlighting.ExtraAccessor.Kind);
 			colorizer.AppendPlainText(" accessor");

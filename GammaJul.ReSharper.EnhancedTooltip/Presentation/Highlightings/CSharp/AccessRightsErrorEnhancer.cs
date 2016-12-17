@@ -21,7 +21,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText(" ");
 			colorizer.AppendElementKind(declaredElement);
 			colorizer.AppendPlainText(" '");
-			colorizer.AppendDeclaredElement(declaredElement, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.AppendDeclaredElement(declaredElement, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.Reference.GetTreeNode());
 			colorizer.AppendPlainText("' here");
 		}
 

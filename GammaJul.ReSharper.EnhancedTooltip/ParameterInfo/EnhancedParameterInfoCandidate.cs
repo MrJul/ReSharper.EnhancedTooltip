@@ -51,7 +51,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			InvocationCandidate invocationCandidate = UnderlyingCandidate.InvocationCandidate;
 			var elementInstance = new DeclaredElementInstance(invocationCandidate.Element, invocationCandidate.Substitution);
 			
-			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, highlighterIdProvider, out presentedInfo);
+			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, highlighterIdProvider, null, out presentedInfo);
 			if (richText == null)
 				return UnderlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 

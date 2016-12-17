@@ -11,7 +11,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(ConditionalLogicTrueFalseOperatorMissingError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("The operator '");
-			colorizer.AppendDeclaredElement(highlighting.SignOperator, highlighting.Substitution, PresenterOptions.QualifiedName);
+			colorizer.AppendDeclaredElement(highlighting.SignOperator, highlighting.Substitution, PresenterOptions.QualifiedName, highlighting.Reference.GetTreeNode());
 			colorizer.AppendPlainText("' requires a matching operator '");
 			colorizer.AppendKeyword("true");
 			colorizer.AppendPlainText("'/'");

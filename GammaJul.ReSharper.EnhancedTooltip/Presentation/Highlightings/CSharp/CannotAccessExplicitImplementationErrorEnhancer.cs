@@ -18,7 +18,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendExpressionType(explicitImplementation.DeclaringType, false, PresenterOptions.NameOnly);
 			colorizer.AppendOperator(".");
 			if (resolvedMember != null)
-				colorizer.AppendDeclaredElement(resolvedMember.Element, resolvedMember.Substitution, PresenterOptions.NameOnly);
+				colorizer.AppendDeclaredElement(resolvedMember.Element, resolvedMember.Substitution, PresenterOptions.NameOnly, highlighting.Reference.GetTreeNode());
 			else
 				colorizer.AppendPlainText(explicitImplementation.MemberName);
 			colorizer.AppendPlainText("'");

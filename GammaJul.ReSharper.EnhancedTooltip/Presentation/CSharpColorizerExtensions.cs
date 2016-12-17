@@ -49,7 +49,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			for (int i = 0; i < candidates.Count; ++i) {
 				colorizer.AppendPlainText(Environment.NewLine);
 				colorizer.AppendPlainText("  ");
-				colorizer.AppendDeclaredElement(candidates[i].EliminateDelegateInvokeMethod(), substitutions[i], PresenterOptions.FullWithoutParameterNames);
+				colorizer.AppendDeclaredElement(candidates[i].EliminateDelegateInvokeMethod(), substitutions[i], PresenterOptions.FullWithoutParameterNames, reference.GetTreeNode());
 			}
 		}
 

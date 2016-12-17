@@ -14,7 +14,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("Cannot call an abstract base ");
 			colorizer.AppendElementKind(highlighting.BaseMember);
 			colorizer.AppendPlainText(" '");
-			colorizer.AppendDeclaredElement(highlighting.BaseMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedMember);
+			colorizer.AppendDeclaredElement(highlighting.BaseMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedMember, highlighting.Expression);
 			colorizer.AppendPlainText("'");
 		}
 

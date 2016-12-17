@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Text;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Psi;
+using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Metadata.Utils;
 using JetBrains.ReSharper.Feature.Services.Lookup;
@@ -17,6 +18,7 @@ using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Util;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
@@ -38,10 +40,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			[NotNull] internal readonly PresenterOptions Options;
 			[CanBeNull] internal readonly PresentedInfo PresentedInfo;
+			[CanBeNull] internal readonly ITreeNode ContextualNode;
 
-			public Context([NotNull] PresenterOptions options, [CanBeNull] PresentedInfo presentedInfo) {
+			public Context([NotNull] PresenterOptions options, [CanBeNull] PresentedInfo presentedInfo, [CanBeNull] ITreeNode contextualNode) {
 				Options = options;
 				PresentedInfo = presentedInfo;
+				ContextualNode = contextualNode;
 			}
 
 		}
@@ -59,8 +63,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public HighlighterIdProvider HighlighterIdProvider
 			=> _highlighterIdProvider;
 
-		public PresentedInfo AppendDeclaredElement(IDeclaredElement element, ISubstitution substitution, PresenterOptions options) {
-			var context = new Context(options, new PresentedInfo());
+		public PresentedInfo AppendDeclaredElement(IDeclaredElement element, ISubstitution substitution, PresenterOptions options, ITreeNode contextualNode) {
+			var context = new Context(options, new PresentedInfo(), contextualNode);
 
 			if (!IsClrPresentableElement(element))
 				return context.PresentedInfo;
@@ -70,6 +74,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (options.ShowAccessRights)
 				AppendAccessRights(element, true);
+
 			if (options.ShowModifiers)
 				AppendModifiers(element);
 
@@ -82,6 +87,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (options.ShowName)
 				AppendNameWithContainer(element, substitution, context);
+
 			if (options.ShowParametersType || options.ShowParametersName)
 				AppendParameters(element, substitution, true, context);
 
@@ -181,8 +187,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendText(builder.ToString(), _highlighterIdProvider.Keyword);
 		}
 
-		private void AppendElementType([NotNull] IDeclaredElement element, [NotNull] ISubstitution substitution, QualifierDisplays expectedQualifierDisplay,
-			[CanBeNull] string before, [CanBeNull] string after, Context context) {
+		private void AppendElementType(
+			[NotNull] IDeclaredElement element,
+			[NotNull] ISubstitution substitution,
+			QualifierDisplays expectedQualifierDisplay,
+			[CanBeNull] string before,
+			[CanBeNull] string after,
+			Context context) {
 
 			// Use the special type first if available (eg Razor helper), colorize it as a keyword
 			string specialTypeString = CSharpModificationUtil.GetSpecialElementType(_specialTypeStyle, element, substitution);
@@ -228,7 +239,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			IType itype = expressionType.ToIType();
 			if (itype != null) {
-				AppendTypeWithoutModule(itype, QualifierDisplays.Everywhere, new Context(options, null));
+				AppendTypeWithoutModule(itype, QualifierDisplays.Everywhere, new Context(options, null, null));
 				if (appendModuleName)
 					AppendModuleName(itype);
 				return;
@@ -324,9 +335,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		private void AppendTypeElement([NotNull] ITypeElement typeElement, [NotNull] ISubstitution substitution, QualifierDisplays expectedQualifierDisplay, Context context) {
 
 			if (!(typeElement is ITypeParameter) && (context.Options.ShowQualifiers & expectedQualifierDisplay) != QualifierDisplays.None) {
-				INamespace containingNamespace = typeElement.GetContainingNamespace();
-				AppendNamespace(containingNamespace);
-				if (!containingNamespace.IsRootNamespace)
+				if (AppendNamespaceParts(GetNamespacePartsToDisplay(typeElement, context)))
 					AppendText(".", _highlighterIdProvider.Operator);
 
 				ITypeElement containingType = typeElement.GetContainingType();
@@ -349,6 +358,65 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendTypeParameters(typeElement, substitution, context);
 		}
 
+		[CanBeNull]
+		private static List<string> GetNamespacePartsToDisplay([NotNull] ITypeElement typeElement, Context context) {
+			if (typeElement is ICompiledElement) {
+				switch (context.Options.ExternalCodeNamespaceDisplayKind) {
+
+					case ExternalCodeNamespaceDisplayKind.Never:
+						return null;
+
+					case ExternalCodeNamespaceDisplayKind.Always:
+						return GetNamespaceParts(typeElement.GetContainingNamespace());
+
+					case ExternalCodeNamespaceDisplayKind.OnlyForNonSystem:
+						if (typeElement.GetClrName().NamespaceNames.FirstOrDefault() != "System")
+							goto case ExternalCodeNamespaceDisplayKind.Always;
+						goto case ExternalCodeNamespaceDisplayKind.Never;
+
+					default:
+						goto case ExternalCodeNamespaceDisplayKind.Always;
+				}
+			}
+
+			switch (context.Options.SolutionCodeNamespaceDisplayKind) {
+
+				case SolutionCodeNamespaceDisplayKind.Never:
+					return null;
+
+				case SolutionCodeNamespaceDisplayKind.Always:
+					return GetNamespaceParts(typeElement.GetContainingNamespace());
+
+				case SolutionCodeNamespaceDisplayKind.Smart:
+					var contextualNamespace = context.ContextualNode?.GetContainingNode<INamespaceDeclaration>();
+					if (contextualNamespace == null)
+						goto case SolutionCodeNamespaceDisplayKind.Always;
+					return GetDifferentNamespaceParts(typeElement.GetContainingNamespace(), contextualNamespace.DeclaredElement);
+					
+				default:
+					goto case SolutionCodeNamespaceDisplayKind.Always;
+			}
+		}
+
+		[NotNull]
+		private static List<string> GetDifferentNamespaceParts([CanBeNull] INamespace sourceNamespace, [CanBeNull] INamespace contextualNamespace) {
+			List<string> sourceParts = GetNamespaceParts(sourceNamespace);
+			List<string> contextualParts = GetNamespaceParts(contextualNamespace);
+
+			int length = Math.Min(sourceParts.Count, contextualParts.Count);
+			int index = 0;
+			while (index < length && sourceParts[index] == contextualParts[index])
+				++index;
+
+			if (index > 0) {
+				sourceParts.RemoveRange(0, index);
+				if (sourceParts.Count > 0)
+					sourceParts.Insert(0, "…");
+			}
+
+			return sourceParts;
+		}
+
 		[NotNull]
 		private static string GetModuleFullName([NotNull] IType type) {
 			AssemblyNameInfo assembly = type.GetScalarType()?.Assembly;
@@ -362,20 +430,31 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return type.Module.DisplayName;
 		}
 
-		private void AppendNamespace([NotNull] INamespace ns) {
-			var containingNamespaces = new Stack<string>();
-			for (INamespace iter = ns.GetContainingNamespace(); iter != null && !iter.IsRootNamespace; iter = iter.GetContainingNamespace())
-				containingNamespaces.Push(iter.ShortName);
+		private bool AppendNamespaceParts([CanBeNull] List<string> namespaceParts) {
+			if (namespaceParts == null || namespaceParts.Count == 0)
+				return false;
 
-			string highlighterId = _highlighterIdProvider.Namespace;
+			string namespaceHighlighterId = _highlighterIdProvider.Namespace;
+			string operatorHighlighterId = _highlighterIdProvider.Operator;
 			
-			while (containingNamespaces.Count > 0) {
-				AppendText(containingNamespaces.Pop(), highlighterId);
-				AppendText(".", _highlighterIdProvider.Operator);
+			for (int i = 0; i < namespaceParts.Count; ++i) {
+				if (i > 0)
+					AppendText(".", operatorHighlighterId);
+				AppendText(namespaceParts[i], namespaceHighlighterId);
 			}
-			AppendText(ns.ShortName, highlighterId);
+
+			return true;
 		}
 
+		[NotNull]
+		private static List<string> GetNamespaceParts([CanBeNull] INamespace ns) {
+			var parts = new List<string>();
+			for (INamespace iter = ns; iter != null && !iter.IsRootNamespace; iter = iter.GetContainingNamespace())
+				parts.Add(iter.ShortName);
+			parts.Reverse();
+			return parts;
+		}
+		
 		private void AppendTypeParameters([NotNull] ITypeElement typeElement, [NotNull] ISubstitution substitution, Context context) {
 			IList<ITypeParameter> typeParameters = typeElement.TypeParameters;
 			int typeParameterCount = typeParameters.Count;
@@ -401,7 +480,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			var ns = element as INamespace;
 			if (ns != null) {
-				AppendNamespace(ns);
+				AppendNamespaceParts(GetNamespaceParts(ns));
 				return;
 			}
 

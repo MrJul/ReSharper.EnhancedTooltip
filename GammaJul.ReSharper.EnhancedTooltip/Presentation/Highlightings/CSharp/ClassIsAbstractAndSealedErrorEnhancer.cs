@@ -16,7 +16,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 			colorizer.AppendPlainText("Class '");
 			if (declaredElement != null)
-				colorizer.AppendDeclaredElement(declaredElement, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName);
+				colorizer.AppendDeclaredElement(declaredElement, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName, highlighting.ClassDeclaration);
 			else
 				colorizer.AppendClassName(highlighting.ClassDeclaration.DeclaredName);
 			colorizer.AppendPlainText("' cannot be both ");
