@@ -14,8 +14,8 @@ It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) tha
 Installation
 ------------
 Visual Studio 2012, 2013 and 2015 are supported.  
-ReSharper 2016.2 must be installed.  
-(Note: older versions are still available for ReSharper 8.2, 9.0, 9.1, 9.2, 10.0 and 2016.1).
+ReSharper 2016.3 must be installed.  
+(Note: older versions are still available for ReSharper 8.2, 9.0, 9.1, 9.2, 10.0, 2016.1 and 2016.2).
 
 Install the plugin using the built-in Extension Manager from the ReSharper menu.  
 
@@ -38,7 +38,8 @@ The options page is located at ReSharper → Options → Environment → Intelli
 
 Current Limitations
 -----------
-- Colors only work in C# files. The standard tooltip and parameter information popup are used in other file types.  
-- The parameter information popup isn't highlighted for calls using named parameters.  
+- Colors only work in C# files. The standard tooltip and parameter information popup are used in other file types.
+- The parameter information popup isn't highlighted for calls using named parameters.
+- This hasn't been tested with Visual Studio 2017 RC. Proper support will come when Visual Studio 2017 is released.
 
 Licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
