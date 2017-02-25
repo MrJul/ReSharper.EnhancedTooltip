@@ -62,13 +62,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			}
 			else if (presentedInfo.IsExtensionMethod && UnderlyingCandidate.InvocationCandidate.IsExtensionMethod) {
 				parameterRanges = presentedInfo.Parameters.Skip(1).ToArray();
-				mapToOriginalOrder = CreateOffsetMap(presentedInfo.Parameters.Count - 1, 1);
+				mapToOriginalOrder = CreateIdentityMap(presentedInfo.Parameters.Count - 1);
 				TextRange firstParameterRange = presentedInfo.Parameters[0].TrimLeft(5); // keeps "this " highlighted with the keyword color
 				extensionMethodInfo = new ExtensionMethodInfo(firstParameterRange, TextRange.InvalidRange);
 			}
 			else {
 				parameterRanges = presentedInfo.Parameters.ToArray();
-				mapToOriginalOrder = CreateOffsetMap(presentedInfo.Parameters.Count, 0);
+				mapToOriginalOrder = CreateIdentityMap(presentedInfo.Parameters.Count);
 				extensionMethodInfo = ExtensionMethodInfo.NoExtension;
 			}
 
@@ -76,10 +76,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		}
 
 		[NotNull]
-		private static int[] CreateOffsetMap(int length, int offset) {
+		private static int[] CreateIdentityMap(int length) {
 			var map = new int[length];
 			for (int i = 0; i < length; ++i)
-				map[i] = i + offset;
+				map[i] = i;
 			return map;
 		}
 
@@ -109,8 +109,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public int PositionalParameterCount
 			=> UnderlyingCandidate.PositionalParameterCount;
 
-		public EnhancedParameterInfoCandidate([NotNull] ParameterInfoCandidate underlyingCandidate, [NotNull] ColorizerPresenter colorizerPresenter,
-			[NotNull] IContextBoundSettingsStore settings, HighlighterIdProviderFactory highlighterIdProviderFactory) {
+		public EnhancedParameterInfoCandidate(
+			[NotNull] ParameterInfoCandidate underlyingCandidate,
+			[NotNull] ColorizerPresenter colorizerPresenter,
+			[NotNull] IContextBoundSettingsStore settings,
+			HighlighterIdProviderFactory highlighterIdProviderFactory) {
 			UnderlyingCandidate = underlyingCandidate;
 			_colorizerPresenter = colorizerPresenter;
 			_settings = settings;
