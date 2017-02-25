@@ -15,7 +15,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			IDeclaredElement function = highlighting.Declaration.DeclaredElement;
 
 			colorizer.AppendPlainText("The body of '");
-			colorizer.TryAppendDeclaredElement(function, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly);
+			colorizer.TryAppendDeclaredElement(function, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.Declaration);
 			colorizer.AppendPlainText("' cannot be an iterator block because '");
 			colorizer.AppendExpressionType(highlighting.ReturnType, false, PresenterOptions.FullWithoutParameterNames);
 			colorizer.AppendPlainText("' is not an iterator interface type");
