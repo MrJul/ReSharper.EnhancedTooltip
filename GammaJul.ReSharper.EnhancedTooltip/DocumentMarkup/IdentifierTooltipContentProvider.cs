@@ -183,7 +183,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			RichText identifierText = _colorizerPresenter.TryPresent(
 				new DeclaredElementInstance(element, info.Substitution),
-				PresenterOptions.ForIdentifierToolTip(settings),
+				PresenterOptions.ForIdentifierToolTip(settings, !element.IsEnumMember()),
 				languageType,
 				highlighterIdProvider,
 				info.TreeNode);

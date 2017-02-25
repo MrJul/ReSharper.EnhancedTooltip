@@ -53,7 +53,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public bool UseTypeKeywords { get; private set; }
 
 		[NotNull]
-		public static PresenterOptions ForIdentifierToolTip([NotNull] IContextBoundSettingsStore settings)
+		public static PresenterOptions ForIdentifierToolTip([NotNull] IContextBoundSettingsStore settings, bool showElementType)
 			=> new PresenterOptions {
 				ExternalCodeNamespaceDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.ExternalCodeNamespaceDisplayKind),
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey s) => s.DelegatesAsLambdas),
@@ -62,7 +62,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowDefaultValues = true,
 				ShowElementKind = settings.GetValue((IdentifierTooltipSettings s) => s.ShowKind) ? ElementKindDisplay.Stylized : ElementKindDisplay.None,
 				ShowElementAnnotations = settings.GetValue((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations),
-				ShowElementType = ElementTypeDisplay.Before,
+				ShowElementType = showElementType ? ElementTypeDisplay.Before : ElementTypeDisplay.None,
 				ShowEmptyParametersText = false,
 				ShowExplicitInterface = false,
 				ShowModifiers = false,
