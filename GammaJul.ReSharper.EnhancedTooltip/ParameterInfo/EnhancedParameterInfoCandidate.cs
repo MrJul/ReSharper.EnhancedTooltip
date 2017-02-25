@@ -27,6 +27,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public RichTextBlock GetDescription()
 			=> UnderlyingCandidate.GetDescription();
 
+		public bool IsFilteredOut {
+			get { return UnderlyingCandidate.IsFilteredOut; }
+			set { UnderlyingCandidate.IsFilteredOut = value; }
+		}
+
+		public bool IsObsolete
+			=> UnderlyingCandidate.IsObsolete;
+
+		public bool Matches(IDeclaredElement signature)
+			=> UnderlyingCandidate.Matches(signature);
+
+		public RichTextBlock ObsoleteDescription
+			=> UnderlyingCandidate.ObsoleteDescription;
+
+		public int PositionalParameterCount
+			=> UnderlyingCandidate.PositionalParameterCount;
+
 		public void GetParametersInfo(out ParamPresentationInfo[] paramInfos, out bool isParamsArray)
 			=> UnderlyingCandidate.GetParametersInfo(out paramInfos, out isParamsArray);
 
@@ -74,7 +91,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 
 			return richText;
 		}
-
+		
 		[NotNull]
 		private static int[] CreateIdentityMap(int length) {
 			var map = new int[length];
@@ -92,23 +109,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			return true;
 		}
 
-		public bool IsFilteredOut {
-			get { return UnderlyingCandidate.IsFilteredOut; }
-			set { UnderlyingCandidate.IsFilteredOut = value; }
+		public override bool Equals(object obj) {
+			var candidate = obj as EnhancedParameterInfoCandidate;
+			return candidate != null && UnderlyingCandidate.Equals(candidate.UnderlyingCandidate);
 		}
 
-		public bool IsObsolete
-			=> UnderlyingCandidate.IsObsolete;
-
-		public bool Matches(IDeclaredElement signature)
-			=> UnderlyingCandidate.Matches(signature);
-
-		public RichTextBlock ObsoleteDescription
-			=> UnderlyingCandidate.ObsoleteDescription;
-
-		public int PositionalParameterCount
-			=> UnderlyingCandidate.PositionalParameterCount;
-
+		public override int GetHashCode()
+			=> UnderlyingCandidate.GetHashCode();
+		
 		public EnhancedParameterInfoCandidate(
 			[NotNull] ParameterInfoCandidate underlyingCandidate,
 			[NotNull] ColorizerPresenter colorizerPresenter,
