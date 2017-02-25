@@ -101,11 +101,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendElementType(element, substitution, QualifierDisplays.ElementType, ":", null, context);
 
 			if (options.ShowConstantValue) {
-				var constantValueOwner = element as IConstantValueOwner
-					?? contextualNode as IConstantValueOwner
-					?? (contextualNode as ITokenNode)?.Parent as IConstantValueOwner;
+				var constantValueOwner = element as IConstantValueOwner;
 				if (constantValueOwner != null)
-					AppendConstantValueOwner(constantValueOwner, true);
+					AppendConstantValueOwner(constantValueOwner);
 			}
 
 			return context.PresentedInfo;
@@ -134,6 +132,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			PresenterOptions options = context.Options;
 			string kind = element.GetElementKindString(
 				options.UseExtensionMethodKind, options.UseAttributeClassKind, options.UseClassModifiersInKind, options.UseMethodModifiersInKind);
+			AppendElementKind(kind, stylized);
+		}
+
+		private void AppendElementKind([NotNull] string kind, bool stylized) {
 			if (stylized)
 				AppendText("(" + kind + ") ", new TextStyle(FontStyle.Italic));
 			else
@@ -796,13 +798,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText(")", null);
 		}
 
-		private void AppendConstantValueOwner([NotNull] IConstantValueOwner constantValueOwner, bool treatEnumAsIntegral) {
+		private void AppendConstantValueOwner([NotNull] IConstantValueOwner constantValueOwner) {
 			ConstantValue constantValue = constantValueOwner.ConstantValue;
 			if (constantValue.IsBadValue())
 				return;
 
 			AppendText(" = ", _highlighterIdProvider.Operator);
-			AppendConstantValue(constantValue, treatEnumAsIntegral);
+			AppendConstantValue(constantValue, true);
 		}
 
 		private void AppendConstantValue([NotNull] ConstantValue constantValue, bool treatEnumAsIntegral) {
@@ -893,6 +895,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 			AppendText(accessorName, _highlighterIdProvider.Method);
 			AppendText("; ", null);
+		}
+
+		public PresentedInfo AppendLiteralExpression(ILiteralExpression literalExpression, PresenterOptions options) {
+			var context = new Context(options, new PresentedInfo(), literalExpression);
+			
+			if (options.ShowElementKind != ElementKindDisplay.None)
+				AppendElementKind("literal", options.ShowElementKind == ElementKindDisplay.Stylized);
+
+			if (options.ShowElementType != ElementTypeDisplay.None)
+				AppendTypeWithoutModule(literalExpression.Type(), QualifierDisplays.ElementType, context);
+
+			if (options.ShowConstantValue)
+				AppendConstantValueOwner(literalExpression);
+
+			return context.PresentedInfo;
 		}
 
 		public CSharpColorizer(

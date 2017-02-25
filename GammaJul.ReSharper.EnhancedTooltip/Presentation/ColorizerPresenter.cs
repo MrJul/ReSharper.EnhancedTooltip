@@ -71,6 +71,22 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		[CanBeNull]
+		public RichText TryPresent(
+			[NotNull] ILiteralExpression literalExpression,
+			[NotNull] PresenterOptions options,
+			[NotNull] PsiLanguageType languageType,
+			[NotNull] HighlighterIdProvider highlighterIdProvider) {
+
+			var richText = new RichText();
+			IColorizer colorizer = TryCreateColorizer(richText, languageType, highlighterIdProvider);
+			if (colorizer == null)
+				return null;
+
+			colorizer.AppendLiteralExpression(literalExpression, options);
+			return richText;
+		}
+
+		[CanBeNull]
 		private IColorizer TryCreateColorizer([NotNull] RichText richText, [NotNull] PsiLanguageType languageType, [NotNull] HighlighterIdProvider highlighterIdProvider) {
 			// TODO: add a language service instead of checking the language
 			if (languageType.Is<CSharpLanguage>())

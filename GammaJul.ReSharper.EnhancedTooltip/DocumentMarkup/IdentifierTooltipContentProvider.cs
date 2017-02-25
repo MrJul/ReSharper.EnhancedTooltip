@@ -55,6 +55,27 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 		}
 
+		private struct PresentableInfo {
+
+			[CanBeNull] internal readonly DeclaredElementInfo DeclaredElementInfo;
+			[CanBeNull] internal readonly ILiteralExpression LiteralExpression;
+
+			public bool IsValid()
+				=> DeclaredElementInfo != null && DeclaredElementInfo.DeclaredElement.IsValid()
+				|| LiteralExpression != null;
+
+			public PresentableInfo([CanBeNull] DeclaredElementInfo declaredElementInfo) {
+				DeclaredElementInfo = declaredElementInfo;
+				LiteralExpression = null;
+			}
+
+			public PresentableInfo([CanBeNull] ILiteralExpression literalExpression) {
+				DeclaredElementInfo = null;
+				LiteralExpression = literalExpression;
+			}
+
+		}
+
 		[NotNull] private readonly ISolution _solution;
 		[NotNull] private readonly IDeclaredElementDescriptionPresenter _declaredElementDescriptionPresenter;
 		[NotNull] private readonly HighlighterIdProviderFactory _highlighterIdProviderFactory;
@@ -97,17 +118,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 		[CanBeNull]
 		private IdentifierContentGroup GetIdentifierContentGroupCore(
-			DocumentRange documentRange, [NotNull] IContextBoundSettingsStore settings, [CanBeNull] IHighlighter highlighter) {
+			DocumentRange documentRange,
+			[NotNull] IContextBoundSettingsStore settings,
+			[CanBeNull] IHighlighter highlighter) {
 
-			DeclaredElementInfo info = FindDeclaredElement(documentRange);
-			if (info == null)
+			PresentableInfo presentable = FindPresentable(documentRange);
+			if (!presentable.IsValid())
 				return null;
-			
-			IdentifierTooltipContent standardContent = TryPresentColorized(info, settings)
-				?? TryPresentNonColorized(highlighter, info.DeclaredElement, settings);
+
+			IdentifierTooltipContent standardContent =
+				TryPresentColorized(presentable.DeclaredElementInfo, settings)
+				?? TryPresentColorized(presentable.LiteralExpression, settings)
+				?? TryPresentNonColorized(highlighter, presentable.DeclaredElementInfo?.DeclaredElement, settings);
 
 			bool replacesStandardContent;
-			IdentifierTooltipContent additionalContent = TryGetAdditionalIdentifierContent(info, settings, out replacesStandardContent);
+			IdentifierTooltipContent additionalContent = TryGetAdditionalIdentifierContent(presentable.DeclaredElementInfo, settings, out replacesStandardContent);
 			if (replacesStandardContent) {
 				standardContent = additionalContent;
 				additionalContent = null;
@@ -120,18 +145,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (additionalContent != null)
 				result.Identifiers.Add(additionalContent);
 
-			result.ArgumentRole = TryGetArgumentRoleContent(info.TreeNode, settings);
+			result.ArgumentRole = TryGetArgumentRoleContent(presentable.DeclaredElementInfo?.TreeNode ?? presentable.LiteralExpression, settings);
 
 			return result;
 		}
 
 		[CanBeNull]
 		private IdentifierTooltipContent TryGetAdditionalIdentifierContent(
-			[NotNull] DeclaredElementInfo info,
+			[CanBeNull] DeclaredElementInfo info,
 			[NotNull] IContextBoundSettingsStore settings,
 			out bool replacesStandardContent) {
-
+			
 			replacesStandardContent = false;
+
+			if (info == null)
+				return null;
 
 			var constructor = info.DeclaredElement as IConstructor;
 			ITypeElement typeElement = constructor?.GetContainingType();
@@ -174,7 +202,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 
 		[CanBeNull]
-		private IdentifierTooltipContent TryPresentColorized([NotNull] DeclaredElementInfo info, [NotNull] IContextBoundSettingsStore settings) {
+		private IdentifierTooltipContent TryPresentColorized([CanBeNull] DeclaredElementInfo info, [NotNull] IContextBoundSettingsStore settings) {
+			if (info == null)
+				return null;
+
 			PsiLanguageType languageType = info.TreeNode.Language;
 			IDeclaredElement element = info.DeclaredElement;
 			IPsiModule psiModule = info.TreeNode.GetPsiModule();
@@ -350,7 +381,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 
 		[CanBeNull]
-		private IdentifierTooltipContent TryPresentNonColorized([CanBeNull] IHighlighter highlighter, [CanBeNull] IDeclaredElement element, [NotNull] IContextBoundSettingsStore settings) {
+		private IdentifierTooltipContent TryPresentNonColorized(
+			[CanBeNull] IHighlighter highlighter,
+			[CanBeNull] IDeclaredElement element,
+			[NotNull] IContextBoundSettingsStore settings) {
+
 			RichTextBlock richTextToolTip = highlighter?.RichTextToolTip;
 			if (richTextToolTip == null)
 				return null;
@@ -443,28 +478,48 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			var psiIconManager = _solution.GetComponent<PsiIconManager>();
 			return psiIconManager.GetImage(declaredElement, declaredElement.PresentationLanguage, true);
 		}
+
+		[CanBeNull]
+		private IdentifierTooltipContent TryPresentColorized([NotNull] ILiteralExpression literalExpression, [NotNull] IContextBoundSettingsStore settings) {
+			HighlighterIdProvider highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(settings);
+
+			RichText identifierText = _colorizerPresenter.TryPresent(
+				literalExpression,
+				PresenterOptions.ForIdentifierToolTip(settings, true),
+				literalExpression.Language,
+				highlighterIdProvider);
+
+			if (identifierText == null || identifierText.IsEmpty)
+				return null;
+			
+			var identifierContent = new IdentifierTooltipContent(identifierText, literalExpression.Literal.GetDocumentRange().TextRange);
+
+			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowIcon))
+				identifierContent.Icon = PsiSymbolsThemedIcons.Const.Id;
+
+			return identifierContent;
+		}
 		
 		/// <summary>
-		/// Finds a valid element represented at a given <see cref="DocumentRange"/>.
+		/// Finds a valid presentable element represented at a given <see cref="DocumentRange"/>.
 		/// </summary>
-		/// <param name="documentRange">The document range where to find a <see cref="IDeclaredElement"/>.</param>
-		/// <returns>A valid <see cref="DeclaredElementInfo"/>, or <c>null</c>.</returns>
-		[CanBeNull]
-		private DeclaredElementInfo FindDeclaredElement(DocumentRange documentRange) {
+		/// <param name="documentRange">The document range where to find a <see cref="IDeclaredElement"/> or a <see cref="ILiteralExpression"/>.</param>
+		/// <returns>A <see cref="PresentableInfo"/> which may not be valid if nothing was found.</returns>
+		private PresentableInfo FindPresentable(DocumentRange documentRange) {
 			IDocument document = documentRange.Document;
 			if (document == null || !documentRange.IsValid())
-				return null;
+				return new PresentableInfo();
 			
 			IPsiServices psiServices = _solution.GetPsiServices();
 			if (!psiServices.Files.AllDocumentsAreCommitted || psiServices.Caches.HasDirtyFiles)
-				return null;
+				return new PresentableInfo();
 
 			return document
 				.GetPsiSourceFiles(_solution)
 				.SelectMany(
 					psiSourceFile => psiServices.Files.GetPsiFiles(psiSourceFile, documentRange),
-					(psiSourceFile, file) => FindDeclaredElement(documentRange, file))
-				.FirstOrDefault(info => info != null && info.DeclaredElement.IsValid());
+					(psiSourceFile, file) => FindPresentable(documentRange, file))
+				.FirstOrDefault(info => info.IsValid());
 		}
 
 		/// <summary>
@@ -472,28 +527,29 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// </summary>
 		/// <param name="range">The range to get the element in <paramref name="file"/>.</param>
 		/// <param name="file">The file to search into.</param>
-		/// <returns>A <see cref="DeclaredElementInfo"/> at range <paramref name="range"/> in <paramref name="file"/>, or <c>null</c>.</returns>
-		[CanBeNull]
-		private static DeclaredElementInfo FindDeclaredElement(DocumentRange range, [NotNull] IFile file) {
+		/// <returns>A <see cref="PresentableInfo"/> at range <paramref name="range"/> in <paramref name="file"/>, which may not be valid if nothing was found.</returns>
+		private static PresentableInfo FindPresentable(DocumentRange range, [NotNull] IFile file) {
 			if (!file.IsValid())
-				return null;
+				return new PresentableInfo();
 
 			TreeTextRange treeTextRange = file.Translate(range);
 			if (!treeTextRange.IsValid())
-				return null;
+				return new PresentableInfo();
 
 			IReference[] references = file.FindReferencesAt(treeTextRange);
 			if (references.Length > 0)
-				return GetBestReference(references);
+				return new PresentableInfo(GetBestReference(references));
 
 			// FindNodeAt seems to return the previous node on single-char literals (eg '0'). FindNodesAt is fine.
 			var node = file.FindNodesAt<ITreeNode>(treeTextRange).FirstOrDefault();
 			if (node == null || !node.IsValid())
-				return null;
+				return new PresentableInfo();
 
-			return FindDeclaration(node, file)
-				?? FindConstant(node, file)
-				?? FindSpecialElement(node, file);
+			DeclaredElementInfo declaredElementInfo = FindDeclaration(node, file) ?? FindSpecialElement(node, file);
+			if (declaredElementInfo != null)
+				return new PresentableInfo(declaredElementInfo);
+
+			return new PresentableInfo(FindLiteralExpression(node));
 		}
 
 		/// <summary>
@@ -536,24 +592,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 
 		[CanBeNull]
-		private static DeclaredElementInfo FindConstant([NotNull] ITreeNode node, [NotNull] IFile file) {
-			var literalExpression = node.GetContainingNode<ILiteralExpression>(true);
-			if (literalExpression == null)
-				return null;
-
-			TreeTextRange literalRange = literalExpression.Literal.GetTreeTextRange();
-			if (!literalRange.Intersects(node.GetTreeTextRange()))
-				return null;
-
-			var declaredType = literalExpression.ConstantValue.Type as IDeclaredType;
-			ITypeElement typeElement = declaredType?.GetTypeElement();
-			if (typeElement == null)
-				return null;
-
-			return new DeclaredElementInfo(typeElement, declaredType.GetSubstitution(), node, file.GetDocumentRange(literalRange).TextRange, null);
-		}
-
-		[CanBeNull]
 		private static DeclaredElementInfo FindSpecialElement([NotNull] ITreeNode node, [NotNull] IFile file) {
 			var finder = LanguageManager.Instance.TryGetService<ISpecialDeclaredElementFinder>(file.Language);
 			if (finder == null)
@@ -567,10 +605,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			return new DeclaredElementInfo(declaredElementInstance.Element, declaredElementInstance.Substitution, node, sourceRange, null);
 		}
 
-		
 		[CanBeNull]
-		private ArgumentRoleTooltipContent TryGetArgumentRoleContent([NotNull] ITreeNode node, [NotNull] IContextBoundSettingsStore settings) {
-			if (!settings.GetValue((IdentifierTooltipSettings s) => s.ShowArgumentsRole))
+		private static ILiteralExpression FindLiteralExpression([NotNull] ITreeNode node) {
+			var literalExpression = node.GetContainingNode<ILiteralExpression>(true);
+			if (literalExpression == null)
+				return null;
+
+			TreeTextRange literalRange = literalExpression.Literal.GetTreeTextRange();
+			if (!literalRange.Intersects(node.GetTreeTextRange()))
+				return null;
+
+			return literalExpression;
+		}
+
+
+		[CanBeNull]
+		private ArgumentRoleTooltipContent TryGetArgumentRoleContent([CanBeNull] ITreeNode node, [NotNull] IContextBoundSettingsStore settings) {
+			if (node == null || !settings.GetValue((IdentifierTooltipSettings s) => s.ShowArgumentsRole))
 				return null;
 
 			var argument = node.GetContainingNode<IArgument>();
