@@ -134,6 +134,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			CheckBoxDisabledNoCheck2 rootCheckBox = IdentifierTooltipEnabledCheckBox;
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.Enabled, rootCheckBox, null);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowIcon, IdentifierTooltipShowIconCheckBox, rootCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowAccessRights, IdentifierTooltipShowAccessRightsCheckBox, rootCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowKind, IdentifierTooltipShowKindCheckBox, rootCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseExtensionMethodKind, IdentifierTooltipUseExtensionMethodKindCheckBox, IdentifierTooltipShowKindCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseAttributeClassKind, IdentifierTooltipUseAttributeClassKindCheckBox, IdentifierTooltipShowKindCheckBox);

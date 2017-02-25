@@ -57,7 +57,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			=> new PresenterOptions {
 				ExternalCodeNamespaceDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.ExternalCodeNamespaceDisplayKind),
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey s) => s.DelegatesAsLambdas),
-				ShowAccessRights = false,
+				ShowAccessRights = settings.GetValue((IdentifierTooltipSettings s) => s.ShowAccessRights),
 				ShowConstantValue = true,
 				ShowDefaultValues = true,
 				ShowElementKind = settings.GetValue((IdentifierTooltipSettings s) => s.ShowKind) ? ElementKindDisplay.Stylized : ElementKindDisplay.None,

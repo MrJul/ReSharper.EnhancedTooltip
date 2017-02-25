@@ -12,6 +12,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display an icon for identifiers")]
 		public bool ShowIcon { get; set; }
 
+		[SettingsEntry(false, "Display access rights (private/protected/internal/public)")]
+		public bool ShowAccessRights { get; set; }
+
 		[SettingsEntry(true, "Display the identifier kind (method, property, etc.)")]
 		public bool ShowKind { get; set; }
 
