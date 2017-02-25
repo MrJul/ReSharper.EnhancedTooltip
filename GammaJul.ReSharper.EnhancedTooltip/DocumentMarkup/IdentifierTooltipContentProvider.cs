@@ -480,7 +480,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 
 		[CanBeNull]
-		private IdentifierTooltipContent TryPresentColorized([NotNull] ILiteralExpression literalExpression, [NotNull] IContextBoundSettingsStore settings) {
+		private IdentifierTooltipContent TryPresentColorized([CanBeNull] ILiteralExpression literalExpression, [NotNull] IContextBoundSettingsStore settings) {
+			if (literalExpression == null)
+				return null;
+
 			HighlighterIdProvider highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(settings);
 
 			RichText identifierText = _colorizerPresenter.TryPresent(
