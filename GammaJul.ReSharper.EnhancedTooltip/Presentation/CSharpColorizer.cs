@@ -91,6 +91,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (options.ShowParametersType || options.ShowParametersName)
 				AppendParameters(element, substitution, true, context);
 
+			if (options.ShowAccessors) {
+				var property = element as IProperty;
+				if (property != null)
+					AppendAccessors(property, context);
+			}
+
 			if (options.ShowElementType == ElementTypeDisplay.After)
 				AppendElementType(element, substitution, QualifierDisplays.ElementType, ":", null, context);
 
@@ -136,14 +142,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public void AppendAccessRights([NotNull] IDeclaredElement element, bool addSpaceAfter) {
 			var accessRightsOwner = element as IAccessRightsOwner;
-			if (accessRightsOwner == null)
+			if (accessRightsOwner != null)
+				AppendAccessRights(accessRightsOwner.GetAccessRights(), addSpaceAfter);
+		}
+
+		private void AppendAccessRights(AccessRights accessRights, bool addSpaceAfter) {
+			string accessRightsString = CSharpDeclaredElementPresenter.Instance.Format(accessRights);
+			if (accessRightsString.IsNullOrEmpty())
 				return;
 
-			string accessRights = CSharpDeclaredElementPresenter.Instance.Format(accessRightsOwner.GetAccessRights());
-			if (accessRights.IsEmpty())
-				return;
+			AppendText(accessRightsString, _highlighterIdProvider.Keyword);
 
-			AppendText(accessRights, _highlighterIdProvider.Keyword);
 			if (addSpaceAfter)
 				AppendText(" ", null);
 		}
@@ -666,7 +675,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (options.ShowDefaultValues)
 				AppendDefaultValue(parameter, substitution, context);
 		}
-
+		
 		private void AppendAnnotations([NotNull] IAttributesSet attributesSet, AnnotationsDisplayKind showAnnotations) {
 			if (showAnnotations == AnnotationsDisplayKind.None)
 				return;
@@ -859,6 +868,31 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				addSeparator = true;
 			}
 			return true;
+		}
+
+		private void AppendAccessors([NotNull] IProperty property, Context context) {
+			IAccessor getter = property.Getter;
+			IAccessor setter = property.Setter;
+			if (getter == null && setter == null)
+				return;
+
+			AppendText(" { ", null);
+			AccessRights propertyAccessRights = property.GetAccessRights();
+			if (getter != null)
+				AppendAccessor(getter, "get", propertyAccessRights, context);
+			if (setter != null)
+				AppendAccessor(setter, "set", propertyAccessRights, context);
+			AppendText("}", null);
+		}
+
+		private void AppendAccessor([NotNull] IAccessor accessor, [NotNull] string accessorName, AccessRights propertyAccessRights, Context context) {
+			if (context.Options.ShowAccessRights) {
+				AccessRights accessorAccessRights = accessor.GetAccessRights();
+				if (accessorAccessRights != propertyAccessRights)
+					AppendAccessRights(accessorAccessRights, true);
+			}
+			AppendText(accessorName, _highlighterIdProvider.Method);
+			AppendText("; ", null);
 		}
 
 		public CSharpColorizer(

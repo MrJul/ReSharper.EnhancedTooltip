@@ -15,8 +15,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(false, "Display access rights (private/protected/internal/public)")]
 		public bool ShowAccessRights { get; set; }
 
-		[SettingsEntry(true, "Display the identifier kind (method, property, etc.)")]
+		[SettingsEntry(true, "Display the identifier kind (method/property/etc.)")]
 		public bool ShowKind { get; set; }
+		
+		[SettingsEntry(true, "Display property accessors (get/set)")]
+		public bool ShowAccessors { get; set; }
 
 		[SettingsEntry(true, "Display whether the member is obsolete")]
 		public bool ShowObsolete { get; set; }
@@ -50,9 +53,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
 		public bool UseTypeKeywords { get; set; }
-
+		
 		[SettingsEntry(true, "Display usage for attribute classes")]
 		public bool ShowAttributesUsage { get; set; }
+
 
 		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations for identifiers")]
 		public AnnotationsDisplayKind ShowIdentifierAnnotations { get; set; }
