@@ -95,9 +95,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendElementType(element, substitution, QualifierDisplays.ElementType, ":", null, context);
 
 			if (options.ShowConstantValue) {
-				var constantValueOwner = element as IConstantValueOwner;
+				var constantValueOwner = element as IConstantValueOwner
+					?? contextualNode as IConstantValueOwner
+					?? (contextualNode as ITokenNode)?.Parent as IConstantValueOwner;
 				if (constantValueOwner != null)
-					AppendConstantValue(constantValueOwner, true);
+					AppendConstantValueOwner(constantValueOwner, true);
 			}
 
 			return context.PresentedInfo;
@@ -785,7 +787,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText(")", null);
 		}
 
-		private void AppendConstantValue([NotNull] IConstantValueOwner constantValueOwner, bool treatEnumAsIntegral) {
+		private void AppendConstantValueOwner([NotNull] IConstantValueOwner constantValueOwner, bool treatEnumAsIntegral) {
 			ConstantValue constantValue = constantValueOwner.ConstantValue;
 			if (constantValue.IsBadValue())
 				return;
