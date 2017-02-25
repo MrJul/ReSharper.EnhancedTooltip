@@ -370,9 +370,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 						return GetNamespaceParts(typeElement.GetContainingNamespace());
 
 					case ExternalCodeNamespaceDisplayKind.OnlyForNonSystem:
-						if (typeElement.GetClrName().NamespaceNames.FirstOrDefault() != "System")
-							goto case ExternalCodeNamespaceDisplayKind.Always;
-						goto case ExternalCodeNamespaceDisplayKind.Never;
+						if (typeElement.IsInSystemLikeNamespace())
+							goto case ExternalCodeNamespaceDisplayKind.Never;
+						goto case ExternalCodeNamespaceDisplayKind.Always;
 
 					default:
 						goto case ExternalCodeNamespaceDisplayKind.Always;

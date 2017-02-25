@@ -421,6 +421,9 @@
     <Compile Include="Presentation\IdentifierContentGroup.cs" />
     <Compile Include="Presentation\IdentifierPresenter.cs" />
     <Compile Include="Presentation\ArgumentRoleTooltipContent.cs" />
+    <Compile Include="Psi\TypeElementExtensions.cs" />
+    <Compile Include="Settings\BaseTypeAndImplementedInterfacesDisplayMigration.cs" />
+    <Compile Include="Settings\BaseTypeDisplayKind.cs" />
     <Compile Include="Settings\SolutionCodeNamespaceDisplayKind.cs" />
     <Compile Include="Settings\ExternalCodeNamespaceDisplayKind.cs" />
     <Compile Include="Presentation\VsIdentifierContent.cs" />

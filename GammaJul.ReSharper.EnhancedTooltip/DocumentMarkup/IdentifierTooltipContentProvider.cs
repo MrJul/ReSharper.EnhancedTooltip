@@ -210,10 +210,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			var typeElement = info.DeclaredElement as ITypeElement;
 			if (typeElement != null) {
 
-				bool showBaseType = settings.GetValue((IdentifierTooltipSettings s) => s.ShowBaseType);
-				bool showImplementedInterfaces = settings.GetValue((IdentifierTooltipSettings s) => s.ShowImplementedInterfaces);
-				if (showBaseType || showImplementedInterfaces)
-					AddSuperTypes(identifierContent, typeElement, showBaseType, showImplementedInterfaces, languageType, info.TreeNode, highlighterIdProvider, settings);
+				var baseTypeDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.BaseTypeDisplayKind);
+				var implementedInterfacesDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.ImplementedInterfacesDisplayKind);
+				if (baseTypeDisplayKind != BaseTypeDisplayKind.Never || implementedInterfacesDisplayKind != BaseTypeDisplayKind.Never)
+					AddSuperTypes(identifierContent, typeElement, baseTypeDisplayKind, implementedInterfacesDisplayKind, languageType, info.TreeNode, highlighterIdProvider, settings);
 
 				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowAttributesUsage) && typeElement.IsAttribute())
 					identifierContent.AttributeUsage = GetAttributeUsage((IClass) info.DeclaredElement);
@@ -238,8 +238,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		private void AddSuperTypes(
 			[NotNull] IdentifierTooltipContent identifierContent,
 			[NotNull] ITypeElement typeElement,
-			bool showBaseType,
-			bool showImplementedInterfaces,
+			BaseTypeDisplayKind baseTypeDisplayKind,
+			BaseTypeDisplayKind implementedInterfacesDisplayKind,
 			[NotNull] PsiLanguageType languageType,
 			[NotNull] ITreeNode contextualNode,
 			[NotNull] HighlighterIdProvider highlighterIdProvider,
@@ -247,7 +247,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			DeclaredElementInstance baseType;
 			IList<DeclaredElementInstance> implementedInterfaces;
-			GetSuperTypes(typeElement, showBaseType, showImplementedInterfaces, out baseType, out implementedInterfaces);
+			GetSuperTypes(typeElement, baseTypeDisplayKind, implementedInterfacesDisplayKind, out baseType, out implementedInterfaces);
 
 			if (baseType == null && implementedInterfaces.Count == 0)
 				return;
@@ -273,16 +273,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 		private static void GetSuperTypes(
 			[NotNull] ITypeElement typeElement,
-			bool getBaseType,
-			bool getImplementedInterfaces,
+			BaseTypeDisplayKind baseTypeDisplayKind,
+			BaseTypeDisplayKind implementedInterfacesDisplayKind,
 			[CanBeNull] out DeclaredElementInstance baseType,
 			[NotNull] out IList<DeclaredElementInstance> implementedInterfaces) {
 
 			baseType = null;
 			implementedInterfaces = EmptyList<DeclaredElementInstance>.InstanceList;
 
-			var searchForBaseType = getBaseType && typeElement is IClass;
-			if (!searchForBaseType && !getImplementedInterfaces)
+			var searchForBaseType = baseTypeDisplayKind != BaseTypeDisplayKind.Never && typeElement is IClass;
+			if (!searchForBaseType && implementedInterfacesDisplayKind == BaseTypeDisplayKind.Never)
 				return;
 
 			var foundInterfaces = new LocalList<DeclaredElementInstance>();
@@ -292,19 +292,40 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 				if (superTypeElement is IClass || superTypeElement is IDelegate) {
 					if (searchForBaseType) {
-						baseType = new DeclaredElementInstance(superTypeElement, superType.GetSubstitution());
 						searchForBaseType = false;
-						if (!getImplementedInterfaces)
+						if (MatchesDisplayKind(superTypeElement, baseTypeDisplayKind))
+							baseType = new DeclaredElementInstance(superTypeElement, superType.GetSubstitution());
+						if (implementedInterfacesDisplayKind == BaseTypeDisplayKind.Never)
 							return;
 					}
 					continue;
 				}
 
-				if (getImplementedInterfaces && superTypeElement is IInterface)
-					foundInterfaces.Add(new DeclaredElementInstance(superTypeElement, superType.GetSubstitution()));
+				if (implementedInterfacesDisplayKind != BaseTypeDisplayKind.Never) {
+					var @interface = superTypeElement as IInterface;
+					if (@interface != null) {
+						if (MatchesDisplayKind(@interface, implementedInterfacesDisplayKind))
+							foundInterfaces.Add(new DeclaredElementInstance(superTypeElement, superType.GetSubstitution()));
+					}
+				}
 			}
 
 			implementedInterfaces = foundInterfaces.ResultingList();
+		}
+
+		private static bool MatchesDisplayKind([NotNull] ITypeElement typeElement, BaseTypeDisplayKind displayKind) {
+			switch (displayKind) {
+				case BaseTypeDisplayKind.Never:
+					return false;
+				case BaseTypeDisplayKind.SolutionCode:
+					return !(typeElement is ICompiledElement);
+				case BaseTypeDisplayKind.SolutionCodeAndNonSystemExternalCode:
+					return !(typeElement is ICompiledElement && typeElement.IsInSystemLikeNamespace());
+				case BaseTypeDisplayKind.Always:
+					return true;
+				default:
+					return false;
+			}
 		}
 
 		[NotNull]

@@ -39,10 +39,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(false, "Display the role of arguments inside invocations")]
 		public bool ShowArgumentsRole { get; set; }
 
-		[SettingsEntry(false, "Display the base type of classes")]
+		[SettingsEntry(false, "Display the base type of classes [legacy]")]
 		public bool ShowBaseType { get; set; }
 
-		[SettingsEntry(false, "Display the implemented interfaces of types")]
+		[SettingsEntry(false, "Display the implemented interfaces of types [legacy]")]
 		public bool ShowImplementedInterfaces { get; set; }
 
 		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
@@ -68,6 +68,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		[SettingsEntry(SolutionCodeNamespaceDisplayKind.Always, "Display namespaces for member from external code")]
 		public ExternalCodeNamespaceDisplayKind ExternalCodeNamespaceDisplayKind { get; set; }
+
+		[SettingsEntry(BaseTypeDisplayKind.Never, "Display the base type of classes")]
+		public BaseTypeDisplayKind BaseTypeDisplayKind { get; set; }
+
+		[SettingsEntry(BaseTypeDisplayKind.Never, "Display the implemented interfaces of types")]
+		public BaseTypeDisplayKind ImplementedInterfacesDisplayKind { get; set; }
 
 	}
 
