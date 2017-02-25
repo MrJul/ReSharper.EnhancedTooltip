@@ -15,78 +15,42 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	/// Wraps an existing <see cref="ParameterInfoCandidate"/>
 	/// and override its <see cref="ICandidate.GetSignature"/> method to provide colored parameter info.
 	/// </summary>
-	public class EnhancedParameterInfoCandidate : ICandidate {
+	public class EnhancedParameterInfoCandidate : EnhancedCandidate<ParameterInfoCandidate> {
 
 		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
-		[NotNull] private readonly HighlighterIdProviderFactory _highlighterIdProviderFactory;
-		[NotNull] private readonly IContextBoundSettingsStore _settings;
 
-		[NotNull]
-		public ParameterInfoCandidate UnderlyingCandidate { get; }
+		protected override PresenterOptions GetPresenterOptions(IContextBoundSettingsStore settings, AnnotationsDisplayKind showAnnotations)
+			=> PresenterOptions.ForParameterInfo(settings, showAnnotations);
 
-		public RichTextBlock GetDescription()
-			=> UnderlyingCandidate.GetDescription();
-
-		public bool IsFilteredOut {
-			get { return UnderlyingCandidate.IsFilteredOut; }
-			set { UnderlyingCandidate.IsFilteredOut = value; }
-		}
-
-		public bool IsObsolete
-			=> UnderlyingCandidate.IsObsolete;
-
-		public bool Matches(IDeclaredElement signature)
-			=> UnderlyingCandidate.Matches(signature);
-
-		public RichTextBlock ObsoleteDescription
-			=> UnderlyingCandidate.ObsoleteDescription;
-
-		public int PositionalParameterCount
-			=> UnderlyingCandidate.PositionalParameterCount;
-
-		public void GetParametersInfo(out ParamPresentationInfo[] paramInfos, out bool isParamsArray)
-			=> UnderlyingCandidate.GetParametersInfo(out paramInfos, out isParamsArray);
-
-		[NotNull]
-		public RichText GetSignature(
-			string[] namedArguments,
-			AnnotationsDisplayKind showAnnotations,
+		protected override RichText TryGetSignatureCore(
+			PresenterOptions options,
+			HighlighterIdProvider highlighterIdProvider,
 			out TextRange[] parameterRanges,
 			out int[] mapToOriginalOrder,
 			out ExtensionMethodInfo extensionMethodInfo) {
-			
-			// TODO: handle named arguments with reordering; currently falling back to non-colored display
-			if (namedArguments.Any(s => s != null)) {
-				string signature = UnderlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
-				if (!IsIdentityMap(mapToOriginalOrder))
-					return signature;
-			}
 
-			var options = PresenterOptions.ForParameterInfo(_settings, showAnnotations);
-			var highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(_settings);
+			parameterRanges = EmptyArray<TextRange>.Instance;
+			mapToOriginalOrder = EmptyArray<int>.Instance;
+			extensionMethodInfo = ExtensionMethodInfo.NoExtension;
+
 			PresentedInfo presentedInfo;
 			InvocationCandidate invocationCandidate = UnderlyingCandidate.InvocationCandidate;
 			var elementInstance = new DeclaredElementInstance(invocationCandidate.Element, invocationCandidate.Substitution);
-			
 			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, highlighterIdProvider, null, out presentedInfo);
 			if (richText == null)
-				return UnderlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
+				return null;
 
-			if (presentedInfo.Parameters.Count == 0) {
-				parameterRanges = EmptyArray<TextRange>.Instance;
-				mapToOriginalOrder = EmptyArray<int>.Instance;
-				extensionMethodInfo = ExtensionMethodInfo.NoExtension;
-			}
-			else if (presentedInfo.IsExtensionMethod && UnderlyingCandidate.InvocationCandidate.IsExtensionMethod) {
-				parameterRanges = presentedInfo.Parameters.Skip(1).ToArray();
-				mapToOriginalOrder = CreateIdentityMap(presentedInfo.Parameters.Count - 1);
-				TextRange firstParameterRange = presentedInfo.Parameters[0].TrimLeft(5); // keeps "this " highlighted with the keyword color
-				extensionMethodInfo = new ExtensionMethodInfo(firstParameterRange, TextRange.InvalidRange);
-			}
-			else {
-				parameterRanges = presentedInfo.Parameters.ToArray();
-				mapToOriginalOrder = CreateIdentityMap(presentedInfo.Parameters.Count);
-				extensionMethodInfo = ExtensionMethodInfo.NoExtension;
+			if (presentedInfo.Parameters.Count > 0) {
+				if (presentedInfo.IsExtensionMethod && UnderlyingCandidate.InvocationCandidate.IsExtensionMethod) {
+					parameterRanges = presentedInfo.Parameters.Skip(1).ToArray();
+					mapToOriginalOrder = CreateIdentityMap(presentedInfo.Parameters.Count - 1);
+					TextRange firstParameterRange = presentedInfo.Parameters[0].TrimLeft(5); // keeps "this " highlighted with the keyword color
+					extensionMethodInfo = new ExtensionMethodInfo(firstParameterRange, TextRange.InvalidRange);
+				}
+				else {
+					parameterRanges = presentedInfo.Parameters.ToArray();
+					mapToOriginalOrder = CreateIdentityMap(presentedInfo.Parameters.Count);
+				}
 			}
 
 			return richText;
@@ -99,33 +63,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 				map[i] = i;
 			return map;
 		}
-
-		private static bool IsIdentityMap([NotNull] int[] map) {
-			int length = map.Length;
-			for (int i = 0; i < length; ++i) {
-				if (map[i] != i)
-					return false;
-			}
-			return true;
-		}
-
-		public override bool Equals(object obj) {
-			var candidate = obj as EnhancedParameterInfoCandidate;
-			return candidate != null && UnderlyingCandidate.Equals(candidate.UnderlyingCandidate);
-		}
-
-		public override int GetHashCode()
-			=> UnderlyingCandidate.GetHashCode();
 		
 		public EnhancedParameterInfoCandidate(
 			[NotNull] ParameterInfoCandidate underlyingCandidate,
-			[NotNull] ColorizerPresenter colorizerPresenter,
 			[NotNull] IContextBoundSettingsStore settings,
-			HighlighterIdProviderFactory highlighterIdProviderFactory) {
-			UnderlyingCandidate = underlyingCandidate;
+			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory,
+			[NotNull] ColorizerPresenter colorizerPresenter)
+			: base(underlyingCandidate, settings, highlighterIdProviderFactory) {
 			_colorizerPresenter = colorizerPresenter;
-			_settings = settings;
-			_highlighterIdProviderFactory = highlighterIdProviderFactory;
 		}
 
 	}

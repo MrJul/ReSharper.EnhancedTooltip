@@ -42,6 +42,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public QualifierDisplays ShowQualifiers { get; private set; }
 
+		public bool ShowTypeParameters { get; private set; }
+
+		public bool ShowTypeParametersVariance { get; private set; }
+
 		public SolutionCodeNamespaceDisplayKind SolutionCodeNamespaceDisplayKind { get; private set; }
 
 		public bool UseAttributeClassKind { get; private set; }
@@ -73,6 +77,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowParametersName = true,
 				ShowParametersAnnotations = settings.GetValue((IdentifierTooltipSettings s) => s.ShowParametersAnnotations),
 				ShowParametersType = true,
+				ShowTypeParameters = true,
+				ShowTypeParametersVariance = false,
 				ShowQualifiers = QualifierDisplays.Member,
 				SolutionCodeNamespaceDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.SolutionCodeNamespaceDisplayKind),
 				UseAttributeClassKind = settings.GetValue((IdentifierTooltipSettings s) => s.UseAttributeClassKind),
@@ -102,6 +108,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowParametersAnnotations = AnnotationsDisplayKind.None,
 				ShowParametersType = false,
 				ShowQualifiers = QualifierDisplays.None,
+				ShowTypeParameters = true,
+				ShowTypeParametersVariance = false,
 				SolutionCodeNamespaceDisplayKind = SolutionCodeNamespaceDisplayKind.Never,
 				UseAttributeClassKind = false,
 				UseClassModifiersInKind = false,
@@ -130,6 +138,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowParametersAnnotations = AnnotationsDisplayKind.None,
 				ShowParametersType = false,
 				ShowQualifiers = QualifierDisplays.None,
+				ShowTypeParameters = false,
+				ShowTypeParametersVariance = false,
 				SolutionCodeNamespaceDisplayKind = SolutionCodeNamespaceDisplayKind.Never,
 				UseAttributeClassKind = false,
 				UseClassModifiersInKind = false,
@@ -158,7 +168,39 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowParametersAnnotations = showAnnotations,
 				ShowParametersType = true,
 				ShowQualifiers = QualifierDisplays.None,
+				ShowTypeParameters = false,
+				ShowTypeParametersVariance = false,
 				SolutionCodeNamespaceDisplayKind = SolutionCodeNamespaceDisplayKind.Never,
+				UseAttributeClassKind = false,
+				UseClassModifiersInKind = false,
+				UseExtensionMethodKind = false,
+				UseMethodModifiersInKind = false,
+				UseTypeKeywords = settings.GetValue((ParameterInfoSettings s) => s.UseTypeKeywords)
+			};
+
+		[NotNull]
+		public static PresenterOptions ForTypeArgumentInfo([NotNull] IContextBoundSettingsStore settings, AnnotationsDisplayKind showAnnotations)
+			=> new PresenterOptions {
+				ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Always,
+				FormatDelegatesAsLambdas = false,
+				ShowAccessors = false,
+				ShowAccessRights = false,
+				ShowConstantValue = false,
+				ShowDefaultValues = false,
+				ShowElementKind = ElementKindDisplay.None,
+				ShowElementAnnotations = AnnotationsDisplayKind.None,
+				ShowElementType = ElementTypeDisplay.None,
+				ShowEmptyParametersText = false,
+				ShowExplicitInterface = false,
+				ShowModifiers = false,
+				ShowName = true,
+				ShowParametersName = false,
+				ShowParametersAnnotations = showAnnotations,
+				ShowParametersType = false,
+				ShowQualifiers = QualifierDisplays.Member,
+				ShowTypeParameters = true,
+				ShowTypeParametersVariance = true,
+				SolutionCodeNamespaceDisplayKind = SolutionCodeNamespaceDisplayKind.Always,
 				UseAttributeClassKind = false,
 				UseClassModifiersInKind = false,
 				UseExtensionMethodKind = false,
@@ -186,6 +228,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ShowParametersAnnotations = AnnotationsDisplayKind.None,
 				ShowParametersType = true,
 				ShowQualifiers = QualifierDisplays.Member,
+				ShowTypeParameters = true,
+				ShowTypeParametersVariance = false,
 				SolutionCodeNamespaceDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.SolutionCodeNamespaceDisplayKind),
 				UseAttributeClassKind = false,
 				UseClassModifiersInKind = false,
@@ -212,7 +256,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersName = false,
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
+			ShowTypeParametersVariance = false,
 			ShowQualifiers = QualifierDisplays.Everywhere,
+			ShowTypeParameters = true,
 			SolutionCodeNamespaceDisplayKind = SolutionCodeNamespaceDisplayKind.Always,
 			UseAttributeClassKind = false,
 			UseClassModifiersInKind = false,
@@ -240,6 +286,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
 			ShowQualifiers = QualifierDisplays.Member,
+			ShowTypeParameters = true,
+			ShowTypeParametersVariance = false,
 			SolutionCodeNamespaceDisplayKind = SolutionCodeNamespaceDisplayKind.Always,
 			UseAttributeClassKind = false,
 			UseClassModifiersInKind = false,
@@ -267,6 +315,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = false,
 			ShowQualifiers = QualifierDisplays.Member,
+			ShowTypeParameters = true,
+			ShowTypeParametersVariance = false,
 			SolutionCodeNamespaceDisplayKind = SolutionCodeNamespaceDisplayKind.Always,
 			UseAttributeClassKind = false,
 			UseClassModifiersInKind = false,
@@ -294,6 +344,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
 			ShowQualifiers = QualifierDisplays.None,
+			ShowTypeParameters = true,
+			ShowTypeParametersVariance = false,
 			SolutionCodeNamespaceDisplayKind = SolutionCodeNamespaceDisplayKind.Never,
 			UseAttributeClassKind = false,
 			UseClassModifiersInKind = false,
@@ -321,6 +373,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = false,
 			ShowQualifiers = QualifierDisplays.None,
+			ShowTypeParameters = false,
+			ShowTypeParametersVariance = false,
 			SolutionCodeNamespaceDisplayKind = SolutionCodeNamespaceDisplayKind.Never,
 			UseAttributeClassKind = false,
 			UseClassModifiersInKind = false,
@@ -348,6 +402,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersAnnotations = AnnotationsDisplayKind.None,
 			ShowParametersType = true,
 			ShowQualifiers = QualifierDisplays.None,
+			ShowTypeParameters = false,
+			ShowTypeParametersVariance = false,
 			SolutionCodeNamespaceDisplayKind = SolutionCodeNamespaceDisplayKind.Never,
 			UseAttributeClassKind = false,
 			UseClassModifiersInKind = false,

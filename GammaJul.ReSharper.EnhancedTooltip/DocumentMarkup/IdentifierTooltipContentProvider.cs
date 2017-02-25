@@ -125,7 +125,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			PresentableInfo presentable = FindPresentable(documentRange);
 			if (!presentable.IsValid())
 				return null;
-
+			
 			IdentifierTooltipContent standardContent =
 				TryPresentColorized(presentable.DeclaredElementInfo, settings)
 				?? TryPresentColorized(presentable.LiteralExpression, settings)

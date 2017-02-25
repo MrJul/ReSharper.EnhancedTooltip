@@ -401,9 +401,15 @@
     <Compile Include="DocumentMarkup\SeverityExtensions.cs" />
     <Compile Include="DocumentMarkup\TextStyleHighlighterManager.cs" />
     <Compile Include="GenericImages\ThemedIcons.cs" />
+    <Compile Include="ParameterInfo\EnhancedCandidate.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoCandidate.cs" />
+    <Compile Include="ParameterInfo\EnhancedContext.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContext.cs" />
     <Compile Include="ParameterInfo\EnhancedParameterInfoContextFactory.cs" />
+    <Compile Include="ParameterInfo\EnhancedTypeArgumentCandidate.cs" />
+    <Compile Include="ParameterInfo\EnhancedTypeArgumentContext.cs" />
+    <Compile Include="ParameterInfo\EnhancedTypeArgumentContextFactory.cs" />
+    <Compile Include="ParameterInfo\ParameterInfoContextExtensions.cs" />
     <Compile Include="Presentation\AttributeUsageContent.cs" />
     <Compile Include="Presentation\AttributeTargetsExtension.cs" />
     <Compile Include="Presentation\AutoContrastedRichTextPresenter.cs" />

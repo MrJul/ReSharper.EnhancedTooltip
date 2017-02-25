@@ -9,6 +9,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull]
 		public List<TextRange> Parameters { get; } = new List<TextRange>();
 
+		[NotNull]
+		public List<TextRange> TypeParameters { get; } = new List<TextRange>();
+
 		public bool IsExtensionMethod { get; set; }
 
 	}
