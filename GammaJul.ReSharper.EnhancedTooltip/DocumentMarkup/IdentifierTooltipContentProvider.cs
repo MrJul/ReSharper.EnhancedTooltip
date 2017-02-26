@@ -229,14 +229,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowDocumentation)) {
 
-				identifierContent.Description = TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.NO_OBSOLETE_SUMMARY_STYLE);
 				XmlNode xmlDoc = element.GetXMLDoc(true);
-				
-				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowObsolete))
-					identifierContent.Obsolete = TryRemoveObsoletePrefix(TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.OBSOLETE_DESCRIPTION));
+				identifierContent.Description = TryGetDescription(element, xmlDoc, psiModule, languageType);
 
+				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowObsolete))
+					identifierContent.Obsolete = TryRemoveObsoletePrefix(TryGetObsolete(element, psiModule, languageType));
+				
 				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowReturn))
-					identifierContent.Return = TryGetReturn(xmlDoc, languageType, psiModule);
+					identifierContent.Return = TryPresentDocNode(xmlDoc, "returns", languageType, psiModule);
+
+				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowRemarks))
+					identifierContent.Remarks = TryPresentDocNode(xmlDoc, "remarks", languageType, psiModule);
 
 				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowExceptions))
 					identifierContent.Exceptions.AddRange(GetExceptions(xmlDoc, languageType, psiModule));
@@ -409,12 +412,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 
 		[CanBeNull]
-		private static RichText TryGetReturn(
+		private static RichText TryPresentDocNode(
 			[CanBeNull] XmlNode xmlDoc,
+			[NotNull] string nodeName,
 			[NotNull] PsiLanguageType languageType,
 			[NotNull] IPsiModule psiModule) {
 
-			XmlNode returnsNode = xmlDoc?.SelectSingleNode("returns");
+			XmlNode returnsNode = xmlDoc?.SelectSingleNode(nodeName);
 			if (returnsNode == null || !returnsNode.HasChildNodes)
 				return null;
 
@@ -468,17 +472,38 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// Returns the description of an element, if available.
 		/// </summary>
 		/// <param name="element">The element whose description will be returned.</param>
+		/// <param name="xmlDoc">The XML documentation for <paramref name="element"/>.</param>
 		/// <param name="psiModule">The PSI module of the file containing the identifier.</param>
 		/// <param name="languageType">The type of language used to present the identifier.</param>
-		/// <param name="style">The description style to use.</param>
 		[CanBeNull]
 		private RichText TryGetDescription(
 			[NotNull] IDeclaredElement element,
+			[CanBeNull] XmlNode xmlDoc,
 			[NotNull] IPsiModule psiModule,
-			[NotNull] PsiLanguageType languageType,
-			[NotNull] DeclaredElementDescriptionStyle style)
+			[NotNull] PsiLanguageType languageType) {
+
+			RichText richText = TryPresentDocNode(xmlDoc, "summary", languageType, psiModule);
+			if (richText != null)
+				return richText;
+
+			return _declaredElementDescriptionPresenter
+				.GetDeclaredElementDescription(element, DeclaredElementDescriptionStyle.NO_OBSOLETE_SUMMARY_STYLE, languageType, psiModule)
+				?.RichText;
+		}
+
+		/// <summary>
+		/// Returns the obsolete message of an element, if available.
+		/// </summary>
+		/// <param name="element">The element whose description will be returned.</param>
+		/// <param name="psiModule">The PSI module of the file containing the identifier.</param>
+		/// <param name="languageType">The type of language used to present the identifier.</param>
+		[CanBeNull]
+		private RichText TryGetObsolete(
+			[NotNull] IDeclaredElement element,
+			[NotNull] IPsiModule psiModule,
+			[NotNull] PsiLanguageType languageType)
 			=> _declaredElementDescriptionPresenter
-				.GetDeclaredElementDescription(element, style, languageType, psiModule)
+				.GetDeclaredElementDescription(element, DeclaredElementDescriptionStyle.OBSOLETE_DESCRIPTION, languageType, psiModule)
 				?.RichText;
 
 		[CanBeNull]
@@ -676,7 +701,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				node));
 
 			var content = new ArgumentRoleTooltipContent(final, argument.GetDocumentRange().TextRange) {
-				Description = TryGetDescription(parameter, parameter.Module, argument.Language, DeclaredElementDescriptionStyle.NO_OBSOLETE_SUMMARY_STYLE)
+				Description = TryGetDescription(parameter, parameter.GetXMLDoc(true), parameter.Module, argument.Language)
 			};
 
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowIcon))

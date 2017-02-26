@@ -144,6 +144,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowDocumentation, IdentifierTooltipShowDocumentationCheckBox, rootCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowObsolete, IdentifierTooltipShowObsoleteCheckBox, IdentifierTooltipShowDocumentationCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowReturn, IdentifierTooltipShowReturnCheckBox, IdentifierTooltipShowDocumentationCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowRemarks, IdentifierTooltipShowRemarksCheckBox, IdentifierTooltipShowDocumentationCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowExceptions, IdentifierTooltipShowExceptionsCheckBox, IdentifierTooltipShowDocumentationCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowOverloadCount, IdentifierTooltipShowOverloadCountCheckBox, rootCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowArgumentsRole, IdentifierTooltipShowArgumentsRoleCheckBox, rootCheckBox);

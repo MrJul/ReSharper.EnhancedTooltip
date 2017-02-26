@@ -20,6 +20,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[CanBeNull]
 		public RichText Return { get; set; }
 
+		[CanBeNull]
+		public RichText Remarks { get; set; }
+
 		public int? OverloadCount { get; set; }
 
 		[NotNull]

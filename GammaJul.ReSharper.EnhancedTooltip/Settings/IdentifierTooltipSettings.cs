@@ -27,8 +27,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display whether the member is obsolete")]
 		public bool ShowObsolete { get; set; }
 
-		[SettingsEntry(true, "Display return value documentation")]
+		[SettingsEntry(false, "Display return value documentation")]
 		public bool ShowReturn { get; set; }
+
+		[SettingsEntry(true, "Display remarks")]
+		public bool ShowRemarks { get; set; }
 
 		[SettingsEntry(true, "Display documented exceptions that can be thrown")]
 		public bool ShowExceptions { get; set; }
