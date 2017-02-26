@@ -27,6 +27,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		private const string VsIdentifier = "Identifier";
 		private const string VsOperator = "Operator";
+		private const string VsKeyword = "Keyword";
+
+		[NotNull]
+		public string Accessor
+			=> Get(HighlightingAttributeIds.METHOD_IDENTIFIER_ATTRIBUTE, VsKeyword, VsKeyword);
 
 		[NotNull]
 		public string Class
@@ -58,7 +63,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public string Keyword
-			=> "Keyword";
+			=> VsKeyword;
 
 		[NotNull]
 		public string Identifier

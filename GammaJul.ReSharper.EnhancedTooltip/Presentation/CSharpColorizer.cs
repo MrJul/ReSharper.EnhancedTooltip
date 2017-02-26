@@ -929,7 +929,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				if (accessorAccessRights != propertyAccessRights)
 					AppendAccessRights(accessorAccessRights, true);
 			}
-			AppendText(accessorName, _highlighterIdProvider.Method);
+			AppendText(accessorName, _highlighterIdProvider.Accessor);
 			AppendText("; ", null);
 		}
 
