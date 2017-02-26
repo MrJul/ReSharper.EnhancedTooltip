@@ -62,6 +62,20 @@
 			<local:DescriptionSeparatorWidthConverter x:Key="DescriptionSeparatorWidthConverter" />
 			<local:StringToWrappedTextBlockConverter x:Key="StringToWrappedTextBlockConverter" />
 			
+			<Style TargetType="{x:Type Border}" x:Key="TitleBorderStyle">
+				<Setter Property="BorderBrush" Value="Gray" />
+				<Setter Property="BorderThickness" Value="1" />
+				<Setter Property="Margin" Value="0,0,4,0" />
+				<Setter Property="VerticalAlignment" Value="Top" />
+			</Style>
+
+			<Style TargetType="{x:Type TextBlock}" x:Key="TitleTextBlockStyle">
+				<Setter Property="Foreground" Value="Gray" />
+				<Setter Property="Margin" Value="2" />
+				<Setter Property="FontWeight" Value="Bold" />
+				<Setter Property="VerticalAlignment" Value="Center" />
+			</Style>
+
 			<!-- Style for an identifier -->
 			<DataTemplate DataType="{x:Type local:IdentifierTooltipContent}">
 				<StackPanel x:Name="Root" Orientation="Vertical" Margin="0,1">
@@ -98,8 +112,8 @@
 							Stroke="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}" />
 
 						<DockPanel x:Name="BaseTypePresenter" Margin="0,2,0,0">
-							<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" VerticalAlignment="Top" DockPanel.Dock="Left">
-								<TextBlock Text="Inherits" Margin="2" Foreground="Gray" FontWeight="Bold" VerticalAlignment="Center"
+							<Border Style="{StaticResource TitleBorderStyle}" DockPanel.Dock="Left">
+								<TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Inherits"
 									FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
 							</Border>
 							<controls:RichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center"
@@ -111,8 +125,8 @@
 								<DataTemplate DataType="{x:Type richText:RichText}">
 
 									<DockPanel Margin="0,2,0,0">
-										<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" VerticalAlignment="Top" DockPanel.Dock="Left">
-											<TextBlock Text="Implements" Margin="2" Foreground="Gray" FontWeight="Bold" VerticalAlignment="Center"
+										<Border Style="{StaticResource TitleBorderStyle}" DockPanel.Dock="Left">
+											<TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Implements"
 												FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
 										</Border>
 										<controls:RichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center"
@@ -133,8 +147,8 @@
 					</StackPanel>
 
 					<DockPanel x:Name="ObsoletePresenter" Margin="0,2,0,0">
-						<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" VerticalAlignment="Top" DockPanel.Dock="Left">
-							<TextBlock Text="Obsolete" Margin="2" Foreground="Gray" FontWeight="Bold" VerticalAlignment="Center"
+						<Border Style="{StaticResource TitleBorderStyle}" DockPanel.Dock="Left">
+							<TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Obsolete"
 								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
 						</Border>
 						<local:AutoContrastedRichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center"
@@ -142,8 +156,8 @@
 					</DockPanel>
 
 					<DockPanel x:Name="ReturnPresenter" Margin="0,2,0,0">
-						<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" VerticalAlignment="Top" DockPanel.Dock="Left">
-							<TextBlock Text="Returns" Margin="2" Foreground="Gray" FontWeight="Bold" VerticalAlignment="Center"
+						<Border Style="{StaticResource TitleBorderStyle}" DockPanel.Dock="Left">
+							<TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Returns"
 								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
 						</Border>
 						<local:AutoContrastedRichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center"
@@ -157,7 +171,7 @@
 								<DockPanel Margin="0,2,0,0">
 									<StackPanel Orientation="Horizontal" VerticalAlignment="Top" DockPanel.Dock="Left">
 										<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" VerticalAlignment="Center">
-											<TextBlock Text="Throws" Margin="2" Foreground="Gray" FontWeight="Bold"
+											<TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Throws"
 												FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
 										</Border>
 										<TextBlock Text="{Binding Exception}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,0,1" />
