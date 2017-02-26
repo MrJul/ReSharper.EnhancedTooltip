@@ -21,8 +21,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display property accessors (get/set)")]
 		public bool ShowAccessors { get; set; }
 
+		[SettingsEntry(true, "Display member documentation")]
+		public bool ShowDocumentation { get; set; }
+
 		[SettingsEntry(true, "Display whether the member is obsolete")]
 		public bool ShowObsolete { get; set; }
+
+		[SettingsEntry(true, "Display return value documentation")]
+		public bool ShowReturn { get; set; }
 
 		[SettingsEntry(true, "Display documented exceptions that can be thrown")]
 		public bool ShowExceptions { get; set; }

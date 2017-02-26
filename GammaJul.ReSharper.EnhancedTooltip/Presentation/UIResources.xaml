@@ -141,6 +141,15 @@
 							RichText="{Binding Obsolete}" Margin="0,0,0,1" />
 					</DockPanel>
 
+					<DockPanel x:Name="ReturnPresenter" Margin="0,2,0,0">
+						<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" VerticalAlignment="Top" DockPanel.Dock="Left">
+							<TextBlock Text="Returns" Margin="2" Foreground="Gray" FontWeight="Bold" VerticalAlignment="Center"
+								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
+						</Border>
+						<local:AutoContrastedRichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center"
+							RichText="{Binding Return}" Margin="0,0,0,1" />
+					</DockPanel>
+
 					<ItemsControl x:Name="ExceptionsPresenter" ItemsSource="{Binding Exceptions}" Grid.IsSharedSizeScope="True">
 						<ItemsControl.ItemTemplate>
 							<DataTemplate DataType="{x:Type local:ExceptionContent}">
@@ -188,6 +197,9 @@
 					<DataTrigger Binding="{Binding Obsolete}" Value="{x:Null}">
 						<Setter TargetName="ObsoletePresenter" Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
+					<DataTrigger Binding="{Binding Return}" Value="{x:Null}">
+						<Setter TargetName="ReturnPresenter" Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
 					<DataTrigger Binding="{Binding HasItems, ElementName=ExceptionsPresenter}" Value="False">
 						<Setter TargetName="ExceptionsPresenter" Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
@@ -197,6 +209,7 @@
 					<MultiDataTrigger>
 						<MultiDataTrigger.Conditions>
 							<Condition Binding="{Binding Obsolete}" Value="{x:Null}" />
+							<Condition Binding="{Binding Return}" Value="{x:Null}" />
 							<Condition Binding="{Binding HasItems, ElementName=ExceptionsPresenter}" Value="False" />
 						</MultiDataTrigger.Conditions>
 						<Setter TargetName="DescriptionPresenter" Property="Margin" Value="0" />

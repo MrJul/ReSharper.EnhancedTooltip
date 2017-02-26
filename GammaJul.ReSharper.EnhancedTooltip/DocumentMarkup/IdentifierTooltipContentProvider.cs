@@ -222,18 +222,26 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (identifierText == null || identifierText.IsEmpty)
 				return null;
 			
-			var identifierContent = new IdentifierTooltipContent(identifierText, info.SourceRange) {
-				Description = TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.NO_OBSOLETE_SUMMARY_STYLE),
-			};
-
+			var identifierContent = new IdentifierTooltipContent(identifierText, info.SourceRange);
+			
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowIcon))
 				identifierContent.Icon = TryGetIcon(element);
 
-			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowObsolete))
-				identifierContent.Obsolete = TryRemoveObsoletePrefix(TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.OBSOLETE_DESCRIPTION));
+			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowDocumentation)) {
 
-			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowExceptions))
-				identifierContent.Exceptions.AddRange(GetExceptions(element, languageType, psiModule));
+				identifierContent.Description = TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.NO_OBSOLETE_SUMMARY_STYLE);
+				XmlNode xmlDoc = element.GetXMLDoc(true);
+				
+				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowObsolete))
+					identifierContent.Obsolete = TryRemoveObsoletePrefix(TryGetDescription(element, psiModule, languageType, DeclaredElementDescriptionStyle.OBSOLETE_DESCRIPTION));
+
+				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowReturn))
+					identifierContent.Return = TryGetReturn(xmlDoc, languageType, psiModule);
+
+				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowExceptions))
+					identifierContent.Exceptions.AddRange(GetExceptions(xmlDoc, languageType, psiModule));
+
+			}
 
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowOverloadCount))
 				identifierContent.OverloadCount = TryGetOverloadCountCount(element as IFunction, info.Reference, languageType);
@@ -400,13 +408,26 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			return identifierContent;
 		}
 
-		[NotNull]
-		private static IEnumerable<ExceptionContent> GetExceptions(
-			[NotNull] IDeclaredElement element,
+		[CanBeNull]
+		private static RichText TryGetReturn(
+			[CanBeNull] XmlNode xmlDoc,
 			[NotNull] PsiLanguageType languageType,
 			[NotNull] IPsiModule psiModule) {
 
-			XmlNode xmlDoc = element.GetXMLDoc(true);
+			XmlNode returnsNode = xmlDoc?.SelectSingleNode("returns");
+			if (returnsNode == null || !returnsNode.HasChildNodes)
+				return null;
+
+			var richText = XmlDocRichTextPresenter.Run(returnsNode, false, languageType, psiModule).RichText;
+			return richText.IsNullOrEmpty() ? null : richText;
+		}
+
+		[NotNull]
+		private static IEnumerable<ExceptionContent> GetExceptions(
+			[CanBeNull] XmlNode xmlDoc,
+			[NotNull] PsiLanguageType languageType,
+			[NotNull] IPsiModule psiModule) {
+
 			XmlNodeList exceptionNodes = xmlDoc?.SelectNodes("exception");
 			if (exceptionNodes == null || exceptionNodes.Count == 0)
 				return EmptyList<ExceptionContent>.InstanceList;
