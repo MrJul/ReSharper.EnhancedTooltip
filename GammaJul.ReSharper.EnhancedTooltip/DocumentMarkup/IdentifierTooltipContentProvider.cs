@@ -247,7 +247,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			}
 
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowOverloadCount))
-				identifierContent.OverloadCount = TryGetOverloadCountCount(element as IFunction, info.Reference, languageType);
+				identifierContent.OverloadCount = TryGetOverloadCount(element as IFunction, info.Reference, languageType);
 
 			var typeElement = info.DeclaredElement as ITypeElement;
 			if (typeElement != null) {
@@ -265,7 +265,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			return identifierContent;
 		}
 		
-		private static int? TryGetOverloadCountCount([CanBeNull] IFunction function, [CanBeNull] IReference reference, PsiLanguageType languageType) {
+		private static int? TryGetOverloadCount([CanBeNull] IFunction function, [CanBeNull] IReference reference, PsiLanguageType languageType) {
 			if (function == null || reference == null || function is PredefinedOperator)
 				return null;
 
@@ -607,7 +607,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// <param name="references">A collection of references.</param>
 		/// <returns>The <see cref="DeclaredElementInfo"/> corresponding to the best reference.</returns>
 		[CanBeNull]
-		private static DeclaredElementInfo GetBestReference([NotNull] IEnumerable<IReference> references) {
+		private static DeclaredElementInfo GetBestReference([NotNull] IReference[] references) {
 			foreach (IReference reference in references.OrderBy(r => r.GetTreeNode().PathToRoot().Count())) {
 				IResolveResult resolveResult = reference.Resolve().Result;
 				if (reference.CheckResolveResult() == ResolveErrorType.DYNAMIC)

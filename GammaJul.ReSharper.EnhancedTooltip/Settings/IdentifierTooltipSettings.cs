@@ -33,7 +33,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display remarks")]
 		public bool ShowRemarks { get; set; }
 
-		[SettingsEntry(true, "Display documented exceptions that can be thrown")]
+		[SettingsEntry(true, "Display documented exceptions")]
 		public bool ShowExceptions { get; set; }
 
 		[SettingsEntry(true, "Display overload count where applicable")]
@@ -65,8 +65,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		
 		[SettingsEntry(true, "Display usage for attribute classes")]
 		public bool ShowAttributesUsage { get; set; }
-
-
+		
 		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations for identifiers")]
 		public AnnotationsDisplayKind ShowIdentifierAnnotations { get; set; }
 
