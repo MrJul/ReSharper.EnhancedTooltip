@@ -9,7 +9,7 @@ using JetBrains.UI.RichText;
 using JetBrains.Util;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
-
+	
 	public abstract class EnhancedCandidate<TCandidate> : ICandidate
 	where TCandidate : class, ICandidate {
 

@@ -60,6 +60,7 @@
 		<Style.Resources>
 
 			<local:DescriptionSeparatorWidthConverter x:Key="DescriptionSeparatorWidthConverter" />
+			<local:StringToWrappedTextBlockConverter x:Key="StringToWrappedTextBlockConverter" />
 			
 			<!-- Style for an identifier -->
 			<DataTemplate DataType="{x:Type local:IdentifierTooltipContent}">
@@ -261,14 +262,19 @@
 
 			<!-- Style for VS squiggle content -->
 			<DataTemplate DataType="{x:Type local:VsSquiggleContent}">
-				<DockPanel Margin="0,1">
-					<Border DataContext="{x:Static resources:BulbThemedIcons+YellowBulbVS.Id}">
+				<Grid Margin="0,1">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+					<Border DataContext="{x:Static resources:BulbThemedIcons+YellowBulbVS.Id}" Grid.Column="0">
 						<jui:ThemedIconViewImage x:Name="IconPresenter" Stretch="Uniform"
 							Margin="0,0,4,0" local:IconScaling.IsScalingWithFontSize="True"
-							DockPanel.Dock="Left" VerticalAlignment="Top" HorizontalAlignment="Left" />
+							VerticalAlignment="Top" HorizontalAlignment="Left" />
 					</Border>
-					<ContentPresenter VerticalAlignment="Center" Content="{Binding Content}" />
-				</DockPanel>
+					<ContentPresenter VerticalAlignment="Center" Grid.Column="1"
+						Content="{Binding Content, Converter={StaticResource StringToWrappedTextBlockConverter}}" />
+				</Grid>
 			</DataTemplate>
 
 			<!-- Style for VS identifier content -->

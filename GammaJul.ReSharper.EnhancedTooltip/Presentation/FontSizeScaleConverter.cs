@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
-	public class FontSizeScaleConverter : IValueConverter {
+	public sealed class FontSizeScaleConverter : IValueConverter {
 
 		public double Scale { get; set; } = 1.0;
 		
@@ -17,13 +17,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return ((double) value) * scale;
 		}
 
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-			return ScaleDouble(value, Scale);
-		}
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+			=> ScaleDouble(value, Scale);
 
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-			return ScaleDouble(value, 1.0 / Scale);
-		}
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+			=> ScaleDouble(value, 1.0 / Scale);
 
 	}
 

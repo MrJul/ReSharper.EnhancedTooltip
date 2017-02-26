@@ -427,6 +427,7 @@
     <Compile Include="Presentation\IdentifierContentGroup.cs" />
     <Compile Include="Presentation\IdentifierPresenter.cs" />
     <Compile Include="Presentation\ArgumentRoleTooltipContent.cs" />
+    <Compile Include="Presentation\StringToWrappedTextBlockConverter.cs" />
     <Compile Include="Psi\TypeElementExtensions.cs" />
     <Compile Include="Settings\BaseTypeAndImplementedInterfacesDisplayMigration.cs" />
     <Compile Include="Settings\BaseTypeDisplayKind.cs" />
