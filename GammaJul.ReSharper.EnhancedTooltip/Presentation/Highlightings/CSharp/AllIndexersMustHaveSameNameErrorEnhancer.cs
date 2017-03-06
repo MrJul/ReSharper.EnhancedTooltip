@@ -7,15 +7,15 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
-	internal sealed class CannotUseDefaultMemberAttributeOnTypeWithIndexerErrorEnhancer : CSharpHighlightingEnhancer<CannotUseDefaultMemberAttributeOnTypeWithIndexerError> {
-
-		protected override void AppendTooltip(CannotUseDefaultMemberAttributeOnTypeWithIndexerError highlighting, CSharpColorizer colorizer) {
-			colorizer.AppendPlainText("Cannot specify the '");
-			colorizer.AppendClassName("DefaultMember");
-			colorizer.AppendPlainText("' attribute on type containing an indexer");
-		}
+	internal sealed class AllIndexersMustHaveSameNameErrorEnhancer : CSharpHighlightingEnhancer<AllIndexersMustHaveSameNameError> {
 		
-		public CannotUseDefaultMemberAttributeOnTypeWithIndexerErrorEnhancer(
+		protected override void AppendTooltip(AllIndexersMustHaveSameNameError highlighting, CSharpColorizer colorizer) {
+			colorizer.AppendPlainText("The '");
+			colorizer.AppendClassName("IndexerName");
+			colorizer.AppendPlainText("' attribute must be used with the same name on every indexer within a type");
+		}
+
+		public AllIndexersMustHaveSameNameErrorEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
 			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
 			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)

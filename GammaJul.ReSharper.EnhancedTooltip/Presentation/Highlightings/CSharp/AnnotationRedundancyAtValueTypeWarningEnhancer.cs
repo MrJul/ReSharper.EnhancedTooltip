@@ -11,8 +11,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(AnnotationRedundancyAtValueTypeWarning highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("Applying nullness annotation to ");
-			if (highlighting.IsVoid)
+			if (highlighting.IsVoid) {
+				colorizer.AppendPlainText("'");
 				colorizer.AppendKeyword("void");
+				colorizer.AppendPlainText("'");
+			}
 			else
 				colorizer.AppendPlainText("value");
 			colorizer.AppendPlainText(" type is meaningless");

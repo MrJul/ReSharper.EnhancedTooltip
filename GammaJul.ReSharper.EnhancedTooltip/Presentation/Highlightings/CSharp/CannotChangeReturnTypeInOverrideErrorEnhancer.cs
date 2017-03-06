@@ -1,3 +1,4 @@
+using System;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using JetBrains.Annotations;
 using JetBrains.ProjectModel;
@@ -11,6 +12,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 	internal sealed class CannotChangeReturnTypeInOverrideErrorEnhancer : CSharpHighlightingEnhancer<CannotChangeReturnTypeInOverrideError> {
 
 		protected override void AppendTooltip(CannotChangeReturnTypeInOverrideError highlighting, CSharpColorizer colorizer) {
+			if (highlighting.TypeUsageMismatch.HasShortDescription) {
+				colorizer.AppendPlainText(highlighting.TypeUsageMismatch.GetDescription());
+				colorizer.AppendPlainText(Environment.NewLine);
+				colorizer.AppendPlainText(Environment.NewLine);
+			}
 			colorizer.AppendPlainText("Cannot change return type when overriding ");
 			colorizer.AppendElementKind(highlighting.OverriddenMember);
 			colorizer.AppendPlainText(" '");

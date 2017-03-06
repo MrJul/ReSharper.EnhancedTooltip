@@ -7,15 +7,15 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
-	internal sealed class CannotUseDefaultMemberAttributeOnTypeWithIndexerErrorEnhancer : CSharpHighlightingEnhancer<CannotUseDefaultMemberAttributeOnTypeWithIndexerError> {
+	internal sealed class ConvertIfStatementToNullCoalescingExpression2WarningEnhancer : CSharpHighlightingEnhancer<ConvertIfStatementToNullCoalescingExpression2Warning> {
 
-		protected override void AppendTooltip(CannotUseDefaultMemberAttributeOnTypeWithIndexerError highlighting, CSharpColorizer colorizer) {
-			colorizer.AppendPlainText("Cannot specify the '");
-			colorizer.AppendClassName("DefaultMember");
-			colorizer.AppendPlainText("' attribute on type containing an indexer");
+		protected override void AppendTooltip(ConvertIfStatementToNullCoalescingExpression2Warning highlighting, CSharpColorizer colorizer) {
+			colorizer.AppendPlainText("Convert to '");
+			colorizer.AppendOperator("??");
+			colorizer.AppendPlainText("' expression");
 		}
 		
-		public CannotUseDefaultMemberAttributeOnTypeWithIndexerErrorEnhancer(
+		public ConvertIfStatementToNullCoalescingExpression2WarningEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
 			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
 			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)

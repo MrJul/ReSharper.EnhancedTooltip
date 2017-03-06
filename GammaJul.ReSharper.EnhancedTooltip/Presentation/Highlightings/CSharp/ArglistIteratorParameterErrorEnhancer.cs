@@ -7,15 +7,15 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
-	internal sealed class CannotUseDefaultMemberAttributeOnTypeWithIndexerErrorEnhancer : CSharpHighlightingEnhancer<CannotUseDefaultMemberAttributeOnTypeWithIndexerError> {
+	internal sealed class ArglistIteratorParameterErrorEnhancer : CSharpHighlightingEnhancer<ArglistIteratorParameterError> {
 
-		protected override void AppendTooltip(CannotUseDefaultMemberAttributeOnTypeWithIndexerError highlighting, CSharpColorizer colorizer) {
-			colorizer.AppendPlainText("Cannot specify the '");
-			colorizer.AppendClassName("DefaultMember");
-			colorizer.AppendPlainText("' attribute on type containing an indexer");
+		protected override void AppendTooltip(ArglistIteratorParameterError highlighting, CSharpColorizer colorizer) {
+			colorizer.AppendPlainText("'");
+			colorizer.AppendKeyword("__arglist");
+			colorizer.AppendPlainText("' is not allowed in the parameter list of iterators");
 		}
-		
-		public CannotUseDefaultMemberAttributeOnTypeWithIndexerErrorEnhancer(
+
+		public ArglistIteratorParameterErrorEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
 			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
 			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)

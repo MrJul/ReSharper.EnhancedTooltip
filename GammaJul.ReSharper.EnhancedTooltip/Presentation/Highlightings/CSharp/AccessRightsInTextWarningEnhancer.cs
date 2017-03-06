@@ -9,24 +9,22 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
-	internal sealed class AccessRightsErrorEnhancer : CSharpHighlightingEnhancer<AccessRightsError> {
+	internal sealed class AccessRightsInTextWarningEnhancer : CSharpHighlightingEnhancer<AccessRightsInTextWarning> {
 
-		protected override void AppendTooltip(AccessRightsError highlighting, CSharpColorizer colorizer) {
+		protected override void AppendTooltip(AccessRightsInTextWarning highlighting, CSharpColorizer colorizer) {
 			ResolveResultWithInfo resolveResult = highlighting.Reference.Resolve();
 			IDeclaredElement declaredElement = resolveResult.DeclaredElement;
 			if (declaredElement == null)
 				return;
 
 			colorizer.AppendPlainText("Cannot access ");
-			colorizer.AppendAccessRights(declaredElement, false);
-			colorizer.AppendPlainText(" ");
 			colorizer.AppendElementKind(declaredElement);
 			colorizer.AppendPlainText(" '");
 			colorizer.AppendDeclaredElement(declaredElement, resolveResult.Substitution, PresenterOptions.NameOnly, highlighting.Reference.GetTreeNode());
 			colorizer.AppendPlainText("' here");
 		}
 
-		public AccessRightsErrorEnhancer(
+		public AccessRightsInTextWarningEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
 			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
 			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)

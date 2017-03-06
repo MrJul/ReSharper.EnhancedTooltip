@@ -17,7 +17,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		public Type HighlightingType
 			=> typeof(T);
-
+		
 		public RichText TryEnhance(IHighlighting highlighting, IContextBoundSettingsStore settings) {
 			var typedHighlighting = highlighting as T;
 			if (typedHighlighting == null)

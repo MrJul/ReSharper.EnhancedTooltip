@@ -9,24 +9,20 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
-	internal sealed class AccessRightsErrorEnhancer : CSharpHighlightingEnhancer<AccessRightsError> {
+	internal sealed class AssignToMethodGroupErrorEnhancer : CSharpHighlightingEnhancer<AssignToMethodGroupError> {
 
-		protected override void AppendTooltip(AccessRightsError highlighting, CSharpColorizer colorizer) {
-			ResolveResultWithInfo resolveResult = highlighting.Reference.Resolve();
+		protected override void AppendTooltip(AssignToMethodGroupError highlighting, CSharpColorizer colorizer) {
+			ResolveResultWithInfo resolveResult = highlighting.Expression.Reference.Resolve();
 			IDeclaredElement declaredElement = resolveResult.DeclaredElement;
 			if (declaredElement == null)
 				return;
 
-			colorizer.AppendPlainText("Cannot access ");
-			colorizer.AppendAccessRights(declaredElement, false);
-			colorizer.AppendPlainText(" ");
-			colorizer.AppendElementKind(declaredElement);
-			colorizer.AppendPlainText(" '");
-			colorizer.AppendDeclaredElement(declaredElement, resolveResult.Substitution, PresenterOptions.NameOnly, highlighting.Reference.GetTreeNode());
-			colorizer.AppendPlainText("' here");
+			colorizer.AppendPlainText("Cannot assign to '");
+			colorizer.AppendDeclaredElement(declaredElement, resolveResult.Substitution, PresenterOptions.NameOnly, highlighting.Expression);
+			colorizer.AppendPlainText("' because it is a 'method group'");
 		}
 
-		public AccessRightsErrorEnhancer(
+		public AssignToMethodGroupErrorEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
 			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
 			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)

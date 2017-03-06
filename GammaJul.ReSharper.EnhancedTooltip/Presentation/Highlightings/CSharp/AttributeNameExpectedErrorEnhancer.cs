@@ -9,24 +9,20 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
-	internal sealed class AccessRightsErrorEnhancer : CSharpHighlightingEnhancer<AccessRightsError> {
+	internal sealed class AttributeNameExpectedErrorEnhancer : CSharpHighlightingEnhancer<AttributeNameExpectedError> {
 
-		protected override void AppendTooltip(AccessRightsError highlighting, CSharpColorizer colorizer) {
+		protected override void AppendTooltip(AttributeNameExpectedError highlighting, CSharpColorizer colorizer) {
 			ResolveResultWithInfo resolveResult = highlighting.Reference.Resolve();
 			IDeclaredElement declaredElement = resolveResult.DeclaredElement;
 			if (declaredElement == null)
 				return;
 
-			colorizer.AppendPlainText("Cannot access ");
-			colorizer.AppendAccessRights(declaredElement, false);
-			colorizer.AppendPlainText(" ");
-			colorizer.AppendElementKind(declaredElement);
-			colorizer.AppendPlainText(" '");
+			colorizer.AppendPlainText("'");
 			colorizer.AppendDeclaredElement(declaredElement, resolveResult.Substitution, PresenterOptions.NameOnly, highlighting.Reference.GetTreeNode());
-			colorizer.AppendPlainText("' here");
+			colorizer.AppendPlainText("' is not an attribute");
 		}
 
-		public AccessRightsErrorEnhancer(
+		public AttributeNameExpectedErrorEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
 			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
 			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)

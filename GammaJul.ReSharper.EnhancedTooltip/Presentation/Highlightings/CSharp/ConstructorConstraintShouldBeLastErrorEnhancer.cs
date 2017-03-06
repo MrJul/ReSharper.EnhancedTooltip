@@ -7,15 +7,15 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
-	internal sealed class CannotUseDefaultMemberAttributeOnTypeWithIndexerErrorEnhancer : CSharpHighlightingEnhancer<CannotUseDefaultMemberAttributeOnTypeWithIndexerError> {
+	internal sealed class ConstructorConstraintShouldBeLastErrorEnhancer : CSharpHighlightingEnhancer<ConstructorConstraintShouldBeLastError> {
 
-		protected override void AppendTooltip(CannotUseDefaultMemberAttributeOnTypeWithIndexerError highlighting, CSharpColorizer colorizer) {
-			colorizer.AppendPlainText("Cannot specify the '");
-			colorizer.AppendClassName("DefaultMember");
-			colorizer.AppendPlainText("' attribute on type containing an indexer");
+		protected override void AppendTooltip(ConstructorConstraintShouldBeLastError highlighting, CSharpColorizer colorizer) {
+			colorizer.AppendPlainText("The ");
+			colorizer.AppendKeyword("new");
+			colorizer.AppendPlainText("() constraint must be the last constraint specified");
 		}
 		
-		public CannotUseDefaultMemberAttributeOnTypeWithIndexerErrorEnhancer(
+		public ConstructorConstraintShouldBeLastErrorEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
 			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
 			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)

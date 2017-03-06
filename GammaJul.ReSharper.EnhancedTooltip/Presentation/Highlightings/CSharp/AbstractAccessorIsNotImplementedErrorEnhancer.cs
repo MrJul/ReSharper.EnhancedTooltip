@@ -9,7 +9,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
 	internal sealed class AbstractAccessorIsNotImplementedErrorEnhancer : CSharpHighlightingEnhancer<AbstractAccessorIsNotImplementedError> {
-
+		
 		protected override void AppendTooltip(AbstractAccessorIsNotImplementedError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("Abstract inherited member '");
 			colorizer.TryAppendDeclaredElement(highlighting.InheritorDeclaration.DeclaredElement, EmptySubstitution.INSTANCE, PresenterOptions.ForInterfaceMember, highlighting.InheritorDeclaration);

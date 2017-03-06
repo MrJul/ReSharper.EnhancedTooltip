@@ -7,15 +7,17 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
-	internal sealed class CannotUseDefaultMemberAttributeOnTypeWithIndexerErrorEnhancer : CSharpHighlightingEnhancer<CannotUseDefaultMemberAttributeOnTypeWithIndexerError> {
+	internal sealed class CannotHaveEventAccessorsInInterfacesErrorEnhancer : CSharpHighlightingEnhancer<CannotHaveEventAccessorsInInterfacesError> {
 
-		protected override void AppendTooltip(CannotUseDefaultMemberAttributeOnTypeWithIndexerError highlighting, CSharpColorizer colorizer) {
-			colorizer.AppendPlainText("Cannot specify the '");
-			colorizer.AppendClassName("DefaultMember");
-			colorizer.AppendPlainText("' attribute on type containing an indexer");
+		protected override void AppendTooltip(CannotHaveEventAccessorsInInterfacesError highlighting, CSharpColorizer colorizer) {
+			colorizer.AppendPlainText("Event in interface cannot have ");
+			colorizer.AppendAccessorName("add");
+			colorizer.AppendPlainText(" or ");
+			colorizer.AppendAccessorName("remove");
+			colorizer.AppendPlainText(" accessors");
 		}
-		
-		public CannotUseDefaultMemberAttributeOnTypeWithIndexerErrorEnhancer(
+
+		public CannotHaveEventAccessorsInInterfacesErrorEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
 			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
 			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)
