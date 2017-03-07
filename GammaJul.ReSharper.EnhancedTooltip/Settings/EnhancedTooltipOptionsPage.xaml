@@ -141,6 +141,7 @@
 				<RowDefinition Height="Auto" />
 				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
 				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
 			</Grid.RowDefinitions>
 			<controls:SectionHeading Grid.Row="0" Text="Display" />
 			<StackPanel Grid.Row="1" Orientation="Horizontal">
@@ -151,6 +152,10 @@
 			<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
 				<Label Target="{Binding ElementName=DisplayTextFormattingMode}" />
 				<ComboBox x:Name="DisplayTextFormattingMode" />
+			</StackPanel>
+			<StackPanel Grid.Row="3" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=DisplayTooltipColorSource}" />
+				<ComboBox x:Name="DisplayTooltipColorSource" />
 			</StackPanel>
 		</Grid>
 

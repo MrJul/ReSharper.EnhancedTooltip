@@ -618,6 +618,7 @@
     <Compile Include="Settings\ParameterInfoSettings.cs" />
     <Compile Include="Settings\IdentifierTooltipSettings.cs" />
     <Compile Include="Settings\SettingsExtensions.cs" />
+    <Compile Include="Settings\TooltipColorSource.cs" />
     <Compile Include="VisualStudio\ExposeEditorFormatMapService.cs" />
     <Compile Include="VisualStudio\MainQuickInfoSource.cs" />
     <Compile Include="VisualStudio\QuickInfoSessionExtensions.cs" />

@@ -15,6 +15,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(TextFormattingMode.Ideal, "Text display mode")]
 		public TextFormattingMode TextFormattingMode { get; set; }
 
+		[SettingsEntry(TooltipColorSource.TextEditorSettings, "Tooltip background and foreground")]
+		public TooltipColorSource TooltipColorSource { get; set; }
+
 	}
 
 }

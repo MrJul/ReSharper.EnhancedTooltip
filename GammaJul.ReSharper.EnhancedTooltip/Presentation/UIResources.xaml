@@ -3,7 +3,6 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:jui="urn:schemas-jetbrains-com:jetbrains-ui-avalon"
 	xmlns:resources="urn:shemas-jetbrains-com:ui-application-icons-altering-featu"
-	xmlns:theming="clr-namespace:JetBrains.Platform.VisualStudio.SinceVs11.Shell.Theming;assembly=JetBrains.Platform.VisualStudio.SinceVs11"
 	xmlns:controls="clr-namespace:JetBrains.UI.Avalon.Controls;assembly=JetBrains.Platform.UI"
 	xmlns:richText="clr-namespace:JetBrains.UI.RichText;assembly=JetBrains.Platform.Util"
 	xmlns:local="clr-namespace:GammaJul.ReSharper.EnhancedTooltip.Presentation">
@@ -22,7 +21,7 @@
 	<!-- Style for VS listbox item's data inside the tooltip -->
   <DataTemplate x:Key="QuickInfoItemDataTemplate">
     <Border BorderThickness="1"
-			BorderBrush="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}"
+			BorderBrush="{Binding Path=(local:Styling.ItemTemplateBorderBrush), RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
 			Background="{Binding Path=(local:Styling.ItemTemplateBackground), RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}">
 			<!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
 			<ContentPresenter Content="{Binding VisualElement}" Margin="8,6" />
@@ -109,7 +108,7 @@
 					<StackPanel x:Name="SuperTypesPresenter" Orientation="Vertical">
 						
 						<local:DashedSeparator StrokeThickness="1" StrokeDashArray="3,3" Margin="-8,6" RenderOptions.EdgeMode="Aliased"
-							Stroke="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}" />
+							Stroke="{Binding Path=(local:Styling.ItemTemplateBorderBrush), RelativeSource={RelativeSource Self}}" />
 
 						<DockPanel x:Name="BaseTypePresenter" Margin="0,2,0,0">
 							<Border Style="{StaticResource TitleBorderStyle}" DockPanel.Dock="Left">
@@ -141,7 +140,7 @@
 					
 					<StackPanel x:Name="DescriptionPresenter" Orientation="Vertical" Margin="0,0,0,6">
 						<local:DashedSeparator StrokeThickness="1" StrokeDashArray="3,3" Margin="-8,6" RenderOptions.EdgeMode="Aliased"
-							Stroke="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}" />
+							Stroke="{Binding Path=(local:Styling.ItemTemplateBorderBrush), RelativeSource={RelativeSource Self}}" />
 						<local:AutoContrastedRichTextPresenter Margin="0" TextWrapping="Wrap"
 							RichText="{Binding Description}" />
 					</StackPanel>
@@ -261,7 +260,7 @@
 
 					<StackPanel x:Name="DescriptionPresenter" Orientation="Vertical">
 						<local:DashedSeparator StrokeThickness="1" StrokeDashArray="3,3" Margin="-8,6" RenderOptions.EdgeMode="Aliased"
-							Stroke="{DynamicResource {x:Static theming:BundledThemeColors+Environment.ToolWindowBorderBrushKey}}" />
+							Stroke="{Binding Path=(local:Styling.ItemTemplateBorderBrush), RelativeSource={RelativeSource Self}}" />
 						<local:AutoContrastedRichTextPresenter Margin="0" TextWrapping="Wrap"
 							RichText="{Binding Description}" />
 					</StackPanel>

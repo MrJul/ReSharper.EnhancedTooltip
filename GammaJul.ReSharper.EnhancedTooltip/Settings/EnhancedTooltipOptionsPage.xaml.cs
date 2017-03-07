@@ -177,6 +177,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetCheckBoxBinding((DisplaySettings s) => s.LimitTooltipWidth, rootCheckBox, null, addColonToDescription: true);
 			SetNumericUpDownBinding((DisplaySettings s) => s.ScreenWidthLimitPercent, DisplayScreenWidthLimitPercent, rootCheckBox);
 			SetComboBoxBinding((DisplaySettings s) => s.TextFormattingMode, DisplayTextFormattingMode, null);
+			SetComboBoxBinding((DisplaySettings s) => s.TooltipColorSource, DisplayTooltipColorSource, null);
 		}
 
 		public EnhancedTooltipOptionsPage([NotNull] Lifetime lifetime, [NotNull] OptionsSettingsSmartContext context) {

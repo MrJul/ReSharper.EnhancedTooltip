@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
+using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.Application.Components;
+using JetBrains.Platform.VisualStudio.SinceVs11.Shell.Theming;
 using JetBrains.Util;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
 
@@ -22,14 +25,30 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			=> _lazyTooltipFormatMap.Value?.DefaultTextProperties ?? TextFormattingRunProperties.CreateTextFormattingRunProperties();
 
 		[CanBeNull]
-		public Brush TryGetBackgroundBrush()
-			=> _lazyTextViewBackgroundResources.Value?["Background"] as Brush;
+		public Brush TryGetBackground(TooltipColorSource colorSource) {
+			if (colorSource == TooltipColorSource.EnvironmentSettings)
+				return GetAppBrush(BundledThemeColors.Environment.ToolTipBrushKey);
+
+			return _lazyTextViewBackgroundResources.Value?["Background"] as Brush;
+		}
 
 		[CanBeNull]
-		public Brush TryGetForegroundBrush() {
+		public Brush TryGetForeground(TooltipColorSource colorSource) {
+			if (colorSource == TooltipColorSource.EnvironmentSettings)
+				return GetAppBrush(BundledThemeColors.Environment.ToolTipTextBrushKey);
+
 			TextFormattingRunProperties textProperties = _lazyTextFormatMap.Value?.DefaultTextProperties;
 			return textProperties == null || textProperties.ForegroundBrushEmpty ? null : textProperties.ForegroundBrush;
 		}
+
+		[CanBeNull]
+		public Brush TryGetBorderBrush()
+			=> GetAppBrush(BundledThemeColors.Environment.ToolTipBorderBrushKey);
+
+		[CanBeNull]
+		[Pure]
+		private static Brush GetAppBrush([NotNull] ThemeResourceKey brushKey)
+			=> Application.Current.Resources[brushKey] as Brush;
 
 		public TooltipFormattingProvider(
 			[NotNull] Lazy<Optional<IClassificationFormatMapService>> lazyFormatMapService,

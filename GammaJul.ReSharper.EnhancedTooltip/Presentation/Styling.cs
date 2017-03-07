@@ -10,7 +10,6 @@ using JetBrains;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
-using JetBrains.Platform.VisualStudio.SinceVs11.Shell.Theming;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.UI.Avalon;
 using JetBrains.UI.Extensions;
@@ -35,6 +34,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			typeof(Brush),
 			typeof(Styling),
 			new FrameworkPropertyMetadata(null));
+
+		[NotNull]
+		public static readonly DependencyProperty ItemTemplateBorderBrushProperty = DependencyProperty.RegisterAttached(
+			"ItemTemplateBorderBrush",
+			typeof(Brush),
+			typeof(Styling),
+			new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
 		[NotNull]
 		public static readonly DependencyProperty DocumentProperty = DependencyProperty.RegisterAttached(
@@ -62,6 +68,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			owner.SetValue(ShouldStyleParentListBoxProperty, value);
 		}
 
+		[CanBeNull]
 		public static Brush GetItemTemplateBackground([NotNull] DependencyObject owner) {
 			if (owner == null)
 				throw new ArgumentNullException(nameof(owner));
@@ -72,6 +79,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (owner == null)
 				throw new ArgumentNullException(nameof(owner));
 			owner.SetValue(ItemTemplateBackgroundProperty, value);
+		}
+
+		[CanBeNull]
+		public static Brush GetItemTemplateBorderBrush([NotNull] DependencyObject owner) {
+			if (owner == null)
+				throw new ArgumentNullException(nameof(owner));
+			return (Brush) owner.GetValue(ItemTemplateBorderBrushProperty);
+		}
+
+		public static void SetItemTemplateBorderBrush([NotNull] DependencyObject owner, [CanBeNull] Brush value) {
+			if (owner == null)
+				throw new ArgumentNullException(nameof(owner));
+			owner.SetValue(ItemTemplateBorderBrushProperty, value);
 		}
 
 		[CanBeNull]
@@ -132,32 +152,37 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				});
 			}
 
+			IContextBoundSettingsStore settings = document.TryGetSettings();
+
 			listBox.Style = UIResources.Instance.QuickInfoListBoxStyle;
 			listBox.ItemTemplate = UIResources.Instance.QuickInfoItemDataTemplate;
-			listBox.ItemContainerStyle = CreateItemContainerStyle(listBox);
-
-			IContextBoundSettingsStore settings = document.TryGetSettings();
+			listBox.ItemContainerStyle = CreateItemContainerStyle(settings);
 			listBox.MaxWidth = ComputeListBoxMaxWidth(listBox,  settings);
 			TextOptions.SetTextFormattingMode(listBox, GetTextFormattingMode(settings));
 			TextOptions.SetTextRenderingMode(listBox, TextRenderingMode.Auto);
 		}
 
 		[NotNull]
-		private static Style CreateItemContainerStyle([NotNull] FrameworkElement resourceSource) {
+		private static Style CreateItemContainerStyle([CanBeNull] IContextBoundSettingsStore settings) {
 			var itemContainerStyle = new Style(typeof(ListBoxItem), UIResources.Instance.QuickInfoItemStyle);
 
 			if (Shell.HasInstance) {
 				var tooltipFormattingProvider = Shell.Instance.TryGetComponent<TooltipFormattingProvider>();
 				if (tooltipFormattingProvider != null) {
 
-					var backgroundBrush = tooltipFormattingProvider.TryGetBackgroundBrush()
-						?? resourceSource.FindResource(BundledThemeColors.Environment.ToolWindowTabSelectedTabBrushKey) as Brush;
-					if (backgroundBrush != null)
-						itemContainerStyle.Setters.Add(new Setter(ItemTemplateBackgroundProperty, backgroundBrush));
+					var colorSource = settings?.GetValue((DisplaySettings s) => s.TooltipColorSource) ?? TooltipColorSource.TextEditorSettings;
 
-					var foregroundBrush = tooltipFormattingProvider.TryGetForegroundBrush();
-					if (foregroundBrush != null)
-						itemContainerStyle.Setters.Add(new Setter(TextElement.ForegroundProperty, foregroundBrush));
+					var background = tooltipFormattingProvider.TryGetBackground(colorSource);
+					if (background != null)
+						itemContainerStyle.Setters.Add(new Setter(ItemTemplateBackgroundProperty, background));
+
+					var borderBrush = tooltipFormattingProvider.TryGetBorderBrush();
+					if (borderBrush != null)
+						itemContainerStyle.Setters.Add(new Setter(ItemTemplateBorderBrushProperty, borderBrush));
+
+					var foreground = tooltipFormattingProvider.TryGetForeground(colorSource);
+					if (foreground != null)
+						itemContainerStyle.Setters.Add(new Setter(TextElement.ForegroundProperty, foreground));
 
 				}
 			}
