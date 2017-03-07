@@ -19,17 +19,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			=> null;
 
 		public void Migrate(IContextBoundSettingsStore store) {
-			MigrateValue(store, s => s.ShowBaseType, s => s.BaseTypeDisplayKind);
-			MigrateValue(store, s => s.ShowImplementedInterfaces, s => s.ImplementedInterfacesDisplayKind);
+			MigrateValue(store, s => s.ShowBaseType, s => s.BaseTypeDisplayKind, BaseTypeDisplayKind.Always, BaseTypeDisplayKind.Never);
+			MigrateValue(store, s => s.ShowImplementedInterfaces, s => s.ImplementedInterfacesDisplayKind, ImplementedInterfacesDisplayKind.Always, ImplementedInterfacesDisplayKind.Never);
 		}
 
-		private static void MigrateValue(
+		private static void MigrateValue<TDisplayKind>(
 			[NotNull] IContextBoundSettingsStore store,
 			[NotNull] Expression<Func<IdentifierTooltipSettings, bool>> oldSettingExpr,
-			[NotNull] Expression<Func<IdentifierTooltipSettings, BaseTypeDisplayKind>> newSettingExpr) {
-
+			[NotNull] Expression<Func<IdentifierTooltipSettings, TDisplayKind>> newSettingExpr,
+			TDisplayKind trueValue,
+			TDisplayKind falseValue)
+		where TDisplayKind : struct {
 			if (!IsEntryEqualToDefault(store, oldSettingExpr) && IsEntryEqualToDefault(store, newSettingExpr)) {
-				var displayKind = store.GetValue(oldSettingExpr) ? BaseTypeDisplayKind.Always : BaseTypeDisplayKind.Never;
+				TDisplayKind displayKind = store.GetValue(oldSettingExpr) ? trueValue : falseValue;
 				store.SetValue(newSettingExpr, displayKind);
 			}
 		}

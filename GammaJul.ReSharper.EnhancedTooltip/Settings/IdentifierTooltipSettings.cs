@@ -87,8 +87,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(BaseTypeDisplayKind.Never, "Display the base type of classes")]
 		public BaseTypeDisplayKind BaseTypeDisplayKind { get; set; }
 
-		[SettingsEntry(BaseTypeDisplayKind.Never, "Display the implemented interfaces of types")]
-		public BaseTypeDisplayKind ImplementedInterfacesDisplayKind { get; set; }
+		[SettingsEntry(ImplementedInterfacesDisplayKind.Never, "Display the implemented interfaces of types")]
+		public ImplementedInterfacesDisplayKind ImplementedInterfacesDisplayKind { get; set; }
 
 	}
 

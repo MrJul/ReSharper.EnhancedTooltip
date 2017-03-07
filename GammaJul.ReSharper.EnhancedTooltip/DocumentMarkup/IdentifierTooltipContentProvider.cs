@@ -254,7 +254,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 				var baseTypeDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.BaseTypeDisplayKind);
 				var implementedInterfacesDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.ImplementedInterfacesDisplayKind);
-				if (baseTypeDisplayKind != BaseTypeDisplayKind.Never || implementedInterfacesDisplayKind != BaseTypeDisplayKind.Never)
+				if (baseTypeDisplayKind != BaseTypeDisplayKind.Never
+				|| implementedInterfacesDisplayKind != ImplementedInterfacesDisplayKind.Never)
 					AddSuperTypes(identifierContent, typeElement, baseTypeDisplayKind, implementedInterfacesDisplayKind, languageType, info.TreeNode, highlighterIdProvider, settings);
 
 				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowAttributesUsage) && typeElement.IsAttribute())
@@ -281,7 +282,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			[NotNull] IdentifierTooltipContent identifierContent,
 			[NotNull] ITypeElement typeElement,
 			BaseTypeDisplayKind baseTypeDisplayKind,
-			BaseTypeDisplayKind implementedInterfacesDisplayKind,
+			ImplementedInterfacesDisplayKind implementedInterfacesDisplayKind,
 			[NotNull] PsiLanguageType languageType,
 			[NotNull] ITreeNode contextualNode,
 			[NotNull] HighlighterIdProvider highlighterIdProvider,
@@ -316,7 +317,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		private static void GetSuperTypes(
 			[NotNull] ITypeElement typeElement,
 			BaseTypeDisplayKind baseTypeDisplayKind,
-			BaseTypeDisplayKind implementedInterfacesDisplayKind,
+			ImplementedInterfacesDisplayKind implementedInterfacesDisplayKind,
 			[CanBeNull] out DeclaredElementInstance baseType,
 			[NotNull] out IList<DeclaredElementInstance> implementedInterfaces) {
 
@@ -324,7 +325,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			implementedInterfaces = EmptyList<DeclaredElementInstance>.InstanceList;
 
 			var searchForBaseType = baseTypeDisplayKind != BaseTypeDisplayKind.Never && typeElement is IClass;
-			if (!searchForBaseType && implementedInterfacesDisplayKind == BaseTypeDisplayKind.Never)
+			bool searchForImplementedInterfaces = implementedInterfacesDisplayKind != ImplementedInterfacesDisplayKind.Never;
+			if (!searchForBaseType && !searchForImplementedInterfaces)
 				return;
 
 			var foundInterfaces = new LocalList<DeclaredElementInstance>();
@@ -335,18 +337,18 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				if (superTypeElement is IClass || superTypeElement is IDelegate) {
 					if (searchForBaseType) {
 						searchForBaseType = false;
-						if (MatchesDisplayKind(superTypeElement, baseTypeDisplayKind))
+						if (MatchesBaseTypeDisplayKind(superTypeElement, baseTypeDisplayKind))
 							baseType = new DeclaredElementInstance(superTypeElement, superType.GetSubstitution());
-						if (implementedInterfacesDisplayKind == BaseTypeDisplayKind.Never)
+						if (!searchForImplementedInterfaces)
 							return;
 					}
 					continue;
 				}
 
-				if (implementedInterfacesDisplayKind != BaseTypeDisplayKind.Never) {
+				if (searchForImplementedInterfaces) {
 					var @interface = superTypeElement as IInterface;
 					if (@interface != null) {
-						if (MatchesDisplayKind(@interface, implementedInterfacesDisplayKind))
+						if (MatchesImplementedInterfacesDisplayKind(@interface, implementedInterfacesDisplayKind))
 							foundInterfaces.Add(new DeclaredElementInstance(superTypeElement, superType.GetSubstitution()));
 					}
 				}
@@ -355,7 +357,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			implementedInterfaces = foundInterfaces.ResultingList();
 		}
 
-		private static bool MatchesDisplayKind([NotNull] ITypeElement typeElement, BaseTypeDisplayKind displayKind) {
+		private static bool MatchesBaseTypeDisplayKind([NotNull] ITypeElement typeElement, BaseTypeDisplayKind displayKind) {
 			switch (displayKind) {
 				case BaseTypeDisplayKind.Never:
 					return false;
@@ -363,7 +365,24 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 					return !(typeElement is ICompiledElement);
 				case BaseTypeDisplayKind.SolutionCodeAndNonSystemExternalCode:
 					return !(typeElement is ICompiledElement && typeElement.IsInSystemLikeNamespace());
+				case BaseTypeDisplayKind.OnlyIfNotSystemObject:
+					return !typeElement.IsObjectClass();
 				case BaseTypeDisplayKind.Always:
+					return true;
+				default:
+					return false;
+			}
+		}
+
+		private static bool MatchesImplementedInterfacesDisplayKind([NotNull] ITypeElement typeElement, ImplementedInterfacesDisplayKind displayKind) {
+			switch (displayKind) {
+				case ImplementedInterfacesDisplayKind.Never:
+					return false;
+				case ImplementedInterfacesDisplayKind.SolutionCode:
+					return !(typeElement is ICompiledElement);
+				case ImplementedInterfacesDisplayKind.SolutionCodeAndNonSystemExternalCode:
+					return !(typeElement is ICompiledElement && typeElement.IsInSystemLikeNamespace());
+				case ImplementedInterfacesDisplayKind.Always:
 					return true;
 				default:
 					return false;

@@ -472,6 +472,7 @@
     <Compile Include="Psi\TypeElementExtensions.cs" />
     <Compile Include="Settings\BaseTypeAndImplementedInterfacesDisplayMigration.cs" />
     <Compile Include="Settings\BaseTypeDisplayKind.cs" />
+    <Compile Include="Settings\ImplementedInterfacesDisplayKind.cs" />
     <Compile Include="Settings\SolutionCodeNamespaceDisplayKind.cs" />
     <Compile Include="Settings\ExternalCodeNamespaceDisplayKind.cs" />
     <Compile Include="Presentation\VsIdentifierContent.cs" />
