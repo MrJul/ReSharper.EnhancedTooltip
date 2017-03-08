@@ -14,6 +14,7 @@
 
 		<Thickness x:Key="CommonMargin">8,2,0,1</Thickness>
 		<Thickness x:Key="IndentedMargin">24,2,0,1</Thickness>
+		<Thickness x:Key="InlineControlMargin">4,2,0,1</Thickness>
 
 		<Style TargetType="{x:Type controls:CheckBoxDisabledNoCheck2}">
 			<Setter Property="Margin" Value="{StaticResource CommonMargin}" />
@@ -89,12 +90,16 @@
 				<ComboBox x:Name="IdentifierTooltipImplementedInterfacesDisplayKindComboBox" />
 			</StackPanel>
 			<StackPanel Grid.Row="22" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
-				<Label Target="{Binding ElementName=IdentifierTooltipShowIdentifierAnnotationsComboBox}" />
-				<ComboBox x:Name="IdentifierTooltipShowIdentifierAnnotationsComboBox" />
+				<Label Target="{Binding ElementName=IdentifierTooltipShowIdentifierAttributesComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipShowIdentifierAttributesComboBox" />
+				<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowIdentifierAttributesArgumentsCheckBox"
+					Margin="{StaticResource InlineControlMargin}" VerticalAlignment="Center" />
 			</StackPanel>
 			<StackPanel Grid.Row="23" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
-				<Label Target="{Binding ElementName=IdentifierTooltipShowParametersAnnotationsComboBox}" />
-				<ComboBox x:Name="IdentifierTooltipShowParametersAnnotationsComboBox" />
+				<Label Target="{Binding ElementName=IdentifierTooltipShowParametersAttributesComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipShowParametersAttributesComboBox" />
+				<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowParametersAttributesArgumentsCheckBox"
+					Margin="{StaticResource InlineControlMargin}" VerticalAlignment="Center" />
 			</StackPanel>
 			<StackPanel Grid.Row="24" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
 				<Label Target="{Binding ElementName=IdentifierTooltipAttributeConstructorReferenceDisplayComboBox}" />
@@ -148,7 +153,7 @@
 			<controls:SectionHeading Grid.Row="0" Text="Display" />
 			<StackPanel Grid.Row="1" Orientation="Horizontal">
 				<controls:CheckBoxDisabledNoCheck2 VerticalAlignment="Center" x:Name="DisplayLimitTooltipWidth" />
-				<controls2:NumericUpDown x:Name="DisplayScreenWidthLimitPercent" MinValue="10" MaxValue="100" Margin="4,2,0,1" />
+				<controls2:NumericUpDown x:Name="DisplayScreenWidthLimitPercent" MinValue="10" MaxValue="100" Margin="{StaticResource InlineControlMargin}" />
 				<Label Target="{Binding ElementName=DisplayScreenWidthLimitPercent}" Content=" %" />
 			</StackPanel>
 			<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">

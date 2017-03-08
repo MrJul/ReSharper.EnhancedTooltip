@@ -410,6 +410,7 @@
     <Compile Include="ParameterInfo\EnhancedTypeArgumentContext.cs" />
     <Compile Include="ParameterInfo\EnhancedTypeArgumentContextFactory.cs" />
     <Compile Include="ParameterInfo\ParameterInfoContextExtensions.cs" />
+    <Compile Include="Presentation\AnnotationsDisplayKindExtensions.cs" />
     <Compile Include="Presentation\AttributeUsageContent.cs" />
     <Compile Include="Presentation\AttributeTargetsExtension.cs" />
     <Compile Include="Presentation\AutoContrastedRichTextPresenter.cs" />
@@ -470,6 +471,8 @@
     <Compile Include="Presentation\ArgumentRoleTooltipContent.cs" />
     <Compile Include="Presentation\StringToWrappedTextBlockConverter.cs" />
     <Compile Include="Psi\TypeElementExtensions.cs" />
+    <Compile Include="Settings\AttributesDisplayKind.cs" />
+    <Compile Include="Settings\AnnotationsDisplayKindMigration.cs" />
     <Compile Include="Settings\BaseTypeAndImplementedInterfacesDisplayMigration.cs" />
     <Compile Include="Settings\BaseTypeDisplayKind.cs" />
     <Compile Include="Settings\ImplementedInterfacesDisplayKind.cs" />

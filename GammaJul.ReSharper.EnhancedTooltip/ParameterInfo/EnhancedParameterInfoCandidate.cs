@@ -20,8 +20,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
 
 		protected override PresenterOptions GetPresenterOptions(IContextBoundSettingsStore settings, AnnotationsDisplayKind showAnnotations)
-			=> PresenterOptions.ForParameterInfo(settings, showAnnotations);
-
+			=> PresenterOptions.ForParameterInfo(settings, showAnnotations.ToAttributesDisplayKind());
+		
 		protected override RichText TryGetSignatureCore(
 			PresenterOptions options,
 			HighlighterIdProvider highlighterIdProvider,

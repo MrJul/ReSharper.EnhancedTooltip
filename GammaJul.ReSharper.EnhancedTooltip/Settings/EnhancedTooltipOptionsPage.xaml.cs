@@ -68,18 +68,44 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckBox,
 			bool addColonToDescription = false) {
 
-			var entry = _context.Schema.GetScalarEntry(settingAccessor);
-			if (checkBox.Content == null) {
-				string description = entry.Description;
-				_keywords.Add(new OptionsPageKeyword(description));
-				if (addColonToDescription)
-					description += ":";
-				checkBox.Content = description;
-			}
-			_context.SetBinding<bool>(_lifetime, entry, checkBox, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
-			SearchablePageBehavior.SetSearchFilter(checkBox, true);
+			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
+			string description = entry.Description;
+			if (addColonToDescription)
+				description += ":";
+			ConfigureCheckBox(checkBox, description, entry);
 
 			parentCheckBox?.IsAppearingChecked.FlowInto(_lifetime, checkBox, IsEnabledProperty);
+		}
+
+		private void SetAttributesArgumentsCheckBoxBinding<TSettings>(
+			[NotNull] Expression<Func<TSettings, bool>> settingAccessor,
+			[NotNull] CheckBoxDisabledNoCheck2 checkBox,
+			[NotNull] ComboBox parentComboBox) {
+
+			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
+			ConfigureCheckBox(checkBox, "with arguments", entry);
+
+			IProperty<object> selectedValueProperty = DependencyPropertyWrapper.Create<object>(_lifetime, parentComboBox, Selector.SelectedValueProperty, true);
+			selectedValueProperty.FlowInto(_lifetime, checkBox, IsEnabledProperty, value => HasAttributesArguments((AttributesDisplayKind) value));
+		}
+
+		private void ConfigureCheckBox([NotNull] CheckBoxDisabledNoCheck2 checkBox, [NotNull] string content, [NotNull] SettingsScalarEntry entry) {
+			if (checkBox.Content == null)
+				checkBox.Content = content;
+			_keywords.Add(new OptionsPageKeyword(content));
+			_context.SetBinding<bool>(_lifetime, entry, checkBox, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
+			SearchablePageBehavior.SetSearchFilter(checkBox, true);
+		}
+
+		[Pure]
+		private static bool HasAttributesArguments(AttributesDisplayKind attributesDisplayKind) {
+			switch (attributesDisplayKind) {
+				case AttributesDisplayKind.AllAnnotations:
+				case AttributesDisplayKind.Always:
+					return true;
+				default:
+					return false;
+			}
 		}
 
 		private void SetComboBoxBinding<TSettings, TEnum>(
@@ -132,20 +158,24 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		private void SetIdentifierTooltipSettingsBindings() {
 			CheckBoxDisabledNoCheck2 rootCheckBox = IdentifierTooltipEnabledCheckBox;
+
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.Enabled, rootCheckBox, null);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowIcon, IdentifierTooltipShowIconCheckBox, rootCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowAccessRights, IdentifierTooltipShowAccessRightsCheckBox, rootCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowAccessors, IdentifierTooltipShowAccessorsCheckBox, rootCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowKind, IdentifierTooltipShowKindCheckBox, rootCheckBox);
+
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseExtensionMethodKind, IdentifierTooltipUseExtensionMethodKindCheckBox, IdentifierTooltipShowKindCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseAttributeClassKind, IdentifierTooltipUseAttributeClassKindCheckBox, IdentifierTooltipShowKindCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseMethodModifiersInKind, IdentifierTooltipUseMethodModifiersInKindCheckBox, IdentifierTooltipShowKindCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseClassModifiersInKind, IdentifierTooltipUseClassModifiersInKindCheckBox, IdentifierTooltipShowKindCheckBox);
+
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowDocumentation, IdentifierTooltipShowDocumentationCheckBox, rootCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowObsolete, IdentifierTooltipShowObsoleteCheckBox, IdentifierTooltipShowDocumentationCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowReturn, IdentifierTooltipShowReturnCheckBox, IdentifierTooltipShowDocumentationCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowRemarks, IdentifierTooltipShowRemarksCheckBox, IdentifierTooltipShowDocumentationCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowExceptions, IdentifierTooltipShowExceptionsCheckBox, IdentifierTooltipShowDocumentationCheckBox);
+
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowOverloadCount, IdentifierTooltipShowOverloadCountCheckBox, rootCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowArgumentsRole, IdentifierTooltipShowArgumentsRoleCheckBox, rootCheckBox);
 			SetComboBoxBinding((IdentifierTooltipSettings s) => s.BaseTypeDisplayKind, IdentifierTooltipBaseTypeDisplayKindComboBox, rootCheckBox);
@@ -153,8 +183,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowAttributesUsage, IdentifierTooltipShowShowAttributesUsageCheckBox, rootCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseTypeKeywords, IdentifierTooltipUseTypeKeywordsCheckBox, rootCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.UseShortNullableForm, IdentifierTooltipUseShortNullableFormCheckBox, rootCheckBox);
-			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowIdentifierAnnotations, IdentifierTooltipShowIdentifierAnnotationsComboBox, rootCheckBox);
-			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowParametersAnnotations, IdentifierTooltipShowParametersAnnotationsComboBox, rootCheckBox);
+
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowIdentifierAttributes, IdentifierTooltipShowIdentifierAttributesComboBox, rootCheckBox);
+			SetAttributesArgumentsCheckBoxBinding(
+				(IdentifierTooltipSettings s) => s.ShowIdentifierAttributesArguments,
+				IdentifierTooltipShowIdentifierAttributesArgumentsCheckBox,
+				IdentifierTooltipShowIdentifierAttributesComboBox);
+
+			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ShowParametersAttributes, IdentifierTooltipShowParametersAttributesComboBox, rootCheckBox);
+			SetAttributesArgumentsCheckBoxBinding(
+				(IdentifierTooltipSettings s) => s.ShowParametersAttributesArguments,
+				IdentifierTooltipShowParametersAttributesArgumentsCheckBox,
+				IdentifierTooltipShowParametersAttributesComboBox);
+
 			SetComboBoxBinding((IdentifierTooltipSettings s) => s.ConstructorReferenceDisplay, IdentifierTooltipConstructorReferenceDisplayComboBox, rootCheckBox);
 			SetComboBoxBinding((IdentifierTooltipSettings s) => s.AttributeConstructorReferenceDisplay, IdentifierTooltipAttributeConstructorReferenceDisplayComboBox, rootCheckBox);
 			SetComboBoxBinding((IdentifierTooltipSettings s) => s.SolutionCodeNamespaceDisplayKind, IdentifierTooltipSolutionCodeNamespaceDisplayKindComboBox, rootCheckBox);

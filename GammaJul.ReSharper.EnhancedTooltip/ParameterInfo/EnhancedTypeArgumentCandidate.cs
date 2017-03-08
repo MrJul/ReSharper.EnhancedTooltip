@@ -29,7 +29,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			=> typeof(TypeArgumentCandidate).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
 
 		protected override PresenterOptions GetPresenterOptions(IContextBoundSettingsStore settings, AnnotationsDisplayKind showAnnotations)
-			=> PresenterOptions.ForTypeArgumentInfo(settings, showAnnotations);
+			=> PresenterOptions.ForTypeArgumentInfo(settings, showAnnotations.ToAttributesDisplayKind());
 
 		protected override RichText TryGetSignatureCore(
 			PresenterOptions options,

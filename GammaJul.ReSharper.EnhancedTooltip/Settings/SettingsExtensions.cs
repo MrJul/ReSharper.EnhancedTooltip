@@ -1,4 +1,7 @@
-﻿using JetBrains.Annotations;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.DocumentModel.DataContext;
@@ -17,6 +20,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[CanBeNull]
 		public static IContextBoundSettingsStore TryGetSettings([CanBeNull] this IDocument document)
 			=> document != null && Shell.HasInstance ? document.GetSettings() : null;
+
+		public static bool IsEntryEqualToDefault<T>(
+			[NotNull] this IContextBoundSettingsStore store,
+			[NotNull] Expression<Func<IdentifierTooltipSettings, T>> settingsExpr)
+		where T : struct {
+			object defaultValue = store.Schema.GetScalarEntry(settingsExpr).GetDefaultValueInEntryMemberType();
+			return defaultValue is T && EqualityComparer<T>.Default.Equals(store.GetValue(settingsExpr), (T) defaultValue);
+		}
 
 	}
 

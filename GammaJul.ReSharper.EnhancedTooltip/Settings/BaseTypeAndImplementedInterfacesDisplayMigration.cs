@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.Application.Settings.Upgrade;
+#pragma warning disable 618
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
@@ -30,18 +31,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			TDisplayKind trueValue,
 			TDisplayKind falseValue)
 		where TDisplayKind : struct {
-			if (!IsEntryEqualToDefault(store, oldSettingExpr) && IsEntryEqualToDefault(store, newSettingExpr)) {
+			if (!store.IsEntryEqualToDefault(oldSettingExpr) && store.IsEntryEqualToDefault(newSettingExpr)) {
 				TDisplayKind displayKind = store.GetValue(oldSettingExpr) ? trueValue : falseValue;
 				store.SetValue(newSettingExpr, displayKind);
 			}
-		}
-
-		private static bool IsEntryEqualToDefault<T>(
-			[NotNull] IContextBoundSettingsStore store,
-			[NotNull] Expression<Func<IdentifierTooltipSettings, T>> settingsExpr)
-		where T : struct {
-			object defaultValue = store.Schema.GetScalarEntry(settingsExpr).GetDefaultValueInEntryMemberType();
-			return defaultValue is T && EqualityComparer<T>.Default.Equals(store.GetValue(settingsExpr), (T) defaultValue);
 		}
 
 	}

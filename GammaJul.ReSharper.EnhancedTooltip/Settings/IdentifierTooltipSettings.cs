@@ -1,4 +1,5 @@
-﻿using JetBrains.Application.Settings;
+﻿using System;
+using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
@@ -21,7 +22,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display property accessors (get/set)")]
 		public bool ShowAccessors { get; set; }
 
-		[SettingsEntry(true, "Display member documentation")]
+		[SettingsEntry(true, "Display identifier documentation")]
 		public bool ShowDocumentation { get; set; }
 
 		[SettingsEntry(true, "Display whether the member is obsolete")]
@@ -54,10 +55,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(false, "Display the role of arguments inside invocations")]
 		public bool ShowArgumentsRole { get; set; }
 
-		[SettingsEntry(false, "Display the base type of classes [legacy]")]
+		[SettingsEntry(false, "[Obsolete] Display the base type of classes")]
+		[Obsolete("Use " + nameof(BaseTypeDisplayKind))]
 		public bool ShowBaseType { get; set; }
 
-		[SettingsEntry(false, "Display the implemented interfaces of types [legacy]")]
+		[SettingsEntry(false, "[Obsolete] Display the implemented interfaces of types")]
+		[Obsolete("Use " + nameof(ImplementedInterfacesDisplayKind))]
 		public bool ShowImplementedInterfaces { get; set; }
 
 		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
@@ -69,11 +72,25 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(true, "Display usage for attribute classes")]
 		public bool ShowAttributesUsage { get; set; }
 
-		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations for identifiers")]
+		[SettingsEntry(AnnotationsDisplayKind.Nullness, "[Obsolete] Display annotations for identifiers")]
+		[Obsolete("Use " + nameof(ShowIdentifierAttributes))]
 		public AnnotationsDisplayKind ShowIdentifierAnnotations { get; set; }
 
-		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations for parameters inside method signatures")]
+		[SettingsEntry(AttributesDisplayKind.NullnessAnnotations, "Display attributes for identifiers")]
+		public AttributesDisplayKind ShowIdentifierAttributes { get; set; }
+
+		[SettingsEntry(false, "Display the arguments of attributes for identifiers")]
+		public bool ShowIdentifierAttributesArguments { get; set; }
+
+		[SettingsEntry(AnnotationsDisplayKind.Nullness, "[Obsolete] Display annotations for parameters inside method signatures")]
+		[Obsolete("Use " + nameof(ShowParametersAnnotations))]
 		public AnnotationsDisplayKind ShowParametersAnnotations { get; set; }
+
+		[SettingsEntry(AttributesDisplayKind.NullnessAnnotations, "Display attributes for parameters inside method signatures")]
+		public AttributesDisplayKind ShowParametersAttributes { get; set; }
+
+		[SettingsEntry(false, "Display the arguments of attributes for parameters inside method signatures")]
+		public bool ShowParametersAttributesArguments { get; set; }
 
 		[SettingsEntry(ConstructorReferenceDisplay.ConstructorOnly, "Display constructor references for other types as")]
 		public ConstructorReferenceDisplay ConstructorReferenceDisplay { get; set; }
