@@ -62,10 +62,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		[SettingsEntry(true, "Use type keywords (eg. int instead of Int32)")]
 		public bool UseTypeKeywords { get; set; }
-		
+
+		[SettingsEntry(true, "Use short nullable form (T? instead of Nullable<T>)")]
+		public bool UseShortNullableForm { get; set; }
+
 		[SettingsEntry(true, "Display usage for attribute classes")]
 		public bool ShowAttributesUsage { get; set; }
-		
+
 		[SettingsEntry(AnnotationsDisplayKind.Nullness, "Display annotations for identifiers")]
 		public AnnotationsDisplayKind ShowIdentifierAnnotations { get; set; }
 

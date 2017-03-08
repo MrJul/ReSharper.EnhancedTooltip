@@ -319,16 +319,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			QualifierDisplays expectedQualifierDisplay,
 			bool appendTypeParameters,
 			Context context) {
-
-			if (declaredType.IsNullable()) {
-				IType underlyingType = declaredType.GetNullableUnderlyingType();
-				if (underlyingType != null) {
-					AppendTypeWithoutModule(underlyingType, expectedQualifierDisplay, context);
-					AppendText("?", _highlighterIdProvider.Operator);
-					return;
-				}
-			}
-
+			
 			if (declaredType is IDynamicType) {
 				AppendText("dynamic", _highlighterIdProvider.Keyword);
 				return;
@@ -361,6 +352,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			QualifierDisplays expectedQualifierDisplay,
 			bool appendTypeParameters,
 			Context context) {
+
+			if (context.Options.UseShortNullableForm
+			&& Equals(typeElement.GetClrName(), PredefinedType.GENERIC_NULLABLE_FQN)
+			&& typeElement.TypeParameters.Count == 1) {
+				IType underlyingType = substitution.Apply(typeElement.TypeParameters[0]);
+				AppendTypeWithoutModule(underlyingType, expectedQualifierDisplay, context);
+				AppendText("?", _highlighterIdProvider.Operator);
+				return;
+			}
 
 			if (!(typeElement is ITypeParameter) && (context.Options.ShowQualifiers & expectedQualifierDisplay) != QualifierDisplays.None) {
 				if (AppendNamespaceParts(GetNamespacePartsToDisplay(typeElement, context)))

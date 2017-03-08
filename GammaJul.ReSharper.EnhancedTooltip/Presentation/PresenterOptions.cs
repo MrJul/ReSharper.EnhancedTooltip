@@ -56,6 +56,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public bool UseMethodModifiersInKind { get; private set; }
 
+		public bool UseShortNullableForm { get; private set; }
+
 		public bool UseTypeKeywords { get; private set; }
 
 		[NotNull]
@@ -85,6 +87,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseClassModifiersInKind = settings.GetValue((IdentifierTooltipSettings s) => s.UseClassModifiersInKind),
 				UseExtensionMethodKind = settings.GetValue((IdentifierTooltipSettings s) => s.UseExtensionMethodKind),
 				UseMethodModifiersInKind = settings.GetValue((IdentifierTooltipSettings s) => s.UseMethodModifiersInKind),
+				UseShortNullableForm = settings.GetValue((IdentifierTooltipSettings s) => s.UseShortNullableForm),
 				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
 			};
 
@@ -115,6 +118,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseClassModifiersInKind = false,
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
+				UseShortNullableForm = settings.GetValue((IdentifierTooltipSettings s) => s.UseShortNullableForm),
 				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
 			};
 
@@ -145,6 +149,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseClassModifiersInKind = false,
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
+				UseShortNullableForm = settings.GetValue((IdentifierTooltipSettings s) => s.UseShortNullableForm),
 				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
 			};
 
@@ -175,6 +180,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseClassModifiersInKind = false,
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
+				UseShortNullableForm = true,
 				UseTypeKeywords = settings.GetValue((ParameterInfoSettings s) => s.UseTypeKeywords)
 			};
 
@@ -205,6 +211,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseClassModifiersInKind = false,
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
+				UseShortNullableForm = true,
 				UseTypeKeywords = settings.GetValue((ParameterInfoSettings s) => s.UseTypeKeywords)
 			};
 
@@ -235,6 +242,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseClassModifiersInKind = false,
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
+				UseShortNullableForm = true,
 				UseTypeKeywords = true
 			};
 
@@ -264,6 +272,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseClassModifiersInKind = false,
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
+			UseShortNullableForm = true,
 			UseTypeKeywords = true
 		};
 
@@ -293,6 +302,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseClassModifiersInKind = false,
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
+			UseShortNullableForm = true,
 			UseTypeKeywords = true
 		};
 
@@ -322,6 +332,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseClassModifiersInKind = false,
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
+			UseShortNullableForm = true,
 			UseTypeKeywords = true
 		};
 		
@@ -351,6 +362,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseClassModifiersInKind = false,
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
+			UseShortNullableForm = true,
 			UseTypeKeywords = true
 		};
 
@@ -380,6 +392,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseClassModifiersInKind = false,
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
+			UseShortNullableForm = true,
 			UseTypeKeywords = true
 		};
 
@@ -409,6 +422,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseClassModifiersInKind = false,
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
+			UseShortNullableForm = true,
 			UseTypeKeywords = true
 		};
 
