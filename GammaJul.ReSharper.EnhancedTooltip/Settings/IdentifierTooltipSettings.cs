@@ -83,7 +83,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		public bool ShowIdentifierAttributesArguments { get; set; }
 
 		[SettingsEntry(AnnotationsDisplayKind.Nullness, "[Obsolete] Display annotations for parameters inside method signatures")]
-		[Obsolete("Use " + nameof(ShowParametersAnnotations))]
+		[Obsolete("Use " + nameof(ShowParametersAttributes))]
 		public AnnotationsDisplayKind ShowParametersAnnotations { get; set; }
 
 		[SettingsEntry(AttributesDisplayKind.NullnessAnnotations, "Display attributes for parameters inside method signatures")]
@@ -112,6 +112,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		[SettingsEntry(ParametersFormattingMode.AllOnCurrentLine, "Format parameters")]
 		public ParametersFormattingMode ParametersFormattingMode { get; set; }
+
+		[SettingsEntry(AttributesFormattingMode.AllOnCurrentLine, "Format attributes")]
+		public AttributesFormattingMode AttributesFormattingMode { get; set; }
 
 	}
 

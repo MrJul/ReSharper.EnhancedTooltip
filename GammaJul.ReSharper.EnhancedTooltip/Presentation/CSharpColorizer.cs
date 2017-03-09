@@ -79,7 +79,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			var attributesSet = element as IAttributesSet;
 			if (attributesSet != null)
-				AppendAttributes(attributesSet, options.ShowElementAttributes, options.ShowElementAttributesArguments, context);
+				AppendAttributes(attributesSet, options.ShowElementAttributes, options.ShowElementAttributesArguments, options.AttributesFormattingMode, context);
 
 			if (options.ShowElementType == ElementTypeDisplay.Before)
 				AppendElementType(element, substitution, QualifierDisplays.ElementType, null, " ", context);
@@ -743,7 +743,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			PresenterOptions options = context.Options;
 
-			AppendAttributes(parameter, options.ShowParametersAttributes, options.ShowParametersAttributesArguments, context);
+			AppendAttributes(parameter, options.ShowParametersAttributes, options.ShowParametersAttributesArguments, AttributesFormattingMode.AllOnCurrentLine, context);
 			
 			if (options.ShowParametersType)
 				AppendElementType(parameter, substitution, QualifierDisplays.Parameters, null, options.ShowParametersName ? " " : null, context);
@@ -755,7 +755,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendDefaultValue(parameter, substitution, context);
 		}
 
-		private void AppendAttributes([NotNull] IAttributesSet attributesSet, AttributesDisplayKind displayKind, bool showArguments, Context context) {
+		private void AppendAttributes(
+			[NotNull] IAttributesSet attributesSet,
+			AttributesDisplayKind displayKind,
+			bool showArguments,
+			AttributesFormattingMode formattingMode,
+			Context context) {
+
 			if (displayKind == AttributesDisplayKind.Never)
 				return;
 
@@ -763,10 +769,29 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (attributes.Count == 0)
 				return;
 
+			var filteredAttributes = new LocalList<IAttributeInstance>();
 			foreach (IAttributeInstance attribute in attributes) {
 				if (MatchesAttributesDisplayKind(attribute, displayKind))
-					AppendAttribute(attribute, showArguments, context);
+					filteredAttributes.Add(attribute);
 			}
+
+			if (filteredAttributes.Count == 0)
+				return;
+
+			bool addNewLineAroundAttributes = formattingMode == AttributesFormattingMode.AllOnNewLine;
+			bool addNewLineBeforeEachAttribute = ShouldAddNewLineBeforeEachAttribute(formattingMode, filteredAttributes.Count);
+
+			if (addNewLineAroundAttributes)
+				AppendText("\r\n", null);
+
+			foreach (IAttributeInstance attribute in filteredAttributes) {
+				if (addNewLineBeforeEachAttribute)
+					AppendText("\r\n", null);
+				AppendAttribute(attribute, showArguments, context);
+			}
+
+			if (addNewLineAroundAttributes || addNewLineBeforeEachAttribute)
+				AppendText("\r\n", null);
 		}
 
 		private bool MatchesAttributesDisplayKind([CanBeNull] IAttributeInstance attribute, AttributesDisplayKind displayKind) {
@@ -792,7 +817,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					return false;
 			}
 		}
-		
+
+		[Pure]
+		private static bool ShouldAddNewLineBeforeEachAttribute(AttributesFormattingMode formattingMode, int attributeCount) {
+			switch (formattingMode) {
+				case AttributesFormattingMode.AllOnCurrentLine:
+					return false;
+				case AttributesFormattingMode.AllOnNewLine:
+					return false;
+				case AttributesFormattingMode.OnePerLine:
+					return true;
+				case AttributesFormattingMode.OnePerLineIfMultiple:
+					return attributeCount > 1;
+				default:
+					return false;
+			}
+		}
+
 		private void AppendAttribute([NotNull] IAttributeInstance attribute, bool showArguments, Context context) {
 			AppendText("[", null);
 			AppendText(attribute.GetClrName().ShortName.TrimFromEnd(AttributeInstanceEx.ATTRIBUTE_SUFFIX, StringComparison.Ordinal), _highlighterIdProvider.Class);

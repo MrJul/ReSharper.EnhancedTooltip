@@ -7,6 +7,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public sealed class PresenterOptions {
 
+		public AttributesFormattingMode AttributesFormattingMode { get; private set; }
+
 		public ExternalCodeNamespaceDisplayKind ExternalCodeNamespaceDisplayKind { get; private set; }
 
 		public bool FormatDelegatesAsLambdas { get; private set; }
@@ -68,6 +70,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull]
 		public static PresenterOptions ForIdentifierToolTip([NotNull] IContextBoundSettingsStore settings, bool showElementType)
 			=> new PresenterOptions {
+				AttributesFormattingMode = settings.GetValue((IdentifierTooltipSettings s) => s.AttributesFormattingMode),
 				ExternalCodeNamespaceDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.ExternalCodeNamespaceDisplayKind),
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey s) => s.DelegatesAsLambdas),
 				ParametersFormattingMode = settings.GetValue((IdentifierTooltipSettings s) => s.ParametersFormattingMode),
@@ -102,6 +105,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull]
 		public static PresenterOptions ForArgumentRoleParametersOwnerToolTip([NotNull] IContextBoundSettingsStore settings)
 			=> new PresenterOptions {
+				AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 				ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
 				FormatDelegatesAsLambdas = false,
 				ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,
@@ -136,6 +140,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull]
 		public static PresenterOptions ForArgumentRoleParameterToolTip([NotNull] IContextBoundSettingsStore settings)
 			=> new PresenterOptions {
+				AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 				ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
 				FormatDelegatesAsLambdas = false,
 				ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,
@@ -170,6 +175,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull]
 		public static PresenterOptions ForParameterInfo([NotNull] IContextBoundSettingsStore settings, AttributesDisplayKind attributesDisplayKind)
 			=> new PresenterOptions {
+				AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 				ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
 				FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas),
 				ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,
@@ -204,6 +210,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull]
 		public static PresenterOptions ForTypeArgumentInfo([NotNull] IContextBoundSettingsStore settings, AttributesDisplayKind attributesDisplayKind)
 			=> new PresenterOptions {
+				AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 				ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Always,
 				FormatDelegatesAsLambdas = false,
 				ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,
@@ -238,6 +245,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		[NotNull]
 		public static PresenterOptions ForBaseTypeOrImplementedInterfaceTooltip([NotNull] IContextBoundSettingsStore settings)
 			=> new PresenterOptions {
+				AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 				ExternalCodeNamespaceDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.ExternalCodeNamespaceDisplayKind),
 				FormatDelegatesAsLambdas = false,
 				ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,
@@ -271,6 +279,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public static readonly PresenterOptions FullWithoutParameterNames = new PresenterOptions {
+			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Always,
 			FormatDelegatesAsLambdas = false,
 			ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,
@@ -304,6 +313,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public static readonly PresenterOptions QualifiedMember = new PresenterOptions {
+			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Always,
 			FormatDelegatesAsLambdas = false,
 			ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,
@@ -337,6 +347,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public static readonly PresenterOptions QualifiedName = new PresenterOptions {
+			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Always,
 			FormatDelegatesAsLambdas = false,
 			ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,
@@ -370,6 +381,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		
 		[NotNull]
 		public static readonly PresenterOptions ForInterfaceMember = new PresenterOptions {
+			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
 			FormatDelegatesAsLambdas = false,
 			ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,
@@ -403,6 +415,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public static readonly PresenterOptions NameOnly = new PresenterOptions {
+			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
 			FormatDelegatesAsLambdas = false,
 			ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,
@@ -436,6 +449,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public static readonly PresenterOptions ParameterTypesOnly = new PresenterOptions {
+			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
 			FormatDelegatesAsLambdas = false,
 			ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,

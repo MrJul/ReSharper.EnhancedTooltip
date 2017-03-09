@@ -61,6 +61,7 @@
 				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
 				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
 				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
 			</Grid.RowDefinitions>
 			<controls:SectionHeading Grid.Row="0" Text="Identifier Tooltip" />
 			<controls:CheckBoxDisabledNoCheck2 Grid.Row="1" x:Name="IdentifierTooltipEnabledCheckBox" />
@@ -121,6 +122,10 @@
 			<StackPanel Grid.Row="28" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
 				<Label Target="{Binding ElementName=IdentifierTooltipParametersFormattingModeComboBox}" />
 				<ComboBox x:Name="IdentifierTooltipParametersFormattingModeComboBox" />
+			</StackPanel>
+			<StackPanel Grid.Row="29" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipAttributesFormattingModeComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipAttributesFormattingModeComboBox" />
 			</StackPanel>
 		</Grid>
 
