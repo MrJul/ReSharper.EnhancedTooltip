@@ -668,23 +668,55 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText(isIndexer ? "[" : "(", null);
 			IList<IParameter> parameters = parametersOwner.Parameters;
 
-			if (parameters.Count == 0 && context.Options.ShowEmptyParametersText) {
-				if (isTopLevel)
+			int parameterCount = parameters.Count;
+			if (parameterCount == 0) {
+				if (isTopLevel && context.Options.ShowEmptyParametersText)
 					AppendText("<no parameters>", new TextStyle(FontStyle.Regular, Color.Gray));
 			}
 
 			else {
-				for (int i = 0; i < parameters.Count; i++) {
+
+				ParametersFormattingMode formattingMode = context.Options.ParametersFormattingMode;
+				bool addNewLineAroundParameters = isTopLevel && formattingMode == ParametersFormattingMode.AllOnNewLine;
+				bool addNewLineBeforeEachParameter = isTopLevel && ShouldAddNewLineBeforeEachParameter(formattingMode, parameterCount);
+
+				if (addNewLineAroundParameters)
+					AppendText("\r\n    ", null);
+				
+				for (int i = 0; i < parameterCount; i++) {
 					if (i > 0)
 						AppendText(", ", null);
+
+					if (addNewLineBeforeEachParameter)
+						AppendText("\r\n    ", null);
+
 					int startOffset = _richText.Length;
 					AppendParameter(parameters[i], substitution, context);
 					if (isTopLevel && context.PresentedInfo != null)
 						context.PresentedInfo.Parameters.Add(new TextRange(startOffset, _richText.Length));
 				}
+
+				if (addNewLineAroundParameters || addNewLineBeforeEachParameter)
+					AppendText("\r\n", null);
 			}
 
 			AppendText(isIndexer ? "]" : ")", null);
+		}
+
+		[Pure]
+		private static bool ShouldAddNewLineBeforeEachParameter(ParametersFormattingMode formattingMode, int parameterCount) {
+			switch (formattingMode) {
+				case ParametersFormattingMode.AllOnCurrentLine:
+					return false;
+				case ParametersFormattingMode.AllOnNewLine:
+					return false;
+				case ParametersFormattingMode.OnePerLine:
+					return true;
+				case ParametersFormattingMode.OnePerLineIfMultiple:
+					return parameterCount > 1;
+				default:
+					return false;
+			}
 		}
 
 		[CanBeNull]

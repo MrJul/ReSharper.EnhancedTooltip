@@ -110,6 +110,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(ImplementedInterfacesDisplayKind.Never, "Display the implemented interfaces of types")]
 		public ImplementedInterfacesDisplayKind ImplementedInterfacesDisplayKind { get; set; }
 
+		[SettingsEntry(ParametersFormattingMode.AllOnCurrentLine, "Format parameters")]
+		public ParametersFormattingMode ParametersFormattingMode { get; set; }
+
 	}
 
 }

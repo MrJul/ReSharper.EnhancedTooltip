@@ -13,7 +13,7 @@
 		<projectUrl>https://github.com/MrJul/ReSharper.EnhancedTooltip/</projectUrl>
 		<iconUrl>https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Logo/Logo128.png</iconUrl>
 		<licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
-		<copyright>Copyright &#x00A9; 2013-2016 Julien Lebosquain</copyright>
+		<copyright>Copyright &#x00A9; 2013-2017 Julien Lebosquain</copyright>
 		<tags>Tooltip Syntax Color Parameter</tags>
 		<dependencies>
 			<dependency id="Wave" version="[7.0]" />
