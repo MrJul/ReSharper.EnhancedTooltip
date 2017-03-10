@@ -10,7 +10,7 @@
 		<releaseNotes>
 			- [Added] Support for ReSharper 2017.1 (EAP 4 minimum). (#97)
 			- [Added] Options to show all attributes, with their arguments. (#26)
-			- [Added] Option to show Nullable&lt;T&;gt; as T?. (#52)
+			- [Added] Option to show Nullable&lt;T&gt; as T?. (#52)
 			- [Added] Option to chop the display of parameters. (#64)
 			- [Added] Option to chop the display of attributes. (#101)
 			- [Added] Option to show property accessors. (#86)
