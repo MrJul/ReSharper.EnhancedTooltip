@@ -8,14 +8,16 @@ It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) tha
 - Colorizes tooltips and parameter information popups for C#.
 - Displays icons for identifiers and issues in the tooltip.
 - Uses the colors and font configured in Visual Studio.
-- When working with JetBrains annotations, can display [CanBeNull] and [NotNull] attributes.
+- Can optionally display more documentation (return type, remarks).
+- Can optionally display base type and implemented interfaces in the tooltip.
+- Can optionally display full attribute information in the tooltip.
 - Everything is configurable.
 
 Installation
 ------------
-Visual Studio 2012, 2013 and 2015 are supported.  
-ReSharper 2016.3 must be installed.  
-(Note: older versions are still available for ReSharper 8.2, 9.0, 9.1, 9.2, 10.0, 2016.1 and 2016.2).
+Visual Studio 2012, 2013, 2015 and 2017 are supported.  
+ReSharper 2017.1 (EAP4 or later) must be installed.  
+(Note: older versions are still available for ReSharper 8.2, 9.x, 10.0 and 2016.x).
 
 Install the plugin using the built-in Extension Manager from the ReSharper menu.  
 
@@ -40,6 +42,5 @@ Current Limitations
 -----------
 - Colors only work in C# files. The standard tooltip and parameter information popup are used in other file types.
 - The parameter information popup isn't highlighted for calls using named parameters.
-- This hasn't been tested with Visual Studio 2017 RC. Proper support will come when Visual Studio 2017 is released.
 
 Licensed under [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
