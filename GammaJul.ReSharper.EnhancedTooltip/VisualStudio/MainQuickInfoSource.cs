@@ -9,10 +9,12 @@ using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.Platform.VisualStudio.SinceVs10.Interop.Shim.IDE;
 using JetBrains.Platform.VisualStudio.SinceVs10.TextControl.Markup;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.UI.RichText;
@@ -48,35 +50,42 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					var presenter = new MultipleTooltipContentPresenter(tooltipFormattingProvider.GetTooltipFormatting(), document);
 					IContextBoundSettingsStore settings = document.GetSettings();
 					ISolution solution = TryGetCurrentSolution();
-
 					bool hasIdentifierTooltipContent = false;
-					if (solution != null) {
-						DocumentRange documentRange = textRange.CreateDocumentRange(document);
-						IdentifierContentGroup contentGroup = GetIdentifierContentGroup(documentRange, solution, settings);
-						if (contentGroup != null) {
-							foreach (IdentifierTooltipContent content in contentGroup.Identifiers) {
-								presenter.AddIdentifierTooltipContent(content);
-								finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
-								hasIdentifierTooltipContent = true;
-							}
-							if (contentGroup.ArgumentRole != null) {
-								presenter.AddArgumentRoleTooltipContent(contentGroup.ArgumentRole);
-								if (finalSpan == null) {
-									// Only track the argument role if we have nothing else displayed.
-									// See https://github.com/MrJul/ReSharper.EnhancedTooltip/issues/70
-									finalSpan = contentGroup.ArgumentRole.TrackingRange.ToSpan();
+
+					var resolveContext = solution != null ? document.GetContext(solution) : UniversalModuleReferenceContext.Instance;
+					using (CompilationContextCookie.GetOrCreate(resolveContext)) {
+
+						if (solution != null) {
+
+							DocumentRange documentRange = textRange.CreateDocumentRange(document);
+							IdentifierContentGroup contentGroup = GetIdentifierContentGroup(documentRange, solution, settings);
+							if (contentGroup != null) {
+								foreach (IdentifierTooltipContent content in contentGroup.Identifiers) {
+									presenter.AddIdentifierTooltipContent(content);
+									finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
+									hasIdentifierTooltipContent = true;
+								}
+								if (contentGroup.ArgumentRole != null) {
+									presenter.AddArgumentRoleTooltipContent(contentGroup.ArgumentRole);
+									if (finalSpan == null) {
+										// Only track the argument role if we have nothing else displayed.
+										// See https://github.com/MrJul/ReSharper.EnhancedTooltip/issues/70
+										finalSpan = contentGroup.ArgumentRole.TrackingRange.ToSpan();
+									}
 								}
 							}
 						}
-					}
 
-					List<Vs10Highlighter> highlighters = documentMarkup.GetHighlightersOver(textRange).OfType<Vs10Highlighter>().ToList();
-					foreach (Vs10Highlighter highlighter in highlighters) {
-						IEnumerable<IReSharperTooltipContent> contents = GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution, hasIdentifierTooltipContent);
-						foreach (IReSharperTooltipContent content in contents) {
-							if (presenter.TryAddReSharperContent(content))
-								finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
+						List<Vs10Highlighter> highlighters = documentMarkup.GetHighlightersOver(textRange).OfType<Vs10Highlighter>().ToList();
+						foreach (Vs10Highlighter highlighter in highlighters) {
+							IEnumerable<IReSharperTooltipContent> contents = GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution,
+								hasIdentifierTooltipContent);
+							foreach (IReSharperTooltipContent content in contents) {
+								if (presenter.TryAddReSharperContent(content))
+									finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
+							}
 						}
+
 					}
 
 					var vsSquiggleContents = session.RetrieveVsSquiggleContents()

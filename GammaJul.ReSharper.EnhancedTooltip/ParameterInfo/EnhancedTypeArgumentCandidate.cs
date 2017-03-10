@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using GammaJul.ReSharper.EnhancedTooltip.Presentation;
+﻿using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Lookup;
@@ -15,18 +14,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	/// and override its <see cref="ICandidate.GetSignature"/> method to provide colored parameter info.
 	/// </summary>
 	public class EnhancedTypeArgumentCandidate : EnhancedCandidate<TypeArgumentCandidate> {
-
-		// TODO: remove reflection if/when TypeArgumentCandidate.myTypeElement/myLanguage are public exposed
-		[CanBeNull] private static readonly FieldInfo _typeElementField = FindField("myTypeElement");
-		[CanBeNull] private static readonly FieldInfo _languageField = FindField("myLanguage");
-
+		
 		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
-		[CanBeNull] private readonly ITypeParametersOwner _typeElement;
-		[CanBeNull] private readonly PsiLanguageType _language;
-
-		[CanBeNull]
-		private static FieldInfo FindField([NotNull] string fieldName)
-			=> typeof(TypeArgumentCandidate).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Instance);
 
 		protected override PresenterOptions GetPresenterOptions(IContextBoundSettingsStore settings, AnnotationsDisplayKind showAnnotations)
 			=> PresenterOptions.ForTypeArgumentInfo(settings, showAnnotations.ToAttributesDisplayKind());
@@ -42,12 +31,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			mapToOriginalOrder = EmptyArray<int>.Instance;
 			extensionMethodInfo = ExtensionMethodInfo.NoExtension;
 			
-			if (_typeElement == null || _language == null)
-				return null;
-
 			PresentedInfo presentedInfo;
-			var elementInstance = new DeclaredElementInstance(_typeElement, _typeElement.IdSubstitution);
-			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, _language, highlighterIdProvider, null, out presentedInfo);
+			ITypeParametersOwner typeElement = UnderlyingCandidate.TypeElement;
+			var elementInstance = new DeclaredElementInstance(typeElement, typeElement.IdSubstitution);
+			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, highlighterIdProvider, null, out presentedInfo);
 			if (richText == null)
 				return null;
 
@@ -62,8 +49,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			[NotNull] ColorizerPresenter colorizerPresenter)
 			: base(underlyingCandidate, settings, highlighterIdProviderFactory) {
 			_colorizerPresenter = colorizerPresenter;
-			_typeElement = _typeElementField?.GetValue(underlyingCandidate) as ITypeParametersOwner;
-			_language = _languageField?.GetValue(underlyingCandidate) as PsiLanguageType;
 		}
 
 	}

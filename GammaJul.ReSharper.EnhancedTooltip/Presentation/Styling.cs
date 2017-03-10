@@ -15,6 +15,7 @@ using JetBrains.UI.Avalon;
 using JetBrains.UI.Extensions;
 using JetBrains.Util;
 using JetBrains.Util.Interop;
+using DpiUtil = JetBrains.UI.Utils.DpiUtil;
 using Screen = System.Windows.Forms.Screen;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
@@ -191,7 +192,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return itemContainerStyle;
 		}
 
-		private static double ComputeListBoxMaxWidth([NotNull] ListBox listBox, [CanBeNull] IContextBoundSettingsStore settings) {
+		private static unsafe double ComputeListBoxMaxWidth([NotNull] ListBox listBox, [CanBeNull] IContextBoundSettingsStore settings) {
 			if (settings == null || !settings.GetValue((DisplaySettings s) => s.LimitTooltipWidth))
 				return Double.PositiveInfinity;
 
@@ -201,7 +202,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			int limitPercent = settings.GetValue((DisplaySettings s) => s.ScreenWidthLimitPercent).Clamp(10, 100);
 			Screen screen = Screen.FromHandle(hwndSource.Handle);
-			return screen.Bounds.Width * (limitPercent / 100.0) / DpiUtil.DpiHorizontalFactor;
+			double dpiFactor = DpiUtil.GetWindowScreenDpiCurrent((void*) hwndSource.Handle).DpiX / DpiResolution.DeviceIndependent96DpiValue;
+			return screen.Bounds.Width * (limitPercent / 100.0) / dpiFactor;
 		}
 
 		private static TextFormattingMode GetTextFormattingMode([CanBeNull] IContextBoundSettingsStore settings)
