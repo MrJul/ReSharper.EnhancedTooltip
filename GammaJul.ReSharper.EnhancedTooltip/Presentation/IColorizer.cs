@@ -13,10 +13,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			[NotNull] ISubstitution substitution,
 			[NotNull] PresenterOptions options,
 			[CanBeNull] ITreeNode contextualNode);
-
-		[NotNull]
-		PresentedInfo AppendLiteralExpression(
-			[NotNull] ILiteralExpression literalExpression,
+		
+		void AppendPresentableNode(
+			[NotNull] ITreeNode treeNode,
 			[NotNull] PresenterOptions options);
 
 	}

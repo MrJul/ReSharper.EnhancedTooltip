@@ -6,13 +6,14 @@ using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Parsing;
 using JetBrains.ReSharper.Psi.Resolve;
+using JetBrains.ReSharper.Psi.Resources;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 
-namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
+namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	[Language(typeof(CSharpLanguage))]
-	internal sealed class CSharpSpecialDeclaredElementFinder : ISpecialDeclaredElementFinder {
+	internal sealed class CSharpPresentableNodeFinder : IPresentableNodeFinder {
 
 		public DeclaredElementInstance FindDeclaredElement(ITreeNode node, IFile file, out TextRange sourceRange) {
 			TokenNodeType tokenType = node.GetTokenType();
@@ -22,7 +23,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 			if (tokenType == CSharpTokenType.NEW_KEYWORD)
 				return FindElementFromNewKeyword(node, file, out sourceRange);
-
+			
 			sourceRange = TextRange.InvalidRange;
 			return null;
 		}
@@ -38,7 +39,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 			if (declaredElement == null)
 				return null;
-			
+
 			sourceRange = file.GetDocumentRange(varKeyword.GetTreeTextRange()).TextRange;
 			return new DeclaredElementInstance(declaredElement, EmptySubstitution.INSTANCE);
 		}
@@ -65,6 +66,35 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 			if (resolveResult?.DeclaredElement != null)
 				return new DeclaredElementInstance(resolveResult.DeclaredElement, resolveResult.Substitution);
 			return null;
+		}
+
+		public PresentableNode FindPresentableNode(ITreeNode node) {
+			var tupleComponent = FindTupleComponent(node);
+			if (tupleComponent != null)
+				return new PresentableNode(tupleComponent, PsiSymbolsThemedIcons.Field.Id);
+
+			var literalExpression = FindLiteralExpression(node);
+			if (literalExpression != null)
+				return new PresentableNode(literalExpression, PsiSymbolsThemedIcons.LocalConst.Id);
+
+			return default(PresentableNode);
+		}
+
+		[CanBeNull]
+		private static ITreeNode FindTupleComponent([NotNull] ITreeNode node)
+			=> node.GetContainingNode<ITupleComponent>(true);
+
+		[CanBeNull]
+		private static ITreeNode FindLiteralExpression([NotNull] ITreeNode node) {
+			var literalExpression = node.GetContainingNode<ILiteralExpression>(true);
+			if (literalExpression == null)
+				return null;
+
+			TreeTextRange literalRange = literalExpression.Literal.GetTreeTextRange();
+			if (!literalRange.Intersects(node.GetTreeTextRange()))
+				return null;
+
+			return literalExpression;
 		}
 
 	}

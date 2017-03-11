@@ -5,7 +5,8 @@
     <ProjectGuid>{503F35A4-5A44-4468-8DE2-174F0B7D3D77}</ProjectGuid>
     <RootNamespace>GammaJul.ReSharper.EnhancedTooltip</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <NuGetPackageImportStamp></NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <Import Project="..\GammaJul.Resharper.EnhancedTooltip.props" />
   <PropertyGroup>
@@ -451,6 +452,7 @@
     <Compile Include="Presentation\IdentifierContentGroup.cs" />
     <Compile Include="Presentation\IdentifierPresenter.cs" />
     <Compile Include="Presentation\ArgumentRoleTooltipContent.cs" />
+    <Compile Include="Presentation\PresentableNode.cs" />
     <Compile Include="Presentation\StringToWrappedTextBlockConverter.cs" />
     <Compile Include="Psi\TypeElementExtensions.cs" />
     <Compile Include="Settings\AttributesDisplayKind.cs" />
@@ -464,7 +466,7 @@
     <Compile Include="Settings\ExternalCodeNamespaceDisplayKind.cs" />
     <Compile Include="Presentation\VsIdentifierContent.cs" />
     <Compile Include="Presentation\VsSquiggleContent.cs" />
-    <Compile Include="Psi\CSharpSpecialDeclaredElementFinder.cs" />
+    <Compile Include="Presentation\CSharpPresentableNodeFinder.cs" />
     <Compile Include="Presentation\CSharpColorizerExtensions.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AbstractAccessorIsNotImplementedErrorEnhancer.cs" />
     <Compile Include="Presentation\Highlightings\CSharp\AbstractBaseMemberCallErrorEnhancer.cs" />
@@ -593,7 +595,7 @@
     <Compile Include="Psi\DeclaredElementExtensions.cs" />
     <Compile Include="Psi\ExpressionTypeExtensions.cs" />
     <Compile Include="Psi\IInvocationCandidateCountProvider.cs" />
-    <Compile Include="Psi\ISpecialDeclaredElementFinder.cs" />
+    <Compile Include="Presentation\IPresentableNodeFinder.cs" />
     <Compile Include="Settings\ConstructorReferenceDisplay.cs" />
     <Compile Include="Settings\DisplaySettings.cs" />
     <Compile Include="Settings\EnhancedTooltipSettingsRoot.cs" />

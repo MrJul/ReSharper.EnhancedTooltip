@@ -72,7 +72,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[CanBeNull]
 		public RichText TryPresent(
-			[NotNull] ILiteralExpression literalExpression,
+			[NotNull] ITreeNode presentableNode,
 			[NotNull] PresenterOptions options,
 			[NotNull] PsiLanguageType languageType,
 			[NotNull] HighlighterIdProvider highlighterIdProvider) {
@@ -82,7 +82,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (colorizer == null)
 				return null;
 
-			colorizer.AppendLiteralExpression(literalExpression, options);
+			colorizer.AppendPresentableNode(presentableNode, options);
 			return richText;
 		}
 

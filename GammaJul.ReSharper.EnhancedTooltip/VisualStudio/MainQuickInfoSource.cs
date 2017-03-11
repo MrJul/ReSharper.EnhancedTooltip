@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
@@ -43,7 +42,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			IShellLocks shellLocks = Shell.Instance.GetComponent<IShellLocks>();
 			Span? finalSpan = null;
 
-			Action getEnhancedTooltips = () => {
+			void GetEnhancedTooltips() {
 				using (shellLocks.UsingReadLock()) {
 
 					IDocument document = documentMarkup.Document;
@@ -78,8 +77,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 						List<Vs10Highlighter> highlighters = documentMarkup.GetHighlightersOver(textRange).OfType<Vs10Highlighter>().ToList();
 						foreach (Vs10Highlighter highlighter in highlighters) {
-							IEnumerable<IReSharperTooltipContent> contents = GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution,
-								hasIdentifierTooltipContent);
+							IEnumerable<IReSharperTooltipContent> contents = GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution, hasIdentifierTooltipContent);
 							foreach (IReSharperTooltipContent content in contents) {
 								if (presenter.TryAddReSharperContent(content))
 									finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
@@ -91,7 +89,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					var vsSquiggleContents = session.RetrieveVsSquiggleContents()
 						.OfType<string>()
 						.ToHashSet();
-					
+
 					bool ignoredFirstTextBuffer = false;
 					foreach (object content in quickInfoContent) {
 						if (content == null)
@@ -120,7 +118,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 						if (contentFullName == VsFullTypeNames.LightBulbQuickInfoPlaceHolder) {
 							// ignore Roslyn's bulb info placeholder (interactive tooltip "press ctrl+.")
 							continue;
-							
+
 						}
 
 						if (contentFullName == VsFullTypeNames.QuickInfoDisplayPanel)
@@ -134,9 +132,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					quickInfoContent.Clear();
 					quickInfoContent.AddRange(presenter.PresentContents());
 				}
-			};
+			}
 
-			if (shellLocks.ReentrancyGuard.TryExecute("GetEnhancedTooltips", getEnhancedTooltips) && finalSpan != null)
+			if (shellLocks.ReentrancyGuard.TryExecute("GetEnhancedTooltips", GetEnhancedTooltips) && finalSpan != null)
 				applicableToSpan = textSnapshot.CreateTrackingSpan(finalSpan.Value, SpanTrackingMode.EdgeInclusive);
 		}
 
