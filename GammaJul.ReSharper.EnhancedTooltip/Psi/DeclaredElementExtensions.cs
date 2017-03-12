@@ -53,6 +53,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 				return "event";
 			if (element is IParameter)
 				return "parameter";
+			if (element is ILocalFunction)
+				return "local function";
 
 			if (element is IFunction) {
 				if (element is IAccessor)

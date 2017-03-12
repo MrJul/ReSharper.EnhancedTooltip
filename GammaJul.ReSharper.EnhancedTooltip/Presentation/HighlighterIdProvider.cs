@@ -74,6 +74,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			=> Get(HighlightingAttributeIds.TYPE_INTERFACE_ATTRIBUTE, "interface name", "User Types(Interfaces)");
 
 		[NotNull]
+		public string LocalFunction
+			=> Get(HighlightingAttributeIds.LOCAL_FUNCTION_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+
+		[NotNull]
 		public string LocalVariable
 			=> Get(HighlightingAttributeIds.LOCAL_VARIABLE_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
 
@@ -202,6 +206,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (declaredElement is ICSharpAnonymousTypeProperty)
 				return declaredElement is IQueryAnonymousTypeProperty ? LocalVariable : Field;
+
+			if (declaredElement is ILocalFunction)
+				return LocalFunction;
 
 			if (declaredElement is IPathDeclaredElement)
 				return Path;
