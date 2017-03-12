@@ -222,12 +222,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendText(after, null);
 				return;
 			}
-
+			
 			IType elementType = GetElementType(element, substitution);
 			if (elementType == null)
 				return;
 
 			AppendText(before, null);
+
+			if (element.IsRefReturnMember() || (element is ICSharpLocalVariable localVariable && localVariable.IsRefVariable))
+				AppendText("ref ", _highlighterIdProvider.Keyword);
+			else if (element is IParameter parameter) {
+				string modifier = GetParameterModifier(parameter);
+				if (!modifier.IsEmpty())
+					AppendText(modifier + " ", _highlighterIdProvider.Keyword);
+			}
+
 			AppendType(elementType, expectedQualifierDisplay, true, context);
 			AppendText(after, null);
 		}
@@ -723,9 +732,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 						AppendText("\r\n    ", null);
 
 					int startOffset = _richText.Length;
-					AppendParameter(parameters[i], substitution, context);
-					if (isTopLevel && context.PresentedInfo != null)
+
+					IParameter parameter = parameters[i];
+					AppendParameter(parameter, substitution, context);
+
+					if (isTopLevel && context.PresentedInfo != null) {
 						context.PresentedInfo.Parameters.Add(new TextRange(startOffset, _richText.Length));
+						if (parameter.IsExtensionFirstParameter())
+							context.PresentedInfo.IsExtensionMethod = true;
+					}
 				}
 
 				if (addNewLineAroundParameters || addNewLineBeforeEachParameter)
@@ -765,16 +780,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendText("__arglist", _highlighterIdProvider.Keyword);
 				return;
 			}
-
-			string modifier = GetParameterModifier(parameter);
-			if (!modifier.IsEmpty()) {
-				AppendText(modifier + " ", _highlighterIdProvider.Keyword);
-				if (context.PresentedInfo != null && modifier == "this")
-					context.PresentedInfo.IsExtensionMethod = true;
-			}
-
+			
 			PresenterOptions options = context.Options;
-
+			
 			AppendAttributes(parameter, options.ShowParametersAttributes, options.ShowParametersAttributesArguments, AttributesFormattingMode.AllOnCurrentLine, context);
 			
 			if (options.ShowParametersType)

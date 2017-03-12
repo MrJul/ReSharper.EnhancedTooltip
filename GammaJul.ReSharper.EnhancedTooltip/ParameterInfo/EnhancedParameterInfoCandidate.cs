@@ -44,8 +44,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 				if (presentedInfo.IsExtensionMethod && UnderlyingCandidate.InvocationCandidate.IsExtensionMethod) {
 					parameterRanges = presentedInfo.Parameters.Skip(1).ToArray();
 					mapToOriginalOrder = CreateIdentityMap(presentedInfo.Parameters.Count - 1);
-					TextRange firstParameterRange = presentedInfo.Parameters[0].TrimLeft(5); // keeps "this " highlighted with the keyword color
-					extensionMethodInfo = new ExtensionMethodInfo(firstParameterRange, TextRange.InvalidRange);
+					extensionMethodInfo = new ExtensionMethodInfo(presentedInfo.Parameters[0], TextRange.InvalidRange);
 				}
 				else {
 					parameterRanges = presentedInfo.Parameters.ToArray();
