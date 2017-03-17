@@ -3,30 +3,35 @@
 	
 	<metadata>
 		<id>JLebosquain.EnhancedTooltip</id>
-		<version>3.0.1-EAP4</version>
+		<version>3.1.0-EAP5</version>
 		<title>Enhanced Tooltip</title>
 		<authors>Julien Lebosquain</authors>
 		<description>Colorizes the tooltip as well as the parameter information popup.</description>
 		<releaseNotes>
-			- [Added] Support for ReSharper 2017.1 (EAP 4 minimum). (#97)
-			- [Added] Options to show all attributes, with their arguments. (#26)
-			- [Added] Option to show Nullable&lt;T&gt; as T?. (#52)
-			- [Added] Option to chop the display of parameters. (#64)
-			- [Added] Option to chop the display of attributes. (#101)
-			- [Added] Option to show property accessors. (#86)
-			- [Added] Option to show access rights. (#100)
-			- [Added] Option to use the colors from the "environment" VS settings rather than from the "text editor" VS settings. (#98)
-			- [Added] Option to display base type and implemented interfaces only for solution code. (#81)
-			- [Added] Options to show non-fully qualified names, configurable for solution code and external code. (#72)
-			- [Added] Literal values now have a specialized display. (#63)
-			- [Added] Type parameters info is now colorized. (#60)
-			- [Added] Documentation remarks are now shown in their own element. (#82)
-			- [Added] Option to show return value documentation. (#46)
-			- [Added] Colorization for 40 more C# error messages.
-			- [Fixed] Visual Studio errors are now correctly wrapped. (#83)
-			- [Fixed] The current parameter documentation was incorrect for extension methods in the parameter info popup. (#90)
-			- [Fixed] The current parameter documentation was lost when changing parameters in the parameter info popup. (#99)
-			- [Fixed] The enum name isn't mentioned twice anymore for enum members. (#73)
+			Since last pre-release:
+				- [Added] Support for ReSharper 2017.1 EAP 5.
+				- [Added] Support for C# 7 tuple display. (#103)
+				- [Added] Support for C# 7 ref return and ref local. (#104)
+				- [Added] Support for C# 7 local function. (#105)
+			Since last release:
+				- [Added] Options to show all attributes, with their arguments. (#26)
+				- [Added] Option to show Nullable&lt;T&gt; as T?. (#52)
+				- [Added] Option to chop the display of parameters. (#64)
+				- [Added] Option to chop the display of attributes. (#101)
+				- [Added] Option to show property accessors. (#86)
+				- [Added] Option to show access rights. (#100)
+				- [Added] Option to use the colors from the "environment" VS settings rather than from the "text editor" VS settings. (#98)
+				- [Added] Option to display base type and implemented interfaces only for solution code. (#81)
+				- [Added] Options to show non-fully qualified names, configurable for solution code and external code. (#72)
+				- [Added] Literal values now have a specialized display. (#63)
+				- [Added] Type parameters info is now colorized. (#60)
+				- [Added] Documentation remarks are now shown in their own element. (#82)
+				- [Added] Option to show return value documentation. (#46)
+				- [Added] Colorization for 40 more C# error messages.
+				- [Fixed] Visual Studio errors are now correctly wrapped. (#83)
+				- [Fixed] The current parameter documentation was incorrect for extension methods in the parameter info popup. (#90)
+				- [Fixed] The current parameter documentation was lost when changing parameters in the parameter info popup. (#99)
+				- [Fixed] The enum name isn't mentioned twice anymore for enum members. (#73)
 		</releaseNotes>
 		<projectUrl>https://github.com/MrJul/ReSharper.EnhancedTooltip/</projectUrl>
 		<iconUrl>https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Logo/Logo128.png</iconUrl>
@@ -34,7 +39,7 @@
 		<copyright>Copyright &#x00A9; 2013-2017 Julien Lebosquain</copyright>
 		<tags>Tooltip Syntax Color Parameter</tags>
 		<dependencies>
-			<dependency id="Wave" version="[8.0]" />
+			<dependency id="Wave" version="[8.0.0.0-eap05,8.1)" />
 		</dependencies>
 	</metadata>
 	

@@ -115,11 +115,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return context.PresentedInfo;
 		}
 
-		private static bool IsClrPresentableElement([NotNull] IDeclaredElement element) {
-			return element.IsValid()
-				&& element is IClrDeclaredElement
-				&& element.GetElementType().IsPresentable(CSharpLanguage.Instance);
-		}
+		private static bool IsClrPresentableElement([NotNull] IDeclaredElement element)
+			=> element.IsValid()
+			&& element is IClrDeclaredElement
+			&& element.GetElementType().IsPresentable(CSharpLanguage.Instance);
 
 		public void AppendText([CanBeNull] string text, [CanBeNull] string highlighterAttributeId) {
 			if (text.IsEmpty())
@@ -370,17 +369,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			AppendText("(", null);
 
-			IReadOnlyList<IValueTupleComponent> components = valueTupleType.Components;
+			IReadOnlyList<ValueTupleComponent> components = valueTupleType.Components;
 			int componentCount = components.Count;
 			for (int i = 0; i < componentCount; ++i) {
 				if (i > 0)
 					AppendText(", ", null);
 
-				IValueTupleComponent component = components[i];
+				ValueTupleComponent component = components[i];
 				AppendType(component.Type, expectedQualifierDisplay, displayUnknownTypeParameters, context);
 				if (component.HasExplicitName) {
 					AppendText(" ", null);
-					AppendText(component.Name, _highlighterIdProvider.Identifier);
+					AppendText(component.ExplicitName, _highlighterIdProvider.Identifier);
 				}
 			}
 
