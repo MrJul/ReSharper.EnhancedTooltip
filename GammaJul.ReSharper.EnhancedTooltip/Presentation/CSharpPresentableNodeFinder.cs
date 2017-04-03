@@ -69,7 +69,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		public PresentableNode FindPresentableNode(ITreeNode node) {
-			var tupleComponent = FindTupleComponent(node);
+			var tupleComponent = FindTupleTypeComponent(node);
 			if (tupleComponent != null)
 				return new PresentableNode(tupleComponent, PsiSymbolsThemedIcons.Field.Id);
 
@@ -81,8 +81,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		[CanBeNull]
-		private static ITreeNode FindTupleComponent([NotNull] ITreeNode node)
-			=> node.GetContainingNode<ITupleComponent>(true);
+		private static ITreeNode FindTupleTypeComponent([NotNull] ITreeNode node)
+			=> node.GetContainingNode<ITupleTypeComponent>(true);
 
 		[CanBeNull]
 		private static ITreeNode FindLiteralExpression([NotNull] ITreeNode node) {

@@ -334,9 +334,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return;
 			}
 
-			var valueTupleType = declaredType as IValueTupleType;
-			if (valueTupleType != null) {
-				AppendValueTupleType(valueTupleType, expectedQualifierDisplay, displayUnknownTypeParameters, context);
+			var tupleType = declaredType as ITupleType;
+			if (tupleType != null) {
+				AppendTupleType(tupleType, expectedQualifierDisplay, displayUnknownTypeParameters, context);
 				return;
 			}
 
@@ -361,21 +361,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendTypeElement(typeElement, declaredType.GetSubstitution(), expectedQualifierDisplay, appendTypeParameters, displayUnknownTypeParameters, context);
 		}
 
-		private void AppendValueTupleType(
-			[NotNull] IValueTupleType valueTupleType,
+		private void AppendTupleType(
+			[NotNull] ITupleType tupleType,
 			QualifierDisplays expectedQualifierDisplay,
 			bool displayUnknownTypeParameters,
 			Context context) {
 
 			AppendText("(", null);
 
-			IReadOnlyList<ValueTupleComponent> components = valueTupleType.Components;
+			IReadOnlyList<TupleTypeComponent> components = tupleType.Components;
 			int componentCount = components.Count;
 			for (int i = 0; i < componentCount; ++i) {
 				if (i > 0)
 					AppendText(", ", null);
 
-				ValueTupleComponent component = components[i];
+				TupleTypeComponent component = components[i];
 				AppendType(component.Type, expectedQualifierDisplay, displayUnknownTypeParameters, context);
 				if (component.HasExplicitName) {
 					AppendText(" ", null);
@@ -1112,8 +1112,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public void AppendPresentableNode(ITreeNode treeNode, PresenterOptions options) {
 			if (treeNode is ILiteralExpression literalExpression)
 				AppendLiteralExpression(literalExpression, options);
-			else if (treeNode is ITupleComponent tupleComponent)
-				AppendTupleComponent(tupleComponent, options);
+			else if (treeNode is ITupleTypeComponent tupleTypeComponent)
+				AppendTupleTypeComponent(tupleTypeComponent, options);
 		}
 
 		private void AppendLiteralExpression(ILiteralExpression literalExpression, PresenterOptions options) {
@@ -1129,8 +1129,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendConstantValueOwner(literalExpression);
 		}
 
-		private void AppendTupleComponent([NotNull] ITupleComponent tupleComponent, [NotNull] PresenterOptions options) {
-			var tupleComponentList = tupleComponent.Parent as ITupleComponentList;
+		private void AppendTupleTypeComponent([NotNull] ITupleTypeComponent tupleTypeComponent, [NotNull] PresenterOptions options) {
+			var tupleComponentList = tupleTypeComponent.Parent as ITupleTypeComponentList;
 			if (tupleComponentList == null)
 				return;
 
@@ -1138,14 +1138,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			AppendText("(", null);
 
-			var context = new Context(options, null, tupleComponent);
-			TreeNodeCollection<ITupleComponent> components = tupleComponentList.Components;
+			var context = new Context(options, null, tupleTypeComponent);
+			TreeNodeCollection<ITupleTypeComponent> components = tupleComponentList.Components;
 			int componentCount = components.Count;
 			for (int i = 0; i < componentCount; ++i) {
 				if (i > 0)
 					AppendText(", ", null);
 
-				ITupleComponent component = components[i];
+				ITupleTypeComponent component = components[i];
 				AppendType(CSharpTypeFactory.CreateType(component.TypeUsage), QualifierDisplays.None, true, context);
 				ICSharpIdentifier nameIdentifier = component.NameIdentifier;
 				if (nameIdentifier != null) {
@@ -1156,7 +1156,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			AppendText(")", null);
 
-			ICSharpIdentifier componentNameIdentifier = tupleComponent.NameIdentifier;
+			ICSharpIdentifier componentNameIdentifier = tupleTypeComponent.NameIdentifier;
 			if (componentNameIdentifier != null) {
 				AppendText(".", _highlighterIdProvider.Operator);
 				AppendText(componentNameIdentifier.Name, _highlighterIdProvider.Identifier);
