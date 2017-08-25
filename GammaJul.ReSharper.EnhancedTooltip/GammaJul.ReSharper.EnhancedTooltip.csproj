@@ -31,6 +31,7 @@
     <PackageReference Include="VSSDK.Language" Version="11.0.4" />
     <PackageReference Include="VSSDK.Shell.Immutable.11" Version="11.0.4" />
     <PackageReference Include="VSSDK.Text" Version="11.0.4" />
+    <PackageReference Include="NuGet.CommandLine" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
