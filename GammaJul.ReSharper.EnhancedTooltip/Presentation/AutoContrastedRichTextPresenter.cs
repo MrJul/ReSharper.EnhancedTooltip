@@ -1,4 +1,4 @@
-﻿using JetBrains.UI.Avalon.Controls;
+﻿using JetBrains.UI.Controls;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 

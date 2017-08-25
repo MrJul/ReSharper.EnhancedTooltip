@@ -5,7 +5,7 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:controls="urn:schemas-jetbrains-com:jetbrains-ui-controls"
-	xmlns:controls2="urn:schemas-jetbrains-com:jetbrains-ui-wpf-controls"
+	xmlns:numUpDown="clr-namespace:JetBrains.UI.Wpf.Controls.NumericUpDown.Impl;assembly=JetBrains.Platform.UIInteractive.Shell"
 	mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
 	HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
 	Grid.IsSharedSizeScope="True">
@@ -163,7 +163,7 @@
 			<controls:SectionHeading Grid.Row="0" Text="Display" />
 			<StackPanel Grid.Row="1" Orientation="Horizontal">
 				<controls:CheckBoxDisabledNoCheck2 VerticalAlignment="Center" x:Name="DisplayLimitTooltipWidth" />
-				<controls2:NumericUpDown x:Name="DisplayScreenWidthLimitPercent" MinValue="10" MaxValue="100" Margin="{StaticResource InlineControlMargin}" />
+				<numUpDown:NumericUpDown x:Name="DisplayScreenWidthLimitPercent" MinValue="10" MaxValue="100" Margin="{StaticResource InlineControlMargin}" />
 				<Label Target="{Binding ElementName=DisplayScreenWidthLimitPercent}" Content=" %" />
 			</StackPanel>
 			<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">

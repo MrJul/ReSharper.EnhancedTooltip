@@ -3,7 +3,7 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:jui="urn:schemas-jetbrains-com:jetbrains-ui-avalon"
 	xmlns:resources="urn:shemas-jetbrains-com:ui-application-icons-altering-featu"
-	xmlns:controls="clr-namespace:JetBrains.UI.Avalon.Controls;assembly=JetBrains.Platform.UI"
+	xmlns:controls="clr-namespace:JetBrains.UI.Controls;assembly=JetBrains.Platform.UIInteractive.Shell"
 	xmlns:richText="clr-namespace:JetBrains.UI.RichText;assembly=JetBrains.Platform.Util"
 	xmlns:local="clr-namespace:GammaJul.ReSharper.EnhancedTooltip.Presentation">
 

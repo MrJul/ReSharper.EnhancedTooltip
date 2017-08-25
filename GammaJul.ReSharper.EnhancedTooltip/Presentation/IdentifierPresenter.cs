@@ -5,8 +5,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 using JetBrains.Annotations;
-using JetBrains.UI.Avalon.Controls;
-using JetBrains.UI.Avalon.Interop;
+using JetBrains.UI.Controls;
+using JetBrains.UI.CrossFramework;
 using JetBrains.UI.RichText;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {

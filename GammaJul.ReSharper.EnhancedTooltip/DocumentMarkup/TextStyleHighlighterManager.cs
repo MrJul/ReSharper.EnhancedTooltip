@@ -8,9 +8,9 @@ using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.TextControl;
 using JetBrains.TextControl.DocumentMarkup;
-using JetBrains.UI.Avalon;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
+using JetBrains.Util.Colors;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
 using Color = System.Drawing.Color;
@@ -72,7 +72,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (solidColorBrush == null)
 				return Color.Empty;
 
-			return solidColorBrush.Color.ToWinForms();
+			return solidColorBrush.Color.ToWinFormsColor();
 		}
 
 		private static FontStyle GetFontStyle([NotNull] TextFormattingRunProperties properties)

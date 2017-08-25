@@ -5,8 +5,8 @@ using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
-using JetBrains.Application;
 using JetBrains.Application.Settings;
+using JetBrains.Application.Threading;
 using JetBrains.DocumentModel;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Platform.VisualStudio.SinceVs10.Interop.Shim.IDE;
@@ -166,7 +166,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				IDocument document = documentMarkup.Document;
 				IContextBoundSettingsStore settings = document.GetSettings();
 
-				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, solution);
+				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, highlighting.GetType(), solution);
 				IssueTooltipContent issueContent = TryCreateIssueContent(highlighting, range, highlighter.RichTextToolTip, severity, settings, solution);
 				if (issueContent != null) {
 					yield return issueContent;

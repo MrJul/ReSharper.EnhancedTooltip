@@ -1,5 +1,5 @@
 ﻿using JetBrains.Annotations;
-using JetBrains.ReSharper.Daemon.SolutionAnalysis.UI.Resources;
+using JetBrains.ReSharper.Daemon.SolutionAnalysis.Resources;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.UI.Icons;
 

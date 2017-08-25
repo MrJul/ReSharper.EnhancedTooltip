@@ -2,8 +2,8 @@
 using System.Windows;
 using JetBrains.Annotations;
 using JetBrains.Application;
+using JetBrains.Application.UI.Extensions;
 using JetBrains.ReSharper.Resources.Shell;
-using JetBrains.UI.Extensions;
 using JetBrains.Util;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {

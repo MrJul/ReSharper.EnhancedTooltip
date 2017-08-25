@@ -8,14 +8,14 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
+using JetBrains.Application.UI.Options;
+using JetBrains.Application.UI.UIAutomation;
 using JetBrains.DataFlow;
 using JetBrains.ReSharper.Features.Intellisense.Options;
 using JetBrains.UI.Controls;
-using JetBrains.UI.CrossFramework;
 using JetBrains.UI.Extensions;
-using JetBrains.UI.Options;
 using JetBrains.UI.Options.OptionsDialog2.SimpleOptions;
-using JetBrains.UI.Wpf.Controls;
+using JetBrains.UI.Wpf.Controls.NumericUpDown.Impl;
 using JetBrains.UI.Wpf.Converters;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {

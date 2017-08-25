@@ -11,7 +11,6 @@ using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Resources.Shell;
-using JetBrains.UI.Avalon;
 using JetBrains.UI.Extensions;
 using JetBrains.Util;
 using JetBrains.Util.Interop;
