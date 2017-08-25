@@ -59,6 +59,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public static bool GetShouldStyleParentListBox([NotNull] DependencyObject owner) {
 			if (owner == null)
 				throw new ArgumentNullException(nameof(owner));
+			// ReSharper disable once PossibleNullReferenceException
 			return (bool) owner.GetValue(ShouldStyleParentListBoxProperty);
 		}
 
@@ -200,8 +201,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return Double.PositiveInfinity;
 
 			int limitPercent = settings.GetValue((DisplaySettings s) => s.ScreenWidthLimitPercent).Clamp(10, 100);
-			Screen screen = Screen.FromHandle(hwndSource.Handle);
-			double dpiFactor = DpiUtil.GetWindowScreenDpiCurrent((void*) hwndSource.Handle).DpiX / DpiResolution.DeviceIndependent96DpiValue;
+			IntPtr handle = hwndSource.Handle;
+			Screen screen = Screen.FromHandle(handle);
+			// ReSharper disable once AssignNullToNotNullAttribute
+			double dpiFactor = DpiUtil.GetWindowScreenDpiCurrent((void*) handle).DpiX / DpiResolution.DeviceIndependent96DpiValue;
 			return screen.Bounds.Width * (limitPercent / 100.0) / dpiFactor;
 		}
 

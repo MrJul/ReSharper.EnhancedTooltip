@@ -17,6 +17,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			new FrameworkPropertyMetadata(BooleanBoxes.False, OnFontSizeForScaleChanged));
 
 		public static double GetIsScalingWithFontSize([NotNull] DependencyObject owner)
+			// ReSharper disable once PossibleNullReferenceException
 			=> (double) owner.GetValue(IsScalingWithFontSizeProperty);
 
 		public static void SetIsScalingWithFontSize([NotNull] DependencyObject owner, bool value)

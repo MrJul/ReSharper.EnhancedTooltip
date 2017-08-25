@@ -18,28 +18,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
 		[NotNull] private readonly CodeAnnotationsConfiguration _codeAnnotationsConfiguration;
-
-		/// <summary>
-		/// Presents a given <see cref="DeclaredElementInstance"/> using a colorizer.
-		/// </summary>
-		/// <param name="declaredElementInstance">The declared element instance.</param>
-		/// <param name="options">The options to use to present the element.</param>
-		/// <param name="languageType">The type of language used to present the element.</param>
-		/// <param name="highlighterIdProvider">An object determining which highlightings to use.</param>
-		/// <param name="contextualNode">The tree node where the element is presented.</param>
-		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
-		[CanBeNull]
-		public RichText TryPresent(
-			[NotNull] DeclaredElementInstance declaredElementInstance,
-			[NotNull] PresenterOptions options,
-			[NotNull] PsiLanguageType languageType,
-			[NotNull] HighlighterIdProvider highlighterIdProvider,
-			[CanBeNull] ITreeNode contextualNode) {
-
-			PresentedInfo presentedInfo;
-			return TryPresent(declaredElementInstance, options, languageType, highlighterIdProvider, contextualNode, out presentedInfo);
-		}
-
+		
 		/// <summary>
 		/// Presents a given <see cref="DeclaredElementInstance"/> using a colorizer.
 		/// </summary>

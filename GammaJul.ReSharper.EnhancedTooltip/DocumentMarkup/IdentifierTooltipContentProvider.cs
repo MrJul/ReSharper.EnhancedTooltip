@@ -218,7 +218,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				PresenterOptions.ForIdentifierToolTip(settings, !element.IsEnumMember()),
 				languageType,
 				highlighterIdProvider,
-				info.TreeNode);
+				info.TreeNode,
+				out _);
 
 			if (identifierText == null || identifierText.IsEmpty)
 				return null;
@@ -299,13 +300,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			PresenterOptions presenterOptions = PresenterOptions.ForBaseTypeOrImplementedInterfaceTooltip(settings);
 
 			if (baseType != null)
-				identifierContent.BaseType = _colorizerPresenter.TryPresent(baseType, presenterOptions, languageType, highlighterIdProvider, contextualNode);
+				identifierContent.BaseType = _colorizerPresenter.TryPresent(baseType, presenterOptions, languageType, highlighterIdProvider, contextualNode, out _);
 
 			if (implementedInterfaces.Count > 0) {
 				var sortedPresentedInterfaces = new SortedDictionary<string, RichText>(StringComparer.Ordinal);
 				foreach (DeclaredElementInstance implementedInterface in implementedInterfaces) {
-					RichText richText = _colorizerPresenter.TryPresent(implementedInterface, presenterOptions, languageType, highlighterIdProvider,
-						contextualNode);
+					RichText richText = _colorizerPresenter.TryPresent(implementedInterface, presenterOptions, languageType, highlighterIdProvider, contextualNode, out _);
 					if (richText != null)
 						sortedPresentedInterfaces[richText.ToString(false)] = richText;
 				}
@@ -706,14 +706,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				PresenterOptions.ForArgumentRoleParametersOwnerToolTip(settings),
 				argument.Language,
 				highlighterIdProvider,
-				node));
+				node,
+				out _));
 			final.Append(": ", TextStyle.Default);
 			final.Append(_colorizerPresenter.TryPresent(
 				parameterInstance,
 				PresenterOptions.ForArgumentRoleParameterToolTip(settings),
 				argument.Language,
 				highlighterIdProvider,
-				node));
+				node,
+				out _));
 
 			var content = new ArgumentRoleTooltipContent(final, argument.GetDocumentRange().TextRange) {
 				Description = TryGetDescription(parameter, parameter.GetXMLDoc(true), parameter.Module, argument.Language)
