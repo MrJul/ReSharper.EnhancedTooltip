@@ -34,10 +34,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		public bool OnOk()
 			=> true;
-
-		public bool ValidatePage()
-			=> true;
-
+		
 		public EitherControl Control
 			=> this;
 
@@ -143,14 +140,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			if (label == null)
 				return;
 
-			if (label.Content == null) {
-				label.Content = description + ":";
-				_keywords.Add(new OptionsPageKeyword(description));
-			}
-			else {
-				string existingContentString = label.Content as string;
-				if (existingContentString != null)
+			switch (label.Content) {
+				case null:
+					label.Content = description + ":";
+					_keywords.Add(new OptionsPageKeyword(description));
+					break;
+				case string existingContentString:
 					_keywords.Add(new OptionsPageKeyword(existingContentString));
+					break;
 			}
 
 			SearchablePageBehavior.SetSearchFilter(label, true);

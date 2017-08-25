@@ -23,12 +23,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		}
 
 		[NotNull]
-		private ICandidate Enhance([NotNull] ICandidate candidate) {
-			var typedCandidate = candidate as TCandidate;
-			return typedCandidate != null
-				? Enhance(typedCandidate)
-				: candidate;
-		}
+		private ICandidate Enhance([NotNull] ICandidate candidate)
+			=> candidate is TCandidate typedCandidate
+			? Enhance(typedCandidate)
+			: candidate;
 
 		[NotNull]
 		protected abstract EnhancedCandidate<TCandidate> Enhance([NotNull] TCandidate candidate);
@@ -52,8 +50,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 				if (ReferenceEquals(candidateToFind, candidate))
 					return candidate;
 
-				var enhancedCandidate = candidate as EnhancedCandidate<TCandidate>;
-				if (enhancedCandidate != null && ReferenceEquals(enhancedCandidate.UnderlyingCandidate, candidateToFind))
+				if (candidate is EnhancedCandidate<TCandidate> enhancedCandidate
+				&& ReferenceEquals(enhancedCandidate.UnderlyingCandidate, candidateToFind))
 					return enhancedCandidate;
 			}
 			
@@ -61,8 +59,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		}
 
 		public string[] NamedArguments {
-			get { return _context.NamedArguments; }
-			set { _context.NamedArguments = value; }
+			get => _context.NamedArguments;
+			set => _context.NamedArguments = value;
 		}
 
 		public Type ParameterListNodeType

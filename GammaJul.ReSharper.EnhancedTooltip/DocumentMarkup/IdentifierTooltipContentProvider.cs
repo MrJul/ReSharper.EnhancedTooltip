@@ -131,8 +131,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				?? TryPresentColorized(presentable.PresentableNode, settings)
 				?? TryPresentNonColorized(highlighter, presentable.DeclaredElementInfo?.DeclaredElement, settings);
 
-			bool replacesStandardContent;
-			IdentifierTooltipContent additionalContent = TryGetAdditionalIdentifierContent(presentable.DeclaredElementInfo, settings, out replacesStandardContent);
+			IdentifierTooltipContent additionalContent = TryGetAdditionalIdentifierContent(presentable.DeclaredElementInfo, settings, out bool replacesStandardContent);
 			if (replacesStandardContent) {
 				standardContent = additionalContent;
 				additionalContent = null;
@@ -251,8 +250,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowOverloadCount))
 				identifierContent.OverloadCount = TryGetOverloadCount(element as IFunction, info.Reference, languageType);
 
-			var typeElement = info.DeclaredElement as ITypeElement;
-			if (typeElement != null) {
+			if (info.DeclaredElement is ITypeElement typeElement) {
 
 				var baseTypeDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.BaseTypeDisplayKind);
 				var implementedInterfacesDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.ImplementedInterfacesDisplayKind);
@@ -290,9 +288,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			[NotNull] HighlighterIdProvider highlighterIdProvider,
 			[NotNull] IContextBoundSettingsStore settings) {
 
-			DeclaredElementInstance baseType;
-			IList<DeclaredElementInstance> implementedInterfaces;
-			GetSuperTypes(typeElement, baseTypeDisplayKind, implementedInterfacesDisplayKind, out baseType, out implementedInterfaces);
+			GetSuperTypes(
+				typeElement,
+				baseTypeDisplayKind,
+				implementedInterfacesDisplayKind,
+				out DeclaredElementInstance baseType,
+				out IList<DeclaredElementInstance> implementedInterfaces);
 
 			if (baseType == null && implementedInterfaces.Count == 0)
 				return;
@@ -346,13 +347,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 					continue;
 				}
 
-				if (searchForImplementedInterfaces) {
-					var @interface = superTypeElement as IInterface;
-					if (@interface != null) {
-						if (MatchesImplementedInterfacesDisplayKind(@interface, implementedInterfacesDisplayKind))
-							foundInterfaces.Add(new DeclaredElementInstance(superTypeElement, superType.GetSubstitution()));
-					}
-				}
+				if (searchForImplementedInterfaces
+				&& superTypeElement is IInterface @interface
+				&& MatchesImplementedInterfacesDisplayKind(@interface, implementedInterfacesDisplayKind))
+					foundInterfaces.Add(new DeclaredElementInstance(superTypeElement, superType.GetSubstitution()));
 			}
 
 			implementedInterfaces = foundInterfaces.ResultingList();
@@ -667,8 +665,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (finder == null)
 				return null;
 
-			TextRange sourceRange;
-			DeclaredElementInstance declaredElementInstance = finder.FindDeclaredElement(node, file, out sourceRange);
+			DeclaredElementInstance declaredElementInstance = finder.FindDeclaredElement(node, file, out TextRange sourceRange);
 			if (declaredElementInstance == null)
 				return null;
 

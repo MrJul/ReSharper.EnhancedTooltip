@@ -20,8 +20,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 			if (element == null)
 				return "unknown";
 
-			var @class = element as IClass;
-			if (@class != null) {
+			if (element is IClass @class) {
 				string classModifiers = useClassModifiers ? GetClassModifiersDisplay(@class) : null;
 				string classKind = useAttributeTypeKind && @class.IsAttribute() ? "attribute" : "class";
 				return classModifiers + classKind;
@@ -59,9 +58,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 			if (element is IFunction) {
 				if (element is IAccessor)
 					return "accessor";
-				
-				var method = element as IMethod;
-				if (method != null) {
+
+				if (element is IMethod method) {
 					if (useExtensionMethodKind && method.IsExtensionMethod)
 						return "extension";
 					if (CSharpDeclaredElementUtil.IsDestructor(method))
@@ -74,9 +72,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 				if (element is IOperator)
 					return "operator";
 			}
-			
-			var field = element as IField;
-			if (field != null) {
+
+			if (element is IField field) {
 				if (field.IsField)
 					return "field";
 				if (field.IsConstant)
@@ -85,8 +82,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 					return "enum member";
 			}
 
-			var property = element as IProperty;
-			if (property != null) {
+			if (element is IProperty property) {
 				if (CSharpDeclaredElementUtil.IsIndexer(property))
 					return "indexer";
 				if (property.IsCSharpIndexedProperty())
@@ -94,8 +90,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 				return "property";
 			}
 
-			var localVariable = element as ILocalVariable;
-			if (localVariable != null)
+			if (element is ILocalVariable localVariable)
 				return localVariable.IsConstant ? "local constant" : "local variable";
 			
 			return "unknown";

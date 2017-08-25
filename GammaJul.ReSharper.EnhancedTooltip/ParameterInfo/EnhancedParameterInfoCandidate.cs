@@ -33,10 +33,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			mapToOriginalOrder = EmptyArray<int>.Instance;
 			extensionMethodInfo = ExtensionMethodInfo.NoExtension;
 
-			PresentedInfo presentedInfo;
 			InvocationCandidate invocationCandidate = UnderlyingCandidate.InvocationCandidate;
 			var elementInstance = new DeclaredElementInstance(invocationCandidate.Element, invocationCandidate.Substitution);
-			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, highlighterIdProvider, null, out presentedInfo);
+			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, highlighterIdProvider, null, out PresentedInfo presentedInfo);
 			if (richText == null)
 				return null;
 

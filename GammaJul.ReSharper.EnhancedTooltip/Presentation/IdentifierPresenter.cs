@@ -35,13 +35,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[CanBeNull]
 		public RichText IdentifierText {
-			get { return (RichText) GetValue(IdentifierTextProperty); }
-			set { SetValue(IdentifierTextProperty, value); }
+			get => (RichText) GetValue(IdentifierTextProperty);
+			set => SetValue(IdentifierTextProperty, value);
 		}
 
 		public int? OverloadCount {
-			get { return (int?) GetValue(OverloadCountProperty); }
-			set { SetValue(OverloadCountProperty, value); }
+			get => (int?) GetValue(OverloadCountProperty);
+			set => SetValue(OverloadCountProperty, value);
 		}
 
 		private void OnRichTextChanged([CanBeNull] RichText newValue) {

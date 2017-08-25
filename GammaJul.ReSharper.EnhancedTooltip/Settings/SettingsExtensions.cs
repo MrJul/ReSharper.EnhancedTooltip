@@ -24,10 +24,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		public static bool IsEntryEqualToDefault<T>(
 			[NotNull] this IContextBoundSettingsStore store,
 			[NotNull] Expression<Func<IdentifierTooltipSettings, T>> settingsExpr)
-		where T : struct {
-			object defaultValue = store.Schema.GetScalarEntry(settingsExpr).GetDefaultValueInEntryMemberType();
-			return defaultValue is T && EqualityComparer<T>.Default.Equals(store.GetValue(settingsExpr), (T) defaultValue);
-		}
+		where T : struct
+			=> store.Schema.GetScalarEntry(settingsExpr).GetDefaultValueInEntryMemberType() is T defaultValue
+			&& EqualityComparer<T>.Default.Equals(store.GetValue(settingsExpr), defaultValue);
 
 	}
 

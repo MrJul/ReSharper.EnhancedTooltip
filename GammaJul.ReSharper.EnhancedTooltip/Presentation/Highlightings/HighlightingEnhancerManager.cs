@@ -16,8 +16,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings {
 
 		[CanBeNull]
 		public RichText TryEnhance([CanBeNull] IHighlighting highlighting, [NotNull] IContextBoundSettingsStore settings) {
-			IHighlightingEnhancer highlightingEnhancer;
-			if (highlighting == null || !_highlightingEnhancers.TryGetValue(highlighting.GetType(), out highlightingEnhancer))
+			if (highlighting == null || !_highlightingEnhancers.TryGetValue(highlighting.GetType(), out IHighlightingEnhancer highlightingEnhancer))
 				return null;
 
 			return highlightingEnhancer.TryEnhance(highlighting, settings);

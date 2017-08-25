@@ -48,8 +48,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		private static DeclaredElementInstance FindElementFromNewKeyword([NotNull] ITreeNode newKeyword, [NotNull] IFile file, out TextRange sourceRange) {
 			sourceRange = TextRange.InvalidRange;
 
-			var creation = newKeyword.Parent as IObjectCreationExpression;
-			if (creation == null)
+			if (!(newKeyword.Parent is IObjectCreationExpression creation))
 				return null;
 
 			DeclaredElementInstance instance = TryResolveReference(creation.ConstructorReference) ?? TryResolveReference(creation.TypeReference);

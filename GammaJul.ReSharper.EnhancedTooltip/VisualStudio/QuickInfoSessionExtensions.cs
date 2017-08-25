@@ -16,8 +16,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		public static object[] RetrieveVsSquiggleContents([CanBeNull] this IQuickInfoSession session) {
 			var properties = session?.Properties;
 			if (properties != null) {
-				object[] squiggleContents;
-				if (properties.TryGetProperty(_squiggleContentsPropertyKey, out squiggleContents)) {
+				if (properties.TryGetProperty(_squiggleContentsPropertyKey, out object[] squiggleContents)) {
 					properties.RemoveProperty(_squiggleContentsPropertyKey);
 					return squiggleContents ?? EmptyArray<object>.Instance;
 				}

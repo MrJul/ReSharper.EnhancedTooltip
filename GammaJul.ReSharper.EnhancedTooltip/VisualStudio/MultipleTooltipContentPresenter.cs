@@ -27,31 +27,22 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (content == null || content.Text.IsNullOrEmpty())
 				return false;
 
-			var identifierContent = content as IdentifierTooltipContent;
-			if (identifierContent != null) {
-				AddIdentifierTooltipContent(identifierContent);
-				return true;
+			switch (content) {
+				case IdentifierTooltipContent identifierContent:
+					AddIdentifierTooltipContent(identifierContent);
+					return true;
+				case ArgumentRoleTooltipContent argumentRoleContent:
+					AddArgumentRoleTooltipContent(argumentRoleContent);
+					return true;
+				case IssueTooltipContent issueContent:
+					AddIssueTooltipContent(issueContent);
+					return true;
+				case MiscTooltipContent miscContent:
+					AddMiscTooltipContent(miscContent);
+					return true;
+				default:
+					return false;
 			}
-
-			var argumentRoleContent = content as ArgumentRoleTooltipContent;
-			if (argumentRoleContent != null) {
-				AddArgumentRoleTooltipContent(argumentRoleContent);
-				return true;
-			}
-
-			var issueContent = content as IssueTooltipContent;
-			if (issueContent != null) {
-				AddIssueTooltipContent(issueContent);
-				return true;
-			}
-
-			var miscContent = content as MiscTooltipContent;
-			if (miscContent != null) {
-				AddMiscTooltipContent(miscContent);
-				return true;
-			}
-
-			return false;
 		}
 
 		public void AddIdentifierTooltipContent([NotNull] IdentifierTooltipContent content)

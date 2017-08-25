@@ -126,12 +126,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 				SetListBoxStyle(listBox, document);
 
-				RoutedEventHandler onListBoxUnloaded = null;
-				onListBoxUnloaded = (sender, args) => {
-					listBox.Unloaded -= onListBoxUnloaded;
+				void OnListBoxUnloaded(object sender, RoutedEventArgs args) {
+					listBox.Unloaded -= OnListBoxUnloaded;
 					RestoreOriginalStyles(listBox);
-				};
-				listBox.Unloaded += onListBoxUnloaded;
+				}
+
+				listBox.Unloaded += OnListBoxUnloaded;
 
 			});
 		}
@@ -144,8 +144,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private static void SetListBoxStyle([NotNull] ListBox listBox, [CanBeNull] IDocument document) {
-			var originalStyles = listBox.GetValue(_originalStylesProperty) as OriginalStyles;
-			if (originalStyles == null) {
+			if (!(listBox.GetValue(_originalStylesProperty) is OriginalStyles)) {
 				listBox.SetValue(_originalStylesProperty, new OriginalStyles {
 					Style = listBox.Style,
 					ItemContainerStyle = listBox.ItemContainerStyle,
@@ -193,11 +192,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private static unsafe double ComputeListBoxMaxWidth([NotNull] ListBox listBox, [CanBeNull] IContextBoundSettingsStore settings) {
-			if (settings == null || !settings.GetValue((DisplaySettings s) => s.LimitTooltipWidth))
-				return Double.PositiveInfinity;
-
-			var hwndSource = PresentationSource.FromVisual(listBox) as HwndSource;
-			if (hwndSource == null)
+			if (settings == null
+			|| !settings.GetValue((DisplaySettings s) => s.LimitTooltipWidth)
+			|| !(PresentationSource.FromVisual(listBox) is HwndSource hwndSource))
 				return Double.PositiveInfinity;
 
 			int limitPercent = settings.GetValue((DisplaySettings s) => s.ScreenWidthLimitPercent).Clamp(10, 100);
@@ -212,8 +209,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			=> settings?.GetValue((DisplaySettings s) => s.TextFormattingMode) ?? TextFormattingMode.Ideal;
 
 		private static void RestoreOriginalStyles([NotNull] ListBox listBox) {
-			var originalStyles = listBox.GetValue(_originalStylesProperty) as OriginalStyles;
-			if (originalStyles == null)
+			if (!(listBox.GetValue(_originalStylesProperty) is OriginalStyles originalStyles))
 				return;
 
 			listBox.ClearValue(_originalStylesProperty);

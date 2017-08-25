@@ -138,82 +138,76 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (_useReSharperColors)
 				return HighlightingAttributeIds.GetHighlightAttributeForTypeElement(typeElement);
 
-			if (typeElement is IDelegate)
-				return Delegate;
-			if (typeElement is IEnum)
-				return Enum;
-			if (typeElement is IInterface)
-				return Interface;
-			if (typeElement is IStruct)
-				return Struct;
-			if (typeElement is ITypeParameter)
-				return TypeParameter;
-			var @class = typeElement as IClass;
-			if (@class != null)
-				return @class.IsAbstract && @class.IsSealed ? StaticClass : Class;
-
-			return VsIdentifier;
+			switch (typeElement) {
+				case IDelegate _:
+					return Delegate;
+				case IEnum _:
+					return Enum;
+				case IInterface _:
+					return Interface;
+				case IStruct _:
+					return Struct;
+				case ITypeParameter _:
+					return TypeParameter;
+				case IClass @class:
+					return @class.IsAbstract && @class.IsSealed ? StaticClass : Class;
+				default:
+					return VsIdentifier;
+			}
 		}
 
 		[CanBeNull]
 		public string GetForDeclaredElement([CanBeNull] IDeclaredElement declaredElement) {
-			if (declaredElement == null)
-				return null;
+			switch (declaredElement) {
 
-			if (declaredElement is IFunction) {
-				
-				var method = declaredElement as IMethod;
-				if (method != null) {
+				case null:
+					return null;
+
+				case IMethod method:
 					if (method.IsPredefined)
 						return null;
 					return method.IsExtensionMethod ? ExtensionMethod : Method;
-				}
 
-				var signOperator = declaredElement as ISignOperator;
-				if (signOperator != null)
+				case ISignOperator signOperator:
 					return signOperator.IsPredefined ? Operator : UserOperator;
 
-				var constructor = declaredElement as IConstructor;
-				if (constructor != null)
+				case IConstructor constructor:
 					return GetForTypeElement(constructor.GetContainingType());
 
+				case IField field:
+					return field.IsField ? Field : Constant;
+
+				case ITypeElement typeElement:
+					return GetForTypeElement(typeElement);
+					
+				case IEvent _:
+					return Event;
+
+				case INamespace _:
+					return Namespace;
+
+				case IParameter parameter:
+					return parameter.IsValueVariable ? Identifier : Parameter;
+
+				case ILocalVariable localVariable:
+					return localVariable.IsConstant ? Constant : LocalVariable;
+
+				case ICSharpAnonymousTypeProperty _:
+					return declaredElement is IQueryAnonymousTypeProperty ? LocalVariable : Field;
+
+				case ILocalFunction _:
+					return LocalFunction;
+
+				case IPathDeclaredElement _:
+					return Path;
+
+				case var _ when CSharpDeclaredElementUtil.IsProperty(declaredElement) || declaredElement.IsCSharpIndexedProperty():
+					return Property;
+
+				default:
+					return Identifier;
+
 			}
-
-			var field = declaredElement as IField;
-			if (field != null)
-				return field.IsField ? Field : Constant;
-
-			var typeElement = declaredElement as ITypeElement;
-			if (typeElement != null)
-				return GetForTypeElement(typeElement);
-			
-			if (CSharpDeclaredElementUtil.IsProperty(declaredElement) || declaredElement.IsCSharpIndexedProperty())
-				return Property;
-
-			if (declaredElement is IEvent)
-				return Event;
-
-			if (declaredElement is INamespace)
-				return Namespace;
-
-			var parameter = declaredElement as IParameter;
-			if (parameter != null)
-				return parameter.IsValueVariable ? Identifier : Parameter;
-
-			var localVariable = declaredElement as ILocalVariable;
-			if (localVariable != null)
-				return localVariable.IsConstant ? Constant : LocalVariable;
-
-			if (declaredElement is ICSharpAnonymousTypeProperty)
-				return declaredElement is IQueryAnonymousTypeProperty ? LocalVariable : Field;
-
-			if (declaredElement is ILocalFunction)
-				return LocalFunction;
-
-			if (declaredElement is IPathDeclaredElement)
-				return Path;
-
-			return Identifier;
 		}
 
 		public HighlighterIdProvider(bool useReSharperColors, bool useRoslynColors) {

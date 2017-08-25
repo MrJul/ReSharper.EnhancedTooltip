@@ -20,8 +20,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public TCandidate UnderlyingCandidate { get; }
 
 		public bool IsFilteredOut {
-			get { return UnderlyingCandidate.IsFilteredOut; }
-			set { UnderlyingCandidate.IsFilteredOut = value; }
+			get => UnderlyingCandidate.IsFilteredOut;
+			set => UnderlyingCandidate.IsFilteredOut = value;
 		}
 
 		public bool IsObsolete
@@ -42,10 +42,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public void GetParametersInfo(out ParamPresentationInfo[] paramInfos, out bool isParamsArray)
 			=> UnderlyingCandidate.GetParametersInfo(out paramInfos, out isParamsArray);
 		
-		public override bool Equals(object obj) {
-			var candidate = obj as EnhancedCandidate<TCandidate>;
-			return candidate != null && UnderlyingCandidate.Equals(candidate.UnderlyingCandidate);
-		}
+		public override bool Equals(object obj)
+			=> obj is EnhancedCandidate<TCandidate> candidate
+			&& UnderlyingCandidate.Equals(candidate.UnderlyingCandidate);
 
 		public override int GetHashCode()
 			=> UnderlyingCandidate.GetHashCode();

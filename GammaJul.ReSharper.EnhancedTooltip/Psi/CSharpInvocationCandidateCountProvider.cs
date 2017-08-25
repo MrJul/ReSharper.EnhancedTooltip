@@ -12,14 +12,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 	[Language(typeof(CSharpLanguage))]
 	internal sealed class CSharpInvocationCandidateCountProvider : IInvocationCandidateCountProvider {
 
-		public int? TryGetInvocationCandidateCount(IReference reference) {
-			return FindInvocationReference(reference)?.GetCandidates().Count();
-		}
-		
+		public int? TryGetInvocationCandidateCount(IReference reference)
+			=> FindInvocationReference(reference)?.GetCandidates().Count();
+
 		[CanBeNull]
 		private static ICSharpInvocationReference FindInvocationReference([NotNull] IReference reference) {
-			ICSharpInvocationReference invocationReference = reference as ICSharpInvocationReference;
-			if (invocationReference != null)
+			if (reference is ICSharpInvocationReference invocationReference)
 				return invocationReference;
 
 			ITreeNode treeNode = reference.GetTreeNode();

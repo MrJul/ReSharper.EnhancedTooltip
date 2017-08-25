@@ -63,8 +63,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private static void OnPenChanged([CanBeNull] DependencyObject d, DependencyPropertyChangedEventArgs e) {
-			DashedSeparator dashedSeparator = d as DashedSeparator;
-			if (dashedSeparator != null)
+			if (d is DashedSeparator dashedSeparator)
 				dashedSeparator._pen = null;
 		}
 

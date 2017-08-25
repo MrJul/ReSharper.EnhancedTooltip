@@ -42,10 +42,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return;
 
 			IResolveResult resolveResult = reference.Resolve().Result;
-			var liftedResolveResult = resolveResult as LiftedResolveResult;
 
 			// ReSharper disable once CoVariantArrayConversion
-			IList<IDeclaredElement> candidates = liftedResolveResult != null ? liftedResolveResult.LiftedCandidates : resolveResult.Candidates;
+			IList<IDeclaredElement> candidates = resolveResult is LiftedResolveResult liftedResolveResult
+				? liftedResolveResult.LiftedCandidates
+				: resolveResult.Candidates;
 			
 			IList<ISubstitution> substitutions = resolveResult.CandidateSubstitutions;
 

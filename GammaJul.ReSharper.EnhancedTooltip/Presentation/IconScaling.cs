@@ -24,8 +24,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			=> owner.SetValue(IsScalingWithFontSizeProperty, value);
 
 		private static void OnFontSizeForScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-			var element = d as FrameworkElement;
-			if (element == null)
+			if (!(d is FrameworkElement element))
 				return;
 
 			FontFamily fontFamily = TextElement.GetFontFamily(element);

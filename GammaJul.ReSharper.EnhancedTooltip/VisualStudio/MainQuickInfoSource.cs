@@ -160,8 +160,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			if (highlighter.Attributes.Effect.Type == EffectType.GUTTER_MARK)
 				yield break;
 
-			var highlighting = highlighter.UserData as IHighlighting;
-			if (highlighting != null) {
+			if (highlighter.UserData is IHighlighting highlighting) {
 				
 				IDocument document = documentMarkup.Document;
 				IContextBoundSettingsStore settings = document.GetSettings();

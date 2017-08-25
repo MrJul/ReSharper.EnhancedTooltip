@@ -64,16 +64,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				? new TextStyle(GetFontStyle(properties), GetColor(properties))
 				: TextStyle.Default;
 
-		private static Color GetColor([NotNull] TextFormattingRunProperties properties) {
-			if (properties.ForegroundBrushEmpty)
-				return Color.Empty;
-
-			var solidColorBrush = properties.ForegroundBrush as SolidColorBrush;
-			if (solidColorBrush == null)
-				return Color.Empty;
-
-			return solidColorBrush.Color.ToWinFormsColor();
-		}
+		private static Color GetColor([NotNull] TextFormattingRunProperties properties)
+			=> !properties.ForegroundBrushEmpty && properties.ForegroundBrush is SolidColorBrush solidColorBrush
+				? solidColorBrush.Color.ToWinFormsColor()
+				: Color.Empty;
 
 		private static FontStyle GetFontStyle([NotNull] TextFormattingRunProperties properties)
 			=> properties.BoldEmpty || !properties.Bold ? FontStyle.Regular : FontStyle.Bold;
