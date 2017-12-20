@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.UI.Icons;
 using JetBrains.UI.RichText;
@@ -19,6 +19,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[CanBeNull]
 		public RichText Return { get; set; }
+
+		[CanBeNull]
+		public RichText Value { get; set; }
 
 		[CanBeNull]
 		public RichText Remarks { get; set; }

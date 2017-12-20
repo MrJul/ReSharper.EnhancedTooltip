@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 
@@ -31,7 +31,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(false, "Display return value documentation")]
 		public bool ShowReturn { get; set; }
 
-		[SettingsEntry(true, "Display remarks")]
+		[SettingsEntry(false, "Display property value documentation")]
+		public bool ShowValue { get; set; }
+
+		[SettingsEntry(true, "Display documentation remarks")]
 		public bool ShowRemarks { get; set; }
 
 		[SettingsEntry(true, "Display documented exceptions")]

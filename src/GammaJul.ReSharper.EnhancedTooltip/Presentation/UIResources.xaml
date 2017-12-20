@@ -1,4 +1,4 @@
-﻿<ResourceDictionary
+<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:jui="urn:schemas-jetbrains-com:jetbrains-ui-avalon"
@@ -154,6 +154,15 @@
 							RichText="{Binding Obsolete}" Margin="0,0,0,1" />
 					</DockPanel>
 
+					<DockPanel x:Name="ValuePresenter" Margin="0,2,0,0">
+						<Border Style="{StaticResource TitleBorderStyle}" DockPanel.Dock="Left">
+							<TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Value"
+								FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
+						</Border>
+						<local:AutoContrastedRichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center"
+							RichText="{Binding Value}" Margin="0,0,0,1" />
+					</DockPanel>
+
 					<DockPanel x:Name="ReturnPresenter" Margin="0,2,0,0">
 						<Border Style="{StaticResource TitleBorderStyle}" DockPanel.Dock="Left">
 							<TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Returns"
@@ -218,6 +227,9 @@
 					</MultiDataTrigger>
 					<DataTrigger Binding="{Binding Obsolete}" Value="{x:Null}">
 						<Setter TargetName="ObsoletePresenter" Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
+					<DataTrigger Binding="{Binding Value}" Value="{x:Null}">
+						<Setter TargetName="ValuePresenter" Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
 					<DataTrigger Binding="{Binding Return}" Value="{x:Null}">
 						<Setter TargetName="ReturnPresenter" Property="Visibility" Value="Collapsed" />

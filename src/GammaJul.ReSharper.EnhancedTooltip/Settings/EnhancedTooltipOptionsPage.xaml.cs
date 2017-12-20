@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -170,6 +170,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowDocumentation, IdentifierTooltipShowDocumentationCheckBox, rootCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowObsolete, IdentifierTooltipShowObsoleteCheckBox, IdentifierTooltipShowDocumentationCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowReturn, IdentifierTooltipShowReturnCheckBox, IdentifierTooltipShowDocumentationCheckBox);
+			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowValue, IdentifierTooltipShowValueCheckBox, IdentifierTooltipShowDocumentationCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowRemarks, IdentifierTooltipShowRemarksCheckBox, IdentifierTooltipShowDocumentationCheckBox);
 			SetCheckBoxBinding((IdentifierTooltipSettings s) => s.ShowExceptions, IdentifierTooltipShowExceptionsCheckBox, IdentifierTooltipShowDocumentationCheckBox);
 

@@ -247,6 +247,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowReturn))
 					identifierContent.Return = TryPresentDocNode(xmlDoc, "returns", languageType, psiModule);
 
+				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowValue))
+					identifierContent.Value = TryPresentDocNode(xmlDoc, "value", languageType, psiModule);
+
 				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowRemarks))
 					identifierContent.Remarks = TryPresentDocNode(xmlDoc, "remarks", languageType, psiModule);
 
