@@ -1,4 +1,4 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using GammaJul.ReSharper.EnhancedTooltip.Psi;
 using System;
 using System.Collections.Generic;
@@ -10,8 +10,10 @@ using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Feature.Services.Cpp.QuickDoc;
 using JetBrains.ReSharper.Feature.Services.Descriptions;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Cpp.Language;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Impl;
 using JetBrains.ReSharper.Psi.Modules;
@@ -66,7 +68,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			public PresentableInfo([CanBeNull] DeclaredElementInfo declaredElementInfo) {
 				DeclaredElementInfo = declaredElementInfo;
-				PresentableNode = default(PresentableNode);
+				PresentableNode = default;
 			}
 
 			public PresentableInfo(PresentableNode presentableNode) {
@@ -125,7 +127,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			PresentableInfo presentable = FindPresentable(documentRange);
 			if (!presentable.IsValid())
 				return null;
-			
+
 			IdentifierTooltipContent standardContent =
 				TryPresentColorized(presentable.DeclaredElementInfo, settings)
 				?? TryPresentColorized(presentable.PresentableNode, settings)
@@ -212,17 +214,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			HighlighterIdProvider highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(settings);
 
-			RichText identifierText = _colorizerPresenter.TryPresent(
-				new DeclaredElementInstance(element, info.Substitution),
-				PresenterOptions.ForIdentifierToolTip(settings, !element.IsEnumMember()),
-				languageType,
-				highlighterIdProvider,
-				info.TreeNode,
-				out _);
+			RichText identifierText;
+
+			if (info.DeclaredElement is ICppDeclaredElement cppDeclaredElement)
+				identifierText = _solution.TryGetComponent<CppDeclaredElementTooltipProvider>()?.GetTooltip(cppDeclaredElement)?.RichText;
+			else {
+				identifierText = _colorizerPresenter.TryPresent(
+					new DeclaredElementInstance(element, info.Substitution),
+					PresenterOptions.ForIdentifierToolTip(settings, !element.IsEnumMember()),
+					languageType,
+					highlighterIdProvider,
+					info.TreeNode,
+					out _);
+			}
 
 			if (identifierText == null || identifierText.IsEmpty)
 				return null;
-			
+
 			var identifierContent = new IdentifierTooltipContent(identifierText, info.SourceRange);
 			
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowIcon))
@@ -576,11 +584,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		private PresentableInfo FindPresentable(DocumentRange documentRange) {
 			IDocument document = documentRange.Document;
 			if (document == null || !documentRange.IsValid())
-				return new PresentableInfo();
+				return default;
 			
 			IPsiServices psiServices = _solution.GetPsiServices();
 			if (!psiServices.Files.AllDocumentsAreCommitted || psiServices.Caches.HasDirtyFiles)
-				return new PresentableInfo();
+				return default;
 
 			return document
 				.GetPsiSourceFiles(_solution)
@@ -598,11 +606,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// <returns>A <see cref="PresentableInfo"/> at range <paramref name="range"/> in <paramref name="file"/>, which may not be valid if nothing was found.</returns>
 		private static PresentableInfo FindPresentable(DocumentRange range, [NotNull] IFile file) {
 			if (!file.IsValid())
-				return new PresentableInfo();
+				return default;
 
 			TreeTextRange treeTextRange = file.Translate(range);
 			if (!treeTextRange.IsValid())
-				return new PresentableInfo();
+				return default;
 
 			IReference[] references = file.FindReferencesAt(treeTextRange);
 			if (references.Length > 0)
@@ -611,7 +619,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			// FindNodeAt seems to return the previous node on single-char literals (eg '0'). FindNodesAt is fine.
 			var node = file.FindNodesAt<ITreeNode>(treeTextRange).FirstOrDefault();
 			if (node == null || !node.IsValid())
-				return new PresentableInfo();
+				return default;
 
 			DeclaredElementInfo declaredElementInfo = FindDeclaration(node, file) ?? FindSpecialElement(node, file);
 			if (declaredElementInfo != null)
@@ -675,7 +683,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		private static PresentableNode FindPresentableNode([NotNull] ITreeNode node, [NotNull] IFile file) {
 			var finder = LanguageManager.Instance.TryGetService<IPresentableNodeFinder>(file.Language);
 			if (finder == null)
-				return default(PresentableNode);
+				return default;
 
 			return finder.FindPresentableNode(node);
 		}

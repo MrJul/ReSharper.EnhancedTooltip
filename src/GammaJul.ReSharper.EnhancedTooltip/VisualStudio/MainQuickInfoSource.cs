@@ -115,11 +115,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 						}
 
-						if (contentFullName == VsFullTypeNames.LightBulbQuickInfoPlaceHolder) {
-							// ignore Roslyn's bulb info placeholder (interactive tooltip "press ctrl+.")
+						// ignore Roslyn's bulb info placeholder (interactive tooltip "press ctrl+.")
+						if (contentFullName == VsFullTypeNames.LightBulbQuickInfoPlaceHolder)
 							continue;
-
-						}
 
 						if (contentFullName == VsFullTypeNames.QuickInfoDisplayPanel)
 							presenter.AddVsIdentifierContent(new VsIdentifierContent(content));
