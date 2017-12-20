@@ -14,6 +14,7 @@ using JetBrains.ReSharper.Feature.Services.Cpp.QuickDoc;
 using JetBrains.ReSharper.Feature.Services.Descriptions;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Cpp.Language;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Impl;
 using JetBrains.ReSharper.Psi.Modules;
@@ -616,19 +617,29 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				return default;
 
 			IReference[] references = file.FindReferencesAt(treeTextRange);
-			if (references.Length > 0)
-				return new PresentableInfo(GetBestReference(references));
+			DeclaredElementInfo bestReference = null;
+			if (references.Length > 0) {
+				bestReference = GetBestReference(references);
+				if (bestReference != null
+				&& !(bestReference.Reference?.GetTreeNode() is ICollectionElementInitializer)) // we may do better than showing a collection initializer
+					return new PresentableInfo(bestReference);
+			}
 
 			// FindNodeAt seems to return the previous node on single-char literals (eg '0'). FindNodesAt is fine.
 			var node = file.FindNodesAt<ITreeNode>(treeTextRange).FirstOrDefault();
-			if (node == null || !node.IsValid())
-				return default;
+			if (node != null && node.IsValid()) {
+				
+				DeclaredElementInfo declaredElementInfo = FindDeclaration(node, file) ?? FindSpecialElement(node, file);
+				if (declaredElementInfo != null)
+					return new PresentableInfo(declaredElementInfo);
 
-			DeclaredElementInfo declaredElementInfo = FindDeclaration(node, file) ?? FindSpecialElement(node, file);
-			if (declaredElementInfo != null)
-				return new PresentableInfo(declaredElementInfo);
+				PresentableNode presentableNode = FindPresentableNode(node, file);
+				if (presentableNode.Node != null)
+					return new PresentableInfo(presentableNode);
 
-			return new PresentableInfo(FindPresentableNode(node, file));
+			}
+
+			return new PresentableInfo(bestReference);
 		}
 
 		/// <summary>
@@ -638,7 +649,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		/// <returns>The <see cref="DeclaredElementInfo"/> corresponding to the best reference.</returns>
 		[CanBeNull]
 		private static DeclaredElementInfo GetBestReference([NotNull] IReference[] references) {
-			foreach (IReference reference in references.OrderBy(r => r.GetTreeNode().PathToRoot().Count())) {
+			SortReferences(references);
+
+			foreach (IReference reference in references) {
 				IResolveResult resolveResult = reference.Resolve().Result;
 				if (reference.CheckResolveResult() == ResolveErrorType.DYNAMIC)
 					return null;
@@ -651,6 +664,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			}
 
 			return null;
+		}
+		
+		private static void SortReferences([NotNull] IReference[] references) {
+			int count = references.Length;
+			if (count <= 1)
+				return;
+
+			int[] pathLengths = new int[count];
+			for (int i = 0; i < count; ++i) {
+				ITreeNode treeNode = references[i].GetTreeNode();
+				int pathToRootLength = treeNode.PathToRoot().Count();
+				pathLengths[i] = treeNode is ICollectionElementInitializer
+					? Int32.MaxValue - pathToRootLength // collection initializers have the lowest priority, and are reversed if nested
+					: pathToRootLength;
+			}
+
+			Array.Sort(pathLengths, references);
 		}
 
 		[CanBeNull]
