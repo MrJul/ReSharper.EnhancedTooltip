@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
@@ -18,14 +18,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public static readonly DependencyProperty IdentifierTextProperty = DependencyProperty.Register(
-			"IdentifierText",
+			nameof(IdentifierText),
 			typeof(RichText),
 			typeof(IdentifierPresenter),
 			new FrameworkPropertyMetadata(null, (d, e) => (d as IdentifierPresenter)?.OnRichTextChanged(e.NewValue as RichText)));
 
 		[NotNull]
 		public static readonly DependencyProperty OverloadCountProperty = DependencyProperty.Register(
-			"OverloadCount",
+			nameof(OverloadCount),
 			typeof(int?),
 			typeof(IdentifierPresenter),
 			new FrameworkPropertyMetadata(null, (d, e) => (d as IdentifierPresenter)?.OnOverloadCountChanged(e.NewValue as int?)));

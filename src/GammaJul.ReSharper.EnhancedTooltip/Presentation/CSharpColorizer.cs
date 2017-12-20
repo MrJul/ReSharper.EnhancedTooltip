@@ -363,7 +363,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendType(component.Type, expectedQualifierDisplay, displayUnknownTypeParameters, context);
 				if (component.HasExplicitName) {
 					AppendText(" ", null);
-					AppendText(component.ExplicitName, _highlighterIdProvider.Identifier);
+					AppendText(component.ExplicitName, _highlighterIdProvider.TupleComponentName);
 				}
 			}
 
@@ -464,7 +464,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (index > 0) {
 				sourceParts.RemoveRange(0, index);
 				if (sourceParts.Count > 0)
-					sourceParts.Insert(0, "…");
+					sourceParts.Insert(0, "â€¦");
 			}
 
 			return sourceParts;
@@ -1100,7 +1100,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (!(tupleTypeComponent.Parent is ITupleTypeComponentList tupleComponentList))
 				return;
 
-			AppendElementKind("tuple field", options.ShowElementKind == ElementKindDisplay.Stylized);
+			AppendElementKind("tuple component", options.ShowElementKind == ElementKindDisplay.Stylized);
 
 			AppendText("(", null);
 
@@ -1116,7 +1116,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ICSharpIdentifier nameIdentifier = component.NameIdentifier;
 				if (nameIdentifier != null) {
 					AppendText(" ", null);
-					AppendText(nameIdentifier.Name, _highlighterIdProvider.Identifier);
+					AppendText(nameIdentifier.Name, _highlighterIdProvider.TupleComponentName);
 				}
 			}
 
@@ -1125,7 +1125,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ICSharpIdentifier componentNameIdentifier = tupleTypeComponent.NameIdentifier;
 			if (componentNameIdentifier != null) {
 				AppendText(".", _highlighterIdProvider.Operator);
-				AppendText(componentNameIdentifier.Name, _highlighterIdProvider.Identifier);
+				AppendText(componentNameIdentifier.Name, _highlighterIdProvider.TupleComponentName);
 			}
 		}
 

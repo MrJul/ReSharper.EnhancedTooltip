@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -76,7 +76,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (literalExpression != null)
 				return new PresentableNode(literalExpression, PsiSymbolsThemedIcons.LocalConst.Id);
 
-			return default(PresentableNode);
+			return default;
 		}
 
 		[CanBeNull]

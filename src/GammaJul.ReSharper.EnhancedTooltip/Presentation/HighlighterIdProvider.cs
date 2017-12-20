@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
@@ -107,7 +107,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public string Property
-			=> Get(HighlightingAttributeIds.FIELD_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+			=> Get(HighlightingAttributeIds.PROPERTY_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
 
 		[NotNull]
 		public string StaticClass
@@ -123,12 +123,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[CanBeNull]
 		public string TypeParameter
-			// Note: there is an "User Types(Type parameters)" on old VS versions but it's actually never.
+			// Note: there is an "User Types(Type parameters)" on old VS versions but it's actually never used.
 			=> Get(HighlightingAttributeIds.TYPE_PARAMETER_ATTRIBUTE, "type parameter name", null);
 		
 		[NotNull]
 		public string UserOperator
 			=> Get(HighlightingAttributeIds.OPERATOR_IDENTIFIER_ATTRIBUTE, VsOperator, VsOperator);
+
+		[CanBeNull]
+		public string TupleComponentName
+			=> Get(HighlightingAttributeIds.TUPLE_COMPONENT_NAME_ATTRIBUTE, VsIdentifier, null);
 
 		[CanBeNull]
 		public string GetForTypeElement([CanBeNull] ITypeElement typeElement) {
