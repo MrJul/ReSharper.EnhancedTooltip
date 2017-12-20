@@ -1,11 +1,7 @@
-/*.suo
+*.suo
 *.user
+.vs
 bin
 obj
-obj82vs*
-/_ReSharper*
-/packages/*.*.*
-/*.tss
-/GammaJul.ReSharper.EnhancedTooltip/obj*
-*.nupkg
-.vs
+build
+_ReSharper.Caches

@@ -1,4 +1,4 @@
-![Logo](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Logo/Logo32.png "Logo") ReSharper.EnhancedTooltip
+![Logo](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/images/Logo32.png "Logo") ReSharper.EnhancedTooltip
 ======
 
 What's ReSharper.EnhancedTooltip?
@@ -24,19 +24,19 @@ Install the plugin using the built-in Extension Manager from the ReSharper menu.
 Tooltip Highlighting
 --------------------
 The tooltip that appears on mouse over is now syntax highlighted. Note that only the tooltips provided by ReSharper are currently colored.  
-![Tooltip Highlighting](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Screenshots/Tooltip.png "Tooltip Highlighting")
+![Tooltip Highlighting](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/images/Tooltip.png "Tooltip Highlighting")
 
 Parameter Info Highlighting
 ---------------------------
 The parameter information popup is now syntax highlighted.
 The colors used for the types are either the ones having a name starting by _ReSharper_ if _Color identifiers_ is used, or the Visual Studio ones starting with _User Types_ otherwise.  
-![Parameter Info Highlighting](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Screenshots/ParameterInfo.png "Parameter Info Highlighting")
+![Parameter Info Highlighting](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/images/ParameterInfo.png "Parameter Info Highlighting")
 
 Options
 -------
 Enhanced Tooltip provides many options to configure the display as you like.  
 The options page is located at ReSharper → Options → Environment → IntelliSense → Enhanced Tooltip.  
-![Options Page](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/Screenshots/Options.png "Options Page")
+![Options Page](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/images/Options.png "Options Page")
 
 Current Limitations
 -----------

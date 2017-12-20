@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:s="clr-namespace:System;assembly=mscorlib">
+	<ImageDrawing AutomationProperties.Name="Logo16" AutomationProperties.ItemType="-" x:Key="0000">
+		<ToolTipService.ToolTip>
+			<x:Array Type="s:String">
+				<s:String>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAk1BMVEX////r3OX37/P////z6vD27fL/////+vX/+/j38PT06/D+8+f/////////+vTv4un////z6vD//v3+7dr59fjx5uz48vX+8OD///+gMm3zkhemQHXMm7PkzdrAgaG1Z47YtMfGjar69vj+8eLr2uT8z5rauMv48/b+5cv02Mj0mSy6dJf3qEuwWoX8y5Tw1MfSp72q531GAAAAGHRSTlMA/OJAsuUw/KZ5av0QILrOUPvi/P3J8MaI1SH5AAAAhUlEQVR4Xo3MRw4CMRBE0bJNzpkOtoec0/1PhzxBCIkFf/nUXfhVu05VkwbQs+bKzAcSkVuzBdgVp2KCy3SAjmHWVwi0FTl1ycFG1mN6f4iQ6wOkrFm2LgAAiPPCpoDqYvW5GEbWXdrYlzAaK3P0PpxLQM1oGvHPBIXM/P0L4OYLylvin96p8xCpsjAcNwAAAABJRU5ErkJggg==</s:String>
+			</x:Array>
+		</ToolTipService.ToolTip>
+	</ImageDrawing>
+</ResourceDictionary>

@@ -1,0 +1,181 @@
+﻿<ScrollViewer
+	x:Class="GammaJul.ReSharper.EnhancedTooltip.Settings.EnhancedTooltipOptionsPage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:controls="urn:schemas-jetbrains-com:jetbrains-ui-controls"
+	xmlns:numUpDown="clr-namespace:JetBrains.UI.Wpf.Controls.NumericUpDown.Impl;assembly=JetBrains.Platform.UIInteractive.Shell"
+	mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
+	HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto"
+	Grid.IsSharedSizeScope="True">
+
+	<ScrollViewer.Resources>
+
+		<Thickness x:Key="CommonMargin">8,2,0,1</Thickness>
+		<Thickness x:Key="IndentedMargin">24,2,0,1</Thickness>
+		<Thickness x:Key="InlineControlMargin">4,2,0,1</Thickness>
+
+		<Style TargetType="{x:Type controls:CheckBoxDisabledNoCheck2}">
+			<Setter Property="Margin" Value="{StaticResource CommonMargin}" />
+		</Style>
+
+		<Style TargetType="{x:Type Label}">
+			<Setter Property="Margin" Value="0,0,4,0" />
+			<Setter Property="Padding" Value="0" />
+			<Setter Property="VerticalAlignment" Value="Center" />
+		</Style>
+
+	</ScrollViewer.Resources>
+
+	<StackPanel>
+
+		<Grid Margin="10,0,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+			</Grid.RowDefinitions>
+			<controls:SectionHeading Grid.Row="0" Text="Identifier Tooltip" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="1" x:Name="IdentifierTooltipEnabledCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="2" x:Name="IdentifierTooltipShowIconCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="3" x:Name="IdentifierTooltipShowAccessRightsCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="4" x:Name="IdentifierTooltipShowAccessorsCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="5" x:Name="IdentifierTooltipShowKindCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="6" x:Name="IdentifierTooltipUseExtensionMethodKindCheckBox" Margin="{StaticResource IndentedMargin}" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="7" x:Name="IdentifierTooltipUseAttributeClassKindCheckBox" Margin="{StaticResource IndentedMargin}" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="8" x:Name="IdentifierTooltipUseMethodModifiersInKindCheckBox" Margin="{StaticResource IndentedMargin}" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="9" x:Name="IdentifierTooltipUseClassModifiersInKindCheckBox" Margin="{StaticResource IndentedMargin}" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="10" x:Name="IdentifierTooltipShowDocumentationCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="11" x:Name="IdentifierTooltipShowObsoleteCheckBox" Margin="{StaticResource IndentedMargin}" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="12" x:Name="IdentifierTooltipShowReturnCheckBox" Margin="{StaticResource IndentedMargin}" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="13" x:Name="IdentifierTooltipShowRemarksCheckBox" Margin="{StaticResource IndentedMargin}" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="14" x:Name="IdentifierTooltipShowExceptionsCheckBox" Margin="{StaticResource IndentedMargin}" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="15" x:Name="IdentifierTooltipShowOverloadCountCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="16" x:Name="IdentifierTooltipShowArgumentsRoleCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="17" x:Name="IdentifierTooltipShowShowAttributesUsageCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="18" x:Name="IdentifierTooltipUseTypeKeywordsCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="19" x:Name="IdentifierTooltipUseShortNullableFormCheckBox" />
+			<StackPanel Grid.Row="20" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipBaseTypeDisplayKindComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipBaseTypeDisplayKindComboBox" />
+			</StackPanel>
+			<StackPanel Grid.Row="21" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipImplementedInterfacesDisplayKindComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipImplementedInterfacesDisplayKindComboBox" />
+			</StackPanel>
+			<StackPanel Grid.Row="22" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipShowIdentifierAttributesComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipShowIdentifierAttributesComboBox" />
+				<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowIdentifierAttributesArgumentsCheckBox"
+					Margin="{StaticResource InlineControlMargin}" VerticalAlignment="Center" />
+			</StackPanel>
+			<StackPanel Grid.Row="23" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipShowParametersAttributesComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipShowParametersAttributesComboBox" />
+				<controls:CheckBoxDisabledNoCheck2 x:Name="IdentifierTooltipShowParametersAttributesArgumentsCheckBox"
+					Margin="{StaticResource InlineControlMargin}" VerticalAlignment="Center" />
+			</StackPanel>
+			<StackPanel Grid.Row="24" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipAttributeConstructorReferenceDisplayComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipAttributeConstructorReferenceDisplayComboBox" />
+			</StackPanel>
+			<StackPanel Grid.Row="25" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipConstructorReferenceDisplayComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipConstructorReferenceDisplayComboBox" />
+			</StackPanel>
+			<StackPanel Grid.Row="26" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipSolutionCodeNamespaceDisplayKindComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipSolutionCodeNamespaceDisplayKindComboBox" />
+			</StackPanel>
+			<StackPanel Grid.Row="27" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipExternalCodeNamespaceDisplayKindComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipExternalCodeNamespaceDisplayKindComboBox" />
+			</StackPanel>
+			<StackPanel Grid.Row="28" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipParametersFormattingModeComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipParametersFormattingModeComboBox" />
+			</StackPanel>
+			<StackPanel Grid.Row="29" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=IdentifierTooltipAttributesFormattingModeComboBox}" />
+				<ComboBox x:Name="IdentifierTooltipAttributesFormattingModeComboBox" />
+			</StackPanel>
+		</Grid>
+
+		<Grid Margin="10,0,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+			</Grid.RowDefinitions>
+			<controls:SectionHeading Grid.Row="0" Text="Issue Tooltip" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="1" x:Name="IssueTooltipShowIconCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="2" x:Name="IssueTooltipColorizeElementsInErrors" />
+		</Grid>
+
+		<Grid Margin="10,0,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+			</Grid.RowDefinitions>
+			<controls:SectionHeading Grid.Row="0" Text="Parameter Info" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="1" x:Name="ParameterInfoEnabledCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="2" x:Name="ParameterInfoShowEmptyParametersTextCheckBox" />
+			<controls:CheckBoxDisabledNoCheck2 Grid.Row="3" x:Name="ParameterInfoUseTypeKeywordsCheckBox" />
+		</Grid>
+
+		<Grid Margin="10,0,0,0">
+			<Grid.RowDefinitions>
+				<RowDefinition Height="Auto" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+				<RowDefinition Height="Auto" SharedSizeGroup="SettingRowGroup" />
+			</Grid.RowDefinitions>
+			<controls:SectionHeading Grid.Row="0" Text="Display" />
+			<StackPanel Grid.Row="1" Orientation="Horizontal">
+				<controls:CheckBoxDisabledNoCheck2 VerticalAlignment="Center" x:Name="DisplayLimitTooltipWidth" />
+				<numUpDown:NumericUpDown x:Name="DisplayScreenWidthLimitPercent" MinValue="10" MaxValue="100" Margin="{StaticResource InlineControlMargin}" />
+				<Label Target="{Binding ElementName=DisplayScreenWidthLimitPercent}" Content=" %" />
+			</StackPanel>
+			<StackPanel Grid.Row="2" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=DisplayTextFormattingMode}" />
+				<ComboBox x:Name="DisplayTextFormattingMode" />
+			</StackPanel>
+			<StackPanel Grid.Row="3" Orientation="Horizontal" Margin="{StaticResource CommonMargin}">
+				<Label Target="{Binding ElementName=DisplayTooltipColorSource}" />
+				<ComboBox x:Name="DisplayTooltipColorSource" />
+			</StackPanel>
+		</Grid>
+
+	</StackPanel>
+
+</ScrollViewer>

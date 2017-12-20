@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<Import Project="..\ProjectSystem\Wpf.targets" />
+
+	<PropertyGroup>
+		<AssemblyName>GammaJul.ReSharper.EnhancedTooltip</AssemblyName>
+		<RootNamespace>GammaJul.ReSharper.EnhancedTooltip</RootNamespace>
+		<TargetFramework>net45</TargetFramework>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<OutputPath>..\..\build\$(Configuration)</OutputPath>
+	</PropertyGroup>
+	
+	<ItemGroup>
+		<Reference Include="System.Windows.Forms" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2017.2.0" />
+		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="109.0.20170824.131327" />
+		<PackageReference Include="EnvDTE" Version="8.0.0" />
+		<PackageReference Include="VSSDK.Editor" Version="11.0.4" />
+		<PackageReference Include="VSSDK.Language" Version="11.0.4" />
+		<PackageReference Include="VSSDK.Shell.Immutable.11" Version="11.0.4" />
+		<PackageReference Include="VSSDK.Text" Version="11.0.4" />
+		<PackageReference Include="NuGet.CommandLine" Version="4.3.0" />
+	</ItemGroup>
+	
+	<!-- ReSharper workaround for duplicate fields -->
+	<ItemGroup>
+		<Compile Remove="obj\**" />
+	</ItemGroup>
+
+</Project>
