@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
@@ -88,7 +88,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 					var vsSquiggleContents = session.RetrieveVsSquiggleContents()
 						.OfType<string>()
-						.ToHashSet();
+						.ToSet();
 
 					bool ignoredFirstTextBuffer = false;
 					foreach (object content in quickInfoContent) {
@@ -123,8 +123,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 						if (contentFullName == VsFullTypeNames.QuickInfoDisplayPanel)
 							presenter.AddVsIdentifierContent(new VsIdentifierContent(content));
-						else if (vsSquiggleContents.Contains(content))
-							presenter.AddVsSquiggleContent(new VsSquiggleContent(content));
+						else if (content is string stringContent && vsSquiggleContents.Contains(stringContent))
+							presenter.AddVsSquiggleContent(new VsSquiggleContent(stringContent));
 						else
 							presenter.AddVsUnknownContent(content);
 					}

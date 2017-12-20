@@ -9,7 +9,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+		<MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
 		<OutputPath>..\..\build\$(Configuration)</OutputPath>
 	</PropertyGroup>
 	
@@ -18,8 +18,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2017.2.0" />
-		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="109.0.20170824.131327" />
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2017.3.0" />
+		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="111.0.20171218.132839" />
 		<PackageReference Include="EnvDTE" Version="8.0.0" />
 		<PackageReference Include="VSSDK.Editor" Version="11.0.4" />
 		<PackageReference Include="VSSDK.Language" Version="11.0.4" />
@@ -28,7 +28,7 @@
 		<PackageReference Include="NuGet.CommandLine" Version="4.3.0" />
 	</ItemGroup>
 	
-	<!-- ReSharper workaround for duplicate fields -->
+	<!-- ReSharper workaround for duplicate XAML fields -->
 	<ItemGroup>
 		<Compile Remove="obj\**" />
 	</ItemGroup>
