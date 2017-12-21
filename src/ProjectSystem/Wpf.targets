@@ -2,7 +2,7 @@
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
 	<ItemGroup>
-		<ProjectCapability Include="DynamicDependentFile" />		
+		<ProjectCapability Include="DynamicDependentFile" />
 		<ProjectCapability Include="WindowsXaml;WindowsXamlPage;WindowsXamlCodeBehind;WindowsXamlResourceDictionary;WindowsXamlUserControl" />
 	</ItemGroup>
 
@@ -23,7 +23,7 @@
 	<!-- https://github.com/dotnet/sdk/issues/810#issuecomment-295642279 -->
 	<PropertyGroup>
 		<LanguageTargets>$(MSBuildExtensionsPath)\$(VisualStudioVersion)\Bin\Microsoft.CSharp.targets</LanguageTargets>
-	</PropertyGroup>  
+	</PropertyGroup>
 
 	<ItemGroup>
 		<Page Include="**\*.xaml" Generator="MSBuild:Compile" SubType="Designer" />

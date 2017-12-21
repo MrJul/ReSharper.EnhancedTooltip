@@ -3,12 +3,15 @@
 
 	<metadata>
 		<id>JLebosquain.EnhancedTooltip</id>
-		<version>3.4.0-pre</version>
+		<version>3.4.0</version>
 		<title>Enhanced Tooltip</title>
 		<authors>Julien Lebosquain</authors>
 		<description>Colorizes the tooltip as well as the parameter information popup.</description>
 		<releaseNotes>
-			- [Added] Support for ReSharper 2017.3 RTM.
+			- [Added] Support for ReSharper 2017.3 RTM. (#118)
+			- [Added] Option to display value documentation. (#114)
+			- [Added] Support for new "property" and "tuple component name" colors introduced in ReSharper 2017.3. (#119, #121)
+			- [Fixed] ReSharper C++ tooltips are correctly displayed. (#115)
 		</releaseNotes>
 		<projectUrl>https://github.com/MrJul/ReSharper.EnhancedTooltip/</projectUrl>
 		<iconUrl>https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/images/Logo128.png</iconUrl>
