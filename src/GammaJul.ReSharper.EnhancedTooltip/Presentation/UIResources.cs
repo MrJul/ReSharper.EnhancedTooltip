@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Windows;
 using JetBrains.Annotations;
 using JetBrains.Application;
@@ -26,12 +26,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			=> (Style) _lazyResourceDictionary.Value["QuickInfoListBoxStyle"];
 
 		[NotNull]
-		public Style QuickInfoItemStyle
-			=> (Style) _lazyResourceDictionary.Value["QuickInfoItemStyle"];
-
-		[NotNull]
 		public DataTemplate QuickInfoItemDataTemplate
 			=> (DataTemplate) _lazyResourceDictionary.Value["QuickInfoItemDataTemplate"];
+
+		[NotNull]
+		public DataTemplate LegacyQuickInfoItemDataTemplate
+			=> (DataTemplate) _lazyResourceDictionary.Value["LegacyQuickInfoItemDataTemplate"];
 
 		[NotNull]
 		private static ResourceDictionary LoadResourceDictionary()

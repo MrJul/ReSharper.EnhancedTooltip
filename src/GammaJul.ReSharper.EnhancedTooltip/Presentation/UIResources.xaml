@@ -10,26 +10,29 @@
 	<local:FontSizeScaleConverter Scale="0.9" x:Key="MediumFontSizeConverter" />
 	<local:FontSizeScaleConverter Scale="0.8" x:Key="SmallFontSizeConverter" />
 
-	<!-- Style for VS listbox item inside the tooltip -->
-	<Style x:Key="QuickInfoItemStyle" TargetType="{x:Type ListBoxItem}">
-		<Setter Property="BorderThickness" Value="0" />
-		<Setter Property="Background" Value="Transparent" />
-		<Setter Property="Margin" Value="0,0,0,2" />
-		<Setter Property="Padding" Value="0" />
-	</Style>
-
-	<!-- Style for VS listbox item's data inside the tooltip -->
-  <DataTemplate x:Key="QuickInfoItemDataTemplate">
-    <Border BorderThickness="1"
-			BorderBrush="{Binding Path=(local:Styling.ItemTemplateBorderBrush), RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}"
-			Background="{Binding Path=(local:Styling.ItemTemplateBackground), RelativeSource={RelativeSource AncestorType={x:Type ListBoxItem}}}">
+	<!-- Style for VS listbox item's data inside the tooltip, for VS < 15.6 -->
+	<DataTemplate x:Key="LegacyQuickInfoItemDataTemplate">
+		<Border
+			BorderThickness="1"
+			BorderBrush="{Binding Path=(local:Styling.ItemTemplateBorderBrush), RelativeSource={RelativeSource Self}}"
+			Background="{Binding Path=(local:Styling.ItemTemplateBackground), RelativeSource={RelativeSource Self}}">
 			<!-- ReSharper disable once Xaml.BindingWithContextNotResolved -->
 			<ContentPresenter Content="{Binding VisualElement}" Margin="8,6" />
 		</Border>
 	</DataTemplate>
 
+	<!-- Style for VS listbox item's data inside the tooltip, for VS >= 15.6 -->
+	<DataTemplate x:Key="QuickInfoItemDataTemplate">
+		<Border
+			BorderThickness="1"
+			BorderBrush="{Binding Path=(local:Styling.ItemTemplateBorderBrush), RelativeSource={RelativeSource Self}}"
+			Background="{Binding Path=(local:Styling.ItemTemplateBackground), RelativeSource={RelativeSource Self}}">
+			<ContentPresenter Content="{Binding}" Margin="8,6" />
+		</Border>
+	</DataTemplate>
+
 	<!-- Style for VS listbox inside the tooltip -->
-	<Style x:Key="QuickInfoListBoxStyle" TargetType="{x:Type ListBox}">
+	<Style x:Key="QuickInfoListBoxStyle" TargetType="{x:Type ItemsControl}">
 		<Setter Property="BorderThickness" Value="0" />
 		<Setter Property="BorderBrush" Value="{Binding PresenterStyle.BorderBrush}" />
 		<Setter Property="Background" Value="Transparent" />
@@ -43,7 +46,7 @@
 		<Setter Property="VerticalContentAlignment" Value="Center" />
 		<Setter Property="Template">
 			<Setter.Value>
-				<ControlTemplate TargetType="{x:Type ListBox}">
+				<ControlTemplate TargetType="{x:Type ItemsControl}">
 					<Border Background="{TemplateBinding Background}" BorderThickness="{TemplateBinding BorderThickness}"
 						BorderBrush="{TemplateBinding BorderBrush}" Padding="{TemplateBinding Control.Padding}">
 						<ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />

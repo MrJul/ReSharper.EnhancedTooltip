@@ -21,6 +21,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public static class Styling {
 
+		private sealed class OriginalStyles {
+			[CanBeNull] public Style Style { get; set; }
+			[CanBeNull] public Style ItemContainerStyle { get; set; }
+			[CanBeNull] public DataTemplate ItemTemplate { get; set; }
+		}
+
 		[NotNull]
 		public static readonly DependencyProperty ShouldStyleParentListBoxProperty = DependencyProperty.RegisterAttached(
 			"ShouldStyleParentListBox",
@@ -33,7 +39,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			"ItemTemplateBackground",
 			typeof(Brush),
 			typeof(Styling),
-			new FrameworkPropertyMetadata(null));
+			new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
 		[NotNull]
 		public static readonly DependencyProperty ItemTemplateBorderBrushProperty = DependencyProperty.RegisterAttached(
@@ -117,8 +123,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			element?.WhenLoaded(lifetime => {
 
 				// We're styling the parent VS ListBox included inside the tooltip.
-				var listBox = element.FindVisualAncestor<ListBox>();
-				if (listBox == null || listBox.GetValue(_originalStylesProperty) != null)
+				if (!(element.FindVisualAncestor(o => o is ItemsControl itemsControl && IsToolTipItemsControl(itemsControl)) is ItemsControl listBox)
+				|| listBox.GetValue(_originalStylesProperty) != null)
 					return;
 
 				IDocument document = null;
@@ -136,14 +142,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			});
 		}
 
-
-		private sealed class OriginalStyles {
-			[CanBeNull] public Style Style { get; set; }
-			[CanBeNull] public Style ItemContainerStyle { get; set; }
-			[CanBeNull] public DataTemplate ItemTemplate { get; set; }
+		[Pure]
+		private static bool IsToolTipItemsControl([NotNull] ItemsControl itemsControl) {
+			string typeFullName = itemsControl.GetType().FullName;
+			return typeFullName == "System.Windows.Controls.ListBox" // Pre VS 15.6
+				|| typeFullName == "Microsoft.VisualStudio.Text.AdornmentLibrary.ToolTip.Implementation.WpfToolTipItemsControl"; // VS 15.6
 		}
 
-		private static void SetListBoxStyle([NotNull] ListBox listBox, [CanBeNull] IDocument document) {
+		private static void SetListBoxStyle([NotNull] ItemsControl listBox, [CanBeNull] IDocument document) {
 			if (!(listBox.GetValue(_originalStylesProperty) is OriginalStyles)) {
 				listBox.SetValue(_originalStylesProperty, new OriginalStyles {
 					Style = listBox.Style,
@@ -154,17 +160,25 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			IContextBoundSettingsStore settings = document.TryGetSettings();
 
+			bool isListBox = listBox is ListBox;
 			listBox.Style = UIResources.Instance.QuickInfoListBoxStyle;
-			listBox.ItemTemplate = UIResources.Instance.QuickInfoItemDataTemplate;
-			listBox.ItemContainerStyle = CreateItemContainerStyle(settings);
+			listBox.ItemTemplate = isListBox ? UIResources.Instance.LegacyQuickInfoItemDataTemplate : UIResources.Instance.QuickInfoItemDataTemplate;
+			listBox.ItemContainerStyle = CreateItemContainerStyle(settings, isListBox);
 			listBox.MaxWidth = ComputeListBoxMaxWidth(listBox,  settings);
 			TextOptions.SetTextFormattingMode(listBox, GetTextFormattingMode(settings));
 			TextOptions.SetTextRenderingMode(listBox, TextRenderingMode.Auto);
 		}
 
 		[NotNull]
-		private static Style CreateItemContainerStyle([CanBeNull] IContextBoundSettingsStore settings) {
-			var itemContainerStyle = new Style(typeof(ListBoxItem), UIResources.Instance.QuickInfoItemStyle);
+		private static Style CreateItemContainerStyle([CanBeNull] IContextBoundSettingsStore settings, bool forListBoxItem) {
+			var itemContainerStyle = new Style(forListBoxItem ? typeof(ListBoxItem) : typeof(ContentPresenter));
+			itemContainerStyle.Setters.Add(new Setter(FrameworkElement.MarginProperty, new Thickness(0.0, 0.0, 0.0, 2.0)));
+
+			if (forListBoxItem) {
+				itemContainerStyle.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(0.0)));
+				itemContainerStyle.Setters.Add(new Setter(Control.BackgroundProperty, Brushes.Transparent));
+				itemContainerStyle.Setters.Add(new Setter(Control.PaddingProperty, new Thickness(0.0)));
+			}
 
 			if (Shell.HasInstance) {
 				var tooltipFormattingProvider = Shell.Instance.TryGetComponent<TooltipFormattingProvider>();
@@ -191,7 +205,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return itemContainerStyle;
 		}
 
-		private static unsafe double ComputeListBoxMaxWidth([NotNull] ListBox listBox, [CanBeNull] IContextBoundSettingsStore settings) {
+		private static unsafe double ComputeListBoxMaxWidth([NotNull] ItemsControl listBox, [CanBeNull] IContextBoundSettingsStore settings) {
 			if (settings == null
 			|| !settings.GetValue((DisplaySettings s) => s.LimitTooltipWidth)
 			|| !(PresentationSource.FromVisual(listBox) is HwndSource hwndSource))
@@ -208,7 +222,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		private static TextFormattingMode GetTextFormattingMode([CanBeNull] IContextBoundSettingsStore settings)
 			=> settings?.GetValue((DisplaySettings s) => s.TextFormattingMode) ?? TextFormattingMode.Ideal;
 
-		private static void RestoreOriginalStyles([NotNull] ListBox listBox) {
+		private static void RestoreOriginalStyles([NotNull] ItemsControl listBox) {
 			if (!(listBox.GetValue(_originalStylesProperty) is OriginalStyles originalStyles))
 				return;
 
