@@ -8,10 +8,18 @@ charset = utf-8
 indent_style = tab
 indent_size = 4
 
-[*.csproj,*.targets]
+[*.csproj]
 indent_style = tab
 indent_size = 2
 
-[*.xaml,*.nuspec]
+[*.targets]
+indent_style = tab
+indent_size = 2
+
+[*.xaml]
+indent_style = tab
+indent_size = 2
+
+[*.nuspec]
 indent_style = tab
 indent_size = 2
