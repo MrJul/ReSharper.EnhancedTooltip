@@ -3,12 +3,14 @@
 
 	<metadata>
 		<id>JLebosquain.EnhancedTooltip</id>
-		<version>3.5.0</version>
+		<version>3.6.0</version>
 		<title>Enhanced Tooltip</title>
 		<authors>Julien Lebosquain</authors>
 		<description>Colorizes the tooltip as well as the parameter information popup.</description>
 		<releaseNotes>
-			- [Fixed] Fixed display in Visual Studio 2017 v15.6. (#125)
+			- [Added] Support for ReSharper 2018.1. (#129)
+			- [Added] Support for C# 7.2 ref and readonly struct modifiers. (#130)
+			- [Fixed] No longer needs ReSharper C++ installed to work correctly. (#122, #126)
 		</releaseNotes>
 		<projectUrl>https://github.com/MrJul/ReSharper.EnhancedTooltip/</projectUrl>
 		<iconUrl>https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/images/Logo128.png</iconUrl>
@@ -16,7 +18,7 @@
 		<copyright>Copyright &#x00A9; 2013-2018 Julien Lebosquain</copyright>
 		<tags>Tooltip Syntax Color Parameter</tags>
 		<dependencies>
-			<dependency id="Wave" version="[11.0.0]" />
+			<dependency id="Wave" version="[12.0.0]" />
 		</dependencies>
 	</metadata>
 
