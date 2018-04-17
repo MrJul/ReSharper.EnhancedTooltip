@@ -20,7 +20,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			if (declaredElement == null)
 				return;
 
-			colorizer.AppendPlainText(declaredElement.GetElementKindString(false, false, false, false).Capitalize());
+			colorizer.AppendPlainText(declaredElement.GetElementKindString(false, false, false, false, false).Capitalize());
 			colorizer.AppendPlainText(" '");
 			colorizer.AppendDeclaredElement(declaredElement, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, declaration);
 			colorizer.AppendPlainText("' of type '");

@@ -1,4 +1,4 @@
-﻿using GammaJul.ReSharper.EnhancedTooltip.Psi;
+using GammaJul.ReSharper.EnhancedTooltip.Psi;
 using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
@@ -35,7 +35,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			=> colorizer.AppendText(accessorName, colorizer.HighlighterIdProvider.Accessor);
 
 		public static void AppendElementKind([NotNull] this CSharpColorizer colorizer, [CanBeNull] IDeclaredElement element)
-			=> colorizer.AppendText(element.GetElementKindString(false, false, false, false), null);
+			=> colorizer.AppendText(element.GetElementKindString(false, false, false, false, false), null);
 
 		public static void AppendCandidates([NotNull] this CSharpColorizer colorizer, [CanBeNull] IReference reference) {
 			if (reference == null)

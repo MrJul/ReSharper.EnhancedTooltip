@@ -132,7 +132,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		private void AppendElementKind([CanBeNull] IDeclaredElement element, Context context, bool stylized) {
 			PresenterOptions options = context.Options;
 			string kind = element.GetElementKindString(
-				options.UseExtensionMethodKind, options.UseAttributeClassKind, options.UseClassModifiersInKind, options.UseMethodModifiersInKind);
+				options.UseExtensionMethodKind,
+				options.UseAttributeClassKind,
+				options.UseClassModifiersInKind,
+				options.UseStructModifiersInKind,
+				options.UseMethodModifiersInKind);
 			AppendElementKind(kind, stylized);
 		}
 

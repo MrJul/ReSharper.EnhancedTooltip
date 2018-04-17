@@ -55,6 +55,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[SettingsEntry(false, "Display class modifiers (abstract/sealed/static/unsafe)")]
 		public bool UseClassModifiersInKind { get; set; }
 
+		[SettingsEntry(false, "Display struct modifiers (ref/readonly)")]
+		public bool UseStructModifiersInKind { get; set; }
+
 		[SettingsEntry(false, "Display the role of arguments inside invocations")]
 		public bool ShowArgumentsRole { get; set; }
 

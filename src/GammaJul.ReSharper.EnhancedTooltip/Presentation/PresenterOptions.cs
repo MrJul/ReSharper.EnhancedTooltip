@@ -1,4 +1,4 @@
-﻿using GammaJul.ReSharper.EnhancedTooltip.Settings;
+using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo.Settings;
@@ -65,6 +65,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public bool UseShortNullableForm { get; private set; }
 
+		public bool UseStructModifiersInKind { get; private set; }
+
 		public bool UseTypeKeywords { get; private set; }
 
 		[NotNull]
@@ -99,6 +101,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseExtensionMethodKind = settings.GetValue((IdentifierTooltipSettings s) => s.UseExtensionMethodKind),
 				UseMethodModifiersInKind = settings.GetValue((IdentifierTooltipSettings s) => s.UseMethodModifiersInKind),
 				UseShortNullableForm = settings.GetValue((IdentifierTooltipSettings s) => s.UseShortNullableForm),
+				UseStructModifiersInKind = settings.GetValue((IdentifierTooltipSettings s) => s.UseStructModifiersInKind),
 				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
 			};
 
@@ -134,6 +137,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
 				UseShortNullableForm = settings.GetValue((IdentifierTooltipSettings s) => s.UseShortNullableForm),
+				UseStructModifiersInKind = false,
 				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
 			};
 
@@ -169,6 +173,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
 				UseShortNullableForm = settings.GetValue((IdentifierTooltipSettings s) => s.UseShortNullableForm),
+				UseStructModifiersInKind = false,
 				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
 			};
 
@@ -204,6 +209,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
 				UseShortNullableForm = true,
+				UseStructModifiersInKind = false,
 				UseTypeKeywords = settings.GetValue((ParameterInfoSettings s) => s.UseTypeKeywords)
 			};
 
@@ -239,6 +245,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
 				UseShortNullableForm = true,
+				UseStructModifiersInKind = false,
 				UseTypeKeywords = settings.GetValue((ParameterInfoSettings s) => s.UseTypeKeywords)
 			};
 
@@ -274,6 +281,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseExtensionMethodKind = false,
 				UseMethodModifiersInKind = false,
 				UseShortNullableForm = true,
+				UseStructModifiersInKind = false,
 				UseTypeKeywords = true
 			};
 
@@ -308,6 +316,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
 			UseShortNullableForm = true,
+			UseStructModifiersInKind = false,
 			UseTypeKeywords = true
 		};
 
@@ -342,6 +351,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
 			UseShortNullableForm = true,
+			UseStructModifiersInKind = false,
 			UseTypeKeywords = true
 		};
 
@@ -376,6 +386,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
 			UseShortNullableForm = true,
+			UseStructModifiersInKind = false,
 			UseTypeKeywords = true
 		};
 		
@@ -410,6 +421,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
 			UseShortNullableForm = true,
+			UseStructModifiersInKind = false,
 			UseTypeKeywords = true
 		};
 
@@ -444,6 +456,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
 			UseShortNullableForm = true,
+			UseStructModifiersInKind = false,
 			UseTypeKeywords = true
 		};
 
@@ -478,6 +491,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseExtensionMethodKind = false,
 			UseMethodModifiersInKind = false,
 			UseShortNullableForm = true,
+			UseStructModifiersInKind = false,
 			UseTypeKeywords = true
 		};
 

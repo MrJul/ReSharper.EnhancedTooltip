@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.CSharp.Tree.Query;
@@ -15,6 +15,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 			bool useExtensionMethodKind,
 			bool useAttributeTypeKind,
 			bool useClassModifiers,
+			bool useStructModifiers,
 			bool useMethodModifiers) {
 
 			if (element == null)
@@ -26,12 +27,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 				return classModifiers + classKind;
 			}
 
+			if (element is IStruct @struct) {
+				string structModifiers = useStructModifiers ? GetStructModifiersDisplay(@struct) : null;
+				return structModifiers + "struct";
+			}
+
 			if (element is INamespace)
 				return "namespace";
 			if (element is IInterface)
 				return "interface";
-			if (element is IStruct)
-				return "struct";
 			if (element is IDelegate)
 				return "delegate";
 			if (element is IEnum)
@@ -107,6 +111,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 			if (modifiersOwner.IsUnsafe)
 				display += "unsafe ";
+
+			return display;
+		}
+
+		[CanBeNull]
+		private static string GetStructModifiersDisplay([NotNull] IStruct @struct) {
+			string display = null;
+
+			if (@struct.IsByRefLike)
+				display += "ref ";
+
+			if (@struct.IsReadonly)
+				display += "readonly ";
 
 			return display;
 		}
