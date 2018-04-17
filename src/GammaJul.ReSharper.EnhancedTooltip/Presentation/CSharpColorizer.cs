@@ -36,7 +36,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	/// </remarks>
 	internal sealed class CSharpColorizer : IColorizer {
 
-		private struct Context {
+		private readonly struct Context {
 
 			[NotNull] internal readonly PresenterOptions Options;
 			[CanBeNull] internal readonly PresentedInfo PresentedInfo;
@@ -222,7 +222,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			AppendText(before, null);
 
-			if (element.IsRefReturnMember() || (element is ICSharpLocalVariable localVariable && localVariable.IsRefVariable))
+			if (element.IsRefReturnMember() || (element is ICSharpLocalVariable localVariable && localVariable.Kind.IsByReference()))
 				AppendText("ref ", _highlighterIdProvider.Keyword);
 			else if (element is IParameter parameter) {
 				string modifier = GetParameterModifier(parameter);
@@ -535,8 +535,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				if (displayUnknownTypeParameters || !type.IsUnknown)
 					AppendType(type, QualifierDisplays.TypeParameters, displayUnknownTypeParameters, context);
 
-				if (isTopLevel && context.PresentedInfo != null)
-					context.PresentedInfo.TypeParameters.Add(new TextRange(startOffset, _richText.Length));
+				if (isTopLevel)
+					context.PresentedInfo?.TypeParameters.Add(new TextRange(startOffset, _richText.Length));
 			}
 			AppendText(">", _highlighterIdProvider.Operator);
 		}
@@ -818,7 +818,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 						|| _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, ContainerElementNullnessProvider.ItemNotNullAttributeShortName)
 						|| _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, ContainerElementNullnessProvider.ItemCanBeNullAttributeShortName);
 				case AttributesDisplayKind.AllAnnotations:
-					return _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, attribute.GetClrName().ShortName ?? String.Empty);
+					return _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, attribute.GetClrName().ShortName);
 				case AttributesDisplayKind.Always:
 					return true;
 				default:
@@ -844,7 +844,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		private void AppendAttribute([NotNull] IAttributeInstance attribute, bool showArguments, Context context) {
 			AppendText("[", null);
-			AppendText(attribute.GetClrName().ShortName.TrimFromEnd(AttributeInstanceEx.ATTRIBUTE_SUFFIX, StringComparison.Ordinal), _highlighterIdProvider.Class);
+			AppendText(attribute.GetClrName().ShortName.TrimFromEnd(AttributeInstanceExtensions.ATTRIBUTE_SUFFIX, StringComparison.Ordinal), _highlighterIdProvider.Class);
 
 			if (showArguments) {
 

@@ -1,10 +1,10 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.UI.Icons;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
-	public struct PresentableNode {
+	public readonly struct PresentableNode {
 
 		[CanBeNull] public readonly ITreeNode Node;
 		
@@ -14,7 +14,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			Node = node;
 			Icon = icon;
 		}
-
 
 	}
 

@@ -4,11 +4,10 @@
 		<AssemblyName>GammaJul.ReSharper.EnhancedTooltip</AssemblyName>
 		<RootNamespace>GammaJul.ReSharper.EnhancedTooltip</RootNamespace>
 		<TargetFramework>net45</TargetFramework>
-		<PlatformTarget>x86</PlatformTarget>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
+		<MSBuildWarningsAsMessages>MSB3277;MSB3270</MSBuildWarningsAsMessages>
 		<OutputPath>..\..\build\$(Configuration)</OutputPath>
 		<LangVersion>7.2</LangVersion>
 	</PropertyGroup>
@@ -18,15 +17,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2017.3.0" />
-		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="111.0.20171218.132839" />
-		<PackageReference Include="JetBrains.Psi.Features.Cpp.Src.Core" Version="111.0.20171219.84809" />
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.1.0" />
+		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="112.0.20180414.70445" />
+		<PackageReference Include="JetBrains.Psi.Features.Cpp.Src.Core" Version="112.0.20180414.71439" />
 		<PackageReference Include="EnvDTE" Version="8.0.0" />
-		<PackageReference Include="VSSDK.Editor" Version="11.0.4" />
-		<PackageReference Include="VSSDK.Language" Version="11.0.4" />
-		<PackageReference Include="VSSDK.Shell.Immutable.11" Version="11.0.4" />
-		<PackageReference Include="VSSDK.Text" Version="11.0.4" />
-		<PackageReference Include="NuGet.CommandLine" Version="4.3.0" />
+		<PackageReference Include="VSSDK.Editor" Version="11.0.*" />
+		<PackageReference Include="VSSDK.Language" Version="11.0.*" />
+		<PackageReference Include="VSSDK.Shell.Immutable.11" Version="11.0.*" />
+		<PackageReference Include="VSSDK.Text" Version="11.0.*" />
+		<PackageReference Include="NuGet.CommandLine" Version="4.6.2" />
 	</ItemGroup>
 
 </Project>

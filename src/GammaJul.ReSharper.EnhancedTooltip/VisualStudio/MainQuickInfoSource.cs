@@ -147,6 +147,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				.GetIdentifierContentGroup(documentRange, settings);
 
 		[NotNull]
+		[ItemNotNull]
 		[Pure]
 		private static IEnumerable<IReSharperTooltipContent> GetTooltipContents(
 			[NotNull] IHighlighter highlighter,
@@ -162,8 +163,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				
 				IDocument document = documentMarkup.Document;
 				IContextBoundSettingsStore settings = document.GetSettings();
+				IPsiSourceFile sourceFile = solution != null ? document.GetPsiSourceFile(solution) : null;
 
-				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, highlighting.GetType(), solution);
+				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, highlighting.GetType(), sourceFile);
 				IssueTooltipContent issueContent = TryCreateIssueContent(highlighting, range, highlighter.RichTextToolTip, severity, settings, solution);
 				if (issueContent != null) {
 					yield return issueContent;

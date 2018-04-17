@@ -90,7 +90,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return null;
 
 			TreeTextRange literalRange = literalExpression.Literal.GetTreeTextRange();
-			if (!literalRange.Intersects(node.GetTreeTextRange()))
+			if (!literalRange.IntersectsOrContacts(node.GetTreeTextRange()))
 				return null;
 
 			return literalExpression;

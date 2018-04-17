@@ -58,7 +58,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 		}
 
-		private struct PresentableInfo {
+		private readonly struct PresentableInfo {
 
 			[CanBeNull] internal readonly DeclaredElementInfo DeclaredElementInfo;
 			internal readonly PresentableNode PresentableNode;
@@ -690,7 +690,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				return null;
 
 			TreeTextRange nameRange = declaration.GetNameRange();
-			if (!nameRange.Intersects(node.GetTreeTextRange()))
+			if (!nameRange.IntersectsOrContacts(node.GetTreeTextRange()))
 				return null;
 
 			IDeclaredElement declaredElement = declaration.DeclaredElement;
