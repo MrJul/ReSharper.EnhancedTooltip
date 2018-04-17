@@ -10,10 +10,8 @@ using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.Cpp.QuickDoc;
 using JetBrains.ReSharper.Feature.Services.Descriptions;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Cpp.Language;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Impl;
@@ -217,8 +215,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			RichText identifierText;
 
-			if (info.DeclaredElement is ICppDeclaredElement cppDeclaredElement)
-				identifierText = _solution.TryGetComponent<CppDeclaredElementTooltipProvider>()?.GetTooltip(cppDeclaredElement)?.RichText;
+			if (info.DeclaredElement.GetType().FullName == "JetBrains.ReSharper.Psi.Cpp.Language.ICppDeclaredElement")
+				identifierText = _solution.TryGetComponent<ReflectionCppTooltipContentProvider>()?.TryPresentCppDeclaredElement(info.DeclaredElement);
 			else {
 				identifierText = _colorizerPresenter.TryPresent(
 					new DeclaredElementInstance(element, info.Substitution),
@@ -277,7 +275,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			
 			return identifierContent;
 		}
-		
+
 		private static int? TryGetOverloadCount([CanBeNull] IFunction function, [CanBeNull] IReference reference, PsiLanguageType languageType) {
 			if (function == null || reference == null || function is PredefinedOperator)
 				return null;

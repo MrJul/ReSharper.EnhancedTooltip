@@ -19,7 +19,6 @@
 	<ItemGroup>
 		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.1.0" />
 		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="112.0.20180414.70445" />
-		<PackageReference Include="JetBrains.Psi.Features.Cpp.Src.Core" Version="112.0.20180414.71439" />
 		<PackageReference Include="EnvDTE" Version="8.0.0" />
 		<PackageReference Include="VSSDK.Editor" Version="11.0.*" />
 		<PackageReference Include="VSSDK.Language" Version="11.0.*" />
