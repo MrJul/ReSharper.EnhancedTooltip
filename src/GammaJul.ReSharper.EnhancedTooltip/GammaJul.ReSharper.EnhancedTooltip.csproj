@@ -1,6 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
-	<Import Project="..\ProjectSystem\Wpf.targets" />
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.3.1">
 
 	<PropertyGroup>
 		<AssemblyName>GammaJul.ReSharper.EnhancedTooltip</AssemblyName>
@@ -29,11 +27,6 @@
 		<PackageReference Include="VSSDK.Shell.Immutable.11" Version="11.0.4" />
 		<PackageReference Include="VSSDK.Text" Version="11.0.4" />
 		<PackageReference Include="NuGet.CommandLine" Version="4.3.0" />
-	</ItemGroup>
-	
-	<!-- ReSharper workaround for duplicate XAML fields -->
-	<ItemGroup>
-		<Compile Remove="obj\**" />
 	</ItemGroup>
 
 </Project>
