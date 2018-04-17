@@ -7,7 +7,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-		<MSBuildWarningsAsMessages>MSB3277;MSB3270</MSBuildWarningsAsMessages>
+		<MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
 		<OutputPath>..\..\build\$(Configuration)</OutputPath>
 		<LangVersion>7.2</LangVersion>
 	</PropertyGroup>
