@@ -18,7 +18,7 @@
 		<copyright>Copyright &#x00A9; 2013-2018 Julien Lebosquain</copyright>
 		<tags>Tooltip Syntax Color Parameter</tags>
 		<dependencies>
-			<dependency id="Wave" version="[12.0.0]" />
+			<dependency id="Wave" version="[182.0.0]" />
 		</dependencies>
 	</metadata>
 

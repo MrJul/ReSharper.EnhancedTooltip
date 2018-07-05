@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<AssemblyName>GammaJul.ReSharper.EnhancedTooltip</AssemblyName>
 		<RootNamespace>GammaJul.ReSharper.EnhancedTooltip</RootNamespace>
-		<TargetFramework>net45</TargetFramework>
+		<TargetFramework>net461</TargetFramework>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
@@ -17,8 +17,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.1.0" />
-		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="112.0.20180414.70445" />
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.2.0" />
+		<!-- Obtain version from https://api.nuget.org/v3/flatcontainer/jetbrains.platform.visualstudio/index.json -->
+		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="182.0.20180628.124316-eap01" />
 		<PackageReference Include="EnvDTE" Version="8.0.0" />
 		<PackageReference Include="VSSDK.Editor" Version="11.0.*" />
 		<PackageReference Include="VSSDK.Language" Version="11.0.*" />
