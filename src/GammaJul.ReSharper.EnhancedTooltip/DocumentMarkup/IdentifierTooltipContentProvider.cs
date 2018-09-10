@@ -614,10 +614,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (!treeTextRange.IsValid())
 				return default;
 
-			IReference[] references = file.FindReferencesAt(treeTextRange);
+			var references = file.FindReferencesAt(treeTextRange);
 			DeclaredElementInfo bestReference = null;
-			if (references.Length > 0) {
-				bestReference = GetBestReference(references);
+			if (references.Count > 0) {
+				bestReference = GetBestReference(references.ToArray());
 				if (bestReference != null
 				&& !(bestReference.Reference?.GetTreeNode() is ICollectionElementInitializer)) // we may do better than showing a collection initializer
 					return new PresentableInfo(bestReference);

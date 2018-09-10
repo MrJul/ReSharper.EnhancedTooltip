@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
@@ -40,7 +40,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 				return null;
 
 			if (presentedInfo.Parameters.Count > 0) {
-				if (presentedInfo.IsExtensionMethod && UnderlyingCandidate.InvocationCandidate.IsExtensionMethod) {
+				if (presentedInfo.IsExtensionMethod && UnderlyingCandidate.InvocationCandidate.IsExtensionMethodInvocation) {
 					parameterRanges = presentedInfo.Parameters.Skip(1).ToArray();
 					mapToOriginalOrder = CreateIdentityMap(presentedInfo.Parameters.Count - 1);
 					extensionMethodInfo = new ExtensionMethodInfo(presentedInfo.Parameters[0], TextRange.InvalidRange);

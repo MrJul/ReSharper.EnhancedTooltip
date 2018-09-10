@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
@@ -21,7 +21,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		public IEnumerable<SettingsKey> GetKeysToMigrate(ISettingsSchema schema)
 			=> null;
 
-		public void Migrate(IContextBoundSettingsStore store) {
+		public void Migrate(IContextBoundSettingsStoreForMigration store) {
 			MigrateValue(store, s => s.ShowIdentifierAnnotations, s => s.ShowIdentifierAttributes);
 			MigrateValue(store, s => s.ShowParametersAnnotations, s => s.ShowParametersAttributes);
 		}

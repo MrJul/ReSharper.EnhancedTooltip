@@ -9,7 +9,7 @@
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
 		<OutputPath>..\..\build\$(Configuration)</OutputPath>
-		<LangVersion>7.2</LangVersion>
+		<LangVersion>7.3</LangVersion>
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -17,9 +17,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.2.0" />
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.2.1" />
 		<!-- Obtain version from https://api.nuget.org/v3/flatcontainer/jetbrains.platform.visualstudio/index.json -->
-		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="182.0.20180628.124316-eap01" />
+		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="182.0.20180829.63239" />
 		<PackageReference Include="EnvDTE" Version="8.0.0" />
 		<PackageReference Include="VSSDK.Editor" Version="11.0.*" />
 		<PackageReference Include="VSSDK.Language" Version="11.0.*" />
