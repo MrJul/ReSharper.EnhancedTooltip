@@ -65,7 +65,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public static bool GetShouldStyleParentListBox([NotNull] DependencyObject owner) {
 			if (owner == null)
 				throw new ArgumentNullException(nameof(owner));
-			// ReSharper disable once PossibleNullReferenceException
 			return (bool) owner.GetValue(ShouldStyleParentListBoxProperty);
 		}
 
@@ -123,21 +122,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			element?.WhenLoaded(lifetime => {
 
 				// We're styling the parent VS ListBox included inside the tooltip.
-				if (!(element.FindVisualAncestor(o => o is ItemsControl itemsControl && IsToolTipItemsControl(itemsControl)) is ItemsControl listBox)
-				|| listBox.GetValue(_originalStylesProperty) != null)
+				if (!(element.FindVisualAncestor(o => o is ItemsControl ic && IsToolTipItemsControl(ic)) is ItemsControl itemsControl)
+				|| itemsControl.GetValue(_originalStylesProperty) != null)
 					return;
 
 				IDocument document = null;
 				GetDocument(element)?.TryGetTarget(out document);
 
-				SetListBoxStyle(listBox, document);
+				SetItemsControlStyle(itemsControl, document);
 
-				void OnListBoxUnloaded(object sender, RoutedEventArgs args) {
-					listBox.Unloaded -= OnListBoxUnloaded;
-					RestoreOriginalStyles(listBox);
+				void OnItemsControlUnloaded(object sender, RoutedEventArgs args) {
+					itemsControl.Unloaded -= OnItemsControlUnloaded;
+					RestoreOriginalStyles(itemsControl);
 				}
 
-				listBox.Unloaded += OnListBoxUnloaded;
+				itemsControl.Unloaded += OnItemsControlUnloaded;
 
 			});
 		}
@@ -149,24 +148,44 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				|| typeFullName == "Microsoft.VisualStudio.Text.AdornmentLibrary.ToolTip.Implementation.WpfToolTipItemsControl"; // VS 15.6
 		}
 
-		private static void SetListBoxStyle([NotNull] ItemsControl listBox, [CanBeNull] IDocument document) {
-			if (!(listBox.GetValue(_originalStylesProperty) is OriginalStyles)) {
-				listBox.SetValue(_originalStylesProperty, new OriginalStyles {
-					Style = listBox.Style,
-					ItemContainerStyle = listBox.ItemContainerStyle,
-					ItemTemplate = listBox.ItemTemplate
+		[Pure]
+		private static bool IsToolTipRootControl([NotNull] UserControl userControl)
+			=> userControl.GetType().FullName == "Microsoft.VisualStudio.Text.AdornmentLibrary.ToolTip.Implementation.WpfToolTipControl"; // VS 15.8
+
+		private static void SetItemsControlStyle([NotNull] ItemsControl itemsControl, [CanBeNull] IDocument document) {
+			if (!(itemsControl.GetValue(_originalStylesProperty) is OriginalStyles)) {
+				itemsControl.SetValue(_originalStylesProperty, new OriginalStyles {
+					Style = itemsControl.Style,
+					ItemContainerStyle = itemsControl.ItemContainerStyle,
+					ItemTemplate = itemsControl.ItemTemplate
 				});
 			}
 
 			IContextBoundSettingsStore settings = document.TryGetSettings();
 
-			bool isListBox = listBox is ListBox;
-			listBox.Style = UIResources.Instance.QuickInfoListBoxStyle;
-			listBox.ItemTemplate = isListBox ? UIResources.Instance.LegacyQuickInfoItemDataTemplate : UIResources.Instance.QuickInfoItemDataTemplate;
-			listBox.ItemContainerStyle = CreateItemContainerStyle(settings, isListBox);
-			listBox.MaxWidth = ComputeListBoxMaxWidth(listBox,  settings);
-			TextOptions.SetTextFormattingMode(listBox, GetTextFormattingMode(settings));
-			TextOptions.SetTextRenderingMode(listBox, TextRenderingMode.Auto);
+			bool isLegacy = itemsControl is ListBox;
+			itemsControl.Style = UIResources.Instance.QuickInfoListBoxStyle;
+			itemsControl.ItemTemplate = isLegacy ? UIResources.Instance.LegacyQuickInfoItemDataTemplate : UIResources.Instance.QuickInfoItemDataTemplate;
+			itemsControl.ItemContainerStyle = CreateItemContainerStyle(settings, isLegacy);
+			itemsControl.MaxWidth = ComputeItemsControlMaxWidth(itemsControl,  settings);
+			TextOptions.SetTextFormattingMode(itemsControl, GetTextFormattingMode(settings));
+			TextOptions.SetTextRenderingMode(itemsControl, TextRenderingMode.Auto);
+
+			if (!isLegacy 
+			&& itemsControl.FindVisualAncestor(o => o is UserControl uc && IsToolTipRootControl(uc)) is UserControl rootControl)
+				SetRootControlTemplate(rootControl);
+		}
+
+		private static void SetRootControlTemplate([NotNull] UserControl rootControl) {
+			ControlTemplate originalTemplate = rootControl.Template;
+
+			void OnRootControlUnloaded(object sender, RoutedEventArgs args) {
+				rootControl.Unloaded -= OnRootControlUnloaded;
+				rootControl.Template = originalTemplate;
+			}
+
+			rootControl.Unloaded += OnRootControlUnloaded;
+			rootControl.Template = UIResources.Instance.QuickInfoRootControlTemplate;
 		}
 
 		[NotNull]
@@ -205,10 +224,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return itemContainerStyle;
 		}
 
-		private static unsafe double ComputeListBoxMaxWidth([NotNull] ItemsControl listBox, [CanBeNull] IContextBoundSettingsStore settings) {
+		private static unsafe double ComputeItemsControlMaxWidth([NotNull] ItemsControl itemsControl, [CanBeNull] IContextBoundSettingsStore settings) {
 			if (settings == null
 			|| !settings.GetValue((DisplaySettings s) => s.LimitTooltipWidth)
-			|| !(PresentationSource.FromVisual(listBox) is HwndSource hwndSource))
+			|| !(PresentationSource.FromVisual(itemsControl) is HwndSource hwndSource))
 				return Double.PositiveInfinity;
 
 			int limitPercent = settings.GetValue((DisplaySettings s) => s.ScreenWidthLimitPercent).Clamp(10, 100);
