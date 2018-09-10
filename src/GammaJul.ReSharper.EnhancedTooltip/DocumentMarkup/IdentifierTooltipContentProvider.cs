@@ -210,13 +210,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			PsiLanguageType languageType = info.TreeNode.Language;
 			IDeclaredElement element = info.DeclaredElement;
 			IPsiModule psiModule = info.TreeNode.GetPsiModule();
-
 			HighlighterIdProvider highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(settings);
+			var reflectionCppTooltipContentProvider = _solution.TryGetComponent<ReflectionCppTooltipContentProvider>();
 
 			RichText identifierText;
-
-			if (info.DeclaredElement.GetType().FullName == "JetBrains.ReSharper.Psi.Cpp.Language.ICppDeclaredElement")
-				identifierText = _solution.TryGetComponent<ReflectionCppTooltipContentProvider>()?.TryPresentCppDeclaredElement(info.DeclaredElement);
+			if (reflectionCppTooltipContentProvider != null && reflectionCppTooltipContentProvider.IsCppDeclaredElement(element))
+				identifierText = reflectionCppTooltipContentProvider.TryPresentCppDeclaredElement(element);
 			else {
 				identifierText = _colorizerPresenter.TryPresent(
 					new DeclaredElementInstance(element, info.Substitution),

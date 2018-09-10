@@ -20,16 +20,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		private const string ICppDeclaredElementTypeName = "JetBrains.ReSharper.Psi.Cpp.Language.ICppDeclaredElement, JetBrains.ReSharper.Psi.Cpp";
 		private const string CppDeclaredElementTooltipProviderTypeName = "JetBrains.ReSharper.Feature.Services.Cpp.QuickDoc.CppDeclaredElementTooltipProvider, JetBrains.ReSharper.Feature.Services.Cpp";
 
+		[NotNull] [ItemCanBeNull] private readonly Lazy<Type> _iCppDeclaredElementType;
 		[NotNull] [ItemNotNull] private readonly Lazy<Func<IDeclaredElement, RichTextBlock>> _lazyGetTooltipMethod;
 
 		[NotNull]
-		private static Func<IDeclaredElement, RichTextBlock> CreateGetTooltipMethod([NotNull] ISolution solution) {
+		private Func<IDeclaredElement, RichTextBlock> CreateGetTooltipMethod([NotNull] ISolution solution) {
 			// Equivalent to element => _solution.TryGetComponent<CppDeclaredElementTooltipProvider>()?.GetTooltip(element);
 
 			RichTextBlock NoTooltip(IDeclaredElement element)
 				=> null;
 
-			var iCppDeclaredElementType = Type.GetType(ICppDeclaredElementTypeName, throwOnError: false);
+			var iCppDeclaredElementType = _iCppDeclaredElementType.Value;
 			if (iCppDeclaredElementType == null)
 				return NoTooltip;
 
@@ -56,11 +57,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			return element => getTooltipMethod.Invoke(tooltipProvider, new object[] { element }) as RichTextBlock;
 		}
 
+		public bool IsCppDeclaredElement([NotNull] IDeclaredElement declaredElement) {
+			var iCppDeclaredElementType = _iCppDeclaredElementType.Value;
+			return iCppDeclaredElementType != null && iCppDeclaredElementType.IsInstanceOfType(declaredElement);
+		}
+
 		[CanBeNull]
 		public RichText TryPresentCppDeclaredElement([NotNull] IDeclaredElement declaredElement)
 			=> _lazyGetTooltipMethod.Value(declaredElement)?.RichText;
 
 		public ReflectionCppTooltipContentProvider([NotNull] ISolution solution) {
+			_iCppDeclaredElementType = Lazy.Of(() => Type.GetType(ICppDeclaredElementTypeName, throwOnError: false), isThreadSafe: true);
 			_lazyGetTooltipMethod = Lazy.Of(() => CreateGetTooltipMethod(solution), isThreadSafe: true);
 		}
 
