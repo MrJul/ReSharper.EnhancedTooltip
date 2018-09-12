@@ -3,14 +3,14 @@
 
 	<metadata>
 		<id>JLebosquain.EnhancedTooltip</id>
-		<version>3.6.0</version>
+		<version>3.7.0</version>
 		<title>Enhanced Tooltip</title>
 		<authors>Julien Lebosquain</authors>
 		<description>Colorizes the tooltip as well as the parameter information popup.</description>
 		<releaseNotes>
-			- [Added] Support for ReSharper 2018.1. (#129)
-			- [Added] Support for C# 7.2 ref and readonly struct modifiers. (#130)
-			- [Fixed] No longer needs ReSharper C++ installed to work correctly. (#122, #126)
+			- [Added] Support for ReSharper 2018.2. (#136)
+			- [Fixed] No more duplicate identifier tooltips in Visual Studio 15.8. (#135)
+			- [Fixed] C++ tooltips are available again. (#124)
 		</releaseNotes>
 		<projectUrl>https://github.com/MrJul/ReSharper.EnhancedTooltip/</projectUrl>
 		<iconUrl>https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/images/Logo128.png</iconUrl>
