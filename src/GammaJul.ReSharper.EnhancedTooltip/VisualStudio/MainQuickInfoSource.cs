@@ -90,7 +90,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 						.OfType<string>()
 						.ToSet();
 
-					bool ignoredFirstTextBuffer = false;
+					bool ignoredFirstVsElement = false;
 					foreach (object content in quickInfoContent) {
 						if (content == null)
 							continue;
@@ -101,15 +101,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 						var contentFullName = content.GetType().FullName;
 
-						if (hasIdentifierTooltipContent) {
-
-							// ignore Roslyn identifier tooltip (for VS2015)
-							if (contentFullName == VsFullTypeNames.QuickInfoDisplayPanel)
-								continue;
-
-							// ignore the first VS text buffer (for VS2012 and VS2013)
-							if (content is ITextBuffer && !ignoredFirstTextBuffer) {
-								ignoredFirstTextBuffer = true;
+						// ignore the first VS element, as it's the identifier tooltip and we already have one
+						if (hasIdentifierTooltipContent && !ignoredFirstVsElement) {
+							
+							if (contentFullName == VsFullTypeNames.ContainerElement /* VS 2017 >= 15.8 */
+							|| contentFullName == VsFullTypeNames.QuickInfoDisplayPanel /* VS 2015 and VS 2017 < 15.8 */
+							|| content is ITextBuffer /* VS2012 and VS2013 */) {
+								ignoredFirstVsElement = true;
 								continue;
 							}
 
