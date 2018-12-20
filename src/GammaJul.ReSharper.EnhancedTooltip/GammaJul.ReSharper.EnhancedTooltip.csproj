@@ -17,15 +17,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.2.1" />
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.3.0" />
 		<!-- Obtain version from https://api.nuget.org/v3/flatcontainer/jetbrains.platform.visualstudio/index.json -->
-		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="182.0.20180829.63239" />
-		<PackageReference Include="EnvDTE" Version="8.0.0" />
-		<PackageReference Include="VSSDK.Editor" Version="11.0.*" />
-		<PackageReference Include="VSSDK.Language" Version="11.0.*" />
-		<PackageReference Include="VSSDK.Shell.Immutable.11" Version="11.0.*" />
-		<PackageReference Include="VSSDK.Text" Version="11.0.*" />
-		<PackageReference Include="NuGet.CommandLine" Version="4.6.2" />
+		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="183.0.20181217.72716" />
+		<PackageReference Include="EnvDTE" Version="8.0.2" />
+		<PackageReference Include="VSSDK.Editor" Version="12.0.4" />
+		<PackageReference Include="VSSDK.Language" Version="12.0.4" />
+		<PackageReference Include="VSSDK.Shell.Immutable.11" Version="11.0.4" />
+		<PackageReference Include="VSSDK.Text" Version="12.0.4" />
+		<PackageReference Include="NuGet.CommandLine" Version="4.7.1" />
 	</ItemGroup>
 
 </Project>
