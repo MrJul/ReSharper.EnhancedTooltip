@@ -1,4 +1,4 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras/1.3.1">
+<Project Sdk="MSBuild.Sdk.Extras/1.6.65">
 
 	<PropertyGroup>
 		<AssemblyName>GammaJul.ReSharper.EnhancedTooltip</AssemblyName>
@@ -10,6 +10,7 @@
 		<MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
 		<OutputPath>..\..\build\$(Configuration)</OutputPath>
 		<LangVersion>7.3</LangVersion>
+		<ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -17,9 +18,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.2.1" />
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.3.1" />
 		<!-- Obtain version from https://api.nuget.org/v3/flatcontainer/jetbrains.platform.visualstudio/index.json -->
-		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="182.0.20180829.63239" />
+		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="183.0.20181225.200024" />
 		<PackageReference Include="EnvDTE" Version="8.0.0" />
 		<PackageReference Include="VSSDK.Editor" Version="11.0.*" />
 		<PackageReference Include="VSSDK.Language" Version="11.0.*" />
