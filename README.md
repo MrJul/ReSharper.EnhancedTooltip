@@ -3,7 +3,7 @@
 
 What's ReSharper.EnhancedTooltip?
 --------------
-It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) that enhances the tooltip and parameter information popup.  
+It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) that enhances the tooltip and parameter information popup.
 
 - Colorizes tooltips and parameter information popups for C#.
 - Displays icons for identifiers and issues in the tooltip.
@@ -15,27 +15,27 @@ It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) tha
 
 Installation
 ------------
-Visual Studio 2012, 2013, 2015 and 2017 are supported.  
-ReSharper 2018.1 must be installed.  
+Visual Studio 2012, 2013, 2015 and 2017 are supported.
+ReSharper 2018.3 must be installed.
 (Note: older versions are still available for ReSharper 8.2, 9.x, 10.0, 2016.x and 2017.x).
 
-Install the plugin using the built-in Extension Manager from the ReSharper menu.  
+Install the plugin using the built-in Extension Manager from the ReSharper menu.
 
 Tooltip Highlighting
 --------------------
-The tooltip that appears on mouse over is now syntax highlighted. Note that only the tooltips provided by ReSharper are currently colored.  
+The tooltip that appears on mouse over is now syntax highlighted. Note that only the tooltips provided by ReSharper are currently colored.
 ![Tooltip Highlighting](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/images/Tooltip.png "Tooltip Highlighting")
 
 Parameter Info Highlighting
 ---------------------------
 The parameter information popup is now syntax highlighted.
-The colors used for the types are either the ones having a name starting by _ReSharper_ if _Color identifiers_ is used, or the Visual Studio ones starting with _User Types_ otherwise.  
+The colors used for the types are either the ones having a name starting by _ReSharper_ if _Color identifiers_ is used, or the Visual Studio ones starting with _User Types_ otherwise.
 ![Parameter Info Highlighting](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/images/ParameterInfo.png "Parameter Info Highlighting")
 
 Options
 -------
 Enhanced Tooltip provides many options to configure the display as you like.  
-The options page is located at ReSharper → Options → Environment → IntelliSense → Enhanced Tooltip.  
+The options page is located at ReSharper → Options → Environment → IntelliSense → Enhanced Tooltip.
 ![Options Page](https://raw.github.com/MrJul/ReSharper.EnhancedTooltip/master/images/Options.png "Options Page")
 
 Current Limitations
