@@ -19,7 +19,7 @@ Visual Studio 2012, 2013, 2015 and 2017 are supported.
 ReSharper 2018.1 must be installed.  
 (Note: older versions are still available for ReSharper 8.2, 9.x, 10.0, 2016.x and 2017.x).
 
-Install the plugin using the built-in Extension Manager from the ReSharper menu.  
+Install the plugin using the built-in Extension Manager from the ReSharper menu. (Needs 2018.3 to be displayed in the list)
 
 Tooltip Highlighting
 --------------------
