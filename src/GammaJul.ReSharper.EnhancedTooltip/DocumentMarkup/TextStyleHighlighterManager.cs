@@ -1,10 +1,11 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Media;
 using JetBrains.Annotations;
 using JetBrains.Application.Components;
 using JetBrains.DataFlow;
+using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
 using JetBrains.TextControl;
 using JetBrains.TextControl.DocumentMarkup;
@@ -83,7 +84,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		}
 
 		public TextStyleHighlighterManager(
-			[NotNull] Lifetime lifetime,
+			Lifetime lifetime,
 			[NotNull] IHighlighterCustomization highlighterCustomization,
 			[NotNull] ITextControlSchemeManager textControlSchemeManager,
 			[NotNull] Lazy<Optional<IClassificationFormatMapService>> lazyClassificationFormatMapService,

@@ -1,27 +1,20 @@
-﻿using System;
-using System.ComponentModel.Composition;
 using JetBrains.Annotations;
 using JetBrains.Util.Logging;
-using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Projection;
+using System;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 	public abstract class QuickInfoSourceProviderBase : IQuickInfoSourceProvider {
 
-		[CanBeNull]
-		[Import(AllowDefault = true)]
-		public IVsEditorAdaptersFactoryService VsEditorAdaptersFactoryService { get; set; }
-		
 		public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer) {
-			var vsEditorAdaptersFactoryService = VsEditorAdaptersFactoryService;
-			if (vsEditorAdaptersFactoryService == null || textBuffer is IProjectionBufferBase)
+			if (textBuffer is IProjectionBufferBase)
 				return null;
 
 			try {
-				return CreateQuickInfoSource(vsEditorAdaptersFactoryService, textBuffer);
+				return CreateQuickInfoSource(textBuffer);
 			}
 			catch (Exception ex) {
 				Logger.LogException($"Problem while creating a quick info source for {GetType().FullName}", ex);
@@ -30,9 +23,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		}
 
 		[NotNull]
-		protected abstract IQuickInfoSource CreateQuickInfoSource(
-			[NotNull] IVsEditorAdaptersFactoryService vsEditorAdaptersFactoryService,
-			[NotNull] ITextBuffer textBuffer);
+		protected abstract IQuickInfoSource CreateQuickInfoSource([NotNull] ITextBuffer textBuffer);
 
 	}
 

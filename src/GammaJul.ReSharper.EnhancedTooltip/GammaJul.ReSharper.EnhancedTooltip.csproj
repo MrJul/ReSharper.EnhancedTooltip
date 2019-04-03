@@ -1,4 +1,4 @@
-<Project Sdk="MSBuild.Sdk.Extras/1.6.65">
+﻿<Project Sdk="MSBuild.Sdk.Extras/1.6.68">
 
 	<PropertyGroup>
 		<AssemblyName>GammaJul.ReSharper.EnhancedTooltip</AssemblyName>
@@ -18,9 +18,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.3.1" />
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.1.0-eap04" />
 		<!-- Obtain version from https://api.nuget.org/v3/flatcontainer/jetbrains.platform.visualstudio/index.json -->
-		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="183.0.20181225.200024" />
+		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="191.0.20190401.162218-eap04" />
 		<PackageReference Include="EnvDTE" Version="8.0.0" />
 		<PackageReference Include="VSSDK.Editor" Version="11.0.*" />
 		<PackageReference Include="VSSDK.Language" Version="11.0.*" />

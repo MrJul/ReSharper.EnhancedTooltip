@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.Util;
-using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 
@@ -25,8 +24,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			session.StoreVsSquiggleContents(quickInfoContent.ToArray());
 		}
 		
-		public VsSquiggleCollectorQuickInfoSource([NotNull] IVsEditorAdaptersFactoryService editorAdaptersFactoryService, [NotNull] ITextBuffer textBuffer)
-			: base(editorAdaptersFactoryService, textBuffer) {
+		public VsSquiggleCollectorQuickInfoSource([NotNull] ITextBuffer textBuffer)
+			: base(textBuffer) {
 		}
 
 	}

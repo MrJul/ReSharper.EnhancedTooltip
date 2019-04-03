@@ -397,7 +397,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 				ITypeElement containingType = typeElement.GetContainingType();
 				if (containingType != null && !(typeElement is IDelegate && context.Options.FormatDelegatesAsLambdas)) {
-					AppendDeclaredType(TypeFactory.CreateType(containingType, substitution), QualifierDisplays.None, true, displayUnknownTypeParameters, context);
+					AppendDeclaredType(TypeFactory.CreateType(containingType, substitution, NullableAnnotation.Unknown), QualifierDisplays.None, true, displayUnknownTypeParameters, context);
 					AppendText(".", _highlighterIdProvider.Operator);
 				}
 			}

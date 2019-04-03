@@ -11,6 +11,7 @@ using JetBrains.Application.Settings;
 using JetBrains.Application.UI.Options;
 using JetBrains.Application.UI.UIAutomation;
 using JetBrains.DataFlow;
+using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Features.Intellisense.Options;
 using JetBrains.UI.Controls;
 using JetBrains.UI.Extensions;
@@ -25,7 +26,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		public const string Pid = "EnhancedTooltip.OptionsPage";
 
-		[NotNull] private readonly Lifetime _lifetime;
+		private readonly Lifetime _lifetime;
 		[NotNull] private readonly OptionsSettingsSmartContext _context;
 		[NotNull] private readonly List<OptionsPageKeyword> _keywords = new List<OptionsPageKeyword>();
 
@@ -223,7 +224,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetComboBoxBinding((DisplaySettings s) => s.TooltipColorSource, DisplayTooltipColorSource, null);
 		}
 
-		public EnhancedTooltipOptionsPage([NotNull] Lifetime lifetime, [NotNull] OptionsSettingsSmartContext context) {
+		public EnhancedTooltipOptionsPage(Lifetime lifetime, [NotNull] OptionsSettingsSmartContext context) {
 			_lifetime = lifetime;
 			_context = context;
 

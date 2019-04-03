@@ -9,7 +9,7 @@ using JetBrains.Application.Settings;
 using JetBrains.Application.Threading;
 using JetBrains.DocumentModel;
 using JetBrains.Metadata.Reader.API;
-using JetBrains.Platform.VisualStudio.SinceVs10.Interop.Shim.IDE;
+using JetBrains.Platform.VisualStudio.SinceVs10.Interop.Shim.TextControl;
 using JetBrains.Platform.VisualStudio.SinceVs10.TextControl.Markup;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
@@ -20,7 +20,6 @@ using JetBrains.UI.RichText;
 using JetBrains.Util;
 using JetBrains.VsIntegration.ProjectDocuments;
 using JetBrains.VsIntegration.TextControl;
-using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 
@@ -262,8 +261,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			return attribute?.GroupId == HighlightingGroupIds.IdentifierHighlightingsGroup;
 		}
 
-		public MainQuickInfoSource([NotNull] IVsEditorAdaptersFactoryService editorAdaptersFactoryService, [NotNull] ITextBuffer textBuffer)
-			: base(editorAdaptersFactoryService, textBuffer) {
+		public MainQuickInfoSource([NotNull] ITextBuffer textBuffer)
+			: base(textBuffer) {
 		}
 
 	}

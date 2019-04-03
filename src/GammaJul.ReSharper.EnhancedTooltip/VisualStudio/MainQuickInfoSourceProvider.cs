@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.Editor;
+using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Utilities;
@@ -21,8 +20,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		public const string Name = "EnhancedTooltip." + nameof(MainQuickInfoSourceProvider);
 
-		protected override IQuickInfoSource CreateQuickInfoSource(IVsEditorAdaptersFactoryService vsEditorAdaptersFactoryService, ITextBuffer textBuffer)
-			=> new MainQuickInfoSource(vsEditorAdaptersFactoryService, textBuffer);
+		protected override IQuickInfoSource CreateQuickInfoSource(ITextBuffer textBuffer)
+			=> new MainQuickInfoSource(textBuffer);
 
 	}
 
