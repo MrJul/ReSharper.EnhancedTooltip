@@ -8,3 +8,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - [Added] Support for ReSharper 2019.1-eap07. (#146)
 - [Added] Support for in parameters. (#143)
 - [Added] Support for Visual Studio 2019 semantic colors. (#144)
+- [Fixed] The base class is correctly displayed for type parameters. (#145)

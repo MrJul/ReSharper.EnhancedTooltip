@@ -335,13 +335,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			baseType = null;
 			implementedInterfaces = EmptyList<DeclaredElementInstance>.InstanceList;
 
-			var searchForBaseType = baseTypeDisplayKind != BaseTypeDisplayKind.Never && typeElement is IClass;
+			var searchForBaseType = baseTypeDisplayKind != BaseTypeDisplayKind.Never && (typeElement is IClass || typeElement is ITypeParameter);
 			bool searchForImplementedInterfaces = implementedInterfacesDisplayKind != ImplementedInterfacesDisplayKind.Never;
 			if (!searchForBaseType && !searchForImplementedInterfaces)
 				return;
 
 			var foundInterfaces = new LocalList<DeclaredElementInstance>();
-			
+
 			foreach (var superType in typeElement.GetAllSuperTypes()) {
 				ITypeElement superTypeElement = superType.GetTypeElement();
 
