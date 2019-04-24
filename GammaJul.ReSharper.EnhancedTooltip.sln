@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GammaJul.ReSharper.EnhancedTooltip", "GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.csproj", "{503F35A4-5A44-4468-8DE2-174F0B7D3D77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GammaJul.ReSharper.EnhancedTooltip", "source\GammaJul.ReSharper.EnhancedTooltip\GammaJul.ReSharper.EnhancedTooltip.csproj", "{503F35A4-5A44-4468-8DE2-174F0B7D3D77}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "_build", "build\_build.csproj", "{1C18A594-4702-4FD5-8189-5144AB6E2A59}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,8 @@ Global
 		{503F35A4-5A44-4468-8DE2-174F0B7D3D77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{503F35A4-5A44-4468-8DE2-174F0B7D3D77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{503F35A4-5A44-4468-8DE2-174F0B7D3D77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C18A594-4702-4FD5-8189-5144AB6E2A59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C18A594-4702-4FD5-8189-5144AB6E2A59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

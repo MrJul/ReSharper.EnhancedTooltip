@@ -1,7 +1,8 @@
 *.suo
 *.user
 .vs
+.tmp
 bin
 obj
-build
-_ReSharper.Caches
+/output
+/_ReSharper.Caches
