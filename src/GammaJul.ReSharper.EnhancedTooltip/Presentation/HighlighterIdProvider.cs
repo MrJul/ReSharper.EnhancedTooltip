@@ -12,17 +12,20 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	/// </summary>
 	public class HighlighterIdProvider {
 
-		private readonly bool _useReSharperColors;
-		private readonly bool _useRoslynColors;
+		private readonly HighlighterIdSource _highlighterIdSource;
 
-		[ContractAnnotation("roslynVsColor: null => canbenull")]
-		[ContractAnnotation("legacyVsColor: null => canbenull")]
-		private string Get([NotNull] string resharperColor, [CanBeNull] string roslynVsColor, [CanBeNull] string legacyVsColor) {
-			if (_useReSharperColors)
-				return resharperColor;
-			if (_useRoslynColors)
-				return roslynVsColor;
-			return legacyVsColor;
+		[ContractAnnotation("vsLegacyColor: null => canbenull")]
+		private string Get([NotNull] string rsColor, [NotNull] string vs16Color, [NotNull] string vs14Color, [CanBeNull] string vsLegacyColor) {
+			switch (_highlighterIdSource) {
+				case HighlighterIdSource.ReSharper:
+					return rsColor;
+				case HighlighterIdSource.VisualStudio16:
+					return vs16Color;
+				case HighlighterIdSource.VisualStudio14:
+					return vs14Color;
+				default:
+					return vsLegacyColor;
+			}
 		}
 
 		private const string VsIdentifier = "Identifier";
@@ -31,35 +34,35 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public string Accessor
-			=> Get(HighlightingAttributeIds.METHOD_IDENTIFIER_ATTRIBUTE, VsKeyword, VsKeyword);
+			=> Get(HighlightingAttributeIds.METHOD_IDENTIFIER_ATTRIBUTE, VsKeyword, VsKeyword, VsKeyword);
 
 		[NotNull]
 		public string Class
-			=> Get(HighlightingAttributeIds.TYPE_CLASS_ATTRIBUTE, "class name", "User Types");
+			=> Get(HighlightingAttributeIds.TYPE_CLASS_ATTRIBUTE, "class name", "class name", "User Types");
 
 		[NotNull]
 		public string Constant
-			=> Get(HighlightingAttributeIds.CONSTANT_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+			=> Get(HighlightingAttributeIds.CONSTANT_IDENTIFIER_ATTRIBUTE, "constant name", VsIdentifier, VsIdentifier);
 		
 		[NotNull]
 		public string Delegate
-			=> Get(HighlightingAttributeIds.TYPE_DELEGATE_ATTRIBUTE, "delegate name", "User Types(Delegates)");
+			=> Get(HighlightingAttributeIds.TYPE_DELEGATE_ATTRIBUTE, "delegate name", "delegate name", "User Types(Delegates)");
 
 		[NotNull]
 		public string Enum
-			=> Get(HighlightingAttributeIds.TYPE_ENUM_ATTRIBUTE, "enum name", "User Types(Enums)");
+			=> Get(HighlightingAttributeIds.TYPE_ENUM_ATTRIBUTE, "enum name", "enum name", "User Types(Enums)");
 
 		[NotNull]
 		public string ExtensionMethod
-			=> Get(HighlightingAttributeIds.EXTENSION_METHOD_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+			=> Get(HighlightingAttributeIds.EXTENSION_METHOD_IDENTIFIER_ATTRIBUTE, "extension method name", VsIdentifier, VsIdentifier);
 
 		[NotNull]
 		public string Event
-			=> Get(HighlightingAttributeIds.EVENT_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+			=> Get(HighlightingAttributeIds.EVENT_IDENTIFIER_ATTRIBUTE, "event name", VsIdentifier, VsIdentifier);
 
 		[NotNull]
 		public string Field
-			=> Get(HighlightingAttributeIds.FIELD_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+			=> Get(HighlightingAttributeIds.FIELD_IDENTIFIER_ATTRIBUTE, "field name", VsIdentifier, VsIdentifier);
 
 		[NotNull]
 		public string Keyword
@@ -71,23 +74,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public string Interface
-			=> Get(HighlightingAttributeIds.TYPE_INTERFACE_ATTRIBUTE, "interface name", "User Types(Interfaces)");
+			=> Get(HighlightingAttributeIds.TYPE_INTERFACE_ATTRIBUTE, "interface name", "interface name", "User Types(Interfaces)");
 
 		[NotNull]
 		public string LocalFunction
-			=> Get(HighlightingAttributeIds.LOCAL_FUNCTION_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+			=> Get(HighlightingAttributeIds.LOCAL_FUNCTION_IDENTIFIER_ATTRIBUTE, "method name", VsIdentifier, VsIdentifier);
 
 		[NotNull]
 		public string LocalVariable
-			=> Get(HighlightingAttributeIds.LOCAL_VARIABLE_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+			=> Get(HighlightingAttributeIds.LOCAL_VARIABLE_IDENTIFIER_ATTRIBUTE, "local name", VsIdentifier, VsIdentifier);
 
 		[NotNull]
 		public string Method
-			=> Get(HighlightingAttributeIds.METHOD_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+			=> Get(HighlightingAttributeIds.METHOD_IDENTIFIER_ATTRIBUTE, "method name", VsIdentifier, VsIdentifier);
 
 		[NotNull]
 		public string Namespace
-			=> Get(HighlightingAttributeIds.NAMESPACE_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+			=> Get(HighlightingAttributeIds.NAMESPACE_IDENTIFIER_ATTRIBUTE, "namespace name", VsIdentifier, VsIdentifier);
 
 		[NotNull]
 		public string Number
@@ -95,11 +98,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public string Parameter
-			=> Get(HighlightingAttributeIds.PARAMETER_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+			=> Get(HighlightingAttributeIds.PARAMETER_IDENTIFIER_ATTRIBUTE, "parameter name", VsIdentifier, VsIdentifier);
 
 		[NotNull]
 		public string Path
-			=> Get(HighlightingAttributeIds.PATH_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+			=> Get(HighlightingAttributeIds.PATH_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier, VsIdentifier);
 
 		[NotNull]
 		public string Operator
@@ -107,11 +110,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public string Property
-			=> Get(HighlightingAttributeIds.PROPERTY_IDENTIFIER_ATTRIBUTE, VsIdentifier, VsIdentifier);
+			=> Get(HighlightingAttributeIds.PROPERTY_IDENTIFIER_ATTRIBUTE, "property name", VsIdentifier, VsIdentifier);
 
 		[NotNull]
 		public string StaticClass
-			=> Get(HighlightingAttributeIds.TYPE_STATIC_CLASS_ATTRIBUTE, "class name", "User Types");
+			=> Get(HighlightingAttributeIds.TYPE_STATIC_CLASS_ATTRIBUTE, "class name", "class name", "User Types");
 
 		[NotNull]
 		public string String
@@ -119,27 +122,27 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		[NotNull]
 		public string Struct
-			=> Get(HighlightingAttributeIds.TYPE_STRUCT_ATTRIBUTE, "struct name", "User Types(Value types)");
+			=> Get(HighlightingAttributeIds.TYPE_STRUCT_ATTRIBUTE, "struct name", "struct name", "User Types(Value types)");
 
 		[CanBeNull]
 		public string TypeParameter
 			// Note: there is an "User Types(Type parameters)" on old VS versions but it's actually never used.
-			=> Get(HighlightingAttributeIds.TYPE_PARAMETER_ATTRIBUTE, "type parameter name", null);
+			=> Get(HighlightingAttributeIds.TYPE_PARAMETER_ATTRIBUTE, "type parameter name", "type parameter name", null);
 		
 		[NotNull]
 		public string UserOperator
-			=> Get(HighlightingAttributeIds.OPERATOR_IDENTIFIER_ATTRIBUTE, VsOperator, VsOperator);
+			=> Get(HighlightingAttributeIds.OPERATOR_IDENTIFIER_ATTRIBUTE, VsOperator, VsOperator, VsOperator);
 
 		[CanBeNull]
 		public string TupleComponentName
-			=> Get(HighlightingAttributeIds.TUPLE_COMPONENT_NAME_ATTRIBUTE, VsIdentifier, null);
+			=> Get(HighlightingAttributeIds.TUPLE_COMPONENT_NAME_ATTRIBUTE, VsIdentifier, VsIdentifier, null);
 
 		[CanBeNull]
 		public string GetForTypeElement([CanBeNull] ITypeElement typeElement) {
 			if (typeElement == null)
 				return null;
 
-			if (_useReSharperColors)
+			if (_highlighterIdSource == HighlighterIdSource.ReSharper)
 				return HighlightingAttributeIds.GetHighlightAttributeForTypeElement(typeElement);
 
 			switch (typeElement) {
@@ -214,9 +217,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 		}
 
-		public HighlighterIdProvider(bool useReSharperColors, bool useRoslynColors) {
-			_useReSharperColors = useReSharperColors;
-			_useRoslynColors = useRoslynColors;
+		public HighlighterIdProvider(HighlighterIdSource highlighterIdSource) {
+			_highlighterIdSource = highlighterIdSource;
 		}
 
 	}
