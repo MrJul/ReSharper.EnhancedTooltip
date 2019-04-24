@@ -62,6 +62,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				case ParameterKind.OUTPUT:
 					colorizer.AppendKeyword("out");
 					return;
+				case ParameterKind.INPUT:
+					colorizer.AppendKeyword("in");
+					return;
 				default:
 					colorizer.AppendPlainText("value");
 					return;

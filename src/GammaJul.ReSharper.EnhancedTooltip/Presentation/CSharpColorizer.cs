@@ -229,9 +229,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (element.IsRefReturnMember() || (element is ICSharpLocalVariable localVariable && localVariable.Kind.IsByReference()))
 				AppendText("ref ", _highlighterIdProvider.Keyword);
 			else if (element is IParameter parameter) {
-				string modifier = GetParameterModifier(parameter);
-				if (!modifier.IsEmpty())
-					AppendText(modifier + " ", _highlighterIdProvider.Keyword);
+				string specialModifier = GetParameterSpecialModifier(parameter);
+				if (!specialModifier.IsEmpty())
+					AppendText(specialModifier, _highlighterIdProvider.Keyword);
+				string kindModifier = GetParameterKindModifier(parameter);
+				if (!kindModifier.IsEmpty())
+					AppendText(kindModifier, _highlighterIdProvider.Keyword);
 			}
 
 			AppendType(elementType, expectedQualifierDisplay, true, context);
@@ -931,17 +934,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		[CanBeNull]
-		private static string GetParameterModifier([NotNull] IParameter parameter) {
+		private static string GetParameterSpecialModifier([NotNull] IParameter parameter) {
 			if (parameter.IsParameterArray)
-				return "params";
+				return "params ";
 			if (parameter.IsExtensionFirstParameter())
-				return "this";
+				return "this ";
+			return null;
+		}
 
+		[CanBeNull]
+		private static string GetParameterKindModifier([NotNull] IParameter parameter) {
 			switch (parameter.Kind) {
 				case ParameterKind.REFERENCE:
-					return "ref";
+					return "ref ";
 				case ParameterKind.OUTPUT:
-					return "out";
+					return "out ";
+				case ParameterKind.INPUT:
+					return "in ";
 				default:
 					return null;
 			}
