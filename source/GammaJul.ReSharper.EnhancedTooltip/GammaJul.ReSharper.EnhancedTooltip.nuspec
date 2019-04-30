@@ -3,7 +3,7 @@
 
 	<metadata>
 		<id>JLebosquain.EnhancedTooltip</id>
-		<version>$version$-eap</version>
+		<version>$version$</version>
 		<title>Enhanced Tooltip</title>
 		<authors>Julien Lebosquain</authors>
 		<description>Colorizes the tooltip as well as the parameter information popup.</description>
