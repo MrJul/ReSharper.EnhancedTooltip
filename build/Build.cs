@@ -19,11 +19,11 @@ using static Nuke.Common.Tools.NuGet.NuGetTasks;
 [CheckBuildProjectConfigurations]
 internal class Build : NukeBuild {
 
-	/// Support plugins are available for:
-	/// - JetBrains ReSharper        https://nuke.build/resharper
-	/// - JetBrains Rider            https://nuke.build/rider
-	/// - Microsoft VisualStudio     https://nuke.build/visualstudio
-	/// - Microsoft VSCode           https://nuke.build/vscode
+	// Support plugins are available for:
+	// - JetBrains ReSharper        https://nuke.build/resharper
+	// - JetBrains Rider            https://nuke.build/rider
+	// - Microsoft VisualStudio     https://nuke.build/visualstudio
+	// - Microsoft VSCode           https://nuke.build/vscode
 
 	[Parameter] public readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
 	[Parameter] public readonly string NuGetSource = "https://plugins.jetbrains.com/";

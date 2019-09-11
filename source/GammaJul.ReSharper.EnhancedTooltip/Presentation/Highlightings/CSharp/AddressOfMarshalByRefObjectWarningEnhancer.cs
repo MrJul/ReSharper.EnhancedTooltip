@@ -15,10 +15,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("Passing '");
 			colorizer.AppendDeclaredElement(highlighting.Field, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName, highlighting.ReferenceExpression);
 			colorizer.AppendPlainText("' as '");
-			colorizer.AppendKeyword(CSharpExpressionUtil.GetKindOfVariableReferenceCapture(highlighting.ReferenceExpression));
+			colorizer.AppendKeyword(CSharpExpressionUtil.GetKindOfExplicitVariableReferenceCapture(highlighting.ReferenceExpression));
 			colorizer.AppendPlainText("' argument may cause a runtime exception because it is a field of a marshal-by-reference class");
 		}
-		
+
 		public AddressOfMarshalByRefObjectWarningEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
 			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,

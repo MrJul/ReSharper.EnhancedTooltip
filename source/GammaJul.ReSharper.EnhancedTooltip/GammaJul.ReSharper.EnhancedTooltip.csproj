@@ -18,9 +18,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.1.0" />
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.2.2" />
 		<!-- Obtain version from https://api.nuget.org/v3/flatcontainer/jetbrains.platform.visualstudio/index.json -->
-		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="191.0.20190429.185153" />
+		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="192.0.20190828.114647" />
 		<PackageReference Include="EnvDTE" Version="8.0.0" />
 		<PackageReference Include="VSSDK.Editor" Version="11.0.*" />
 		<PackageReference Include="VSSDK.Language" Version="11.0.*" />
