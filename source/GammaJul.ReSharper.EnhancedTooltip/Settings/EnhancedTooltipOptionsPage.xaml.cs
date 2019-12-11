@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,7 +10,6 @@ using System.Windows.Controls.Primitives;
 using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.Application.UI.Options;
-using JetBrains.Application.UI.UIAutomation;
 using JetBrains.DataFlow;
 using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Features.Intellisense.Options;
@@ -30,14 +30,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		[NotNull] private readonly OptionsSettingsSmartContext _context;
 		[NotNull] private readonly List<OptionsPageKeyword> _keywords = new List<OptionsPageKeyword>();
 
+		public event PropertyChangedEventHandler PropertyChanged {
+			add { }
+			remove { }
+		}
+
 		public string Id
 			=> Pid;
 
 		public bool OnOk()
 			=> true;
-		
-		public EitherControl Control
-			=> this;
 
 		public IProperty<OptionsFilterResult> SearchFilter { get; }
 			= new Property<OptionsFilterResult>(String.Format(CultureInfo.InvariantCulture, "Filter for {0}", typeof(EnhancedTooltipOptionsPage)));
@@ -119,7 +121,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			_context.SetBinding<object>(_lifetime, entry, comboBox, Selector.SelectedValueProperty);
 
 			SetAssociatedLabel(comboBox, entry.Description);
-			
+
 			parentCheckBox?.IsAppearingChecked.FlowInto(_lifetime, comboBox, IsEnabledProperty);
 		}
 

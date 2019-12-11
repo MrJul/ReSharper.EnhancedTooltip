@@ -59,7 +59,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 
 			// TODO: handle named arguments with reordering; currently falling back to non-colored display
 			if (namedArguments.Any(s => s != null)) {
-				string signature = UnderlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
+				RichText signature = UnderlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
 				if (!IsIdentityMap(mapToOriginalOrder))
 					return signature;
 			}
