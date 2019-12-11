@@ -74,6 +74,9 @@ internal class Build : NukeBuild {
 				var releaseNotes = GetReleaseNotes();
 				var wave = GetWaveVersion();
 
+				if (Configuration.Equals(Configuration.Debug))
+					version += "-pre";
+
 				NuGetPack(s => s
 					.SetTargetPath(MainProjectDirectory / (MainProjectName + ".nuspec"))
 					.SetBasePath(MainProjectDirectory)
