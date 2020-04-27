@@ -7,6 +7,7 @@ using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Psi;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
+using JetBrains.Metadata.Reader.API;
 using JetBrains.Metadata.Utils;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
@@ -164,7 +165,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private void AppendModifiers([NotNull] IDeclaredElement element) {
-			if (!(element is IModifiersOwner modifiersOwner) || modifiersOwner is IAccessor || CSharpDeclaredElementUtil.IsDestructor(element))
+			if (!(element is IModifiersOwner modifiersOwner) || modifiersOwner is IAccessor || element.IsDestructor())
 				return;
 
 			var builder = new StringBuilder();
@@ -219,14 +220,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendText(after, null);
 				return;
 			}
-			
+
 			IType elementType = GetElementType(element, substitution);
 			if (elementType == null)
 				return;
 
 			AppendText(before, null);
 
-			if (element.IsRefReturnMember() || (element is ICSharpLocalVariable localVariable && localVariable.Kind.IsByReference()))
+			if (element.IsRefReturnMember() || (element is ICSharpLocalVariable localVariable && localVariable.ReferenceKind.IsByReference()))
 				AppendText("ref ", _highlighterIdProvider.Keyword);
 			else if (element is IParameter parameter) {
 				string specialModifier = GetParameterSpecialModifier(parameter);
@@ -246,7 +247,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			switch (element) {
 				case IConstructor _:
 					return null;
-				case var _ when CSharpDeclaredElementUtil.IsDestructor(element):
+				case var _ when element.IsDestructor():
 					return null;
 				case ITypeOwner typeOwner:
 					return substitution.Apply(typeOwner.Type);
@@ -271,7 +272,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return;
 			}
 
-			AppendText(expressionType.GetLongPresentableName(CSharpLanguage.Instance), null);
+			AppendText(expressionType.GetLongPresentableName(CSharpLanguage.Instance!), null);
 		}
 
 		private void AppendType([NotNull] IType type, QualifierDisplays expectedQualifierDisplay, bool displayUnknownTypeParameters, Context context) {
@@ -289,9 +290,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					AppendText("anonymous type", null);
 					return;
 				default:
-					AppendText(type.GetLongPresentableName(CSharpLanguage.Instance), null);
+					AppendText(type.GetLongPresentableName(CSharpLanguage.Instance!), null);
 					return;
-			}			
+			}
 		}
 
 		private void AppendModuleName([NotNull] IType itype) {
@@ -342,11 +343,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendText("void", _highlighterIdProvider.Keyword);
 				return;
 			}
-			
+
 			ITypeElement typeElement = declaredType.GetTypeElement();
 			if (typeElement == null || !typeElement.IsValid()) {
-				PsiLanguageType language = CSharpLanguage.Instance ?? (PsiLanguageType) UnknownLanguage.Instance;
-				AppendText(declaredType.GetPresentableName(language), null);
+				AppendText(declaredType.GetPresentableName(CSharpLanguage.Instance!), null);
 			}
 			else
 				AppendTypeElement(typeElement, declaredType.GetSubstitution(), expectedQualifierDisplay, appendTypeParameters, displayUnknownTypeParameters, context);
@@ -595,10 +595,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		private void AppendName([NotNull] IDeclaredElement element) {
 			string highlighterId = _highlighterIdProvider.GetForDeclaredElement(element);
-			
+
 			switch (element) {
 
-				case var _ when CSharpDeclaredElementUtil.IsDestructor(element):
+				case var _ when element.IsDestructor():
 					ITypeElement containingType = ((IClrDeclaredElement) element).GetContainingType();
 					if (containingType != null) {
 						AppendText("~", _highlighterIdProvider.Operator);
@@ -916,9 +916,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			AppendConstantValue(attributeValue.ConstantValue, false);
 		}
-		
+
 		private static bool ShouldShowParameters([NotNull] IDeclaredElement element) {
-			if (CSharpDeclaredElementUtil.IsDestructor(element) || CSharpDeclaredElementUtil.IsProperty(element))
+			if (element.IsDestructor() || CSharpDeclaredElementUtil.IsProperty(element))
 				return false;
 
 			return !(element is IAccessor accessor)

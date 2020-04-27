@@ -1,4 +1,4 @@
-<Project Sdk="MSBuild.Sdk.Extras/1.6.68">
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
 
 	<PropertyGroup>
 		<AssemblyName>GammaJul.ReSharper.EnhancedTooltip</AssemblyName>
@@ -9,18 +9,18 @@
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<MSBuildWarningsAsMessages>MSB3277</MSBuildWarningsAsMessages>
 		<OutputPath>..\..\output\$(Configuration)</OutputPath>
-		<LangVersion>7.3</LangVersion>
-		<ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
+		<LangVersion>8.0</LangVersion>
+		<UseWPF>true</UseWPF>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<Reference Include="System.Windows.Forms" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2019.3.0" />
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2020.1.0" />
 		<!-- Obtain version from https://api.nuget.org/v3/flatcontainer/jetbrains.platform.visualstudio/index.json -->
-		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="193.0.20191207.64902" />
+		<PackageReference Include="JetBrains.Platform.VisualStudio" Version="201.0.20200415.3100" />
 		<PackageReference Include="EnvDTE" Version="8.0.0" />
 		<PackageReference Include="VSSDK.Editor" Version="11.0.*" />
 		<PackageReference Include="VSSDK.Language" Version="11.0.*" />

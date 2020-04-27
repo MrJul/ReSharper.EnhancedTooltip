@@ -736,21 +736,29 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			HighlighterIdProvider highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(settings);
 
 			RichText final = new RichText("Argument of ", TextStyle.Default);
-			final.Append(_colorizerPresenter.TryPresent(
+			var parametersOwnerDisplay = _colorizerPresenter.TryPresent(
 				new DeclaredElementInstance(parametersOwner, parameterInstance.Substitution),
 				PresenterOptions.ForArgumentRoleParametersOwnerToolTip(settings),
 				argument.Language,
 				highlighterIdProvider,
 				node,
-				out _));
+				out _);
+
+			if (parametersOwnerDisplay != null)
+				final.Append(parametersOwnerDisplay);
+
 			final.Append(": ", TextStyle.Default);
-			final.Append(_colorizerPresenter.TryPresent(
+
+			var parameterDisplay = _colorizerPresenter.TryPresent(
 				parameterInstance,
 				PresenterOptions.ForArgumentRoleParameterToolTip(settings),
 				argument.Language,
 				highlighterIdProvider,
 				node,
-				out _));
+				out _);
+
+			if (parameterDisplay != null)
+				final.Append(parameterDisplay);
 
 			var content = new ArgumentRoleTooltipContent(final, argument.GetDocumentRange().TextRange) {
 				Description = TryGetDescription(parameter, parameter.GetXMLDoc(true), parameter.Module, argument.Language)
