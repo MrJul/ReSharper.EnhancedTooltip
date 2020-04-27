@@ -84,7 +84,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (options.ShowElementType == ElementTypeDisplay.Before)
 				AppendElementType(element, substitution, QualifierDisplays.ElementType, null, " ", context);
-			
+
 			if (options.ShowName)
 				AppendNameWithContainer(element, substitution, context);
 
@@ -129,7 +129,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (!text.IsEmpty())
 				_richText.Append(text, textStyle);
 		}
-		
+
 		private void AppendElementKind([CanBeNull] IDeclaredElement element, Context context, bool stylized) {
 			PresenterOptions options = context.Options;
 			string kind = element.GetElementKindString(
@@ -321,7 +321,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			bool appendTypeParameters,
 			bool displayUnknownTypeParameters,
 			Context context) {
-			
+
 			if (declaredType is IDynamicType) {
 				AppendText("dynamic", _highlighterIdProvider.Keyword);
 				return;
@@ -336,6 +336,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				string typeKeyword = CSharpTypeFactory.GetTypeKeyword(declaredType.GetClrName());
 				if (typeKeyword != null) {
 					AppendText(typeKeyword, _highlighterIdProvider.Keyword);
+					AppendNullability(declaredType.NullableAnnotation);
 					return;
 				}
 			}
@@ -348,8 +349,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (typeElement == null || !typeElement.IsValid()) {
 				AppendText(declaredType.GetPresentableName(CSharpLanguage.Instance!), null);
 			}
-			else
+			else {
 				AppendTypeElement(typeElement, declaredType.GetSubstitution(), expectedQualifierDisplay, appendTypeParameters, displayUnknownTypeParameters, context);
+				AppendNullability(declaredType.NullableAnnotation);
+			}
 		}
 
 		private void AppendTupleType(
@@ -418,6 +421,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendTypeParameters(typeElement, substitution, false, displayUnknownTypeParameters, context);
 		}
 
+		private void AppendNullability(NullableAnnotation nullableAnnotation) {
+			if (nullableAnnotation == NullableAnnotation.Annotated)
+				AppendText("?", _highlighterIdProvider.Operator);
+		}
+
 		[CanBeNull]
 		private static List<string> GetNamespacePartsToDisplay([NotNull] ITypeElement typeElement, Context context) {
 			if (typeElement is ICompiledElement) {
@@ -452,7 +460,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					if (contextualNamespace == null)
 						goto case SolutionCodeNamespaceDisplayKind.Always;
 					return GetDifferentNamespaceParts(typeElement.GetContainingNamespace(), contextualNamespace.DeclaredElement);
-					
+
 				default:
 					goto case SolutionCodeNamespaceDisplayKind.Always;
 			}
@@ -496,7 +504,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			string namespaceHighlighterId = _highlighterIdProvider.Namespace;
 			string operatorHighlighterId = _highlighterIdProvider.Operator;
-			
+
 			for (int i = 0; i < namespaceParts.Count; ++i) {
 				if (i > 0)
 					AppendText(".", operatorHighlighterId);
@@ -699,7 +707,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 				if (addNewLineAroundParameters)
 					AppendText("\r\n    ", null);
-				
+
 				for (int i = 0; i < parameterCount; i++) {
 					if (i > 0)
 						AppendText(", ", null);
@@ -755,11 +763,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendText("__arglist", _highlighterIdProvider.Keyword);
 				return;
 			}
-			
+
 			PresenterOptions options = context.Options;
-			
+
 			AppendAttributes(parameter, options.ShowParametersAttributes, options.ShowParametersAttributesArguments, AttributesFormattingMode.AllOnCurrentLine, context);
-			
+
 			if (options.ShowParametersType)
 				AppendElementType(parameter, substitution, QualifierDisplays.Parameters, null, options.ShowParametersName ? " " : null, context);
 
@@ -976,7 +984,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			IType defaultType = defaultValue.DefaultTypeValue;
 			if (defaultType == null)
 				return;
-			
+
 			if (defaultType.IsNullable() || defaultType.IsReferenceType()) {
 				AppendText(" = ", _highlighterIdProvider.Operator);
 				AppendText("null", _highlighterIdProvider.Keyword);
@@ -1029,7 +1037,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendText(presentation, null);
 				return;
 			}
-			
+
 			if (type.IsString())
 				AppendText(presentation, _highlighterIdProvider.String);
 			else if (type.IsChar())
@@ -1047,10 +1055,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			string typeHighlighterId = _highlighterIdProvider.Enum;
 			string valueHighlighterId = _highlighterIdProvider.Constant;
-			
+
 			var orderedFields = fields.OrderBy(f => f.ShortName);
 			bool addSeparator = false;
-			
+
 			foreach (IField orderedField in orderedFields) {
 				if (addSeparator)
 					AppendText(" | ", _highlighterIdProvider.Operator);
@@ -1098,7 +1106,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		private void AppendLiteralExpression(ILiteralExpression literalExpression, PresenterOptions options) {
 			var context = new Context(options, null, literalExpression);
-			
+
 			if (options.ShowElementKind != ElementKindDisplay.None)
 				AppendElementKind("literal", options.ShowElementKind == ElementKindDisplay.Stylized);
 
