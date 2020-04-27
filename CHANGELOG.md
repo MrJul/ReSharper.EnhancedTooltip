@@ -1,5 +1,12 @@
 # Changelog
 
+## 3.13.0
+- [Added] Support for ReSharper 2020.1 RTM. (#157)
+- [Added] Support for C# 8 nullable reference types. (#154)
+
+## 3.12.0
+- [Added] Support for ReSharper 2019.3 RTM. (#152)
+
 ## 3.11.0
 - [Added] Support for ReSharper 2019.2.2 RTM. (#149)
 

@@ -16,8 +16,8 @@ It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) tha
 Installation
 ------------
 Visual Studio 2012, 2013, 2015, 2017 and 2019 are supported.  
-ReSharper 2019.1 must be installed.  
-(Note: older versions are still available for ReSharper 8.2, 9.x, 10.0, 2016.x, 2017.x and 2018.x).
+ReSharper 2020.1 must be installed.  
+(Note: older versions are still available for ReSharper 8.2, 9.x, 10.0, 2016.x, 2017.x, 2018.x and 2019.x).
 
 Install the plugin using the built-in Extension Manager from the ReSharper menu.  
 
