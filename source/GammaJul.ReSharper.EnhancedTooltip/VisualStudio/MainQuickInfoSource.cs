@@ -258,7 +258,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		[Pure]
 		private static bool IsIdentifierHighlighting([NotNull] IHighlighting highlighting) {
 			var attribute = HighlightingSettingsManager.Instance.GetHighlightingAttribute(highlighting) as StaticSeverityHighlightingAttribute;
-			return attribute?.GroupId == HighlightingGroupIds.IdentifierHighlightingsGroup;
+			return attribute?.GroupId == RegisterStaticHighlightingsGroupAttribute.GetGroupIdString(typeof(HighlightingGroupIds.IdentifierHighlightings));
 		}
 
 		public MainQuickInfoSource([NotNull] ITextBuffer textBuffer)

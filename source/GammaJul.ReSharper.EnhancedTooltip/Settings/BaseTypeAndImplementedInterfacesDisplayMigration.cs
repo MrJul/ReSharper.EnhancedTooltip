@@ -19,7 +19,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		public IEnumerable<SettingsKey> GetKeysToMigrate(ISettingsSchema schema)
 			=> null;
 
-		public void Migrate(IContextBoundSettingsStoreForMigration store) {
+		public void Migrate(IContextBoundSettingsStoreImplementation store) {
 			MigrateValue(store, s => s.ShowBaseType, s => s.BaseTypeDisplayKind, BaseTypeDisplayKind.Always, BaseTypeDisplayKind.Never);
 			MigrateValue(store, s => s.ShowImplementedInterfaces, s => s.ImplementedInterfacesDisplayKind, ImplementedInterfacesDisplayKind.Always, ImplementedInterfacesDisplayKind.Never);
 		}

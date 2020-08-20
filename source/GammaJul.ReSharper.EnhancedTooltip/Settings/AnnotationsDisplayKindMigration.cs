@@ -21,7 +21,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		public IEnumerable<SettingsKey> GetKeysToMigrate(ISettingsSchema schema)
 			=> null;
 
-		public void Migrate(IContextBoundSettingsStoreForMigration store) {
+		public void Migrate(IContextBoundSettingsStoreImplementation store) {
 			MigrateValue(store, s => s.ShowIdentifierAnnotations, s => s.ShowIdentifierAttributes);
 			MigrateValue(store, s => s.ShowParametersAnnotations, s => s.ShowParametersAttributes);
 		}
