@@ -44,7 +44,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public bool ShowParametersAttributesArguments { get; private set; }
 
 		public bool ShowParametersName { get; private set; }
-		
+
 		public bool ShowParametersType { get; private set; }
 
 		public QualifierDisplays ShowQualifiers { get; private set; }
@@ -482,6 +482,42 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			ShowParametersAttributesArguments = false,
 			ShowParametersName = false,
 			ShowParametersType = true,
+			ShowQualifiers = QualifierDisplays.None,
+			ShowTypeParameters = false,
+			ShowTypeParametersVariance = false,
+			SolutionCodeNamespaceDisplayKind = SolutionCodeNamespaceDisplayKind.Never,
+			UseAttributeClassKind = false,
+			UseClassModifiersInKind = false,
+			UseExtensionMethodKind = false,
+			UseMethodModifiersInKind = false,
+			UseShortNullableForm = true,
+			UseStructModifiersInKind = false,
+			UseTypeKeywords = true
+		};
+
+		[NotNull]
+		public static readonly PresenterOptions ElementTypeOnly = new PresenterOptions
+		{
+			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
+			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
+			FormatDelegatesAsLambdas = false,
+			ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,
+			ShowAccessors = false,
+			ShowAccessRights = false,
+			ShowConstantValue = false,
+			ShowDefaultValues = false,
+			ShowElementAttributes = AttributesDisplayKind.Never,
+			ShowElementAttributesArguments = false,
+			ShowElementKind = ElementKindDisplay.None,
+			ShowElementType = ElementTypeDisplay.Before,
+			ShowEmptyParametersText = false,
+			ShowExplicitInterface = false,
+			ShowModifiers = false,
+			ShowName = false,
+			ShowParametersAttributes = AttributesDisplayKind.Never,
+			ShowParametersAttributesArguments = false,
+			ShowParametersName = false,
+			ShowParametersType = false,
 			ShowQualifiers = QualifierDisplays.None,
 			ShowTypeParameters = false,
 			ShowTypeParametersVariance = false,

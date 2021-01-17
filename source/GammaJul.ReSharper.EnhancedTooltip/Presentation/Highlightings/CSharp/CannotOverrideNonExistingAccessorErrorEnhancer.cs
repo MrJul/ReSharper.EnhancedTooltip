@@ -12,14 +12,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(CannotOverrideNonExistingAccessorError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("'");
-			colorizer.TryAppendDeclaredElement(highlighting.ExtraAccessor.DeclaredElement, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.ExtraAccessor);
+			colorizer.TryAppendDeclaredElement(highlighting.ExtraAccessor, EmptySubstitution.INSTANCE, PresenterOptions.NameOnly, highlighting.Declaration);
 			colorizer.AppendPlainText("': cannot override because '");
-			colorizer.AppendDeclaredElement(highlighting.OverriddenMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedMember, highlighting.ExtraAccessor);
+			colorizer.AppendDeclaredElement(highlighting.OverriddenMember, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedMember, highlighting.Declaration);
 			colorizer.AppendPlainText("' does not have an overridable ");
 			colorizer.AppendAccessorKind(highlighting.ExtraAccessor.Kind);
 			colorizer.AppendPlainText(" accessor");
 		}
-		
+
 		public CannotOverrideNonExistingAccessorErrorEnhancer(
 			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
 			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,

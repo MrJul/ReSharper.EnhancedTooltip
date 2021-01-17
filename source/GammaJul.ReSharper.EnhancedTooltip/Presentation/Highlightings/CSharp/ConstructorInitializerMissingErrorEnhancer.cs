@@ -11,8 +11,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 	internal sealed class ConstructorInitializerMissingErrorEnhancer : CSharpHighlightingEnhancer<ConstructorInitializerMissingError> {
 
 		protected override void AppendTooltip(ConstructorInitializerMissingError highlighting, CSharpColorizer colorizer) {
-			colorizer.AppendPlainText("Base class '");
-			colorizer.AppendDeclaredElement(highlighting.BaseClass, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName, highlighting.ConstructorDeclaration);
+			colorizer.AppendPlainText("Base ");
+			colorizer.AppendElementKind(highlighting.BaseType);
+			colorizer.AppendPlainText(" '");
+			colorizer.AppendDeclaredElement(highlighting.BaseType, EmptySubstitution.INSTANCE, PresenterOptions.QualifiedName, highlighting.ConstructorDeclaration);
 			colorizer.AppendPlainText("' doesn't contain parameterless constructor");
 		}
 

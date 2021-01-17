@@ -70,7 +70,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					return;
 			}
 		}
-		
+
 		public static void AppendAccessorKind([NotNull] this CSharpColorizer colorizer, AccessorKind accessorKind) {
 			switch (accessorKind) {
 				case AccessorKind.ADDER:

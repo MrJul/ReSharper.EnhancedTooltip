@@ -424,7 +424,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			[CanBeNull] IDeclaredElement element,
 			[NotNull] IContextBoundSettingsStore settings) {
 
-			RichTextBlock richTextToolTip = highlighter?.RichTextToolTip;
+			RichTextBlock richTextToolTip = highlighter?.TryGetTooltip(HighlighterTooltipKind.TextEditor);
 			if (richTextToolTip == null)
 				return null;
 
@@ -449,7 +449,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (returnsNode == null || !returnsNode.HasChildNodes)
 				return null;
 
-			var richText = XmlDocRichTextPresenter.Run(returnsNode, false, languageType, psiModule).RichText;
+			var richText = XmlDocRichTextPresenter.Run(returnsNode, false, languageType, DeclaredElementPresenterTextStyles.Empty, psiModule).RichText;
 			return richText.IsNullOrEmpty() ? null : richText;
 		}
 
@@ -488,7 +488,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			var exceptionContent = new ExceptionContent(cref);
 			if (exceptionElement.HasChildNodes) {
-				RichText richText = XmlDocRichTextPresenter.Run(exceptionElement, false, languageType, psiModule).RichText;
+				RichText richText = XmlDocRichTextPresenter.Run(exceptionElement, false, languageType, DeclaredElementPresenterTextStyles.Empty, psiModule).RichText;
 				if (!richText.IsNullOrEmpty())
 					exceptionContent.Description = richText;
 			}
