@@ -336,7 +336,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				string typeKeyword = CSharpTypeFactory.GetTypeKeyword(declaredType.GetClrName());
 				if (typeKeyword != null) {
 					AppendText(typeKeyword, _highlighterIdProvider.Keyword);
-					AppendNullability(declaredType.NullableAnnotation);
+					if (declaredType.NullableAnnotation == NullableAnnotation.Annotated)
+						AppendText("?", _highlighterIdProvider.Operator);
 					return;
 				}
 			}
@@ -351,7 +352,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 			else {
 				AppendTypeElement(typeElement, declaredType.GetSubstitution(), expectedQualifierDisplay, appendTypeParameters, displayUnknownTypeParameters, context);
-				AppendNullability(declaredType.NullableAnnotation);
+				if (declaredType.NullableAnnotation == NullableAnnotation.Annotated && !Equals(typeElement.GetClrName(), PredefinedType.GENERIC_NULLABLE_FQN))
+					AppendText("?", _highlighterIdProvider.Operator);
 			}
 		}
 
@@ -419,11 +421,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (appendTypeParameters)
 				AppendTypeParameters(typeElement, substitution, false, displayUnknownTypeParameters, context);
-		}
-
-		private void AppendNullability(NullableAnnotation nullableAnnotation) {
-			if (nullableAnnotation == NullableAnnotation.Annotated)
-				AppendText("?", _highlighterIdProvider.Operator);
 		}
 
 		[CanBeNull]
