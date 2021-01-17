@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using Nuke.Common;
 using Nuke.Common.Execution;
+using Nuke.Common.IO;
 using Nuke.Common.ProjectModel;
 using Nuke.Common.Tooling;
 using Nuke.Common.Tools.MSBuild;
@@ -25,7 +26,10 @@ internal class Build : NukeBuild {
 	// - Microsoft VisualStudio     https://nuke.build/visualstudio
 	// - Microsoft VSCode           https://nuke.build/vscode
 
-	[Parameter] public readonly Configuration Configuration = IsLocalBuild ? Configuration.Debug : Configuration.Release;
+	public const string Debug = "Debug";
+	public const string Release = "Release";
+
+	[Parameter] public readonly string Configuration = IsLocalBuild ? Debug : Release;
 	[Parameter] public readonly string NuGetSource = "https://plugins.jetbrains.com/";
 	[Parameter] public readonly string NuGetApiKey;
 
@@ -74,7 +78,7 @@ internal class Build : NukeBuild {
 				var releaseNotes = GetReleaseNotes();
 				var wave = GetWaveVersion();
 
-				if (Configuration.Equals(Configuration.Debug))
+				if (Configuration.Equals(Debug))
 					version += "-pre";
 
 				NuGetPack(s => s
@@ -93,7 +97,7 @@ internal class Build : NukeBuild {
 		=> _ => _
 			.DependsOn(Pack)
 			.Requires(() => NuGetApiKey)
-			.Requires(() => Configuration.Release.Equals(Configuration))
+			.Requires(() => Release.Equals(Configuration))
 			.Executes(() => {
 				GlobFiles(OutputDirectory, "*.nupkg")
 					.ForEach(x => NuGetPush(s => s
