@@ -25,7 +25,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 		[NotNull]
 		private Func<IDeclaredElement, RichTextBlock> CreateGetTooltipMethod([NotNull] ISolution solution) {
-			// Equivalent to element => _solution.TryGetComponent<CppDeclaredElementTooltipProvider>()?.GetTooltip(element);
+			// Equivalent to element => _solution.TryGetComponent<CppDeclaredElementTooltipProvider>()?.GetTooltip(element, false);
 
 			RichTextBlock NoTooltip(IDeclaredElement element)
 				=> null;
@@ -49,12 +49,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				"GetTooltip",
 				BindingFlags.Instance | BindingFlags.Public,
 				null,
-				new[] { iCppDeclaredElementType },
+				new[] { iCppDeclaredElementType, typeof(bool) },
 				null);
 			if (getTooltipMethod == null)
 				return NoTooltip;
 
-			return element => getTooltipMethod.Invoke(tooltipProvider, new object[] { element }) as RichTextBlock;
+			return element => getTooltipMethod.Invoke(tooltipProvider, new object[] { element, false /* fillSpaces */ }) as RichTextBlock;
 		}
 
 		public bool IsCppDeclaredElement([NotNull] IDeclaredElement declaredElement) {
