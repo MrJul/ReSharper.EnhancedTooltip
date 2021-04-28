@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.16.0
+- [Added] Support for ReSharper 2021.1.2 RTM. (#165)
+
 ## 3.15.0
 - [Added] Support for ReSharper 2020.3.2 RTM. (#161)
 
