@@ -112,14 +112,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				throw new ArgumentNullException(nameof(owner));
 			owner.SetValue(DocumentProperty, value);
 		}
-		
+
 		private static void OnShouldStyleParentListBoxChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
 			if (!(bool) e.NewValue)
 				return;
 
 			var element = d as FrameworkElement;
-			
-			element?.WhenLoaded(lifetime => {
+
+			element?.WhenLoaded(_ => {
 
 				// We're styling the parent VS ListBox included inside the tooltip.
 				if (!(element.FindVisualAncestor(o => o is ItemsControl ic && IsToolTipItemsControl(ic)) is ItemsControl itemsControl)

@@ -1115,7 +1115,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private void AppendTupleTypeComponent([NotNull] ITupleTypeComponent tupleTypeComponent, [NotNull] PresenterOptions options) {
-			if (!(tupleTypeComponent.Parent is ITupleTypeComponentList tupleComponentList))
+			if (tupleTypeComponent.Parent is not ITupleTypeComponentList tupleComponentList)
 				return;
 
 			AppendElementKind("tuple component", options.ShowElementKind == ElementKindDisplay.Stylized);
@@ -1123,18 +1123,20 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText("(", null);
 
 			var context = new Context(options, null, tupleTypeComponent);
-			TreeNodeCollection<ITupleTypeComponent> components = tupleComponentList.Components;
+			var components = tupleComponentList.Components;
 			int componentCount = components.Count;
 			for (int i = 0; i < componentCount; ++i) {
 				if (i > 0)
 					AppendText(", ", null);
 
 				ITupleTypeComponent component = components[i];
-				AppendType(CSharpTypeFactory.CreateType(component.TypeUsage), QualifierDisplays.None, true, context);
-				ICSharpIdentifier nameIdentifier = component.NameIdentifier;
-				if (nameIdentifier != null) {
-					AppendText(" ", null);
-					AppendText(nameIdentifier.Name, _highlighterIdProvider.TupleComponentName);
+				if (component is not null) {
+					AppendType(CSharpTypeFactory.CreateType(component.TypeUsage), QualifierDisplays.None, true, context);
+					ICSharpIdentifier nameIdentifier = component.NameIdentifier;
+					if (nameIdentifier != null) {
+						AppendText(" ", null);
+						AppendText(nameIdentifier.Name, _highlighterIdProvider.TupleComponentName);
+					}
 				}
 			}
 

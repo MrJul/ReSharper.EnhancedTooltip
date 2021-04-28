@@ -32,7 +32,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 	/// </summary>
 	[SolutionComponent]
 	public class IdentifierTooltipContentProvider {
-		
+
 		private sealed class DeclaredElementInfo {
 
 			[NotNull] internal readonly IDeclaredElement DeclaredElement;
@@ -81,7 +81,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 		[NotNull] private readonly IDeclaredElementDescriptionPresenter _declaredElementDescriptionPresenter;
 		[NotNull] private readonly HighlighterIdProviderFactory _highlighterIdProviderFactory;
 		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
-		
+
 		/// <summary>
 		/// Returns a colored <see cref="IdentifierContentGroup"/> for an identifier represented by a <see cref="IHighlighter"/>.
 		/// </summary>
@@ -156,7 +156,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			[CanBeNull] DeclaredElementInfo info,
 			[NotNull] IContextBoundSettingsStore settings,
 			out bool replacesStandardContent) {
-			
+
 			replacesStandardContent = false;
 
 			if (info == null)
@@ -169,14 +169,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			ConstructorReferenceDisplay display = settings.GetValue(GetConstructorSettingsKey(typeElement.IsAttribute()));
 			switch (display) {
-				
+
 				case ConstructorReferenceDisplay.TypeOnly:
 					replacesStandardContent = true;
 					return TryGetTypeIdentifierContentFromConstructor(constructor, info, settings);
-				
+
 				case ConstructorReferenceDisplay.Both:
 					return TryGetTypeIdentifierContentFromConstructor(constructor, info, settings);
-			
+
 				default:
 					return null;
 
@@ -230,7 +230,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				return null;
 
 			var identifierContent = new IdentifierTooltipContent(identifierText, info.SourceRange);
-			
+
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowIcon))
 				identifierContent.Icon = TryGetIcon(element);
 
@@ -241,7 +241,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowObsolete))
 					identifierContent.Obsolete = TryRemoveObsoletePrefix(TryGetObsolete(element, psiModule, languageType));
-				
+
 				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowReturn))
 					identifierContent.Return = TryPresentDocNode(xmlDoc, "returns", languageType, psiModule);
 
@@ -271,7 +271,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 					identifierContent.AttributeUsage = GetAttributeUsage((IClass) info.DeclaredElement);
 
 			}
-			
+
 			return identifierContent;
 		}
 
@@ -568,7 +568,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			if (identifierText == null || identifierText.IsEmpty)
 				return null;
-			
+
 			var identifierContent = new IdentifierTooltipContent(identifierText, node.GetDocumentRange().TextRange);
 
 			if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowIcon))
@@ -576,7 +576,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			return identifierContent;
 		}
-		
+
 		/// <summary>
 		/// Finds a valid presentable element represented at a given <see cref="DocumentRange"/>.
 		/// </summary>
@@ -586,7 +586,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			IDocument document = documentRange.Document;
 			if (document == null || !documentRange.IsValid())
 				return default;
-			
+
 			IPsiServices psiServices = _solution.GetPsiServices();
 			if (!psiServices.Files.AllDocumentsAreCommitted || psiServices.Caches.HasDirtyFiles)
 				return default;
@@ -595,7 +595,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				.GetPsiSourceFiles(_solution)
 				.SelectMany(
 					psiSourceFile => psiServices.Files.GetPsiFiles(psiSourceFile, documentRange),
-					(psiSourceFile, file) => FindPresentable(documentRange, file))
+					(_, file) => FindPresentable(documentRange, file))
 				.FirstOrDefault(info => info.IsValid());
 		}
 
@@ -625,7 +625,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			// FindNodeAt seems to return the previous node on single-char literals (eg '0'). FindNodesAt is fine.
 			var node = file.FindNodesAt<ITreeNode>(treeTextRange).FirstOrDefault();
 			if (node != null && node.IsValid()) {
-				
+
 				DeclaredElementInfo declaredElementInfo = FindDeclaration(node, file) ?? FindSpecialElement(node, file);
 				if (declaredElementInfo != null)
 					return new PresentableInfo(declaredElementInfo);
@@ -662,7 +662,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			return null;
 		}
-		
+
 		private static void SortReferences([NotNull] IReference[] references) {
 			int count = references.Length;
 			if (count <= 1)
