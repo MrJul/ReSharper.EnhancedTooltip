@@ -55,9 +55,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				? GetReSharperHighlighterAttributes(highlighterAttributeId)
 				: GetVsHighlighterAttributes(highlighterAttributeId);
 
-		private static TextStyle ToTextStyle([NotNull] HighlighterAttributes attributes) {
-			FontStyle fontStyle = attributes.FontStyle != HighlighterAttributes.UNDEFINED_FONT_STYLE ? (FontStyle) attributes.FontStyle : FontStyle.Regular;
-			return new TextStyle(fontStyle, attributes.Color, attributes.BackgroundColor);
+		private static TextStyle ToTextStyle([NotNull] CustomizedHighlighterAttributes attributes) {
+			return new TextStyle(attributes.FontStyle, attributes.Color, attributes.BackgroundColor);
 		}
 
 		private static TextStyle ToTextStyle([CanBeNull] TextFormattingRunProperties properties)

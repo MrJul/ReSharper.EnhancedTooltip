@@ -153,7 +153,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			[CanBeNull] ISolution solution,
 			bool skipIdentifierHighlighting) {
 
-			if (highlighter.Attributes.Effect.Type == EffectType.GUTTER_MARK)
+			if (highlighter.Attributes.EffectType == EffectType.GUTTER_MARK)
 				yield break;
 
 			if (highlighter.UserData is IHighlighting highlighting) {

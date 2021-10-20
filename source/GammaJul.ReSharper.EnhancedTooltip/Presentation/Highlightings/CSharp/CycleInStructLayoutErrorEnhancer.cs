@@ -15,8 +15,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 	internal sealed class CycleInStructLayoutErrorEnhancer : CSharpHighlightingEnhancer<CycleInStructLayoutError> {
 
 		protected override void AppendTooltip(CycleInStructLayoutError highlighting, CSharpColorizer colorizer) {
-			IClassMemberDeclaration declaration = highlighting.Declaration;
-			ITypeMember declaredElement = declaration.DeclaredElement;
+			IClassMemberDeclaration declaration = highlighting.Declaration as IClassMemberDeclaration;
+			ITypeMember declaredElement = declaration?.DeclaredElement;
 			if (declaredElement == null)
 				return;
 
