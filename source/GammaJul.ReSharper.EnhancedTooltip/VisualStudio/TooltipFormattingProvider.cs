@@ -1,13 +1,12 @@
-﻿using System;
+using System;
 using System.Windows;
 using System.Windows.Media;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.Application.Components;
-using JetBrains.Platform.VisualStudio.SinceVs11.Shell.Theming;
+using JetBrains.Application.UI.Components.Theming;
 using JetBrains.Util;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
 
@@ -27,7 +26,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		[CanBeNull]
 		public Brush TryGetBackground(TooltipColorSource colorSource) {
 			if (colorSource == TooltipColorSource.EnvironmentSettings)
-				return GetAppBrush(BundledThemeColors.Environment.ToolTipBrushKey);
+				return GetAppBrush(ThemeColor.TooltipBackground.BrushKey);
 
 			return _lazyTextViewBackgroundResources.Value?["Background"] as Brush;
 		}
@@ -35,7 +34,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		[CanBeNull]
 		public Brush TryGetForeground(TooltipColorSource colorSource) {
 			if (colorSource == TooltipColorSource.EnvironmentSettings)
-				return GetAppBrush(BundledThemeColors.Environment.ToolTipTextBrushKey);
+				return GetAppBrush(ThemeColor.TooltipForeground.BrushKey);
 
 			TextFormattingRunProperties textProperties = _lazyTextFormatMap.Value?.DefaultTextProperties;
 			return textProperties == null || textProperties.ForegroundBrushEmpty ? null : textProperties.ForegroundBrush;
@@ -43,11 +42,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		[CanBeNull]
 		public Brush TryGetBorderBrush()
-			=> GetAppBrush(BundledThemeColors.Environment.ToolTipBorderBrushKey);
+			=> GetAppBrush(ThemeColor.TooltipBorder.BrushKey);
 
 		[CanBeNull]
 		[Pure]
-		private static Brush GetAppBrush([NotNull] ThemeResourceKey brushKey)
+		private static Brush GetAppBrush([NotNull] Object brushKey)
 			=> Application.Current.Resources[brushKey] as Brush;
 
 		public TooltipFormattingProvider(
