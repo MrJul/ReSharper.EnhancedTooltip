@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.17.0
+- [Added] Support for ReSharper 2021.3.0 RTM.
+- [Added] Support for init property accessors.
+
 ## 3.16.0
 - [Added] Support for ReSharper 2021.1.2 RTM. (#165)
 
