@@ -31,9 +31,8 @@ internal class Build : NukeBuild {
 
 	[Parameter] public readonly string Configuration = IsLocalBuild ? Debug : Release;
 	[Parameter] public readonly string NuGetSource = "https://plugins.jetbrains.com/";
-	[Parameter] public readonly string NuGetApiKey;
-
-	[Solution] private readonly Solution _solution;
+	[Parameter] public readonly string NuGetApiKey = null!;
+	[Solution] public readonly Solution Solution = null!;
 
 	private const string MainProjectName = "GammaJul.ReSharper.EnhancedTooltip";
 
@@ -53,7 +52,7 @@ internal class Build : NukeBuild {
 		=> _ => _
 			.Executes(() => {
 				MSBuild(s => s
-					.SetTargetPath(_solution)
+					.SetTargetPath(Solution)
 					.SetTargets("Restore"));
 			});
 
@@ -62,7 +61,7 @@ internal class Build : NukeBuild {
 			.DependsOn(Restore)
 			.Executes(() => {
 				MSBuild(s => s
-					.SetTargetPath(_solution)
+					.SetTargetPath(Solution)
 					.SetTargets("Rebuild")
 					.SetConfiguration(Configuration)
 					.SetMaxCpuCount(Environment.ProcessorCount)
@@ -106,12 +105,13 @@ internal class Build : NukeBuild {
 						.SetApiKey(NuGetApiKey)));
 			});
 
-	private string GetReleaseVersion()
-		=> File.ReadAllLines(MainProjectDirectory / "Properties/AssemblyInfo.cs")
+	private string? GetReleaseVersion()
+		=> File.ReadAllLines(MainProjectDirectory / "Properties" / "AssemblyInfo.cs")
 			.Select(x => Regex.Match(x, @"^\[assembly: AssemblyVersion\(""([^""]*)""\)\]$"))
 			.Where(x => x.Success)
 			.Select(x => x.Groups[1].Value)
-			.FirstOrDefault();
+			.FirstOrDefault()
+			.NotNull("Couldn't find assembly version");
 
 	private static string GetReleaseNotes()
 		=> File.ReadAllLines(RootDirectory / "CHANGELOG.md")
@@ -123,8 +123,10 @@ internal class Build : NukeBuild {
 
 	private string GetWaveVersion()
 		=> NuGetPackageResolver.GetLocalInstalledPackages(MainProjectDirectory / (MainProjectName + ".csproj"))
-			.SingleOrDefault(x => x.Id == "Wave")
-			.NotNull("fullWaveVersion != null")
+			.Where(x => x.Id.EqualsOrdinalIgnoreCase("Wave"))
+			.OrderByDescending(x => x.Version.Version)
+			.FirstOrDefault()
+			.NotNull("Couldn't find Wave version")!
 			.Version
 			.Version
 			.ToString(2);
