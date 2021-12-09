@@ -11,8 +11,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 		protected override void AppendTooltip(IncorrectPropertyAccessorNameError highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("'");
 			colorizer.AppendKeyword("get");
-			colorizer.AppendPlainText("' or '");
+			colorizer.AppendPlainText("', '");
 			colorizer.AppendKeyword("set");
+			colorizer.AppendPlainText("' or '");
+			colorizer.AppendKeyword("init");
 			colorizer.AppendPlainText("' expected");
 		}
 

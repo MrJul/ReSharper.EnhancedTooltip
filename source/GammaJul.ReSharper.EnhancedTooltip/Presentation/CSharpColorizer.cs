@@ -1021,7 +1021,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (getter is not null)
 				AppendAccessor(getter, "get", propertyAccessRights, context);
 			if (setter is not null)
-				AppendAccessor(setter, "set", propertyAccessRights, context);
+				AppendAccessor(setter, setter.IsInitOnly ? "init" : "set", propertyAccessRights, context);
 			AppendText("}", null);
 		}
 
