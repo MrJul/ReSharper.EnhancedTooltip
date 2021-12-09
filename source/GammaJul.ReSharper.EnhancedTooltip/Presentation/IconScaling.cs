@@ -1,34 +1,26 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Documents;
-using System.Windows.Media;
-using JetBrains.Annotations;
 using JetBrains.Util;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public static class IconScaling {
 
-		[NotNull]
 		public static readonly DependencyProperty IsScalingWithFontSizeProperty = DependencyProperty.RegisterAttached(
 			"IsScalingWithFontSize",
 			typeof(bool),
 			typeof(IconScaling),
 			new FrameworkPropertyMetadata(BooleanBoxes.False, OnFontSizeForScaleChanged));
 
-		public static double GetIsScalingWithFontSize([NotNull] DependencyObject owner)
-			// ReSharper disable once PossibleNullReferenceException
+		public static double GetIsScalingWithFontSize(DependencyObject owner)
 			=> (double) owner.GetValue(IsScalingWithFontSizeProperty);
 
-		public static void SetIsScalingWithFontSize([NotNull] DependencyObject owner, bool value)
+		public static void SetIsScalingWithFontSize(DependencyObject owner, bool value)
 			=> owner.SetValue(IsScalingWithFontSizeProperty, value);
 
 		private static void OnFontSizeForScaleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-			if (!(d is FrameworkElement element))
-				return;
-
-			FontFamily fontFamily = TextElement.GetFontFamily(element);
-			if (fontFamily == null)
+			if (d is not FrameworkElement element || TextElement.GetFontFamily(element) is not { } fontFamily)
 				return;
 
 			double fontSize = TextElement.GetFontSize(element);

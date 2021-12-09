@@ -2,7 +2,6 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using JetBrains.Annotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
@@ -23,7 +22,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		
 		private double _width;
 		private Rect _rect = Rect.Empty;
-		[CanBeNull] private Pen _pen;
+		private Pen? _pen;
 
 		public override Geometry RenderedGeometry
 			=> DefiningGeometry;
@@ -32,7 +31,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			=> Transform.Identity;
 
 		protected override Size MeasureOverride(Size constraint)
-			=> new Size(0, StrokeThickness);
+			=> new(0, StrokeThickness);
 
 		protected override Size ArrangeOverride(Size finalSize) {
 			_width = Math.Max(0.0, finalSize.Width);
@@ -51,9 +50,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private Pen Pen
-			=> _pen ?? (_pen = CreatePen());
+			=> _pen ??= CreatePen();
 
-		[NotNull]
 		private Pen CreatePen() {
 			var pen = new Pen(Stroke, StrokeThickness) {
 				DashStyle = new DashStyle(new[] { 3.0, 3.0 }, 0.0)
@@ -62,7 +60,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return pen;
 		}
 
-		private static void OnPenChanged([CanBeNull] DependencyObject d, DependencyPropertyChangedEventArgs e) {
+		private static void OnPenChanged(DependencyObject? d, DependencyPropertyChangedEventArgs e) {
 			if (d is DashedSeparator dashedSeparator)
 				dashedSeparator._pen = null;
 		}

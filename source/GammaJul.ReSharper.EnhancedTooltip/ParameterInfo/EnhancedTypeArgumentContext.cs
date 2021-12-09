@@ -1,5 +1,4 @@
 ﻿using GammaJul.ReSharper.EnhancedTooltip.Presentation;
-using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo;
 
@@ -11,18 +10,18 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	/// </summary>
 	public class EnhancedTypeArgumentContext : EnhancedContext<TypeArgumentCandidate> {
 
-		[NotNull] private readonly IContextBoundSettingsStore _settings;
-		[NotNull] private readonly HighlighterIdProviderFactory _highlighterIdProviderFactory;
-		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
+		private readonly IContextBoundSettingsStore _settings;
+		private readonly HighlighterIdProviderFactory _highlighterIdProviderFactory;
+		private readonly ColorizerPresenter _colorizerPresenter;
 		
 		protected override EnhancedCandidate<TypeArgumentCandidate> Enhance(TypeArgumentCandidate candidate)
 			=> new EnhancedTypeArgumentCandidate(candidate, _settings, _highlighterIdProviderFactory, _colorizerPresenter);
 
 		public EnhancedTypeArgumentContext(
-			[NotNull] IParameterInfoContext context,
-			[NotNull] IContextBoundSettingsStore settings,
-			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory,
-			[NotNull] ColorizerPresenter colorizerPresenter)
+			IParameterInfoContext context,
+			IContextBoundSettingsStore settings,
+			HighlighterIdProviderFactory highlighterIdProviderFactory,
+			ColorizerPresenter colorizerPresenter)
 			: base(context) {
 			_settings = settings;
 			_highlighterIdProviderFactory = highlighterIdProviderFactory;

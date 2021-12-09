@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.Application.Settings.Upgrade;
 #pragma warning disable 618
@@ -16,7 +15,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			yield return schema.GetEntry((IdentifierTooltipSettings s) => s.ShowImplementedInterfaces);
 		}
 
-		public IEnumerable<SettingsKey> GetKeysToMigrate(ISettingsSchema schema)
+		public IEnumerable<SettingsKey>? GetKeysToMigrate(ISettingsSchema schema)
 			=> null;
 
 		public void Migrate(IContextBoundSettingsStoreImplementation store) {
@@ -25,9 +24,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		}
 
 		private static void MigrateValue<TDisplayKind>(
-			[NotNull] IContextBoundSettingsStore store,
-			[NotNull] Expression<Func<IdentifierTooltipSettings, bool>> oldSettingExpr,
-			[NotNull] Expression<Func<IdentifierTooltipSettings, TDisplayKind>> newSettingExpr,
+			IContextBoundSettingsStore store,
+			Expression<Func<IdentifierTooltipSettings, bool>> oldSettingExpr,
+			Expression<Func<IdentifierTooltipSettings, TDisplayKind>> newSettingExpr,
 			TDisplayKind trueValue,
 			TDisplayKind falseValue)
 		where TDisplayKind : struct {

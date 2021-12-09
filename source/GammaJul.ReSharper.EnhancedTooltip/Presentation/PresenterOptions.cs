@@ -1,5 +1,4 @@
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
-using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo.Settings;
 
@@ -69,8 +68,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public bool UseTypeKeywords { get; private set; }
 
-		[NotNull]
-		public static PresenterOptions ForIdentifierToolTip([NotNull] IContextBoundSettingsStore settings, bool showElementType)
+		public static PresenterOptions ForIdentifierToolTip(IContextBoundSettingsStore settings, bool showElementType)
 			=> new PresenterOptions {
 				AttributesFormattingMode = settings.GetValue((IdentifierTooltipSettings s) => s.AttributesFormattingMode),
 				ExternalCodeNamespaceDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.ExternalCodeNamespaceDisplayKind),
@@ -105,8 +103,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
 			};
 
-		[NotNull]
-		public static PresenterOptions ForArgumentRoleParametersOwnerToolTip([NotNull] IContextBoundSettingsStore settings)
+		public static PresenterOptions ForArgumentRoleParametersOwnerToolTip(IContextBoundSettingsStore settings)
 			=> new PresenterOptions {
 				AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 				ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
@@ -141,8 +138,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
 			};
 
-		[NotNull]
-		public static PresenterOptions ForArgumentRoleParameterToolTip([NotNull] IContextBoundSettingsStore settings)
+		public static PresenterOptions ForArgumentRoleParameterToolTip(IContextBoundSettingsStore settings)
 			=> new PresenterOptions {
 				AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 				ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
@@ -177,8 +173,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseTypeKeywords = settings.GetValue((IdentifierTooltipSettings s) => s.UseTypeKeywords)
 			};
 
-		[NotNull]
-		public static PresenterOptions ForParameterInfo([NotNull] IContextBoundSettingsStore settings, AttributesDisplayKind attributesDisplayKind)
+		public static PresenterOptions ForParameterInfo(IContextBoundSettingsStore settings, AttributesDisplayKind attributesDisplayKind)
 			=> new PresenterOptions {
 				AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 				ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
@@ -213,8 +208,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseTypeKeywords = settings.GetValue((ParameterInfoSettings s) => s.UseTypeKeywords)
 			};
 
-		[NotNull]
-		public static PresenterOptions ForTypeArgumentInfo([NotNull] IContextBoundSettingsStore settings, AttributesDisplayKind attributesDisplayKind)
+		public static PresenterOptions ForTypeArgumentInfo(IContextBoundSettingsStore settings, AttributesDisplayKind attributesDisplayKind)
 			=> new PresenterOptions {
 				AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 				ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Always,
@@ -249,8 +243,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseTypeKeywords = settings.GetValue((ParameterInfoSettings s) => s.UseTypeKeywords)
 			};
 
-		[NotNull]
-		public static PresenterOptions ForBaseTypeOrImplementedInterfaceTooltip([NotNull] IContextBoundSettingsStore settings)
+		public static PresenterOptions ForBaseTypeOrImplementedInterfaceTooltip(IContextBoundSettingsStore settings)
 			=> new PresenterOptions {
 				AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 				ExternalCodeNamespaceDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.ExternalCodeNamespaceDisplayKind),
@@ -285,7 +278,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				UseTypeKeywords = true
 			};
 
-		[NotNull]
 		public static readonly PresenterOptions FullWithoutParameterNames = new PresenterOptions {
 			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Always,
@@ -320,7 +312,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseTypeKeywords = true
 		};
 
-		[NotNull]
 		public static readonly PresenterOptions QualifiedMember = new PresenterOptions {
 			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Always,
@@ -355,7 +346,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseTypeKeywords = true
 		};
 
-		[NotNull]
 		public static readonly PresenterOptions QualifiedName = new PresenterOptions {
 			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Always,
@@ -390,7 +380,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseTypeKeywords = true
 		};
 		
-		[NotNull]
 		public static readonly PresenterOptions ForInterfaceMember = new PresenterOptions {
 			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
@@ -425,7 +414,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseTypeKeywords = true
 		};
 
-		[NotNull]
 		public static readonly PresenterOptions NameOnly = new PresenterOptions {
 			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
@@ -460,7 +448,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseTypeKeywords = true
 		};
 
-		[NotNull]
 		public static readonly PresenterOptions ParameterTypesOnly = new PresenterOptions {
 			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
@@ -495,9 +482,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			UseTypeKeywords = true
 		};
 
-		[NotNull]
-		public static readonly PresenterOptions ElementTypeOnly = new PresenterOptions
-		{
+		public static readonly PresenterOptions ElementTypeOnly = new PresenterOptions {
 			AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
 			ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
 			FormatDelegatesAsLambdas = false,

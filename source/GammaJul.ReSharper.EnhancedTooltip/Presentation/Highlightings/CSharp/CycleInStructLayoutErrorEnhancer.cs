@@ -1,9 +1,7 @@
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Psi;
-using JetBrains.Annotations;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
@@ -15,9 +13,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 	internal sealed class CycleInStructLayoutErrorEnhancer : CSharpHighlightingEnhancer<CycleInStructLayoutError> {
 
 		protected override void AppendTooltip(CycleInStructLayoutError highlighting, CSharpColorizer colorizer) {
-			IClassMemberDeclaration declaration = highlighting.Declaration as IClassMemberDeclaration;
-			ITypeMember declaredElement = declaration?.DeclaredElement;
-			if (declaredElement == null)
+			IClassMemberDeclaration? declaration = highlighting.Declaration as IClassMemberDeclaration;
+			if (declaration?.DeclaredElement is not { } declaredElement)
 				return;
 
 			colorizer.AppendPlainText(declaredElement.GetElementKindString(false, false, false, false, false).Capitalize());
@@ -29,9 +26,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 		}
 		
 		public CycleInStructLayoutErrorEnhancer(
-			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
-			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
-			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)
+			TextStyleHighlighterManager textStyleHighlighterManager,
+			CodeAnnotationsConfiguration codeAnnotationsConfiguration,
+			HighlighterIdProviderFactory highlighterIdProviderFactory)
 			: base(textStyleHighlighterManager, codeAnnotationsConfiguration, highlighterIdProviderFactory) {
 		}
 

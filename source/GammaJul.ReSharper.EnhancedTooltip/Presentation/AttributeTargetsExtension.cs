@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Text;
-using JetBrains.Annotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	internal static class AttributeTargetsExtension {
 
-		[NotNull]
 		public static string ToHumanReadableString(this AttributeTargets targets) {
 			if (targets == 0)
 				return "Nowhere";
@@ -32,7 +30,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return builder.Length > 0 ? builder.ToString() : "Unknown";
 		}
 
-		private static void AppendTarget([NotNull] StringBuilder builder, AttributeTargets currentTargets, AttributeTargets expectedTarget, [NotNull] string display) {
+		private static void AppendTarget(StringBuilder builder, AttributeTargets currentTargets, AttributeTargets expectedTarget, string display) {
 			if ((currentTargets & expectedTarget) == expectedTarget) {
 				if (builder.Length > 0)
 					builder.Append(", ");

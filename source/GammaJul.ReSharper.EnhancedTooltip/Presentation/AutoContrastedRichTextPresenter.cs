@@ -8,9 +8,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	/// </summary>
 	public class AutoContrastedRichTextPresenter : RichTextPresenter {
 
-		public AutoContrastedRichTextPresenter() {
-			IsAutoContrasted = true;
-		}
+		public AutoContrastedRichTextPresenter()
+			=> IsAutoContrasted = true;
 
 	}
 

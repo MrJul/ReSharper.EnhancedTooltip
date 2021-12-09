@@ -22,138 +22,101 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	public static class Styling {
 
 		private sealed class OriginalStyles {
-			[CanBeNull] public Style Style { get; set; }
-			[CanBeNull] public Style ItemContainerStyle { get; set; }
-			[CanBeNull] public DataTemplate ItemTemplate { get; set; }
+			public Style? Style { get; set; }
+			public Style? ItemContainerStyle { get; set; }
+			public DataTemplate? ItemTemplate { get; set; }
 		}
 
-		[NotNull]
 		public static readonly DependencyProperty ShouldStyleParentListBoxProperty = DependencyProperty.RegisterAttached(
 			"ShouldStyleParentListBox",
 			typeof(bool),
 			typeof(Styling),
 			new FrameworkPropertyMetadata(BooleanBoxes.False, OnShouldStyleParentListBoxChanged));
 
-		[NotNull]
 		public static readonly DependencyProperty ItemTemplateBackgroundProperty = DependencyProperty.RegisterAttached(
 			"ItemTemplateBackground",
 			typeof(Brush),
 			typeof(Styling),
 			new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
-		[NotNull]
 		public static readonly DependencyProperty ItemTemplateBorderBrushProperty = DependencyProperty.RegisterAttached(
 			"ItemTemplateBorderBrush",
 			typeof(Brush),
 			typeof(Styling),
 			new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
 
-		[NotNull]
 		public static readonly DependencyProperty DocumentProperty = DependencyProperty.RegisterAttached(
 			"Document",
 			typeof(WeakReference<IDocument>),
 			typeof(Styling),
 			new FrameworkPropertyMetadata(null));
 
-		[NotNull]
 		private static readonly DependencyProperty _originalStylesProperty = DependencyProperty.RegisterAttached(
 			"OriginalStyles",
 			typeof(OriginalStyles),
 			typeof(Styling),
 			new FrameworkPropertyMetadata(null));
 
-		public static bool GetShouldStyleParentListBox([NotNull] DependencyObject owner) {
-			if (owner == null)
-				throw new ArgumentNullException(nameof(owner));
-			return (bool) owner.GetValue(ShouldStyleParentListBoxProperty);
-		}
+		public static bool GetShouldStyleParentListBox(DependencyObject owner)
+			=> (bool) owner.GetValue(ShouldStyleParentListBoxProperty);
 
-		public static void SetShouldStyleParentListBox([NotNull] DependencyObject owner, bool value) {
-			if (owner == null)
-				throw new ArgumentNullException(nameof(owner));
-			owner.SetValue(ShouldStyleParentListBoxProperty, value);
-		}
+		public static void SetShouldStyleParentListBox(DependencyObject owner, bool value)
+			=> owner.SetValue(ShouldStyleParentListBoxProperty, value);
 
-		[CanBeNull]
-		public static Brush GetItemTemplateBackground([NotNull] DependencyObject owner) {
-			if (owner == null)
-				throw new ArgumentNullException(nameof(owner));
-			return (Brush) owner.GetValue(ItemTemplateBackgroundProperty);
-		}
+		public static Brush? GetItemTemplateBackground(DependencyObject owner)
+			=> (Brush?) owner.GetValue(ItemTemplateBackgroundProperty);
 
-		public static void SetItemTemplateBackground([NotNull] DependencyObject owner, [CanBeNull] Brush value) {
-			if (owner == null)
-				throw new ArgumentNullException(nameof(owner));
-			owner.SetValue(ItemTemplateBackgroundProperty, value);
-		}
+		public static void SetItemTemplateBackground(DependencyObject owner, Brush? value)
+			=> owner.SetValue(ItemTemplateBackgroundProperty, value);
 
-		[CanBeNull]
-		public static Brush GetItemTemplateBorderBrush([NotNull] DependencyObject owner) {
-			if (owner == null)
-				throw new ArgumentNullException(nameof(owner));
-			return (Brush) owner.GetValue(ItemTemplateBorderBrushProperty);
-		}
+		public static Brush? GetItemTemplateBorderBrush(DependencyObject owner)
+			=> (Brush?) owner.GetValue(ItemTemplateBorderBrushProperty);
 
-		public static void SetItemTemplateBorderBrush([NotNull] DependencyObject owner, [CanBeNull] Brush value) {
-			if (owner == null)
-				throw new ArgumentNullException(nameof(owner));
-			owner.SetValue(ItemTemplateBorderBrushProperty, value);
-		}
+		public static void SetItemTemplateBorderBrush(DependencyObject owner, Brush? value)
+			=> owner.SetValue(ItemTemplateBorderBrushProperty, value);
 
-		[CanBeNull]
-		public static WeakReference<IDocument> GetDocument([NotNull] DependencyObject owner) {
-			if (owner == null)
-				throw new ArgumentNullException(nameof(owner));
-			return (WeakReference<IDocument>) owner.GetValue(DocumentProperty);
-		}
+		public static WeakReference<IDocument>? GetDocument(DependencyObject owner)
+			=> (WeakReference<IDocument>?) owner.GetValue(DocumentProperty);
 
-		public static void SetDocument([NotNull] DependencyObject owner, [CanBeNull] WeakReference<IDocument> value) {
-			if (owner == null)
-				throw new ArgumentNullException(nameof(owner));
-			owner.SetValue(DocumentProperty, value);
-		}
+		public static void SetDocument(DependencyObject owner, WeakReference<IDocument?>? value)
+			=> owner.SetValue(DocumentProperty, value);
 
 		private static void OnShouldStyleParentListBoxChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
-			if (!(bool) e.NewValue)
+			if (!(bool) e.NewValue || d is not FrameworkElement element)
 				return;
 
-			var element = d as FrameworkElement;
-
-			element?.WhenLoaded(_ => {
-
+			element.WhenLoaded(_ => {
 				// We're styling the parent VS ListBox included inside the tooltip.
-				if (!(element.FindVisualAncestor(o => o is ItemsControl ic && IsToolTipItemsControl(ic)) is ItemsControl itemsControl)
-				|| itemsControl.GetValue(_originalStylesProperty) != null)
+				if (element.FindVisualAncestor(o => o is ItemsControl ic && IsToolTipItemsControl(ic)) is not ItemsControl itemsControl
+				|| itemsControl.GetValue(_originalStylesProperty) is not null)
 					return;
 
-				IDocument document = null;
+				IDocument? document = null;
 				GetDocument(element)?.TryGetTarget(out document);
 
 				SetItemsControlStyle(itemsControl, document);
 
-				void OnItemsControlUnloaded(object sender, RoutedEventArgs args) {
+				void OnItemsControlUnloaded(object? sender, RoutedEventArgs args) {
 					itemsControl.Unloaded -= OnItemsControlUnloaded;
 					RestoreOriginalStyles(itemsControl);
 				}
 
 				itemsControl.Unloaded += OnItemsControlUnloaded;
-
 			});
 		}
 
 		[Pure]
-		private static bool IsToolTipItemsControl([NotNull] ItemsControl itemsControl) {
-			string typeFullName = itemsControl.GetType().FullName;
-			return typeFullName == "System.Windows.Controls.ListBox" // Pre VS 15.6
-				|| typeFullName == "Microsoft.VisualStudio.Text.AdornmentLibrary.ToolTip.Implementation.WpfToolTipItemsControl"; // VS 15.6
-		}
+		private static bool IsToolTipItemsControl(ItemsControl itemsControl)
+			=> itemsControl.GetType().FullName
+				is "System.Windows.Controls.ListBox" // Pre VS 15.6
+				or "Microsoft.VisualStudio.Text.AdornmentLibrary.ToolTip.Implementation.WpfToolTipItemsControl"; // VS 15.6
 
 		[Pure]
-		private static bool IsToolTipRootControl([NotNull] UserControl userControl)
+		private static bool IsToolTipRootControl(UserControl userControl)
 			=> userControl.GetType().FullName == "Microsoft.VisualStudio.Text.AdornmentLibrary.ToolTip.Implementation.WpfToolTipControl"; // VS 15.8
 
-		private static void SetItemsControlStyle([NotNull] ItemsControl itemsControl, [CanBeNull] IDocument document) {
-			if (!(itemsControl.GetValue(_originalStylesProperty) is OriginalStyles)) {
+		private static void SetItemsControlStyle(ItemsControl itemsControl, IDocument? document) {
+			if (itemsControl.GetValue(_originalStylesProperty) is not OriginalStyles) {
 				itemsControl.SetValue(_originalStylesProperty, new OriginalStyles {
 					Style = itemsControl.Style,
 					ItemContainerStyle = itemsControl.ItemContainerStyle,
@@ -161,7 +124,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				});
 			}
 
-			IContextBoundSettingsStore settings = document.TryGetSettings();
+			IContextBoundSettingsStore? settings = document.TryGetSettings();
 
 			bool isLegacy = itemsControl is ListBox;
 			itemsControl.Style = UIResources.Instance.QuickInfoListBoxStyle;
@@ -176,7 +139,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				SetRootControlTemplate(rootControl);
 		}
 
-		private static void SetRootControlTemplate([NotNull] UserControl rootControl) {
+		private static void SetRootControlTemplate(UserControl rootControl) {
 			ControlTemplate originalTemplate = rootControl.Template;
 
 			void OnRootControlUnloaded(object sender, RoutedEventArgs args) {
@@ -188,8 +151,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			rootControl.Template = UIResources.Instance.QuickInfoRootControlTemplate;
 		}
 
-		[NotNull]
-		private static Style CreateItemContainerStyle([CanBeNull] IContextBoundSettingsStore settings, bool forListBoxItem) {
+		private static Style CreateItemContainerStyle(IContextBoundSettingsStore? settings, bool forListBoxItem) {
 			var itemContainerStyle = new Style(forListBoxItem ? typeof(ListBoxItem) : typeof(ContentPresenter));
 			itemContainerStyle.Setters.Add(new Setter(FrameworkElement.MarginProperty, new Thickness(0.0, 0.0, 0.0, 2.0)));
 
@@ -200,23 +162,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 
 			if (Shell.HasInstance) {
-				var tooltipFormattingProvider = Shell.Instance.TryGetComponent<TooltipFormattingProvider>();
-				if (tooltipFormattingProvider != null) {
-
+				if (Shell.Instance.TryGetComponent<TooltipFormattingProvider>() is { } tooltipFormattingProvider) {
 					var colorSource = settings?.GetValue((DisplaySettings s) => s.TooltipColorSource) ?? TooltipColorSource.TextEditorSettings;
 
-					var background = tooltipFormattingProvider.TryGetBackground(colorSource);
-					if (background != null)
+					if (tooltipFormattingProvider.TryGetBackground(colorSource) is { } background)
 						itemContainerStyle.Setters.Add(new Setter(ItemTemplateBackgroundProperty, background));
 
-					var borderBrush = tooltipFormattingProvider.TryGetBorderBrush();
-					if (borderBrush != null)
+					if (tooltipFormattingProvider.TryGetBorderBrush() is { } borderBrush)
 						itemContainerStyle.Setters.Add(new Setter(ItemTemplateBorderBrushProperty, borderBrush));
 
-					var foreground = tooltipFormattingProvider.TryGetForeground(colorSource);
-					if (foreground != null)
+					if (tooltipFormattingProvider.TryGetForeground(colorSource) is { } foreground)
 						itemContainerStyle.Setters.Add(new Setter(TextElement.ForegroundProperty, foreground));
-
 				}
 			}
 
@@ -224,25 +180,24 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return itemContainerStyle;
 		}
 
-		private static unsafe double ComputeItemsControlMaxWidth([NotNull] ItemsControl itemsControl, [CanBeNull] IContextBoundSettingsStore settings) {
-			if (settings == null
+		private static unsafe double ComputeItemsControlMaxWidth(ItemsControl itemsControl, IContextBoundSettingsStore? settings) {
+			if (settings is null
 			|| !settings.GetValue((DisplaySettings s) => s.LimitTooltipWidth)
-			|| !(PresentationSource.FromVisual(itemsControl) is HwndSource hwndSource))
+			|| PresentationSource.FromVisual(itemsControl) is not HwndSource hwndSource)
 				return Double.PositiveInfinity;
 
 			int limitPercent = settings.GetValue((DisplaySettings s) => s.ScreenWidthLimitPercent).Clamp(10, 100);
 			IntPtr handle = hwndSource.Handle;
-			// ReSharper disable once AssignNullToNotNullAttribute
 			double dpiFactor = DpiUtil.GetWindowScreenDpiCurrent((void*) handle).DpiX / DpiResolution.DeviceIndependent96DpiValue;
 			var screenBounds = ScreenUtil.GetBounds(handle);
 			return screenBounds.Width * (limitPercent / 100.0) / dpiFactor;
 		}
 
-		private static TextFormattingMode GetTextFormattingMode([CanBeNull] IContextBoundSettingsStore settings)
+		private static TextFormattingMode GetTextFormattingMode(IContextBoundSettingsStore? settings)
 			=> settings?.GetValue((DisplaySettings s) => s.TextFormattingMode) ?? TextFormattingMode.Ideal;
 
-		private static void RestoreOriginalStyles([NotNull] ItemsControl listBox) {
-			if (!(listBox.GetValue(_originalStylesProperty) is OriginalStyles originalStyles))
+		private static void RestoreOriginalStyles(ItemsControl listBox) {
+			if (listBox.GetValue(_originalStylesProperty) is not OriginalStyles originalStyles)
 				return;
 
 			listBox.ClearValue(_originalStylesProperty);

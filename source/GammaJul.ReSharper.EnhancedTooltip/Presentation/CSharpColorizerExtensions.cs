@@ -1,7 +1,6 @@
 using GammaJul.ReSharper.EnhancedTooltip.Psi;
 using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Resolve;
 
@@ -9,35 +8,35 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	internal static class CSharpColorizerExtensions {
 
-		public static void AppendPlainText([NotNull] this CSharpColorizer colorizer, [CanBeNull] string text)
+		public static void AppendPlainText(this CSharpColorizer colorizer, string? text)
 			=> colorizer.AppendText(text, null);
 
-		public static void AppendKeyword([NotNull] this CSharpColorizer colorizer, [CanBeNull] string keyword)
+		public static void AppendKeyword(this CSharpColorizer colorizer, string? keyword)
 			=> colorizer.AppendText(keyword, colorizer.HighlighterIdProvider.Keyword);
 
-		public static void AppendOperator([NotNull] this CSharpColorizer colorizer, [CanBeNull] string @operator)
+		public static void AppendOperator(this CSharpColorizer colorizer, string? @operator)
 			=> colorizer.AppendText(@operator, colorizer.HighlighterIdProvider.Operator);
 
-		public static void AppendNamespaceName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string className)
+		public static void AppendNamespaceName(this CSharpColorizer colorizer, string? className)
 			=> colorizer.AppendText(className, colorizer.HighlighterIdProvider.Namespace);
 
-		public static void AppendClassName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string className)
+		public static void AppendClassName(this CSharpColorizer colorizer, string? className)
 			=> colorizer.AppendText(className, colorizer.HighlighterIdProvider.Class);
 
-		public static void AppendInterfaceName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string interfaceName)
+		public static void AppendInterfaceName(this CSharpColorizer colorizer, string? interfaceName)
 			=> colorizer.AppendText(interfaceName, colorizer.HighlighterIdProvider.Interface);
 
-		public static void AppendMethodName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string methodName)
+		public static void AppendMethodName(this CSharpColorizer colorizer, string? methodName)
 			=> colorizer.AppendText(methodName, colorizer.HighlighterIdProvider.Method);
 
-		public static void AppendAccessorName([NotNull] this CSharpColorizer colorizer, [CanBeNull] string accessorName)
+		public static void AppendAccessorName(this CSharpColorizer colorizer, string? accessorName)
 			=> colorizer.AppendText(accessorName, colorizer.HighlighterIdProvider.Accessor);
 
-		public static void AppendElementKind([NotNull] this CSharpColorizer colorizer, [CanBeNull] IDeclaredElement element)
+		public static void AppendElementKind(this CSharpColorizer colorizer, IDeclaredElement? element)
 			=> colorizer.AppendText(element.GetElementKindString(false, false, false, false, false), null);
 
-		public static void AppendCandidates([NotNull] this CSharpColorizer colorizer, [CanBeNull] IReference reference) {
-			if (reference == null)
+		public static void AppendCandidates(this CSharpColorizer colorizer, IReference? reference) {
+			if (reference is null)
 				return;
 
 			IResolveResult resolveResult = reference.Resolve().Result;
@@ -51,7 +50,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 		}
 
-		public static void AppendParameterKind([NotNull] this CSharpColorizer colorizer, ParameterKind parameterKind) {
+		public static void AppendParameterKind(this CSharpColorizer colorizer, ParameterKind parameterKind) {
 			switch (parameterKind) {
 				case ParameterKind.VALUE:
 					colorizer.AppendPlainText("value");
@@ -71,7 +70,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 		}
 
-		public static void AppendAccessorKind([NotNull] this CSharpColorizer colorizer, AccessorKind accessorKind) {
+		public static void AppendAccessorKind(this CSharpColorizer colorizer, AccessorKind accessorKind) {
 			switch (accessorKind) {
 				case AccessorKind.ADDER:
 					colorizer.AppendKeyword("add");

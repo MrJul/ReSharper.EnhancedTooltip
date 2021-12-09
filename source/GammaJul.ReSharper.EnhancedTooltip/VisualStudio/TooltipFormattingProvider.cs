@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Media;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
@@ -15,43 +15,39 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 	[ShellComponent]
 	public class TooltipFormattingProvider {
 
-		[NotNull] [ItemCanBeNull] private readonly Lazy<IClassificationFormatMap> _lazyTooltipFormatMap;
-		[NotNull] [ItemCanBeNull] private readonly Lazy<IClassificationFormatMap> _lazyTextFormatMap;
-		[NotNull] [ItemCanBeNull] private readonly Lazy<ResourceDictionary> _lazyTextViewBackgroundResources;
+		private readonly Lazy<IClassificationFormatMap?> _lazyTooltipFormatMap;
+		private readonly Lazy<IClassificationFormatMap?> _lazyTextFormatMap;
+		private readonly Lazy<ResourceDictionary?> _lazyTextViewBackgroundResources;
 
-		[NotNull]
 		public TextFormattingRunProperties GetTooltipFormatting()
 			=> _lazyTooltipFormatMap.Value?.DefaultTextProperties ?? TextFormattingRunProperties.CreateTextFormattingRunProperties();
 
-		[CanBeNull]
-		public Brush TryGetBackground(TooltipColorSource colorSource) {
+		public Brush? TryGetBackground(TooltipColorSource colorSource) {
 			if (colorSource == TooltipColorSource.EnvironmentSettings)
 				return GetAppBrush(ThemeColor.TooltipBackground.BrushKey);
 
 			return _lazyTextViewBackgroundResources.Value?["Background"] as Brush;
 		}
 
-		[CanBeNull]
-		public Brush TryGetForeground(TooltipColorSource colorSource) {
+		public Brush? TryGetForeground(TooltipColorSource colorSource) {
 			if (colorSource == TooltipColorSource.EnvironmentSettings)
 				return GetAppBrush(ThemeColor.TooltipForeground.BrushKey);
 
-			TextFormattingRunProperties textProperties = _lazyTextFormatMap.Value?.DefaultTextProperties;
-			return textProperties == null || textProperties.ForegroundBrushEmpty ? null : textProperties.ForegroundBrush;
+			return _lazyTextFormatMap.Value?.DefaultTextProperties is { ForegroundBrushEmpty: false } textProperties 
+				? textProperties.ForegroundBrush 
+				: null;
 		}
 
-		[CanBeNull]
-		public Brush TryGetBorderBrush()
+		public Brush? TryGetBorderBrush()
 			=> GetAppBrush(ThemeColor.TooltipBorder.BrushKey);
 
-		[CanBeNull]
 		[Pure]
-		private static Brush GetAppBrush([NotNull] Object brushKey)
+		private static Brush? GetAppBrush(Object brushKey)
 			=> Application.Current.Resources[brushKey] as Brush;
 
 		public TooltipFormattingProvider(
-			[NotNull] Lazy<Optional<IClassificationFormatMapService>> lazyFormatMapService,
-			[NotNull] Lazy<Optional<IEditorFormatMapService>> lazyEditorFormatMapService) {
+			Lazy<Optional<IClassificationFormatMapService>> lazyFormatMapService,
+			Lazy<Optional<IEditorFormatMapService>> lazyEditorFormatMapService) {
 			_lazyTooltipFormatMap = Lazy.Of(
 				() => lazyFormatMapService.Value.CanBeNull?.GetClassificationFormatMap("tooltip"),
 				true);

@@ -2,7 +2,6 @@ using System;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using JetBrains.Annotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
@@ -10,17 +9,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public double Scale { get; set; } = 1.0;
 		
-		[CanBeNull]
-		private static object ScaleDouble([CanBeNull] object value, double scale) {
-			if (!(value is double))
-				return DependencyProperty.UnsetValue;
-			return ((double) value) * scale;
-		}
+		private static object ScaleDouble(object? value, double scale)
+			=> value is double d ? d * scale : DependencyProperty.UnsetValue;
 
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		public object Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
 			=> ScaleDouble(value, Scale);
 
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
 			=> ScaleDouble(value, 1.0 / Scale);
 
 	}

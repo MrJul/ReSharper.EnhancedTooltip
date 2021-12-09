@@ -1,16 +1,13 @@
 ﻿using System.Collections.Generic;
-using JetBrains.Annotations;
 using JetBrains.Util;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
-	public class PresentedInfo {
+	public sealed class PresentedInfo {
 
-		[NotNull]
-		public List<TextRange> Parameters { get; } = new List<TextRange>();
+		public List<TextRange> Parameters { get; } = new();
 
-		[NotNull]
-		public List<TextRange> TypeParameters { get; } = new List<TextRange>();
+		public List<TextRange> TypeParameters { get; } = new();
 
 		public bool IsExtensionMethod { get; set; }
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo;
 using JetBrains.Util;
 
@@ -9,12 +8,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	public abstract class EnhancedContext<TCandidate> : IParameterInfoContext
 	where TCandidate : class, ICandidate {
 
-		[NotNull] private readonly IParameterInfoContext _context;
-		[CanBeNull] private ICandidate[] _candidates;
-		[CanBeNull] private ICandidate _defaultCandidate;
+		private readonly IParameterInfoContext _context;
+		private ICandidate[]? _candidates;
+		private ICandidate? _defaultCandidate;
 
-		[NotNull]
-		private ICandidate[] Enhance([NotNull] ICandidate[] candidates) {
+		private ICandidate[] Enhance(ICandidate[] candidates) {
 			int length = candidates.Length;
 			var wrappedCandidates = new ICandidate[length];
 			for (int i = 0; i < length; i++)
@@ -22,28 +20,24 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			return wrappedCandidates;
 		}
 
-		[NotNull]
-		private ICandidate Enhance([NotNull] ICandidate candidate)
+		private ICandidate Enhance(ICandidate candidate)
 			=> candidate is TCandidate typedCandidate
 			? Enhance(typedCandidate)
 			: candidate;
 
-		[NotNull]
-		protected abstract EnhancedCandidate<TCandidate> Enhance([NotNull] TCandidate candidate);
+		protected abstract EnhancedCandidate<TCandidate> Enhance(TCandidate candidate);
 
 		public int Argument
 			=> _context.Argument;
 
 		public ICandidate[] Candidates
-			=> _candidates ?? (_candidates = Enhance(_context.Candidates));
+			=> _candidates ??= Enhance(_context.Candidates);
 
-		public ICandidate DefaultCandidate
-			=> _defaultCandidate ?? (_defaultCandidate = FindDefaultCandidate());
+		public ICandidate? DefaultCandidate
+			=> _defaultCandidate ??= FindDefaultCandidate();
 
-		[CanBeNull]
-		private ICandidate FindDefaultCandidate() {
-			ICandidate candidateToFind = _context.DefaultCandidate;
-			if (candidateToFind == null)
+		private ICandidate? FindDefaultCandidate() {
+			if (_context.DefaultCandidate is not { } candidateToFind)
 				return null;
 
 			foreach (ICandidate candidate in Candidates) {
@@ -72,7 +66,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public TextRange Range
 			=> _context.Range;
 
-		protected EnhancedContext([NotNull] IParameterInfoContext context) {
+		protected EnhancedContext(IParameterInfoContext context) {
 			_context = context;
 		}
 

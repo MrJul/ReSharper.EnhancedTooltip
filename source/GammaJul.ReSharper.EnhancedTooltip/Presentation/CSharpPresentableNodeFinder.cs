@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
@@ -14,8 +13,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	[Language(typeof(CSharpLanguage))]
 	internal sealed class CSharpPresentableNodeFinder : IPresentableNodeFinder {
 
-		public DeclaredElementInstance FindDeclaredElement(ITreeNode node, IFile file, out TextRange sourceRange) {
-			TokenNodeType tokenType = node.GetTokenType();
+		public DeclaredElementInstance? FindDeclaredElement(ITreeNode node, IFile file, out TextRange sourceRange) {
+			TokenNodeType? tokenType = node.GetTokenType();
 
 			if (tokenType == CSharpTokenType.VAR_KEYWORD)
 				return FindElementFromVarKeyword(node, file, out sourceRange);
@@ -27,65 +26,52 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return null;
 		}
 
-		[CanBeNull]
-		private static DeclaredElementInstance FindElementFromVarKeyword([NotNull] ITreeNode varKeyword, [NotNull] IFile file, out TextRange sourceRange) {
+		private static DeclaredElementInstance? FindElementFromVarKeyword(ITreeNode varKeyword, IFile file, out TextRange sourceRange) {
 			sourceRange = TextRange.InvalidRange;
 
-			IDeclaredElement declaredElement = (varKeyword.Parent as IMultipleLocalVariableDeclaration)
+			IDeclaredElement? declaredElement = (varKeyword.Parent as IMultipleLocalVariableDeclaration)
 				?.DeclaratorsEnumerable
 				.FirstOrDefault()
 				?.DeclaredElement;
 
-			if (declaredElement == null)
+			if (declaredElement is null)
 				return null;
 
 			sourceRange = file.GetDocumentRange(varKeyword.GetTreeTextRange()).TextRange;
 			return new DeclaredElementInstance(declaredElement, EmptySubstitution.INSTANCE);
 		}
 
-		[CanBeNull]
-		private static DeclaredElementInstance FindElementFromNewKeyword([NotNull] ITreeNode newKeyword, [NotNull] IFile file, out TextRange sourceRange) {
+		private static DeclaredElementInstance? FindElementFromNewKeyword(ITreeNode newKeyword, IFile file, out TextRange sourceRange) {
+			if (newKeyword.Parent is IObjectCreationExpression creation
+			&& (TryResolveReference(creation.ConstructorReference) ?? TryResolveReference(creation.TypeReference)) is { } instance) {
+				sourceRange = file.GetDocumentRange(newKeyword.GetTreeTextRange()).TextRange;
+				return instance;
+			}
+
 			sourceRange = TextRange.InvalidRange;
-
-			if (!(newKeyword.Parent is IObjectCreationExpression creation))
-				return null;
-
-			DeclaredElementInstance instance = TryResolveReference(creation.ConstructorReference) ?? TryResolveReference(creation.TypeReference);
-			if (instance == null)
-				return null;
-
-			sourceRange = file.GetDocumentRange(newKeyword.GetTreeTextRange()).TextRange;
-			return instance;
-		}
-
-		[CanBeNull]
-		private static DeclaredElementInstance TryResolveReference([CanBeNull] IReference reference) {
-			IResolveResult resolveResult = reference?.Resolve().Result;
-			if (resolveResult?.DeclaredElement != null)
-				return new DeclaredElementInstance(resolveResult.DeclaredElement, resolveResult.Substitution);
 			return null;
 		}
 
+		private static DeclaredElementInstance? TryResolveReference(IReference? reference)
+			=> reference?.Resolve().Result is { DeclaredElement: not null } resolveResult
+				? new DeclaredElementInstance(resolveResult.DeclaredElement, resolveResult.Substitution)
+				: null;
+
 		public PresentableNode FindPresentableNode(ITreeNode node) {
-			var tupleComponent = FindTupleTypeComponent(node);
-			if (tupleComponent != null)
+			if (FindTupleTypeComponent(node) is { } tupleComponent)
 				return new PresentableNode(tupleComponent, PsiSymbolsThemedIcons.Field.Id);
 
-			var literalExpression = FindLiteralExpression(node);
-			if (literalExpression != null)
+			if (FindLiteralExpression(node) is { } literalExpression)
 				return new PresentableNode(literalExpression, PsiSymbolsThemedIcons.LocalConst.Id);
 
 			return default;
 		}
 
-		[CanBeNull]
-		private static ITreeNode FindTupleTypeComponent([NotNull] ITreeNode node)
+		private static ITreeNode? FindTupleTypeComponent(ITreeNode node)
 			=> node.GetContainingNode<ITupleTypeComponent>(true);
 
-		[CanBeNull]
-		private static ITreeNode FindLiteralExpression([NotNull] ITreeNode node) {
-			var literalExpression = node.GetContainingNode<ILiteralExpression>(true);
-			if (literalExpression == null)
+		private static ITreeNode? FindLiteralExpression(ITreeNode node) {
+			if (node.GetContainingNode<ILiteralExpression>(true) is not { } literalExpression)
 				return null;
 
 			TreeTextRange literalRange = literalExpression.Literal.GetTreeTextRange();

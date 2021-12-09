@@ -1,4 +1,3 @@
-using JetBrains.Annotations;
 using JetBrains.Util.Logging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
@@ -9,7 +8,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 	public abstract class QuickInfoSourceProviderBase : IQuickInfoSourceProvider {
 
-		public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer) {
+		public IQuickInfoSource? TryCreateQuickInfoSource(ITextBuffer textBuffer) {
 			if (textBuffer is IProjectionBufferBase)
 				return null;
 
@@ -22,8 +21,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			}
 		}
 
-		[NotNull]
-		protected abstract IQuickInfoSource CreateQuickInfoSource([NotNull] ITextBuffer textBuffer);
+		protected abstract IQuickInfoSource CreateQuickInfoSource(ITextBuffer textBuffer);
 
 	}
 

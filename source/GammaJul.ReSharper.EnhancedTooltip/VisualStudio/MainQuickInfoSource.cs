@@ -29,10 +29,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		protected override void AugmentQuickInfoSessionCore(
 			IQuickInfoSession session,
-			IList<object> quickInfoContent,
+			IList<object?> quickInfoContent,
 			IDocumentMarkup documentMarkup,
 			TooltipFormattingProvider tooltipFormattingProvider,
-			out ITrackingSpan applicableToSpan) {
+			out ITrackingSpan? applicableToSpan) {
 
 			applicableToSpan = null;
 
@@ -47,30 +47,24 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					IDocument document = documentMarkup.Document;
 					var presenter = new MultipleTooltipContentPresenter(tooltipFormattingProvider.GetTooltipFormatting(), document);
 					IContextBoundSettingsStore settings = document.GetSettings();
-					ISolution solution = TryGetCurrentSolution();
+					ISolution? solution = TryGetCurrentSolution();
 					bool hasIdentifierTooltipContent = false;
 
-					var resolveContext = solution != null ? document.GetContext(solution) : UniversalModuleReferenceContext.Instance;
+					var resolveContext = solution is null ? UniversalModuleReferenceContext.Instance : document.GetContext(solution);
 					using (CompilationContextCookie.GetOrCreate(resolveContext)) {
 
-						if (solution != null) {
-
-							DocumentRange documentRange = textRange.CreateDocumentRange(document);
-							IdentifierContentGroup contentGroup = GetIdentifierContentGroup(documentRange, solution, settings);
-							if (contentGroup != null) {
-								foreach (IdentifierTooltipContent content in contentGroup.Identifiers) {
-									presenter.AddIdentifierTooltipContent(content);
-									finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
-									hasIdentifierTooltipContent = true;
-								}
-								if (contentGroup.ArgumentRole != null) {
-									presenter.AddArgumentRoleTooltipContent(contentGroup.ArgumentRole);
-									if (finalSpan == null) {
-										// Only track the argument role if we have nothing else displayed.
-										// See https://github.com/MrJul/ReSharper.EnhancedTooltip/issues/70
-										finalSpan = contentGroup.ArgumentRole.TrackingRange.ToSpan();
-									}
-								}
+						if (solution is not null && GetIdentifierContentGroup(textRange.CreateDocumentRange(document), solution, settings) is { } contentGroup) {
+							foreach (IdentifierTooltipContent content in contentGroup.Identifiers) {
+								presenter.AddIdentifierTooltipContent(content);
+								finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
+								hasIdentifierTooltipContent = true;
+							}
+							
+							if (contentGroup.ArgumentRole is not null) {
+								presenter.AddArgumentRoleTooltipContent(contentGroup.ArgumentRole);
+								// Only track the argument role if we have nothing else displayed.
+								// See https://github.com/MrJul/ReSharper.EnhancedTooltip/issues/70
+								finalSpan ??= contentGroup.ArgumentRole.TrackingRange.ToSpan();
 							}
 						}
 
@@ -90,8 +84,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 						.ToSet();
 
 					bool ignoredFirstVsElement = false;
-					foreach (object content in quickInfoContent) {
-						if (content == null)
+					foreach (object? content in quickInfoContent) {
+						if (content is null)
 							continue;
 
 						// ignore existing R# elements
@@ -129,28 +123,25 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				}
 			}
 
-			if (shellLocks.ReentrancyGuard.TryExecute("GetEnhancedTooltips", GetEnhancedTooltips) && finalSpan != null)
+			if (shellLocks.ReentrancyGuard.TryExecute("GetEnhancedTooltips", GetEnhancedTooltips) && finalSpan is not null)
 				applicableToSpan = textSnapshot.CreateTrackingSpan(finalSpan.Value, SpanTrackingMode.EdgeInclusive);
 		}
 
-		[CanBeNull]
 		[Pure]
-		private static IdentifierContentGroup GetIdentifierContentGroup(
+		private static IdentifierContentGroup? GetIdentifierContentGroup(
 			DocumentRange documentRange,
-			[NotNull] ISolution solution,
-			[NotNull] IContextBoundSettingsStore settings)
+			ISolution solution,
+			IContextBoundSettingsStore settings)
 			=> solution
 				.GetComponent<IdentifierTooltipContentProvider>()
 				.GetIdentifierContentGroup(documentRange, settings);
 
-		[NotNull]
-		[ItemNotNull]
 		[Pure]
 		private static IEnumerable<IReSharperTooltipContent> GetTooltipContents(
-			[NotNull] IHighlighter highlighter,
+			IHighlighter highlighter,
 			TextRange range,
-			[NotNull] IDocumentMarkup documentMarkup,
-			[CanBeNull] ISolution solution,
+			IDocumentMarkup documentMarkup,
+			ISolution? solution,
 			bool skipIdentifierHighlighting) {
 
 			if (highlighter.Attributes.EffectType == EffectType.GUTTER_MARK)
@@ -160,22 +151,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				
 				IDocument document = documentMarkup.Document;
 				IContextBoundSettingsStore settings = document.GetSettings();
-				IPsiSourceFile sourceFile = solution != null ? document.GetPsiSourceFile(solution) : null;
+				IPsiSourceFile? sourceFile = solution is null ? null : document.GetPsiSourceFile(solution);
 
 				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, highlighting.GetType(), sourceFile, settings);
-				IssueTooltipContent issueContent = TryCreateIssueContent(highlighting, range, highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), severity, settings, solution);
-				if (issueContent != null) {
+				if (TryCreateIssueContent(highlighting, range, highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), severity, settings, solution) is { } issueContent) {
 					yield return issueContent;
 					yield break;
 				}
 
-				if (solution != null && IsIdentifierHighlighting(highlighting)) {
+				if (solution is not null && IsIdentifierHighlighting(highlighting)) {
 					if (!skipIdentifierHighlighting) {
 						var identifierContentGroup = GetIdentifierContentGroup(highlighter, solution, settings);
-						if (identifierContentGroup != null) {
+						if (identifierContentGroup is not null) {
 							foreach (IdentifierTooltipContent content in identifierContentGroup.Identifiers)
 								yield return content;
-							if (identifierContentGroup.ArgumentRole != null)
+							if (identifierContentGroup.ArgumentRole is not null)
 								yield return identifierContentGroup.ArgumentRole;
 						}
 					}
@@ -183,31 +173,32 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				}
 			}
 
-			MiscTooltipContent miscContent = TryCreateMiscContent(highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), range);
-			if (miscContent != null)
+			if (TryCreateMiscContent(highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), range) is { } miscContent)
 				yield return miscContent;
 		}
 
-		[CanBeNull]
-		private static ISolution TryGetCurrentSolution()
+		private static ISolution? TryGetCurrentSolution()
 			=> Shell.Instance.TryGetComponent<VSSolutionManager>()?.CurrentSolution;
 
-		[CanBeNull]
 		[Pure]
-		private static IdentifierContentGroup GetIdentifierContentGroup(
-			[NotNull] IHighlighter highlighter,
-			[NotNull] ISolution solution,
-			[NotNull] IContextBoundSettingsStore settings)
+		private static IdentifierContentGroup? GetIdentifierContentGroup(
+			IHighlighter highlighter,
+			ISolution solution,
+			IContextBoundSettingsStore settings)
 			=> solution
 				.GetComponent<IdentifierTooltipContentProvider>()
 				.GetIdentifierContentGroup(highlighter, settings);
 
-		[CanBeNull]
 		[Pure]
-		private static IssueTooltipContent TryCreateIssueContent([NotNull] IHighlighting highlighting, TextRange trackingRange,
-			[CanBeNull] RichTextBlock textBlock, Severity severity, [NotNull] IContextBoundSettingsStore settings, [CanBeNull] ISolution solution) {
+		private static IssueTooltipContent? TryCreateIssueContent(
+			IHighlighting highlighting,
+			TextRange trackingRange,
+			RichTextBlock? textBlock,
+			Severity severity,
+			IContextBoundSettingsStore settings,
+			ISolution? solution) {
 
-			if (textBlock == null || !severity.IsIssue())
+			if (textBlock is null || !severity.IsIssue())
 				return null;
 
 			RichText text = textBlock.RichText;
@@ -215,9 +206,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				return null;
 
 			if (settings.GetValue((IssueTooltipSettings s) => s.ColorizeElementsInErrors)) {
-				RichText enhancedText = TryEnhanceHighlighting(highlighting, settings, solution);
+				RichText? enhancedText = TryEnhanceHighlighting(highlighting, settings, solution);
 				if (!enhancedText.IsNullOrEmpty())
-					text = enhancedText;
+					text = enhancedText!;
 			}
 
 			var issueContent = new IssueTooltipContent(text, trackingRange);
@@ -226,19 +217,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			return issueContent;
 		}
 
-		[CanBeNull]
-		private static RichText TryEnhanceHighlighting(
-			[NotNull] IHighlighting highlighting,
-			[NotNull] IContextBoundSettingsStore settings,
-			[CanBeNull] ISolution solution)
+		private static RichText? TryEnhanceHighlighting(
+			IHighlighting highlighting,
+			IContextBoundSettingsStore settings,
+			ISolution? solution)
 			=> solution
 				?.TryGetComponent<HighlightingEnhancerManager>()
 				?.TryEnhance(highlighting, settings);
 
-		[CanBeNull]
 		[Pure]
-		private static MiscTooltipContent TryCreateMiscContent([CanBeNull] RichTextBlock textBlock, TextRange range) {
-			if (textBlock == null)
+		private static MiscTooltipContent? TryCreateMiscContent(RichTextBlock? textBlock, TextRange range) {
+			if (textBlock is null)
 				return null;
 
 			RichText text = textBlock.RichText;
@@ -249,19 +238,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		}
 
 		[Pure]
-		private TextRange GetCurrentTextRange([NotNull] IIntellisenseSession session, [NotNull] ITextSnapshot textSnapshot) {
+		private TextRange GetCurrentTextRange(IIntellisenseSession session, ITextSnapshot textSnapshot) {
 			SnapshotPoint currentPoint = session.GetTriggerPoint(TextBuffer).GetPoint(textSnapshot);
 			var currentSpan = new SnapshotSpan(currentPoint, 0);
 			return new TextRange(currentSpan.Start, currentSpan.End);
 		}
 
 		[Pure]
-		private static bool IsIdentifierHighlighting([NotNull] IHighlighting highlighting) {
+		private static bool IsIdentifierHighlighting(IHighlighting highlighting) {
 			var attribute = HighlightingSettingsManager.Instance.GetHighlightingAttribute(highlighting) as StaticSeverityHighlightingAttribute;
 			return attribute?.GroupId == RegisterStaticHighlightingsGroupAttribute.GetGroupIdString(typeof(HighlightingGroupIds.IdentifierHighlightings));
 		}
 
-		public MainQuickInfoSource([NotNull] ITextBuffer textBuffer)
+		public MainQuickInfoSource(ITextBuffer textBuffer)
 			: base(textBuffer) {
 		}
 

@@ -12,19 +12,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 	public class MultipleTooltipContentPresenter {
 
-		[NotNull] private readonly List<IdentifierTooltipContent> _identifierContents = new List<IdentifierTooltipContent>();
-		[NotNull] private readonly List<ArgumentRoleTooltipContent> _argumentRoleContents = new List<ArgumentRoleTooltipContent>();
-		[NotNull] private readonly List<IssueTooltipContent> _issueContents = new List<IssueTooltipContent>();
-		[NotNull] private readonly List<MiscTooltipContent> _miscContents = new List<MiscTooltipContent>();
-		[NotNull] private readonly List<VsIdentifierContent> _vsIdentifierContents = new List<VsIdentifierContent>();
-		[NotNull] private readonly List<VsSquiggleContent> _vsSquiggleContents = new List<VsSquiggleContent>();
-		[NotNull] private readonly List<object> _vsUnknownContents = new List<object>();
-		[NotNull] private readonly TextFormattingRunProperties _formatting;
-		[CanBeNull] private readonly IDocument _document;
+		private readonly List<IdentifierTooltipContent> _identifierContents = new();
+		private readonly List<ArgumentRoleTooltipContent> _argumentRoleContents = new();
+		private readonly List<IssueTooltipContent> _issueContents = new();
+		private readonly List<MiscTooltipContent> _miscContents = new();
+		private readonly List<VsIdentifierContent> _vsIdentifierContents = new();
+		private readonly List<VsSquiggleContent> _vsSquiggleContents = new();
+		private readonly List<object> _vsUnknownContents = new();
+		private readonly TextFormattingRunProperties _formatting;
+		private readonly IDocument? _document;
 
 		[ContractAnnotation("null => false")]
-		public bool TryAddReSharperContent([CanBeNull] IReSharperTooltipContent content) {
-			if (content == null || content.Text.IsNullOrEmpty())
+		public bool TryAddReSharperContent(IReSharperTooltipContent? content) {
+			if (content is null || content.Text.IsNullOrEmpty())
 				return false;
 
 			switch (content) {
@@ -45,28 +45,27 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			}
 		}
 
-		public void AddIdentifierTooltipContent([NotNull] IdentifierTooltipContent content)
+		public void AddIdentifierTooltipContent(IdentifierTooltipContent content)
 			=> _identifierContents.Add(content);
 
-		public void AddArgumentRoleTooltipContent([NotNull] ArgumentRoleTooltipContent content)
+		public void AddArgumentRoleTooltipContent(ArgumentRoleTooltipContent content)
 			=> _argumentRoleContents.Add(content);
 
-		public void AddIssueTooltipContent([NotNull] IssueTooltipContent content)
+		public void AddIssueTooltipContent(IssueTooltipContent content)
 			=> _issueContents.Add(content);
 
-		public void AddMiscTooltipContent([NotNull] MiscTooltipContent content)
+		public void AddMiscTooltipContent(MiscTooltipContent content)
 			=> _miscContents.Add(content);
 
-		public void AddVsSquiggleContent([NotNull] VsSquiggleContent content)
+		public void AddVsSquiggleContent(VsSquiggleContent content)
 			=> _vsSquiggleContents.Add(content);
 
-		public void AddVsIdentifierContent([NotNull] VsIdentifierContent content)
+		public void AddVsIdentifierContent(VsIdentifierContent content)
 			=> _vsIdentifierContents.Add(content);
 
-		public void AddVsUnknownContent([NotNull] object content)
+		public void AddVsUnknownContent(object content)
 			=> _vsUnknownContents.Add(content);
 
-		[NotNull]
 		public IEnumerable<object> PresentContents() {
 			foreach (IdentifierTooltipContent identifierContent in _identifierContents)
 				yield return PresentTooltipContents("Id", new[] { identifierContent });
@@ -90,9 +89,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				yield return PresentTooltipContents("VS", _vsSquiggleContents);
 		}
 
-		[NotNull]
 		[Pure]
-		private HeaderedContentControl PresentTooltipContents([CanBeNull] object header, [NotNull] IEnumerable<object> tooltipContents) {
+		private HeaderedContentControl PresentTooltipContents(object? header, IEnumerable<object> tooltipContents) {
 			var control = new HeaderedContentControl {
 				Style = UIResources.Instance.HeaderedContentControlStyle,
 				Focusable = false,
@@ -103,11 +101,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				}
 			};
 			ApplyFormatting(control);
-			Styling.SetDocument(control, new WeakReference<IDocument>(_document));
+			Styling.SetDocument(control, new WeakReference<IDocument?>(_document));
 			return control;
 		}
 
-		private void ApplyFormatting([NotNull] Control control) {
+		private void ApplyFormatting(Control control) {
 			if (!_formatting.TypefaceEmpty) {
 				Typeface typeface = _formatting.Typeface;
 				control.FontFamily = typeface.FontFamily;
@@ -115,11 +113,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				control.FontStretch = typeface.Stretch;
 				control.FontStyle = typeface.Style;
 			}
+			
 			if (!_formatting.FontRenderingEmSizeEmpty)
 				control.FontSize = _formatting.FontRenderingEmSize;
 		}
 
-		public MultipleTooltipContentPresenter([NotNull] TextFormattingRunProperties formatting, [CanBeNull] IDocument document) {
+		public MultipleTooltipContentPresenter(TextFormattingRunProperties formatting, IDocument? document) {
 			_formatting = formatting;
 			_document = document;
 		}

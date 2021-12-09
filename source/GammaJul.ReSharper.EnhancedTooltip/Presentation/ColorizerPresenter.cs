@@ -1,5 +1,4 @@
 ﻿using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
-using JetBrains.Annotations;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
@@ -16,8 +15,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	[SolutionComponent]
 	public class ColorizerPresenter {
 
-		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
-		[NotNull] private readonly CodeAnnotationsConfiguration _codeAnnotationsConfiguration;
+		private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
+		private readonly CodeAnnotationsConfiguration _codeAnnotationsConfiguration;
 		
 		/// <summary>
 		/// Presents a given <see cref="DeclaredElementInstance"/> using a colorizer.
@@ -29,44 +28,40 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		/// <param name="contextualNode">The tree node where the element is presented.</param>
 		/// <param name="presentedInfo">When the method returns, a <see cref="PresentedInfo"/> containing range information about the presented element.</param>
 		/// <returns>A <see cref="RichText"/> representing <paramref name="declaredElementInstance"/>.</returns>
-		[CanBeNull]
-		public RichText TryPresent(
-			[NotNull] DeclaredElementInstance declaredElementInstance,
-			[NotNull] PresenterOptions options,
-			[NotNull] PsiLanguageType languageType,
-			[NotNull] HighlighterIdProvider highlighterIdProvider,
-			[CanBeNull] ITreeNode contextualNode,
-			[NotNull] out PresentedInfo presentedInfo) {
+		public RichText? TryPresent(
+			DeclaredElementInstance declaredElementInstance,
+			PresenterOptions options,
+			PsiLanguageType languageType,
+			HighlighterIdProvider highlighterIdProvider,
+			ITreeNode? contextualNode,
+			out PresentedInfo presentedInfo) {
 
 			var richText = new RichText();
-			IColorizer colorizer = TryCreateColorizer(richText, languageType, highlighterIdProvider);
-			if (colorizer == null) {
-				presentedInfo = new PresentedInfo();
-				return null;
+			if (TryCreateColorizer(richText, languageType, highlighterIdProvider) is { } colorizer) {
+				presentedInfo = colorizer.AppendDeclaredElement(declaredElementInstance.Element, declaredElementInstance.Substitution, options, contextualNode);
+				return richText;
 			}
 
-			presentedInfo = colorizer.AppendDeclaredElement(declaredElementInstance.Element, declaredElementInstance.Substitution, options, contextualNode);
-			return richText;
+			presentedInfo = new PresentedInfo();
+			return null;
 		}
 
-		[CanBeNull]
-		public RichText TryPresent(
-			[NotNull] ITreeNode presentableNode,
-			[NotNull] PresenterOptions options,
-			[NotNull] PsiLanguageType languageType,
-			[NotNull] HighlighterIdProvider highlighterIdProvider) {
+		public RichText? TryPresent(
+			ITreeNode presentableNode,
+			PresenterOptions options,
+			PsiLanguageType languageType,
+			HighlighterIdProvider highlighterIdProvider) {
 
 			var richText = new RichText();
-			IColorizer colorizer = TryCreateColorizer(richText, languageType, highlighterIdProvider);
-			if (colorizer == null)
-				return null;
+			if (TryCreateColorizer(richText, languageType, highlighterIdProvider) is { } colorizer) {
+				colorizer.AppendPresentableNode(presentableNode, options);
+				return richText;
+			}
 
-			colorizer.AppendPresentableNode(presentableNode, options);
-			return richText;
+			return null;
 		}
 
-		[CanBeNull]
-		private IColorizer TryCreateColorizer([NotNull] RichText richText, [NotNull] PsiLanguageType languageType, [NotNull] HighlighterIdProvider highlighterIdProvider) {
+		private IColorizer? TryCreateColorizer(RichText richText, PsiLanguageType languageType, HighlighterIdProvider highlighterIdProvider) {
 			// TODO: add a language service instead of checking the language
 			if (languageType.Is<CSharpLanguage>())
 				return new CSharpColorizer(richText, _textStyleHighlighterManager, _codeAnnotationsConfiguration, highlighterIdProvider);
@@ -74,8 +69,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		public ColorizerPresenter(
-			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
-			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration) {
+			TextStyleHighlighterManager textStyleHighlighterManager,
+			CodeAnnotationsConfiguration codeAnnotationsConfiguration) {
 			_textStyleHighlighterManager = textStyleHighlighterManager;
 			_codeAnnotationsConfiguration = codeAnnotationsConfiguration;
 		}

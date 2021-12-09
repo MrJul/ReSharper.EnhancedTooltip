@@ -9,32 +9,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 		[Pure]
 		public static bool IsIssue(this Severity severity) {
-			switch (severity) {
-				case Severity.HINT:
-				case Severity.SUGGESTION:
-				case Severity.WARNING:
-				case Severity.ERROR:
-					return true;
-				default:
-					return false;
-			}
+			return severity switch {
+				Severity.HINT or Severity.SUGGESTION or Severity.WARNING or Severity.ERROR => true,
+				_ => false
+			};
 		}
 
-		[CanBeNull]
 		[Pure]
-		public static IconId TryGetIcon(this Severity severity) {
-			switch (severity) {
-				case Severity.HINT:
-					return SolutionAnalysisThemedIcons.SolutionAnalysisHint.Id;
-				case Severity.SUGGESTION:
-					return SolutionAnalysisThemedIcons.SolutionAnalysisSuggestion.Id;
-				case Severity.WARNING:
-					return SolutionAnalysisThemedIcons.SolutionAnalysisWarning.Id;
-				case Severity.ERROR:
-					return SolutionAnalysisThemedIcons.SolutionAnalysisError.Id;
-				default:
-					return null;
-			}
+		public static IconId? TryGetIcon(this Severity severity) {
+			return severity switch {
+				Severity.HINT => SolutionAnalysisThemedIcons.SolutionAnalysisHint.Id,
+				Severity.SUGGESTION => SolutionAnalysisThemedIcons.SolutionAnalysisSuggestion.Id,
+				Severity.WARNING => SolutionAnalysisThemedIcons.SolutionAnalysisWarning.Id,
+				Severity.ERROR => SolutionAnalysisThemedIcons.SolutionAnalysisError.Id,
+				_ => null
+			};
 		}
 
 	}

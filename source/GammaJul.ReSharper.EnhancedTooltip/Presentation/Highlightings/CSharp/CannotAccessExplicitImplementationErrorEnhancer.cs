@@ -1,5 +1,4 @@
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
-using JetBrains.Annotations;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Psi;
@@ -12,12 +11,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 		protected override void AppendTooltip(CannotAccessExplicitImplementationError highlighting, CSharpColorizer colorizer) {
 			IExplicitImplementation explicitImplementation = highlighting.ExplicitImplementation;
-			OverridableMemberInstance resolvedMember = explicitImplementation.Resolve();
+			OverridableMemberInstance? resolvedMember = explicitImplementation.Resolve();
 
 			colorizer.AppendPlainText("Cannot access explicit implementation of '");
 			colorizer.AppendExpressionType(explicitImplementation.DeclaringType, false, PresenterOptions.NameOnly);
 			colorizer.AppendOperator(".");
-			if (resolvedMember != null)
+			if (resolvedMember is not null)
 				colorizer.AppendDeclaredElement(resolvedMember.Element, resolvedMember.Substitution, PresenterOptions.NameOnly, highlighting.Reference.GetTreeNode());
 			else
 				colorizer.AppendPlainText(explicitImplementation.MemberName);
@@ -25,9 +24,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 		}
 		
 		public CannotAccessExplicitImplementationErrorEnhancer(
-			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
-			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
-			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory)
+			TextStyleHighlighterManager textStyleHighlighterManager,
+			CodeAnnotationsConfiguration codeAnnotationsConfiguration,
+			HighlighterIdProviderFactory highlighterIdProviderFactory)
 			: base(textStyleHighlighterManager, codeAnnotationsConfiguration, highlighterIdProviderFactory) {
 		}
 

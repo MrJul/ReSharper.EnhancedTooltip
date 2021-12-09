@@ -7,9 +7,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 	[WrapVsInterfaces]
 	public class ExposeEditorFormatMapService : IExposeVsServices {
 		
-		public void Register(VsServiceProviderResolver.VsServiceMap map) {
-			map.Mef<IEditorFormatMapService>();
-		}
+		public void Register(VsServiceProviderResolver.VsServiceMap map)
+			=> map.Mef<IEditorFormatMapService>();
 
 	}
 

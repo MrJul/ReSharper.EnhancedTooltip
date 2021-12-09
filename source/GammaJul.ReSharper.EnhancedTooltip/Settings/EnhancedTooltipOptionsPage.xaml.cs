@@ -27,8 +27,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		public const string Pid = "EnhancedTooltip.OptionsPage";
 
 		private readonly Lifetime _lifetime;
-		[NotNull] private readonly OptionsSettingsSmartContext _context;
-		[NotNull] private readonly List<OptionsPageKeyword> _keywords = new List<OptionsPageKeyword>();
+		private readonly OptionsSettingsSmartContext _context;
+		private readonly List<OptionsPageKeyword> _keywords = new();
 
 		public event PropertyChangedEventHandler PropertyChanged {
 			add { }
@@ -53,8 +53,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		public IEnumerable<string> GetTagKeywordsForPage()
 			=> new[] { "Tooltip" };
 
-		[NotNull]
-		private static List<EnumValue> CreateEnumItemsSource([NotNull] Type enumType) {
+		private static List<EnumValue> CreateEnumItemsSource(Type enumType) {
 			var enumDescriptionConverter = new EnumDescriptionConverter();
 			return Enum.GetValues(enumType)
 				.Cast<Enum>()
@@ -63,9 +62,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		}
 
 		private void SetCheckBoxBinding<TSettings>(
-			[NotNull] Expression<Func<TSettings, bool>> settingAccessor,
-			[NotNull] CheckBoxDisabledNoCheck2 checkBox,
-			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckBox,
+			Expression<Func<TSettings, bool>> settingAccessor,
+			CheckBoxDisabledNoCheck2 checkBox,
+			CheckBoxDisabledNoCheck2? parentCheckBox,
 			bool addColonToDescription = false) {
 
 			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
@@ -78,9 +77,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		}
 
 		private void SetAttributesArgumentsCheckBoxBinding<TSettings>(
-			[NotNull] Expression<Func<TSettings, bool>> settingAccessor,
-			[NotNull] CheckBoxDisabledNoCheck2 checkBox,
-			[NotNull] ComboBox parentComboBox) {
+			Expression<Func<TSettings, bool>> settingAccessor,
+			CheckBoxDisabledNoCheck2 checkBox,
+			ComboBox parentComboBox) {
 
 			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
 			ConfigureCheckBox(checkBox, "with arguments", entry);
@@ -89,9 +88,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			selectedValueProperty.FlowInto(_lifetime, checkBox, IsEnabledProperty, value => HasAttributesArguments((AttributesDisplayKind) value));
 		}
 
-		private void ConfigureCheckBox([NotNull] CheckBoxDisabledNoCheck2 checkBox, [NotNull] string content, [NotNull] SettingsScalarEntry entry) {
-			if (checkBox.Content == null)
-				checkBox.Content = content;
+		private void ConfigureCheckBox(CheckBoxDisabledNoCheck2 checkBox, string content, SettingsScalarEntry entry) {
+			checkBox.Content ??= content;
 			_keywords.Add(new OptionsPageKeyword(content));
 			_context.SetBinding<bool>(_lifetime, entry, checkBox, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
 			SearchablePageBehavior.SetSearchFilter(checkBox, true);
@@ -109,9 +107,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		}
 
 		private void SetComboBoxBinding<TSettings, TEnum>(
-			[NotNull] Expression<Func<TSettings, TEnum>> settingAccessor,
-			[NotNull] ComboBox comboBox,
-			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckBox) {
+			Expression<Func<TSettings, TEnum>> settingAccessor,
+			ComboBox comboBox,
+			CheckBoxDisabledNoCheck2? parentCheckBox) {
 
 			comboBox.ItemsSource = CreateEnumItemsSource(typeof(TEnum));
 			comboBox.DisplayMemberPath = nameof(EnumValue.Description);
@@ -126,9 +124,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		}
 
 		private void SetNumericUpDownBinding<TSettings>(
-			[NotNull] Expression<Func<TSettings, int>> settingAccessor,
-			[NotNull] NumericUpDown numericUpDown,
-			[CanBeNull] CheckBoxDisabledNoCheck2 parentCheckBox) {
+			Expression<Func<TSettings, int>> settingAccessor,
+			NumericUpDown numericUpDown,
+			CheckBoxDisabledNoCheck2? parentCheckBox) {
 
 			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
 			_context.SetBinding<int>(_lifetime, entry, numericUpDown, NumericUpDown.ValueProperty);
@@ -138,9 +136,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			parentCheckBox?.IsAppearingChecked.FlowInto(_lifetime, numericUpDown, IsEnabledProperty);
 		}
 
-		private void SetAssociatedLabel([NotNull] FrameworkElement element, [NotNull] string description) {
-			Label label = element.Parent?.FindDescendant<Label>();
-			if (label == null)
+		private void SetAssociatedLabel(FrameworkElement element, string description) {
+			if (element.Parent?.FindDescendant<Label>() is not { } label)
 				return;
 
 			switch (label.Content) {
@@ -226,7 +223,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			SetComboBoxBinding((DisplaySettings s) => s.TooltipColorSource, DisplayTooltipColorSource, null);
 		}
 
-		public EnhancedTooltipOptionsPage(Lifetime lifetime, [NotNull] OptionsSettingsSmartContext context) {
+		public EnhancedTooltipOptionsPage(Lifetime lifetime, OptionsSettingsSmartContext context) {
 			_lifetime = lifetime;
 			_context = context;
 

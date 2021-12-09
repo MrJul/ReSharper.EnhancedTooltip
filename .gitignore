@@ -1,6 +1,7 @@
 *.suo
 *.user
 .vs
+.idea
 .tmp
 bin
 obj

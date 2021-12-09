@@ -1,5 +1,4 @@
 using JetBrains.Annotations;
-using JetBrains.DocumentModel;
 using JetBrains.Platform.VisualStudio.SinceVs10.TextControl.Markup;
 using JetBrains.PsiFeatures.VisualStudio.SinceVs10.TextControl.Intellisense;
 using JetBrains.ReSharper.Resources.Shell;
@@ -13,51 +12,41 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 	public abstract class QuickInfoSourceBase : IQuickInfoSource {
 
-		[NotNull]
 		protected ITextBuffer TextBuffer { get; }
 
-		public void AugmentQuickInfoSession(IQuickInfoSession session, IList<object> quickInfoContent, out ITrackingSpan applicableToSpan) {
-			applicableToSpan = null;
-
-			if (session == null || session.IsDismissed || session.TextView.TextBuffer != TextBuffer || quickInfoContent == null || quickInfoContent.IsReadOnly)
-				return;
-
-			IDocumentMarkup documentMarkup = TryGetDocumentMarkup(session.TextView);
-			if (documentMarkup == null)
-				return;
-
+		public void AugmentQuickInfoSession(IQuickInfoSession? session, IList<object?>? quickInfoContent, out ITrackingSpan? applicableToSpan) {
+			if (session is not (null or { IsDismissed: true })
+			&& session.TextView.TextBuffer == TextBuffer
+			&& quickInfoContent is not (null or { IsReadOnly: true }) 
+			&& TryGetDocumentMarkup(session.TextView) is { } documentMarkup
 			// If this fails, it means the extension is disabled and none of the components are available.
-			var tooltipFontProvider = Shell.Instance.TryGetComponent<TooltipFormattingProvider>();
-			if (tooltipFontProvider == null)
-				return;
-
-			AugmentQuickInfoSessionCore(session, quickInfoContent, documentMarkup, tooltipFontProvider, out applicableToSpan);
+			&& Shell.Instance.TryGetComponent<TooltipFormattingProvider>() is { } tooltipFormattingProvider) {
+				AugmentQuickInfoSessionCore(session, quickInfoContent, documentMarkup, tooltipFormattingProvider, out applicableToSpan);
+			}
+			else {
+				applicableToSpan = null;
+			}
 		}
 
-		[CanBeNull]
 		[Pure]
-		private IDocumentMarkup TryGetDocumentMarkup([CanBeNull] ITextView textView) {
-			IDocument document = VsTextViewSolutionContextProvider.TryGetContext(textView)?.TextControl.Document;
-			if (document == null)
-				return null;
-
-			IDocumentMarkup documentMarkup = Shell.Instance.TryGetComponent<IDocumentMarkupManager>()?.TryGetMarkupModel(document);
-			return documentMarkup is VsDocumentMarkupDevTen ? documentMarkup : null;
-		}
+		private static IDocumentMarkup? TryGetDocumentMarkup(ITextView? textView)
+			=> VsTextViewSolutionContextProvider.TryGetContext(textView)?.TextControl.Document is { } document
+				&& Shell.Instance.TryGetComponent<IDocumentMarkupManager>()?.TryGetMarkupModel(document) is VsDocumentMarkupDevTen documentMarkup
+					? documentMarkup
+					: null;
 
 		protected abstract void AugmentQuickInfoSessionCore(
-			[NotNull] IQuickInfoSession session,
-			[NotNull] IList<object> quickInfoContent,
-			[NotNull] IDocumentMarkup documentMarkup,
-			[NotNull] TooltipFormattingProvider tooltipFormattingProvider,
-			out ITrackingSpan applicableToSpan);
+			IQuickInfoSession session,
+			IList<object?> quickInfoContent,
+			IDocumentMarkup documentMarkup,
+			TooltipFormattingProvider tooltipFormattingProvider,
+			out ITrackingSpan? applicableToSpan);
 
 		public void Dispose() {
 		}
 
-		protected QuickInfoSourceBase([NotNull] ITextBuffer textBuffer) {
-			TextBuffer = textBuffer;
-		}
+		protected QuickInfoSourceBase(ITextBuffer textBuffer)
+			=> TextBuffer = textBuffer;
 
 	}
 

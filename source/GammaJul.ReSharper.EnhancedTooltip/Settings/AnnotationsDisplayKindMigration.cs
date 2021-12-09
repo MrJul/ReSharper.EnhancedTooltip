@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
-using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.Application.Settings.Upgrade;
 using JetBrains.ReSharper.Feature.Services.Lookup;
@@ -18,7 +17,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			yield return schema.GetEntry((IdentifierTooltipSettings s) => s.ShowParametersAnnotations);
 		}
 
-		public IEnumerable<SettingsKey> GetKeysToMigrate(ISettingsSchema schema)
+		public IEnumerable<SettingsKey>? GetKeysToMigrate(ISettingsSchema schema)
 			=> null;
 
 		public void Migrate(IContextBoundSettingsStoreImplementation store) {
@@ -27,9 +26,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		}
 
 		private static void MigrateValue(
-			[NotNull] IContextBoundSettingsStore store,
-			[NotNull] Expression<Func<IdentifierTooltipSettings, AnnotationsDisplayKind>> oldSettingExpr,
-			[NotNull] Expression<Func<IdentifierTooltipSettings, AttributesDisplayKind>> newSettingExpr) {
+			IContextBoundSettingsStore store,
+			Expression<Func<IdentifierTooltipSettings, AnnotationsDisplayKind>> oldSettingExpr,
+			Expression<Func<IdentifierTooltipSettings, AttributesDisplayKind>> newSettingExpr) {
 			if (!store.IsEntryEqualToDefault(oldSettingExpr) && store.IsEntryEqualToDefault(newSettingExpr)) {
 				AnnotationsDisplayKind annotationsDisplayKind = store.GetValue(oldSettingExpr);
 				store.SetValue(newSettingExpr, annotationsDisplayKind.ToAttributesDisplayKind());

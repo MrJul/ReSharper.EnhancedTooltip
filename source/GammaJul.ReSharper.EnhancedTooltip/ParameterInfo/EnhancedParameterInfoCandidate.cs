@@ -1,11 +1,9 @@
 using System.Linq;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
-using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.ExpectedTypes;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
 
@@ -17,12 +15,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	/// </summary>
 	public class EnhancedParameterInfoCandidate : EnhancedCandidate<ParameterInfoCandidate> {
 
-		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
+		private readonly ColorizerPresenter _colorizerPresenter;
 
 		protected override PresenterOptions GetPresenterOptions(IContextBoundSettingsStore settings, AnnotationsDisplayKind showAnnotations)
 			=> PresenterOptions.ForParameterInfo(settings, showAnnotations.ToAttributesDisplayKind());
 		
-		protected override RichText TryGetSignatureCore(
+		protected override RichText? TryGetSignatureCore(
 			PresenterOptions options,
 			HighlighterIdProvider highlighterIdProvider,
 			out TextRange[] parameterRanges,
@@ -33,10 +31,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			mapToOriginalOrder = EmptyArray<int>.Instance;
 			extensionMethodInfo = ExtensionMethodInfo.NoExtension;
 
-			InvocationCandidate invocationCandidate = UnderlyingCandidate.InvocationCandidate;
-			var elementInstance = new DeclaredElementInstance(invocationCandidate.Element, invocationCandidate.Substitution);
-			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, highlighterIdProvider, null, out PresentedInfo presentedInfo);
-			if (richText == null)
+			var (declaredElement, substitution) = UnderlyingCandidate.InvocationCandidate;
+			var elementInstance = new DeclaredElementInstance(declaredElement, substitution);
+			RichText? richText = _colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, highlighterIdProvider, null, out PresentedInfo presentedInfo);
+			if (richText is null)
 				return null;
 
 			if (presentedInfo.Parameters.Count > 0) {
@@ -54,7 +52,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			return richText;
 		}
 		
-		[NotNull]
 		private static int[] CreateIdentityMap(int length) {
 			var map = new int[length];
 			for (int i = 0; i < length; ++i)
@@ -63,10 +60,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		}
 		
 		public EnhancedParameterInfoCandidate(
-			[NotNull] ParameterInfoCandidate underlyingCandidate,
-			[NotNull] IContextBoundSettingsStore settings,
-			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory,
-			[NotNull] ColorizerPresenter colorizerPresenter)
+			ParameterInfoCandidate underlyingCandidate,
+			IContextBoundSettingsStore settings,
+			HighlighterIdProviderFactory highlighterIdProviderFactory,
+			ColorizerPresenter colorizerPresenter)
 			: base(underlyingCandidate, settings, highlighterIdProviderFactory) {
 			_colorizerPresenter = colorizerPresenter;
 		}

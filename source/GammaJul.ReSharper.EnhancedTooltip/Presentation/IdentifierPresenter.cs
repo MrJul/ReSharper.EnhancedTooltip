@@ -1,5 +1,4 @@
 using System;
-using System.Globalization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -16,25 +15,22 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	/// </summary>
 	public class IdentifierPresenter : TextBlock {
 
-		[NotNull]
 		public static readonly DependencyProperty IdentifierTextProperty = DependencyProperty.Register(
 			nameof(IdentifierText),
 			typeof(RichText),
 			typeof(IdentifierPresenter),
 			new FrameworkPropertyMetadata(null, (d, e) => (d as IdentifierPresenter)?.OnRichTextChanged(e.NewValue as RichText)));
 
-		[NotNull]
 		public static readonly DependencyProperty OverloadCountProperty = DependencyProperty.Register(
 			nameof(OverloadCount),
 			typeof(int?),
 			typeof(IdentifierPresenter),
 			new FrameworkPropertyMetadata(null, (d, e) => (d as IdentifierPresenter)?.OnOverloadCountChanged(e.NewValue as int?)));
 
-		[CanBeNull] private Span _richTextSpan;
-		[CanBeNull] private Run _overloadCountRun;
+		private Span? _richTextSpan;
+		private Run? _overloadCountRun;
 
-		[CanBeNull]
-		public RichText IdentifierText {
+		public RichText? IdentifierText {
 			get => (RichText) GetValue(IdentifierTextProperty);
 			set => SetValue(IdentifierTextProperty, value);
 		}
@@ -44,35 +40,32 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			set => SetValue(OverloadCountProperty, value);
 		}
 
-		private void OnRichTextChanged([CanBeNull] RichText newValue) {
+		private void OnRichTextChanged(RichText? newValue) {
 			_richTextSpan = newValue?.ToSpan();
 			SetInlines();
 		}
 
 		private void OnOverloadCountChanged(int? newValue) {
-			string text = GetOverloadCountText(newValue);
-			_overloadCountRun = text == null ? null : CreateOverloadCountRun(text);
+			string? text = GetOverloadCountText(newValue);
+			_overloadCountRun = text is null ? null : CreateOverloadCountRun(text);
 			SetInlines();
 		}
 
-		[CanBeNull]
-		private Run CreateOverloadCountRun([NotNull] string text)
+		private Run CreateOverloadCountRun(string text)
 			=> new Run(text) {
 				Foreground = Brushes.Gray,
 				FontSize = FontSize * 0.9,
 				FontStyle = FontStyles.Italic
 			};
 
-		[CanBeNull]
 		[Pure]
-		private static string GetOverloadCountText(int? overloadCount) {
-			switch (overloadCount) {
-				case null: return null;
-				case 0: return null;
-				case 1: return " + 1 overload";
-				default: return String.Format(CultureInfo.CurrentCulture, " + {0} overloads", overloadCount.Value);
-			}
-		}
+		private static string? GetOverloadCountText(int? overloadCount)
+			=> overloadCount switch {
+				null => null,
+				0 => null,
+				1 => " + 1 overload",
+				{ } value => $" + {value} overloads"
+			};
 
 		protected override void OnInitialized(EventArgs e) {
 			base.OnInitialized(e);
@@ -85,9 +78,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			var inlines = Inlines;
 			inlines.Clear();
-			if (_richTextSpan != null)
+			if (_richTextSpan is not null)
 				inlines.Add(_richTextSpan);
-			if (_overloadCountRun != null)
+			if (_overloadCountRun is not null)
 				inlines.Add(_overloadCountRun);
 		}
 

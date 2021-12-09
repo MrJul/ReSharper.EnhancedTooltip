@@ -8,27 +8,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public sealed class StringToWrappedTextBlockConverter : IValueConverter {
 		
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture) {
-			switch (value) {
-				case null:
-					return null;
-				case string stringValue:
-					return new TextBlock { Text = stringValue, TextWrapping = TextWrapping.Wrap };
-				default:
-					return value;
-			}
-		}
+		public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
+			=> value switch {
+				null => null,
+				string stringValue => new TextBlock { Text = stringValue, TextWrapping = TextWrapping.Wrap },
+				_ => value
+			};
 
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-			switch (value) {
-				case null:
-					return null;
-				case TextBlock textBlock:
-					return textBlock.Text;
-				default:
-					return value;
-			}
-		}
+		public object? ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+			=> value switch {
+				null => null,
+				TextBlock textBlock => textBlock.Text,
+				_ => value
+			};
 
 	}
 

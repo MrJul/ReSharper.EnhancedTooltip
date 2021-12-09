@@ -8,12 +8,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		[Pure]
 		public static Span Union(this Span x, Span? y) {
-			if (y == null)
+			if (y is not { } other)
 				return x;
 
 			return Span.FromBounds(
-				Math.Min(x.Start, y.Value.Start),
-				Math.Max(x.End, y.Value.End));
+				Math.Min(x.Start, other.Start),
+				Math.Max(x.End, other.End));
 		}
 
 	}

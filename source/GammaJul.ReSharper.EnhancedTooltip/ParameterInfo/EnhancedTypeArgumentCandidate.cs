@@ -1,5 +1,4 @@
 ﻿using GammaJul.ReSharper.EnhancedTooltip.Presentation;
-using JetBrains.Annotations;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Feature.Services.Lookup;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo;
@@ -15,12 +14,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 	/// </summary>
 	public class EnhancedTypeArgumentCandidate : EnhancedCandidate<TypeArgumentCandidate> {
 		
-		[NotNull] private readonly ColorizerPresenter _colorizerPresenter;
+		private readonly ColorizerPresenter _colorizerPresenter;
 
 		protected override PresenterOptions GetPresenterOptions(IContextBoundSettingsStore settings, AnnotationsDisplayKind showAnnotations)
 			=> PresenterOptions.ForTypeArgumentInfo(settings, showAnnotations.ToAttributesDisplayKind());
 
-		protected override RichText TryGetSignatureCore(
+		protected override RichText? TryGetSignatureCore(
 			PresenterOptions options,
 			HighlighterIdProvider highlighterIdProvider,
 			out TextRange[] parameterRanges,
@@ -33,8 +32,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 
 			ITypeParametersOwner typeElement = UnderlyingCandidate.TypeElement;
 			var elementInstance = new DeclaredElementInstance(typeElement, typeElement.IdSubstitution);
-			RichText richText = _colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, highlighterIdProvider, null, out PresentedInfo presentedInfo);
-			if (richText == null)
+			if (_colorizerPresenter.TryPresent(elementInstance, options, UnderlyingCandidate.Language, highlighterIdProvider, null, out PresentedInfo presentedInfo) is not { } richText)
 				return null;
 
 			parameterRanges = presentedInfo.TypeParameters.ToArray();
@@ -42,10 +40,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		}
 
 		public EnhancedTypeArgumentCandidate(
-			[NotNull] TypeArgumentCandidate underlyingCandidate,
-			[NotNull] IContextBoundSettingsStore settings,
-			[NotNull] HighlighterIdProviderFactory highlighterIdProviderFactory,
-			[NotNull] ColorizerPresenter colorizerPresenter)
+			TypeArgumentCandidate underlyingCandidate,
+			IContextBoundSettingsStore settings,
+			HighlighterIdProviderFactory highlighterIdProviderFactory,
+			ColorizerPresenter colorizerPresenter)
 			: base(underlyingCandidate, settings, highlighterIdProviderFactory) {
 			_colorizerPresenter = colorizerPresenter;
 		}

@@ -89,7 +89,7 @@ internal class Build : NukeBuild {
 					.SetProperty("currentyear", currentYear)
 					.SetProperty("releasenotes", releaseNotes)
 					.SetProperty("wave", wave)
-					.SetProperty("configuration", Configuration.ToString())
+					.SetProperty("configuration", Configuration)
 					.EnableNoPackageAnalysis());
 			});
 

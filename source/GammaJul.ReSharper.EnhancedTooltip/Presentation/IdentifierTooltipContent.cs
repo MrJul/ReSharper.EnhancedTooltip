@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using JetBrains.Annotations;
 using JetBrains.UI.Icons;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
@@ -8,39 +7,29 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public class IdentifierTooltipContent : TooltipContent {
 
-		[CanBeNull]
-		public IconId Icon { get; set; }
+		public IconId? Icon { get; set; }
 		
-		[CanBeNull]
-		public RichText Description { get; set; }
+		public RichText? Description { get; set; }
 
-		[CanBeNull]
-		public RichText Obsolete { get; set; }
+		public RichText? Obsolete { get; set; }
 
-		[CanBeNull]
-		public RichText Return { get; set; }
+		public RichText? Return { get; set; }
 
-		[CanBeNull]
-		public RichText Value { get; set; }
+		public RichText? Value { get; set; }
 
-		[CanBeNull]
-		public RichText Remarks { get; set; }
+		public RichText? Remarks { get; set; }
 
 		public int? OverloadCount { get; set; }
 
-		[NotNull]
-		public List<ExceptionContent> Exceptions { get; } = new List<ExceptionContent>();
+		public List<ExceptionContent> Exceptions { get; } = new();
 
-		[CanBeNull]
-		public RichText BaseType { get; set; }
+		public RichText? BaseType { get; set; }
 
-		[NotNull]
-		public List<RichText> ImplementedInterfaces { get; } = new List<RichText>();
+		public List<RichText> ImplementedInterfaces { get; } = new();
 
-		[CanBeNull]
-		public AttributeUsageContent AttributeUsage { get; set; }
+		public AttributeUsageContent? AttributeUsage { get; set; }
 
-		public IdentifierTooltipContent([CanBeNull] RichText text, TextRange trackingRange)
+		public IdentifierTooltipContent(RichText? text, TextRange trackingRange)
 			: base(text, trackingRange) {
 		}
 

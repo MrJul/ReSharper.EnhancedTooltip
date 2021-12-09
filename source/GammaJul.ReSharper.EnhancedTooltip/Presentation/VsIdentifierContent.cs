@@ -1,15 +1,11 @@
-﻿using JetBrains.Annotations;
-
-namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
+﻿namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public class VsIdentifierContent {
 
-		[NotNull]
 		public object Content { get; }
 
-		public VsIdentifierContent([NotNull] object content) {
-			Content = content;
-		}
+		public VsIdentifierContent(object content)
+			=> Content = content;
 
 	}
 

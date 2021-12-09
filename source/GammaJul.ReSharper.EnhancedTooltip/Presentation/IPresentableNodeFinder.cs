@@ -1,5 +1,4 @@
-﻿using JetBrains.Annotations;
-using JetBrains.ReSharper.Psi;
+﻿using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 
@@ -10,10 +9,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	/// </summary>
 	internal interface IPresentableNodeFinder {
 
-		[CanBeNull]
-		DeclaredElementInstance FindDeclaredElement([NotNull] ITreeNode node, [NotNull] IFile file, out TextRange sourceRange);
+		DeclaredElementInstance? FindDeclaredElement(ITreeNode node, IFile file, out TextRange sourceRange);
 
-		PresentableNode FindPresentableNode([NotNull] ITreeNode node);
+		PresentableNode FindPresentableNode(ITreeNode node);
 
 	}
 

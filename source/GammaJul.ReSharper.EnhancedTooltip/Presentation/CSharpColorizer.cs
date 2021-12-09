@@ -8,7 +8,6 @@ using GammaJul.ReSharper.EnhancedTooltip.Psi;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
 using JetBrains.Metadata.Reader.API;
-using JetBrains.Metadata.Utils;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -39,11 +38,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		private readonly struct Context {
 
-			[NotNull] internal readonly PresenterOptions Options;
-			[CanBeNull] internal readonly PresentedInfo PresentedInfo;
-			[CanBeNull] internal readonly ITreeNode ContextualNode;
+			internal readonly PresenterOptions Options;
+			internal readonly PresentedInfo? PresentedInfo;
+			internal readonly ITreeNode? ContextualNode;
 
-			public Context([NotNull] PresenterOptions options, [CanBeNull] PresentedInfo presentedInfo, [CanBeNull] ITreeNode contextualNode) {
+			public Context(PresenterOptions options, PresentedInfo? presentedInfo, ITreeNode? contextualNode) {
 				Options = options;
 				PresentedInfo = presentedInfo;
 				ContextualNode = contextualNode;
@@ -51,24 +50,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		}
 
-		private static readonly DeclaredElementPresenterStyle _specialTypeStyle = new DeclaredElementPresenterStyle(NameStyle.SHORT) {
+		private static readonly DeclaredElementPresenterStyle _specialTypeStyle = new(NameStyle.SHORT) {
 			ShowTypeParameters = TypeParameterStyle.NONE
 		};
 
-		[NotNull] private readonly RichText _richText;
-		[NotNull] private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
-		[NotNull] private readonly CodeAnnotationsConfiguration _codeAnnotationsConfiguration;
-		[NotNull] private readonly HighlighterIdProvider _highlighterIdProvider;
+		private readonly RichText _richText;
+		private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
+		private readonly CodeAnnotationsConfiguration _codeAnnotationsConfiguration;
+		private readonly HighlighterIdProvider _highlighterIdProvider;
 
-		[NotNull]
 		public HighlighterIdProvider HighlighterIdProvider
 			=> _highlighterIdProvider;
 
-		public PresentedInfo AppendDeclaredElement(IDeclaredElement element, ISubstitution substitution, PresenterOptions options, ITreeNode contextualNode) {
+		public PresentedInfo AppendDeclaredElement(IDeclaredElement element, ISubstitution substitution, PresenterOptions options, ITreeNode? contextualNode) {
 			var context = new Context(options, new PresentedInfo(), contextualNode);
 
 			if (!IsClrPresentableElement(element))
-				return context.PresentedInfo;
+				return context.PresentedInfo!;
 
 			if (options.ShowElementKind != ElementKindDisplay.None)
 				AppendElementKind(element, context, options.ShowElementKind == ElementKindDisplay.Stylized);
@@ -109,15 +107,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					AppendConstantValueOwner(constantValueOwner);
 			}
 
-			return context.PresentedInfo;
+			return context.PresentedInfo!;
 		}
 
-		private static bool IsClrPresentableElement([NotNull] IDeclaredElement element)
+		private static bool IsClrPresentableElement(IDeclaredElement element)
 			=> element.IsValid()
 			&& element is IClrDeclaredElement
 			&& element.GetElementType().IsPresentable(CSharpLanguage.Instance);
 
-		public void AppendText([CanBeNull] string text, [CanBeNull] string highlighterAttributeId) {
+		public void AppendText(string? text, string? highlighterAttributeId) {
 			if (text.IsEmpty())
 				return;
 
@@ -125,12 +123,12 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			_richText.Append(text, textStyle);
 		}
 
-		private void AppendText([CanBeNull] string text, TextStyle textStyle) {
+		private void AppendText(string? text, TextStyle textStyle) {
 			if (!text.IsEmpty())
 				_richText.Append(text, textStyle);
 		}
 
-		private void AppendElementKind([CanBeNull] IDeclaredElement element, Context context, bool stylized) {
+		private void AppendElementKind(IDeclaredElement? element, Context context, bool stylized) {
 			PresenterOptions options = context.Options;
 			string kind = element.GetElementKindString(
 				options.UseExtensionMethodKind,
@@ -141,14 +139,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendElementKind(kind, stylized);
 		}
 
-		private void AppendElementKind([NotNull] string kind, bool stylized) {
+		private void AppendElementKind(string kind, bool stylized) {
 			if (stylized)
 				AppendText("(" + kind + ") ", new TextStyle(FontStyle.Italic));
 			else
 				AppendText(kind + " ", null);
 		}
 
-		public void AppendAccessRights([NotNull] IDeclaredElement element, bool addSpaceAfter) {
+		public void AppendAccessRights(IDeclaredElement element, bool addSpaceAfter) {
 			if (element is IAccessRightsOwner accessRightsOwner)
 				AppendAccessRights(accessRightsOwner.GetAccessRights(), addSpaceAfter);
 		}
@@ -164,8 +162,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendText(" ", null);
 		}
 
-		private void AppendModifiers([NotNull] IDeclaredElement element) {
-			if (!(element is IModifiersOwner modifiersOwner) || modifiersOwner is IAccessor || element.IsDestructor())
+		private void AppendModifiers(IDeclaredElement element) {
+			if (element is not IModifiersOwner modifiersOwner || modifiersOwner is IAccessor || element.IsDestructor())
 				return;
 
 			var builder = new StringBuilder();
@@ -205,15 +203,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private void AppendElementType(
-			[NotNull] IDeclaredElement element,
-			[NotNull] ISubstitution substitution,
+			IDeclaredElement element,
+			ISubstitution substitution,
 			QualifierDisplays expectedQualifierDisplay,
-			[CanBeNull] string before,
-			[CanBeNull] string after,
+			string? before,
+			string? after,
 			Context context) {
 
 			// Use the special type first if available (eg Razor helper), colorize it as a keyword
-			string specialTypeString = CSharpModificationUtil.GetSpecialElementType(_specialTypeStyle, element, substitution);
+			string? specialTypeString = CSharpModificationUtil.GetSpecialElementType(_specialTypeStyle, element, substitution);
 			if (!specialTypeString.IsEmpty()) {
 				AppendText(before, null);
 				AppendText(specialTypeString, _highlighterIdProvider.Keyword);
@@ -221,8 +219,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return;
 			}
 
-			IType elementType = GetElementType(element, substitution);
-			if (elementType == null)
+			if (GetElementType(element, substitution) is not { } elementType)
 				return;
 
 			AppendText(before, null);
@@ -230,10 +227,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (element.IsRefReturnMember() || (element is ICSharpLocalVariable localVariable && localVariable.ReferenceKind.IsByReference()))
 				AppendText("ref ", _highlighterIdProvider.Keyword);
 			else if (element is IParameter parameter) {
-				string specialModifier = GetParameterSpecialModifier(parameter);
+				string? specialModifier = GetParameterSpecialModifier(parameter);
 				if (!specialModifier.IsEmpty())
 					AppendText(specialModifier, _highlighterIdProvider.Keyword);
-				string kindModifier = GetParameterKindModifier(parameter);
+				string? kindModifier = GetParameterKindModifier(parameter);
 				if (!kindModifier.IsEmpty())
 					AppendText(kindModifier, _highlighterIdProvider.Keyword);
 			}
@@ -242,30 +239,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText(after, null);
 		}
 
-		[CanBeNull]
-		private static IType GetElementType([NotNull] IDeclaredElement element, [NotNull] ISubstitution substitution) {
-			switch (element) {
-				case IConstructor _:
-					return null;
-				case var _ when element.IsDestructor():
-					return null;
-				case ITypeOwner typeOwner:
-					return substitution.Apply(typeOwner.Type);
-				case IParametersOwner parametersOwner:
-					return substitution.Apply(parametersOwner.ReturnType);
-				case IDelegate deleg:
-					return substitution.Apply(deleg.InvokeMethod.ReturnType);
-				default:
-					return null;
-			}
-		}
+		private static IType? GetElementType(IDeclaredElement element, ISubstitution substitution)
+			=> element switch {
+				IConstructor => null,
+				_ when element.IsDestructor() => null,
+				ITypeOwner typeOwner => substitution.Apply(typeOwner.Type),
+				IParametersOwner parametersOwner => substitution.Apply(parametersOwner.ReturnType),
+				IDelegate deleg => substitution.Apply(deleg.InvokeMethod.ReturnType),
+				_ => null
+			};
 
-		public void AppendExpressionType([CanBeNull] IExpressionType expressionType, bool appendModuleName, [NotNull] PresenterOptions options) {
-			if (expressionType == null)
+		public void AppendExpressionType(IExpressionType? expressionType, bool appendModuleName, PresenterOptions options) {
+			if (expressionType is null)
 				return;
 
-			IType itype = expressionType.ToIType();
-			if (itype != null) {
+			if (expressionType.ToIType() is { } itype) {
 				AppendType(itype, QualifierDisplays.Everywhere, true, new Context(options, null, null));
 				if (appendModuleName)
 					AppendModuleName(itype);
@@ -275,7 +263,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText(expressionType.GetLongPresentableName(CSharpLanguage.Instance!), null);
 		}
 
-		private void AppendType([NotNull] IType type, QualifierDisplays expectedQualifierDisplay, bool displayUnknownTypeParameters, Context context) {
+		private void AppendType(IType type, QualifierDisplays expectedQualifierDisplay, bool displayUnknownTypeParameters, Context context) {
 			switch (type) {
 				case IArrayType arrayType:
 					AppendArrayType(arrayType, expectedQualifierDisplay, displayUnknownTypeParameters, context);
@@ -286,7 +274,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				case IDeclaredType declaredType:
 					AppendDeclaredType(declaredType, expectedQualifierDisplay, true, displayUnknownTypeParameters, context);
 					return;
-				case IAnonymousType _:
+				case IAnonymousType:
 					AppendText("anonymous type", null);
 					return;
 				default:
@@ -295,28 +283,27 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 		}
 
-		private void AppendModuleName([NotNull] IType itype) {
+		private void AppendModuleName(IType itype) {
 			AppendText(" [", null);
 			AppendText(GetModuleFullName(itype), null);
 			AppendText("]", null);
 		}
 
-		private void AppendArrayType([NotNull] IArrayType arrayType, QualifierDisplays expectedQualifierDisplay, bool displayUnknownTypeParameters, Context context) {
+		private void AppendArrayType(IArrayType arrayType, QualifierDisplays expectedQualifierDisplay, bool displayUnknownTypeParameters, Context context) {
 			AppendType(arrayType.ElementType, expectedQualifierDisplay, displayUnknownTypeParameters, context);
 			AppendText("[" + new string(',', arrayType.Rank - 1) + "]", null);
 		}
 
-		private void AppendPointerType([NotNull] IPointerType pointerType, QualifierDisplays expectedQualifierDisplay, bool displayUnknownTypeParameters, Context context) {
+		private void AppendPointerType(IPointerType pointerType, QualifierDisplays expectedQualifierDisplay, bool displayUnknownTypeParameters, Context context) {
 			AppendType(pointerType.ElementType, expectedQualifierDisplay, displayUnknownTypeParameters, context);
 			AppendText("*", _highlighterIdProvider.Operator);
 		}
 
-		[NotNull]
-		private static string FormatShortName([NotNull] string shortName)
+		private static string FormatShortName(string shortName)
 			=> CSharpLexer.IsKeyword(shortName) ? "@" + shortName : shortName;
 
 		private void AppendDeclaredType(
-			[NotNull] IDeclaredType declaredType,
+			IDeclaredType declaredType,
 			QualifierDisplays expectedQualifierDisplay,
 			bool appendTypeParameters,
 			bool displayUnknownTypeParameters,
@@ -333,8 +320,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 
 			if (context.Options.UseTypeKeywords) {
-				string typeKeyword = CSharpTypeFactory.GetTypeKeyword(declaredType.GetClrName());
-				if (typeKeyword != null) {
+				if (CSharpTypeFactory.GetTypeKeyword(declaredType.GetClrName()) is { } typeKeyword) {
 					AppendText(typeKeyword, _highlighterIdProvider.Keyword);
 					if (declaredType.NullableAnnotation == NullableAnnotation.Annotated)
 						AppendText("?", _highlighterIdProvider.Operator);
@@ -346,19 +332,18 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return;
 			}
 
-			ITypeElement typeElement = declaredType.GetTypeElement();
-			if (typeElement == null || !typeElement.IsValid()) {
-				AppendText(declaredType.GetPresentableName(CSharpLanguage.Instance!), null);
-			}
-			else {
+			if (declaredType.GetTypeElement() is { } typeElement && typeElement.IsValid()) {
 				AppendTypeElement(typeElement, declaredType.GetSubstitution(), expectedQualifierDisplay, appendTypeParameters, displayUnknownTypeParameters, context);
 				if (declaredType.NullableAnnotation == NullableAnnotation.Annotated && !Equals(typeElement.GetClrName(), PredefinedType.GENERIC_NULLABLE_FQN))
 					AppendText("?", _highlighterIdProvider.Operator);
 			}
+			else {
+				AppendText(declaredType.GetPresentableName(CSharpLanguage.Instance!), null);
+			}
 		}
 
 		private void AppendTupleType(
-			[NotNull] ITupleType tupleType,
+			ITupleType tupleType,
 			QualifierDisplays expectedQualifierDisplay,
 			bool displayUnknownTypeParameters,
 			Context context) {
@@ -383,8 +368,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private void AppendTypeElement(
-			[NotNull] ITypeElement typeElement,
-			[NotNull] ISubstitution substitution,
+			ITypeElement typeElement,
+			ISubstitution substitution,
 			QualifierDisplays expectedQualifierDisplay,
 			bool appendTypeParameters,
 			bool displayUnknownTypeParameters,
@@ -399,12 +384,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return;
 			}
 
-			if (!(typeElement is ITypeParameter) && (context.Options.ShowQualifiers & expectedQualifierDisplay) != QualifierDisplays.None) {
+			if (typeElement is not ITypeParameter && (context.Options.ShowQualifiers & expectedQualifierDisplay) != QualifierDisplays.None) {
 				if (AppendNamespaceParts(GetNamespacePartsToDisplay(typeElement, context)))
 					AppendText(".", _highlighterIdProvider.Operator);
 
-				ITypeElement containingType = typeElement.GetContainingType();
-				if (containingType != null && !(typeElement is IDelegate && context.Options.FormatDelegatesAsLambdas)) {
+				if (typeElement.GetContainingType() is { } containingType && !(typeElement is IDelegate && context.Options.FormatDelegatesAsLambdas)) {
 					AppendDeclaredType(TypeFactory.CreateType(containingType, substitution, NullableAnnotation.Unknown), QualifierDisplays.None, true, displayUnknownTypeParameters, context);
 					AppendText(".", _highlighterIdProvider.Operator);
 				}
@@ -423,8 +407,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendTypeParameters(typeElement, substitution, false, displayUnknownTypeParameters, context);
 		}
 
-		[CanBeNull]
-		private static List<string> GetNamespacePartsToDisplay([NotNull] ITypeElement typeElement, Context context) {
+		private static List<string>? GetNamespacePartsToDisplay(ITypeElement typeElement, Context context) {
 			if (typeElement is ICompiledElement) {
 				switch (context.Options.ExternalCodeNamespaceDisplayKind) {
 
@@ -453,18 +436,16 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					return GetNamespaceParts(typeElement.GetContainingNamespace());
 
 				case SolutionCodeNamespaceDisplayKind.Smart:
-					var contextualNamespace = context.ContextualNode?.GetContainingNode<INamespaceDeclaration>();
-					if (contextualNamespace == null)
-						goto case SolutionCodeNamespaceDisplayKind.Always;
-					return GetDifferentNamespaceParts(typeElement.GetContainingNamespace(), contextualNamespace.DeclaredElement);
+					if (context.ContextualNode?.GetContainingNode<INamespaceDeclaration>() is { } contextualNamespace)
+						return GetDifferentNamespaceParts(typeElement.GetContainingNamespace(), contextualNamespace.DeclaredElement);
+					goto case SolutionCodeNamespaceDisplayKind.Always;
 
 				default:
 					goto case SolutionCodeNamespaceDisplayKind.Always;
 			}
 		}
 
-		[NotNull]
-		private static List<string> GetDifferentNamespaceParts([CanBeNull] INamespace sourceNamespace, [CanBeNull] INamespace contextualNamespace) {
+		private static List<string> GetDifferentNamespaceParts(INamespace? sourceNamespace, INamespace? contextualNamespace) {
 			List<string> sourceParts = GetNamespaceParts(sourceNamespace);
 			List<string> contextualParts = GetNamespaceParts(contextualNamespace);
 
@@ -482,21 +463,18 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return sourceParts;
 		}
 
-		[NotNull]
-		private static string GetModuleFullName([NotNull] IType type) {
-			AssemblyNameInfo assembly = type.GetScalarType()?.Assembly;
-			if (assembly != null)
+		private static string GetModuleFullName(IType type) {
+			if (type.GetScalarType()?.Assembly is { } assembly)
 				return assembly.FullName;
 
-			string name = (type.Module as IAssemblyPsiModule)?.Assembly.AssemblyName.FullName;
-			if (name != null)
+			if ((type.Module as IAssemblyPsiModule)?.Assembly.AssemblyName.FullName is { } name)
 				return name;
 
 			return type.Module.DisplayName;
 		}
 
-		private bool AppendNamespaceParts([CanBeNull] List<string> namespaceParts) {
-			if (namespaceParts == null || namespaceParts.Count == 0)
+		private bool AppendNamespaceParts(List<string>? namespaceParts) {
+			if (namespaceParts is null || namespaceParts.Count == 0)
 				return false;
 
 			string namespaceHighlighterId = _highlighterIdProvider.Namespace;
@@ -511,18 +489,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return true;
 		}
 
-		[NotNull]
-		private static List<string> GetNamespaceParts([CanBeNull] INamespace ns) {
+		private static List<string> GetNamespaceParts(INamespace? ns) {
 			var parts = new List<string>();
-			for (INamespace iter = ns; iter != null && !iter.IsRootNamespace; iter = iter.GetContainingNamespace())
+			for (INamespace? iter = ns; iter is { IsRootNamespace: false }; iter = iter.GetContainingNamespace())
 				parts.Add(iter.ShortName);
 			parts.Reverse();
 			return parts;
 		}
 
 		private void AppendTypeParameters(
-			[NotNull] ITypeParametersOwner typeParametersOwner,
-			[NotNull] ISubstitution substitution,
+			ITypeParametersOwner typeParametersOwner,
+			ISubstitution substitution,
 			bool isTopLevel,
 			bool displayUnknownTypeParameters,
 			Context context) {
@@ -564,7 +541,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 		}
 
-		private void AppendNameWithContainer([NotNull] IDeclaredElement element, [NotNull] ISubstitution substitution, Context context) {
+		private void AppendNameWithContainer(IDeclaredElement element, ISubstitution substitution, Context context) {
 			if (element is ITypeElement typeElement) {
 				AppendTypeElement(typeElement, substitution, QualifierDisplays.Member, false, false, context);
 				return;
@@ -576,36 +553,30 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 
 			bool appendedExplicitInterface = false;
-			if (context.Options.ShowExplicitInterface) {
-				if (element is IOverridableMember overridableMember && overridableMember.IsExplicitImplementation) {
-					IDeclaredType declaredType = CSharpDeclaredElementUtil.InterfaceQualification(overridableMember);
-					if (declaredType != null) {
-						AppendDeclaredType(declaredType, QualifierDisplays.None, true, true, context);
-						AppendText(".", _highlighterIdProvider.Operator);
-						appendedExplicitInterface = true;
-					}
-				}
+			if (context.Options.ShowExplicitInterface 
+			&& element is IOverridableMember { IsExplicitImplementation: true } overridableMember 
+			&& CSharpDeclaredElementUtil.InterfaceQualification(overridableMember) is { } declaredType) {
+				AppendDeclaredType(declaredType, QualifierDisplays.None, true, true, context);
+				AppendText(".", _highlighterIdProvider.Operator);
+				appendedExplicitInterface = true;
 			}
 
-			if (!appendedExplicitInterface && (context.Options.ShowQualifiers & QualifierDisplays.Member) != QualifierDisplays.None) {
-				ITypeElement containingTypeElement = (element as ITypeMember)?.GetContainingType();
-				if (containingTypeElement != null) {
-					AppendTypeElement(containingTypeElement, substitution, QualifierDisplays.Member, true, true, context);
-					AppendText(".", _highlighterIdProvider.Operator);
-				}
+			if (!appendedExplicitInterface && (context.Options.ShowQualifiers & QualifierDisplays.Member) != QualifierDisplays.None 
+			&& (element as ITypeMember)?.GetContainingType() is { } containingTypeElement) {
+				AppendTypeElement(containingTypeElement, substitution, QualifierDisplays.Member, true, true, context);
+				AppendText(".", _highlighterIdProvider.Operator);
 			}
 
 			AppendName(element);
 		}
 
-		private void AppendName([NotNull] IDeclaredElement element) {
-			string highlighterId = _highlighterIdProvider.GetForDeclaredElement(element);
+		private void AppendName(IDeclaredElement element) {
+			string? highlighterId = _highlighterIdProvider.GetForDeclaredElement(element);
 
 			switch (element) {
 
 				case var _ when element.IsDestructor():
-					ITypeElement containingType = ((IClrDeclaredElement) element).GetContainingType();
-					if (containingType != null) {
+					if (((IClrDeclaredElement) element).GetContainingType() is { } containingType) {
 						AppendText("~", _highlighterIdProvider.Operator);
 						AppendText(containingType.ShortName, highlighterId);
 					}
@@ -615,7 +586,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					AppendText("this", _highlighterIdProvider.Keyword);
 					return;
 
-				case IAnonymousMethod _:
+				case IAnonymousMethod:
 					AppendText("Anonymous method", highlighterId);
 					return;
 
@@ -626,15 +597,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 						AppendText("explicit", _highlighterIdProvider.Keyword);
 					return;
 
-				case ISignOperator _:
+				case ISignOperator:
 					AppendText(GetSignOperator(element.ShortName), highlighterId);
 					return;
 
-				case INamespace ns when ns.IsRootNamespace:
+				case INamespace { IsRootNamespace: true }:
 					AppendText("<Root Namespace>", highlighterId);
 					return;
 
-				case IParameter parameter when parameter.IsVarArg:
+				case IParameter { IsVarArg: true }:
 					AppendText("__arglist", _highlighterIdProvider.Keyword);
 					return;
 
@@ -647,43 +618,39 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					AppendText(FormatShortName(element.ShortName), highlighterId);
 					return;
 			}
-
 		}
 
-		[NotNull]
-		private static string GetSignOperator([NotNull] string operatorName) {
-			switch (operatorName) {
-				case OperatorName.UNARY_PLUS: return "+";
-				case OperatorName.UNARY_MINUS: return "-";
-				case OperatorName.UNARY_LOGNOT: return "!";
-				case OperatorName.UNARY_COMPLEMENT: return "~";
-				case OperatorName.UNARY_INCREMENT: return "++";
-				case OperatorName.UNARY_DECREMENT: return "--";
-				case OperatorName.UNARY_TRUE: return "true";
-				case OperatorName.UNARY_FALSE: return "false";
-				case OperatorName.BINARY_PLUS: return "+";
-				case OperatorName.BINARY_MINUS: return "-";
-				case OperatorName.BINARY_MULTIPLY: return "*";
-				case OperatorName.BINARY_DIVIDE: return "/";
-				case OperatorName.BINARY_MODULUS: return "%";
-				case OperatorName.BINARY_BITWISE_AND: return "&";
-				case OperatorName.BINARY_BITWISE_OR: return "|";
-				case OperatorName.BINARY_EXCLUSIVE_OR: return "^";
-				case OperatorName.BINARY_LEFTSHIFT: return "<<";
-				case OperatorName.BINARY_RIGHTSHIFT: return ">>";
-				case OperatorName.BINARY_EQUALITY: return "==";
-				case OperatorName.BINARY_INEQUALITY: return "!=";
-				case OperatorName.BINARY_LT: return "<";
-				case OperatorName.BINARY_LE: return "<=";
-				case OperatorName.BINARY_GT: return ">";
-				case OperatorName.BINARY_GE: return ">=";
-				default: return operatorName;
-			}
-		}
+		private static string GetSignOperator(string operatorName)
+			=> operatorName switch {
+				OperatorName.UNARY_PLUS => "+",
+				OperatorName.UNARY_MINUS => "-",
+				OperatorName.UNARY_LOGNOT => "!",
+				OperatorName.UNARY_COMPLEMENT => "~",
+				OperatorName.UNARY_INCREMENT => "++",
+				OperatorName.UNARY_DECREMENT => "--",
+				OperatorName.UNARY_TRUE => "true",
+				OperatorName.UNARY_FALSE => "false",
+				OperatorName.BINARY_PLUS => "+",
+				OperatorName.BINARY_MINUS => "-",
+				OperatorName.BINARY_MULTIPLY => "*",
+				OperatorName.BINARY_DIVIDE => "/",
+				OperatorName.BINARY_MODULUS => "%",
+				OperatorName.BINARY_BITWISE_AND => "&",
+				OperatorName.BINARY_BITWISE_OR => "|",
+				OperatorName.BINARY_EXCLUSIVE_OR => "^",
+				OperatorName.BINARY_LEFTSHIFT => "<<",
+				OperatorName.BINARY_RIGHTSHIFT => ">>",
+				OperatorName.BINARY_EQUALITY => "==",
+				OperatorName.BINARY_INEQUALITY => "!=",
+				OperatorName.BINARY_LT => "<",
+				OperatorName.BINARY_LE => "<=",
+				OperatorName.BINARY_GT => ">",
+				OperatorName.BINARY_GE => ">=",
+				_ => operatorName
+			};
 
-		private void AppendParameters([NotNull] IDeclaredElement element, [NotNull] ISubstitution substitution, bool isTopLevel, Context context) {
-			var parametersOwner = TryGetParametersOwner(element);
-			if (parametersOwner == null || !ShouldShowParameters(element))
+		private void AppendParameters(IDeclaredElement element, ISubstitution substitution, bool isTopLevel, Context context) {
+			if (TryGetParametersOwner(element) is not { } parametersOwner || !ShouldShowParameters(element))
 				return;
 
 			bool isIndexer = IsIndexer(element);
@@ -697,7 +664,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 
 			else {
-
 				ParametersFormattingMode formattingMode = context.Options.ParametersFormattingMode;
 				bool addNewLineAroundParameters = isTopLevel && formattingMode == ParametersFormattingMode.AllOnNewLine;
 				bool addNewLineBeforeEachParameter = isTopLevel && ShouldAddNewLineBeforeEachParameter(formattingMode, parameterCount);
@@ -717,7 +683,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					IParameter parameter = parameters[i];
 					AppendParameter(parameter, substitution, context);
 
-					if (isTopLevel && context.PresentedInfo != null) {
+					if (isTopLevel && context.PresentedInfo is not null) {
 						context.PresentedInfo.Parameters.Add(new TextRange(startOffset, _richText.Length));
 						if (parameter.IsExtensionFirstParameter())
 							context.PresentedInfo.IsExtensionMethod = true;
@@ -732,30 +698,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		[Pure]
-		private static bool ShouldAddNewLineBeforeEachParameter(ParametersFormattingMode formattingMode, int parameterCount) {
-			switch (formattingMode) {
-				case ParametersFormattingMode.AllOnCurrentLine:
-					return false;
-				case ParametersFormattingMode.AllOnNewLine:
-					return false;
-				case ParametersFormattingMode.OnePerLine:
-					return true;
-				case ParametersFormattingMode.OnePerLineIfMultiple:
-					return parameterCount > 1;
-				default:
-					return false;
-			}
-		}
+		private static bool ShouldAddNewLineBeforeEachParameter(ParametersFormattingMode formattingMode, int parameterCount)
+			=> formattingMode switch {
+				ParametersFormattingMode.AllOnCurrentLine => false,
+				ParametersFormattingMode.AllOnNewLine => false,
+				ParametersFormattingMode.OnePerLine => true,
+				ParametersFormattingMode.OnePerLineIfMultiple => parameterCount > 1,
+				_ => false
+			};
 
-		[CanBeNull]
-		private static IParametersOwner TryGetParametersOwner([NotNull] IDeclaredElement declaredElement) {
+		private static IParametersOwner? TryGetParametersOwner(IDeclaredElement declaredElement) {
 			if (declaredElement is IParametersOwner parametersOwner)
 				return parametersOwner;
 
 			return (declaredElement as IDelegate)?.InvokeMethod;
 		}
 
-		private void AppendParameter([NotNull] IParameter parameter, [NotNull] ISubstitution substitution, Context context) {
+		private void AppendParameter(IParameter parameter, ISubstitution substitution, Context context) {
 			if (parameter.IsVarArg) {
 				AppendText("__arglist", _highlighterIdProvider.Keyword);
 				return;
@@ -776,7 +735,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private void AppendAttributes(
-			[NotNull] IAttributesSet attributesSet,
+			IAttributesSet attributesSet,
 			AttributesDisplayKind displayKind,
 			bool showArguments,
 			AttributesFormattingMode formattingMode,
@@ -814,47 +773,41 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendText("\r\n", null);
 		}
 
-		private bool MatchesAttributesDisplayKind([CanBeNull] IAttributeInstance attribute, AttributesDisplayKind displayKind) {
-			if (attribute == null)
+		private bool MatchesAttributesDisplayKind(IAttributeInstance? attribute, AttributesDisplayKind displayKind) {
+			if (attribute is null)
 				return false;
 
-			switch (displayKind) {
-				case AttributesDisplayKind.Never:
-					return false;
-				case AttributesDisplayKind.NullnessAnnotations:
-					return _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, NullnessProvider.NotNullAttributeShortName)
-						|| _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, NullnessProvider.CanBeNullAttributeShortName);
-				case AttributesDisplayKind.NullnessAndItemNullnessAnnotations:
-					return _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, NullnessProvider.NotNullAttributeShortName)
-						|| _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, NullnessProvider.CanBeNullAttributeShortName)
-						|| _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, ContainerElementNullnessProvider.ItemNotNullAttributeShortName)
-						|| _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, ContainerElementNullnessProvider.ItemCanBeNullAttributeShortName);
-				case AttributesDisplayKind.AllAnnotations:
-					return _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, attribute.GetClrName().ShortName);
-				case AttributesDisplayKind.Always:
-					return true;
-				default:
-					return false;
-			}
+			return displayKind switch {
+				AttributesDisplayKind.Never
+					=> false,
+				AttributesDisplayKind.NullnessAnnotations
+					=> _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, NullnessProvider.NotNullAttributeShortName)
+					|| _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, NullnessProvider.CanBeNullAttributeShortName),
+				AttributesDisplayKind.NullnessAndItemNullnessAnnotations 
+					=> _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, NullnessProvider.NotNullAttributeShortName)
+					|| _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, NullnessProvider.CanBeNullAttributeShortName)
+					|| _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, ContainerElementNullnessProvider.ItemNotNullAttributeShortName)
+					|| _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, ContainerElementNullnessProvider.ItemCanBeNullAttributeShortName),
+				AttributesDisplayKind.AllAnnotations
+					=> _codeAnnotationsConfiguration.IsAnnotationAttribute(attribute, attribute.GetClrName().ShortName),
+				AttributesDisplayKind.Always 
+					=> true,
+				_ 
+					=> false
+			};
 		}
 
 		[Pure]
-		private static bool ShouldAddNewLineBeforeEachAttribute(AttributesFormattingMode formattingMode, int attributeCount) {
-			switch (formattingMode) {
-				case AttributesFormattingMode.AllOnCurrentLine:
-					return false;
-				case AttributesFormattingMode.AllOnNewLine:
-					return false;
-				case AttributesFormattingMode.OnePerLine:
-					return true;
-				case AttributesFormattingMode.OnePerLineIfMultiple:
-					return attributeCount > 1;
-				default:
-					return false;
-			}
-		}
+		private static bool ShouldAddNewLineBeforeEachAttribute(AttributesFormattingMode formattingMode, int attributeCount)
+			=> formattingMode switch {
+				AttributesFormattingMode.AllOnCurrentLine => false,
+				AttributesFormattingMode.AllOnNewLine => false,
+				AttributesFormattingMode.OnePerLine => true,
+				AttributesFormattingMode.OnePerLineIfMultiple => attributeCount > 1,
+				_ => false
+			};
 
-		private void AppendAttribute([NotNull] IAttributeInstance attribute, bool showArguments, Context context) {
+		private void AppendAttribute(IAttributeInstance attribute, bool showArguments, Context context) {
 			AppendText("[", null);
 			AppendText(attribute.GetClrName().ShortName.TrimFromEnd(AttributeInstanceExtensions.ATTRIBUTE_SUFFIX, StringComparison.Ordinal), _highlighterIdProvider.Class);
 
@@ -893,12 +846,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText("] ", null);
 		}
 
-		private void AppendAttributeValue([NotNull] AttributeValue attributeValue, Context context) {
+		private void AppendAttributeValue(AttributeValue attributeValue, Context context) {
 			if (attributeValue.IsArray) {
 				AppendText("new", _highlighterIdProvider.Keyword);
 				AppendText(" { ", null);
-				AttributeValue[] arrayValue = attributeValue.ArrayValue;
-				if (arrayValue != null) {
+				if (attributeValue.ArrayValue is { } arrayValue) {
 					for (int i = 0; i < arrayValue.Length; ++i) {
 						if (i > 0)
 							AppendText(", ", null);
@@ -912,8 +864,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			if (attributeValue.IsType) {
 				AppendText("typeof", _highlighterIdProvider.Keyword);
 				AppendText("(", null);
-				IType typeValue = attributeValue.TypeValue;
-				if (typeValue != null)
+				if (attributeValue.TypeValue is { } typeValue)
 					AppendType(typeValue, QualifierDisplays.None, false, context);
 				AppendText(")", null);
 				return;
@@ -922,24 +873,22 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendConstantValue(attributeValue.ConstantValue, false);
 		}
 
-		private static bool ShouldShowParameters([NotNull] IDeclaredElement element) {
+		private static bool ShouldShowParameters(IDeclaredElement element) {
 			if (element.IsDestructor() || CSharpDeclaredElementUtil.IsProperty(element))
 				return false;
 
-			return !(element is IAccessor accessor)
-				|| accessor.Kind != AccessorKind.GETTER
+			return element is not IAccessor { Kind: AccessorKind.GETTER } accessor 
 				|| !CSharpDeclaredElementUtil.IsProperty(accessor.OwnerMember);
 		}
 
-		private static bool IsIndexer([NotNull] IDeclaredElement element) {
+		private static bool IsIndexer(IDeclaredElement? element) {
 			if (element is IAccessor accessor)
 				element = accessor.OwnerMember;
 
 			return element.IsCSharpIndexer() || element.IsCSharpIndexedProperty();
 		}
 
-		[CanBeNull]
-		private static string GetParameterSpecialModifier([NotNull] IParameter parameter) {
+		private static string? GetParameterSpecialModifier(IParameter parameter) {
 			if (parameter.IsParameterArray)
 				return "params ";
 			if (parameter.IsExtensionFirstParameter())
@@ -947,21 +896,15 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return null;
 		}
 
-		[CanBeNull]
-		private static string GetParameterKindModifier([NotNull] IParameter parameter) {
-			switch (parameter.Kind) {
-				case ParameterKind.REFERENCE:
-					return "ref ";
-				case ParameterKind.OUTPUT:
-					return "out ";
-				case ParameterKind.INPUT:
-					return "in ";
-				default:
-					return null;
-			}
-		}
+		private static string? GetParameterKindModifier(IParameter parameter)
+			=> parameter.Kind switch {
+				ParameterKind.REFERENCE => "ref ",
+				ParameterKind.OUTPUT => "out ",
+				ParameterKind.INPUT => "in ",
+				_ => null
+			};
 
-		private void AppendDefaultValue([NotNull] IParameter parameter, [NotNull] ISubstitution substitution, Context context) {
+		private void AppendDefaultValue(IParameter parameter, ISubstitution substitution, Context context) {
 			if (!parameter.IsOptional)
 				return;
 
@@ -978,8 +921,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return;
 			}
 
-			IType defaultType = defaultValue.DefaultTypeValue;
-			if (defaultType == null)
+			if (defaultValue.DefaultTypeValue is not { } defaultType)
 				return;
 
 			if (defaultType.IsNullable() || defaultType.IsReferenceType()) {
@@ -995,7 +937,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendText(")", null);
 		}
 
-		private void AppendConstantValueOwner([NotNull] IConstantValueOwner constantValueOwner) {
+		private void AppendConstantValueOwner(IConstantValueOwner constantValueOwner) {
 			ConstantValue constantValue = constantValueOwner.ConstantValue;
 			if (constantValue.IsBadValue())
 				return;
@@ -1004,14 +946,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			AppendConstantValue(constantValue, true);
 		}
 
-		private void AppendConstantValue([NotNull] ConstantValue constantValue, bool treatEnumAsIntegral) {
+		private void AppendConstantValue(ConstantValue constantValue, bool treatEnumAsIntegral) {
 			if (constantValue.IsBadValue()) {
 				AppendText("bad value", null);
 				return;
 			}
 
-			IEnum enumType = constantValue.Type.GetEnumType();
-			if (enumType != null) {
+			if (constantValue.Type.GetEnumType() is { } enumType) {
 				if (treatEnumAsIntegral) {
 					AppendText(constantValue.Value?.ToString() ?? String.Empty, _highlighterIdProvider.Number);
 					return;
@@ -1020,17 +961,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 					return;
 			}
 
-			string presentation = constantValue.GetPresentation(CSharpLanguage.Instance);
+			string presentation = constantValue.GetPresentation(CSharpLanguage.Instance, DeclaredElementPresenterTextStyles.Empty).Text;
 			if (CSharpLexer.IsKeyword(presentation)) {
 				AppendText(presentation, _highlighterIdProvider.Keyword);
 				return;
 			}
 
-			IType type = constantValue.Type;
+			IType? type = constantValue.Type;
 			if (type.IsNullable())
 				type = type.GetNullableUnderlyingType();
 
-			if (type == null) {
+			if (type is null) {
 				AppendText(presentation, null);
 				return;
 			}
@@ -1045,7 +986,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendText(presentation, null);
 		}
 
-		private bool AppendEnumValue([NotNull] ConstantValue constantValue, [NotNull] IEnum enumType) {
+		private bool AppendEnumValue(ConstantValue constantValue, IEnum enumType) {
 			IList<IField> fields = CSharpEnumUtil.CalculateEnumMembers(constantValue, enumType);
 			if (fields.Count == 0)
 				return false;
@@ -1069,22 +1010,22 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			return true;
 		}
 
-		private void AppendAccessors([NotNull] IProperty property, Context context) {
-			IAccessor getter = property.Getter;
-			IAccessor setter = property.Setter;
-			if (getter == null && setter == null)
+		private void AppendAccessors(IProperty property, Context context) {
+			IAccessor? getter = property.Getter;
+			IAccessor? setter = property.Setter;
+			if (getter is null && setter is null)
 				return;
 
 			AppendText(" { ", null);
 			AccessRights propertyAccessRights = property.GetAccessRights();
-			if (getter != null)
+			if (getter is not null)
 				AppendAccessor(getter, "get", propertyAccessRights, context);
-			if (setter != null)
+			if (setter is not null)
 				AppendAccessor(setter, "set", propertyAccessRights, context);
 			AppendText("}", null);
 		}
 
-		private void AppendAccessor([NotNull] IAccessor accessor, [NotNull] string accessorName, AccessRights propertyAccessRights, Context context) {
+		private void AppendAccessor(IAccessor accessor, string accessorName, AccessRights propertyAccessRights, Context context) {
 			if (context.Options.ShowAccessRights) {
 				AccessRights accessorAccessRights = accessor.GetAccessRights();
 				if (accessorAccessRights != propertyAccessRights)
@@ -1114,7 +1055,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				AppendConstantValueOwner(literalExpression);
 		}
 
-		private void AppendTupleTypeComponent([NotNull] ITupleTypeComponent tupleTypeComponent, [NotNull] PresenterOptions options) {
+		private void AppendTupleTypeComponent(ITupleTypeComponent tupleTypeComponent, PresenterOptions options) {
 			if (tupleTypeComponent.Parent is not ITupleTypeComponentList tupleComponentList)
 				return;
 
@@ -1132,8 +1073,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				ITupleTypeComponent component = components[i];
 				if (component is not null) {
 					AppendType(CSharpTypeFactory.CreateType(component.TypeUsage), QualifierDisplays.None, true, context);
-					ICSharpIdentifier nameIdentifier = component.NameIdentifier;
-					if (nameIdentifier != null) {
+					if (component.NameIdentifier is { } nameIdentifier) {
 						AppendText(" ", null);
 						AppendText(nameIdentifier.Name, _highlighterIdProvider.TupleComponentName);
 					}
@@ -1142,18 +1082,17 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			AppendText(")", null);
 
-			ICSharpIdentifier componentNameIdentifier = tupleTypeComponent.NameIdentifier;
-			if (componentNameIdentifier != null) {
+			if (tupleTypeComponent.NameIdentifier is { } componentNameIdentifier) {
 				AppendText(".", _highlighterIdProvider.Operator);
 				AppendText(componentNameIdentifier.Name, _highlighterIdProvider.TupleComponentName);
 			}
 		}
 
 		public CSharpColorizer(
-			[NotNull] RichText richText,
-			[NotNull] TextStyleHighlighterManager textStyleHighlighterManager,
-			[NotNull] CodeAnnotationsConfiguration codeAnnotationsConfiguration,
-			[NotNull] HighlighterIdProvider highlighterIdProvider) {
+			RichText richText,
+			TextStyleHighlighterManager textStyleHighlighterManager,
+			CodeAnnotationsConfiguration codeAnnotationsConfiguration,
+			HighlighterIdProvider highlighterIdProvider) {
 			_richText = richText;
 			_textStyleHighlighterManager = textStyleHighlighterManager;
 			_codeAnnotationsConfiguration = codeAnnotationsConfiguration;
