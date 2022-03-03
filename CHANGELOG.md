@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.17.6.4
+- [Added] Support for all variants of "see" documentation tags.(#151, #159)
+- [Added] Support for parameters info in documentation. (#151)
+- [Updated] Updated ReSharper SDK to 2021.3.3.
+
 ## 3.17.0
 - [Added] Support for ReSharper 2021.3.0 RTM.
 - [Added] Support for init property accessors.

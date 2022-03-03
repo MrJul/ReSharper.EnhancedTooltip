@@ -15,6 +15,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public RichText? Return { get; set; }
 
+		public List<ParamContent> Parameters { get; } = new();
+
 		public RichText? Value { get; set; }
 
 		public RichText? Remarks { get; set; }

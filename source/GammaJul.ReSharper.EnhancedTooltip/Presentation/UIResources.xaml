@@ -153,6 +153,29 @@
 							RichText="{Binding Description}" />
 					</StackPanel>
 
+					<ItemsControl x:Name="ParametersPresenter" ItemsSource="{Binding Parameters}" Grid.IsSharedSizeScope="True">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate DataType="{x:Type richText:RichText}">
+
+								<DockPanel Margin="0,2,0,0">
+									<StackPanel Orientation="Horizontal" VerticalAlignment="Top" DockPanel.Dock="Left">
+										<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" VerticalAlignment="Center">
+											<TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Parameter"
+											           FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
+										</Border>
+										<TextBlock Text="{Binding Name}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,0,1" />
+										<TextBlock Text=" • " FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,0,1" />
+									</StackPanel>
+
+									<local:AutoContrastedRichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center"
+									                                       RichText="{Binding Description}" Margin="0,0,0,1" />
+
+								</DockPanel>
+
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+
 					<DockPanel x:Name="ObsoletePresenter" Margin="0,2,0,0">
 						<Border Style="{StaticResource TitleBorderStyle}" DockPanel.Dock="Left">
 							<TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Obsolete"
@@ -248,6 +271,9 @@
 					<DataTrigger Binding="{Binding HasItems, ElementName=ExceptionsPresenter}" Value="False">
 						<Setter TargetName="ExceptionsPresenter" Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
+					<DataTrigger Binding="{Binding HasItems, ElementName=ParametersPresenter}" Value="False">
+						<Setter TargetName="ParametersPresenter" Property="Visibility" Value="Collapsed" />
+					</DataTrigger>
 					<DataTrigger Binding="{Binding Description}" Value="{x:Null}">
 						<Setter TargetName="DescriptionPresenter" Property="Visibility" Value="Collapsed" />
 					</DataTrigger>
@@ -257,6 +283,7 @@
 							<Condition Binding="{Binding Return}" Value="{x:Null}" />
 							<Condition Binding="{Binding Remarks}" Value="{x:Null}" />
 							<Condition Binding="{Binding HasItems, ElementName=ExceptionsPresenter}" Value="False" />
+							<Condition Binding="{Binding HasItems, ElementName=ParametersPresenter}" Value="False" />
 						</MultiDataTrigger.Conditions>
 						<Setter TargetName="DescriptionPresenter" Property="Margin" Value="0" />
 					</MultiDataTrigger>

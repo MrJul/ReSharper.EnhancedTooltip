@@ -6,6 +6,7 @@ using System.Linq;
 using System.Xml;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
+using GammaJul.ReSharper.EnhancedTooltip.VisualStudio;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
@@ -238,6 +239,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowExceptions))
 					identifierContent.Exceptions.AddRange(GetExceptions(xmlDoc, languageType, psiModule));
+				if (settings.GetValue((IdentifierTooltipSettings s) => s.ShowParams))
+					identifierContent.Parameters.AddRange(IdentifierTooltipContentProvider.GetParams(xmlDoc, languageType, psiModule));
 
 			}
 
@@ -415,7 +418,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			if (returnsNode is null || !returnsNode.HasChildNodes)
 				return null;
 
-			var richText = XmlDocRichTextPresenter.Run(returnsNode, false, languageType, DeclaredElementPresenterTextStyles.Empty, psiModule).RichText;
+			var richText = XmlDocRichTextPresenterEx.Run(returnsNode, false, languageType, DeclaredElementPresenterTextStyles.Empty, psiModule).RichText;
 			return richText.IsNullOrEmpty() ? null : richText;
 		}
 
@@ -434,7 +437,49 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			}
 			return exceptions.ResultingList();
 		}
+		private static IEnumerable<ParamContent> GetParams(
+			XmlNode? xmlDoc,
+			PsiLanguageType languageType,
+			IPsiModule psiModule) {
+			XmlNodeList? typeParamNodes = xmlDoc?.SelectNodes("typeparam");
+			XmlNodeList? paramNodes = xmlDoc?.SelectNodes("param");
+			Boolean paramExists = !(typeParamNodes?.Count == 0 && paramNodes?.Count == 0);
+			if (!paramExists)
+				return EmptyList<ParamContent>.InstanceList;
 
+			var paramNodesList = new LocalList<ParamContent>();
+			if (typeParamNodes != null) {
+				foreach (XmlNode paramNode in typeParamNodes) {
+					if (IdentifierTooltipContentProvider.TryExtractParams(paramNode as XmlElement, languageType, psiModule) is { } typeparam)
+						paramNodesList.Add(typeparam);
+				}
+			}
+
+			if (paramNodes != null) {
+				foreach (XmlNode paramNode in paramNodes) {
+					if (IdentifierTooltipContentProvider.TryExtractParams(paramNode as XmlElement, languageType, psiModule) is { } param)
+						paramNodesList.Add(param);
+				}
+			}
+
+			return paramNodesList.ResultingList();
+		}
+		private static ParamContent? TryExtractParams(
+			XmlElement? paramElement,
+			PsiLanguageType languageType,
+			IPsiModule psiModule) {
+
+			string? name = paramElement?.GetAttribute("name");
+			if (String.IsNullOrEmpty(name))
+				return null;
+
+			var paramContent = new ParamContent(name!);
+
+			RichText richText = XmlDocRichTextPresenterEx.Run(paramElement!, false, languageType, DeclaredElementPresenterTextStyles.Empty, psiModule).RichText;
+			if (!richText.IsNullOrEmpty())
+				paramContent.Description = richText;
+			return paramContent;
+		}
 		private static ExceptionContent? TryExtractException(
 			XmlElement? exceptionElement,
 			PsiLanguageType languageType,
@@ -450,7 +495,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			var exceptionContent = new ExceptionContent(cref);
 			if (exceptionElement!.HasChildNodes) {
-				RichText richText = XmlDocRichTextPresenter.Run(exceptionElement, false, languageType, DeclaredElementPresenterTextStyles.Empty, psiModule).RichText;
+				RichText richText = XmlDocRichTextPresenterEx.Run(exceptionElement, false, languageType, DeclaredElementPresenterTextStyles.Empty, psiModule).RichText;
 				if (!richText.IsNullOrEmpty())
 					exceptionContent.Description = richText;
 			}

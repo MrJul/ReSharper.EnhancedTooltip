@@ -39,6 +39,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
 		[SettingsEntry(true, "Display documented exceptions")]
 		public bool ShowExceptions { get; set; }
+		[SettingsEntry(true, "Display parameters information")]
+		public bool ShowParams { get; set; }
 
 		[SettingsEntry(true, "Display overload count where applicable")]
 		public bool ShowOverloadCount { get; set; }

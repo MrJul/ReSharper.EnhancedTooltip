@@ -20,13 +20,16 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2021.3.0" />
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2021.3.3" />
 		<PackageReference Include="EnvDTE" Version="8.0.0" />
 		<PackageReference Include="VSSDK.Editor" Version="11.0.*" />
 		<PackageReference Include="VSSDK.Language" Version="11.0.*" />
 		<PackageReference Include="VSSDK.Shell.Immutable.11" Version="11.0.*" />
 		<PackageReference Include="VSSDK.Text" Version="11.0.*" />
-		<PackageReference Include="NuGet.CommandLine" Version="4.6.2" />
+		<PackageReference Include="NuGet.CommandLine" Version="6.0.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 </Project>
