@@ -31,7 +31,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		private int myLevel;
 
 		protected XmlDocRichTextPresenterEx(XmlNode node, PsiLanguageType languageType, DeclaredElementPresenterTextStyles textStyles, IPsiModule module) {
-			//this.myLastString = new RichText();
 			this.myModule = module;
 			this.myLanguageType = languageType;
 			this.myTextStyles = textStyles;
@@ -136,11 +135,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			this.Append("\n");
 		}
 
-		public override void VisitPara(XmlElement element) => this.WrapInNewLine(new Action<XmlElement>(((XmlDocVisitor)this).VisitPara), element);
+		public override void VisitPara(XmlElement element) => this.WrapInNewLine(new Action<XmlElement>(base.VisitPara), element);
 
-		public override void VisitSummary(XmlElement element) => this.WrapInNewLine(new Action<XmlElement>(((XmlDocVisitor)this).VisitSummary), element);
+		public override void VisitSummary(XmlElement element) => this.WrapInNewLine(new Action<XmlElement>(base.VisitSummary), element);
 
-		public override void VisitRemarks(XmlElement element) => this.WrapInNewLine(new Action<XmlElement>(((XmlDocVisitor)this).VisitRemarks), element);
+		public override void VisitRemarks(XmlElement element) => this.WrapInNewLine(new Action<XmlElement>(base.VisitRemarks), element);
 
 		public override void VisitC(XmlElement element) => this.Append(element.InnerText, XmlDocRichTextPresenterEx.ourCodeStyle);
 
