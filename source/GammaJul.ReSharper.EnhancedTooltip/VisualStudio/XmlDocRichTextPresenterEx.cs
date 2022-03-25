@@ -11,6 +11,7 @@ using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
+using JetBrains.Util.Media;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 	internal enum XmlDocListType {
@@ -19,8 +20,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		NUMBER,
 	}
 	public class XmlDocRichTextPresenterEx : XmlDocVisitor {
-		private static readonly TextStyle ourCodeStyle = TextStyle.FromForeColor(Color.DarkBlue);
-		private static readonly TextStyle ourCRefStyle = new TextStyle(FontStyle.Bold);
+		private static readonly TextStyle ourCodeStyle = TextStyle.FromForeColor(Color.DarkBlue.ToJetRgbaColor());
+		private static readonly TextStyle ourCRefStyle = new TextStyle(JetFontStyles.Bold);
 		private static readonly TextStyle ourNormalStyle = TextStyle.Default;
 		private readonly PsiLanguageType myLanguageType;
 		[CanBeNull]

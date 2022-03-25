@@ -22,6 +22,7 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
+using JetBrains.Util.Media;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
@@ -141,7 +142,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		private void AppendElementKind(string kind, bool stylized) {
 			if (stylized)
-				AppendText("(" + kind + ") ", new TextStyle(FontStyle.Italic));
+				AppendText("(" + kind + ") ", new TextStyle(JetFontStyles.Italic));
 			else
 				AppendText(kind + " ", null);
 		}
@@ -660,7 +661,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			int parameterCount = parameters.Count;
 			if (parameterCount == 0) {
 				if (isTopLevel && context.Options.ShowEmptyParametersText)
-					AppendText("<no parameters>", new TextStyle(FontStyle.Regular, Color.Gray));
+					AppendText("<no parameters>", new TextStyle(JetFontStyles.Regular, Color.Gray.ToJetRgbaColor()));
 			}
 
 			else {

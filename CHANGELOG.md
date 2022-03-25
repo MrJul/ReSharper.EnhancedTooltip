@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.17.8-pre
+- [Added] Support for ReSharper 2022.1.0 EAP.
+
 ## 3.17.6.4
 - [Added] Support for all variants of "see" documentation tags.(#151, #159)
 - [Added] Support for parameters info in documentation. (#151)

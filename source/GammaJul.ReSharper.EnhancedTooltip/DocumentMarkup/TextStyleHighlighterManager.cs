@@ -10,7 +10,7 @@ using JetBrains.TextControl;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
-using JetBrains.Util.Colors;
+using JetBrains.Util.Media;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
 using Color = System.Drawing.Color;
@@ -60,13 +60,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 				? new TextStyle(GetFontStyle(properties), GetColor(properties))
 				: TextStyle.Default;
 
-		private static Color GetColor(TextFormattingRunProperties properties)
+		private static JetRgbaColor GetColor(TextFormattingRunProperties properties)
 			=> !properties.ForegroundBrushEmpty && properties.ForegroundBrush is SolidColorBrush solidColorBrush
-				? solidColorBrush.Color.ToWinFormsColor()
-				: Color.Empty;
+				? solidColorBrush.Color.ToJetRgbaColor()
+				: Color.Empty.ToJetRgbaColor();
 
-		private static FontStyle GetFontStyle(TextFormattingRunProperties properties)
-			=> properties.BoldEmpty || !properties.Bold ? FontStyle.Regular : FontStyle.Bold;
+		private static JetFontStyles GetFontStyle(TextFormattingRunProperties properties)
+			=> properties.BoldEmpty || !properties.Bold ? JetFontStyles.Regular : JetFontStyles.Bold;
 
 		public TextStyle GetHighlighterTextStyle(string? highlighterAttributeId)
 			=> highlighterAttributeId.IsEmpty()

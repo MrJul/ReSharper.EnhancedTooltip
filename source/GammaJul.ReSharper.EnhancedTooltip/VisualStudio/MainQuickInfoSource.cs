@@ -68,8 +68,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 							}
 						}
 
-						List<Vs10Highlighter> highlighters = documentMarkup.GetHighlightersOver(textRange).OfType<Vs10Highlighter>().ToList();
-						foreach (Vs10Highlighter highlighter in highlighters) {
+						var highlighters = documentMarkup.GetHighlightersOver(textRange).ToList();
+						foreach (var highlighter in highlighters) {
 							IEnumerable<IReSharperTooltipContent> contents = GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution, hasIdentifierTooltipContent);
 							foreach (IReSharperTooltipContent content in contents) {
 								if (presenter.TryAddReSharperContent(content))
@@ -93,6 +93,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 							continue;
 
 						var contentFullName = content.GetType().FullName;
+						if (content.ToString().Contains("quickinfo:")) {
+							continue;
+						}
 
 						// ignore the first VS element, as it's the identifier tooltip and we already have one
 						if (hasIdentifierTooltipContent && !ignoredFirstVsElement) {
