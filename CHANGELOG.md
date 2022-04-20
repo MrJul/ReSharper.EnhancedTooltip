@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.17.8.8
+- [Updated] Updated ReSharper SDK to 2022.1.0.
+
 ## 3.17.8-pre
 - [Added] Support for ReSharper 2022.1.0 EAP.
 

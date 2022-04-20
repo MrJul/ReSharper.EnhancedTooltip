@@ -47,13 +47,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 					IDocument document = documentMarkup.Document;
 					var presenter = new MultipleTooltipContentPresenter(tooltipFormattingProvider.GetTooltipFormatting(), document);
 					IContextBoundSettingsStore settings = document.GetSettings();
-					ISolution? solution = TryGetCurrentSolution();
+					ISolution? solution = MainQuickInfoSource.TryGetCurrentSolution();
 					bool hasIdentifierTooltipContent = false;
 
 					var resolveContext = solution is null ? UniversalModuleReferenceContext.Instance : document.GetContext(solution);
 					using (CompilationContextCookie.GetOrCreate(resolveContext)) {
 
-						if (solution is not null && GetIdentifierContentGroup(textRange.CreateDocumentRange(document), solution, settings) is { } contentGroup) {
+						if (solution is not null && MainQuickInfoSource.GetIdentifierContentGroup(textRange.CreateDocumentRange(document), solution, settings) is { } contentGroup) {
 							foreach (IdentifierTooltipContent content in contentGroup.Identifiers) {
 								presenter.AddIdentifierTooltipContent(content);
 								finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
@@ -70,7 +70,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 						var highlighters = documentMarkup.GetHighlightersOver(textRange).ToList();
 						foreach (var highlighter in highlighters) {
-							IEnumerable<IReSharperTooltipContent> contents = GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution, hasIdentifierTooltipContent);
+							IEnumerable<IReSharperTooltipContent> contents = MainQuickInfoSource.GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution, hasIdentifierTooltipContent);
 							foreach (IReSharperTooltipContent content in contents) {
 								if (presenter.TryAddReSharperContent(content))
 									finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
@@ -157,14 +157,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				IPsiSourceFile? sourceFile = solution is null ? null : document.GetPsiSourceFile(solution);
 
 				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, highlighting.GetType(), sourceFile, settings);
-				if (TryCreateIssueContent(highlighting, range, highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), severity, settings, solution) is { } issueContent) {
+				if (MainQuickInfoSource.TryCreateIssueContent(highlighting, range, highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), severity, settings, solution) is { } issueContent) {
 					yield return issueContent;
 					yield break;
 				}
 
-				if (solution is not null && IsIdentifierHighlighting(highlighting)) {
+				if (solution is not null && MainQuickInfoSource.IsIdentifierHighlighting(highlighting)) {
 					if (!skipIdentifierHighlighting) {
-						var identifierContentGroup = GetIdentifierContentGroup(highlighter, solution, settings);
+						var identifierContentGroup = MainQuickInfoSource.GetIdentifierContentGroup(highlighter, solution, settings);
 						if (identifierContentGroup is not null) {
 							foreach (IdentifierTooltipContent content in identifierContentGroup.Identifiers)
 								yield return content;
@@ -176,7 +176,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				}
 			}
 
-			if (TryCreateMiscContent(highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), range) is { } miscContent)
+			if (MainQuickInfoSource.TryCreateMiscContent(highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), range) is { } miscContent)
 				yield return miscContent;
 		}
 
@@ -209,7 +209,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				return null;
 
 			if (settings.GetValue((IssueTooltipSettings s) => s.ColorizeElementsInErrors)) {
-				RichText? enhancedText = TryEnhanceHighlighting(highlighting, settings, solution);
+				RichText? enhancedText = MainQuickInfoSource.TryEnhanceHighlighting(highlighting, settings, solution);
 				if (!enhancedText.IsNullOrEmpty())
 					text = enhancedText!;
 			}

@@ -16,7 +16,7 @@ It's a plugin for [JetBrains ReSharper](http://www.jetbrains.com/resharper/) tha
 Installation
 ------------
 Visual Studio 2017, 2019 and 2022 are supported.  
-ReSharper 2021.3 must be installed.  
+ReSharper 2022.1 must be installed.  
 (Note: older versions are still available for previous ReSharper versions).
 
 Install the plugin using the built-in Extension Manager from the ReSharper menu.  
