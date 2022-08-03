@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo;
 using JetBrains.Util;
@@ -27,9 +27,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 
 		protected abstract EnhancedCandidate<TCandidate> Enhance(TCandidate candidate);
 
-		public int Argument
-			=> _context.Argument;
-
 		public ICandidate[] Candidates
 			=> _candidates ??= Enhance(_context.Candidates);
 
@@ -51,6 +48,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			
 			return null;
 		}
+
+		public Int32 GetArgument(ICandidate candidate)
+			=> this._context.GetArgument(candidate);
 
 		public string[] NamedArguments {
 			get => _context.NamedArguments;

@@ -239,15 +239,30 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		public override void VisitTypeParamRef(XmlElement element) => this.ProcessRefTagNameAttr(element);
 
 		private JetBrains.UI.RichText.RichText ProcessCRef(string value) {
-			DeclaredElementPresenterStyle presenterStyle = XmlDocPresenterUtil.LinkedElementPresentationStyle;
-			if (this.myTextStyles != null) {
-				presenterStyle = presenterStyle.Clone();
-				presenterStyle.TextStyles = this.myTextStyles;
-			}
+			DeclaredElementPresenterStyle presenterStyle = new DeclaredElementPresenterStyle() {
+				ShowAccessRights = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowAccessRights,
+				ShowModifiers = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowModifiers,
+				ShowParametersForDelegates = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowParametersForDelegates,
+				ShowEntityKind = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowEntityKind,
+				ShowName = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowName,
+				ShowExplicitInterfaceQualification = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowExplicitInterfaceQualification,
+				ShowNameInQuotes = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowNameInQuotes,
+				ShowType = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowType,
+				ShowParameterTypes = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowParameterTypes,
+				ShowParameterNames = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowParameterNames,
+				ShowTypesQualified = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowTypesQualified,
+				ShowMemberContainer = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowMemberContainer,
+				ShowTypeContainer = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowTypeContainer,
+				ShowNamespaceContainer = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowNamespaceContainer,
+				ShowParameterContainer = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowParameterContainer,
+				ShowConstantValue = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowConstantValue,
+				TextStyles = this.myTextStyles ?? XmlDocPresenterUtil.LinkedElementPresentationStyle.TextStyles
+			};
+
 			return XmlDocRichTextPresenterEx.ProcessCRef(value, this.myLanguageType, this.myModule, presenterStyle);
 		}
 
-		public static JetBrains.UI.RichText.RichText ProcessCRef(string crefValue,PsiLanguageType languageType,IPsiModule psiModule,DeclaredElementPresenterStyle presenterStyle) {
+		public static JetBrains.UI.RichText.RichText ProcessCRef(string crefValue, PsiLanguageType languageType, IPsiModule psiModule, DeclaredElementPresenterStyle presenterStyle) {
 			var element = psiModule == null ? null : XMLDocUtil.ResolveId(psiModule.GetPsiServices(), crefValue, psiModule, true);
 			return element == null || !element.IsValid() ? new JetBrains.UI.RichText.RichText(XmlDocPresenterUtil.ProcessCref(crefValue), XmlDocRichTextPresenterEx.ourCRefStyle) : DeclaredElementPresenter.Format(languageType, presenterStyle, element);
 		}

@@ -51,8 +51,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		}
 
-		private static readonly DeclaredElementPresenterStyle _specialTypeStyle = new(NameStyle.SHORT) {
-			ShowTypeParameters = TypeParameterStyle.NONE
+		private static readonly DeclaredElementPresenterStyle _specialTypeStyle = new() {
+			ShowTypeParameters = TypeParameterStyle.NONE,
+			ShowName = NameStyle.SHORT
 		};
 
 		private readonly RichText _richText;
@@ -225,7 +226,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			AppendText(before, null);
 
-			if (element.IsRefReturnMember() || (element is ICSharpLocalVariable localVariable && localVariable.ReferenceKind.IsByReference()))
+			if (element.IsRefMember() || (element is ICSharpLocalVariable localVariable && localVariable.ReferenceKind.IsByReference()))
 				AppendText("ref ", _highlighterIdProvider.Keyword);
 			else if (element is IParameter parameter) {
 				string? specialModifier = GetParameterSpecialModifier(parameter);
@@ -955,14 +956,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (constantValue.Type.GetEnumType() is { } enumType) {
 				if (treatEnumAsIntegral) {
-					AppendText(constantValue.Value?.ToString() ?? String.Empty, _highlighterIdProvider.Number);
+					AppendText(constantValue.StringValue ?? String.Empty, _highlighterIdProvider.Number);
 					return;
 				}
 				if (AppendEnumValue(constantValue, enumType))
 					return;
 			}
 
-			string presentation = constantValue.GetPresentation(CSharpLanguage.Instance, DeclaredElementPresenterTextStyles.Empty).Text;
+			string presentation = constantValue.GetPresentation(CSharpLanguage.Instance, TypePresentationStyle.Default).Text;
 			if (CSharpLexer.IsKeyword(presentation)) {
 				AppendText(presentation, _highlighterIdProvider.Keyword);
 				return;

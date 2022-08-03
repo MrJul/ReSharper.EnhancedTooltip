@@ -6,9 +6,9 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
 	[SolutionComponent]
-	internal sealed class ConvertIfStatementToSwitchStatementWarningEnhancer : CSharpHighlightingEnhancer<ConvertIfStatementToSwitchStatementWarning> {
+	internal sealed class ConvertIfStatementToSwitchStatementWarningEnhancer : CSharpHighlightingEnhancer<ConvertIfStatementToSwitchWarning> {
 
-		protected override void AppendTooltip(ConvertIfStatementToSwitchStatementWarning highlighting, CSharpColorizer colorizer) {
+		protected override void AppendTooltip(ConvertIfStatementToSwitchWarning highlighting, CSharpColorizer colorizer) {
 			colorizer.AppendPlainText("Convert '");
 			colorizer.AppendKeyword("if");
 			colorizer.AppendPlainText("' statement to '");

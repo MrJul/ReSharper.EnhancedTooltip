@@ -377,9 +377,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 			bool inherited;
 
 			if (attributeClass.GetAttributeInstances(PredefinedType.ATTRIBUTE_USAGE_ATTRIBUTE_CLASS, true).FirstOrDefault() is { } attributeUsage) {
-				targets = (AttributeTargets?) (attributeUsage.PositionParameter(0).ConstantValue.Value as int?) ?? AttributeTargets.All;
-				allowMultiple = attributeUsage.NamedParameter(nameof(AttributeUsageAttribute.AllowMultiple)).ConstantValue.Value as bool? ?? false;
-				inherited = attributeUsage.NamedParameter(nameof(AttributeUsageAttribute.Inherited)).ConstantValue.Value as bool? ?? true;
+				targets = (AttributeTargets?) (attributeUsage.PositionParameter(0).ConstantValue.IntValue) ?? AttributeTargets.All;
+				allowMultiple = attributeUsage.NamedParameter(nameof(AttributeUsageAttribute.AllowMultiple)).ConstantValue.BoolValue as bool? ?? false;
+				inherited = attributeUsage.NamedParameter(nameof(AttributeUsageAttribute.Inherited)).ConstantValue.BoolValue as bool? ?? true;
 			}
 			else {
 				targets = AttributeTargets.All;

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using JetBrains.Application.Settings;
@@ -37,8 +38,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public bool Matches(IDeclaredElement signature)
 			=> UnderlyingCandidate.Matches(signature);
 
-		public void GetParametersInfo(out ParamPresentationInfo[] paramInfos, out bool isParamsArray)
-			=> UnderlyingCandidate.GetParametersInfo(out paramInfos, out isParamsArray);
+		public void GetParametersInfo(out ParamPresentationInfo[] paramInfos, out Int32 paramArrayIndex)
+			=> UnderlyingCandidate.GetParametersInfo(out paramInfos, out paramArrayIndex);
 		
 		public override bool Equals(object obj)
 			=> obj is EnhancedCandidate<TCandidate> candidate
