@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.18.0.2
+- [Fixed] Fixed wrongly labeled put parameters as ref.
+
 ## 3.18.0.0
 - [Updated] Updated ReSharper SDK to 2022.2.0.
 

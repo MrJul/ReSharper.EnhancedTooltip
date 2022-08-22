@@ -226,7 +226,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			AppendText(before, null);
 
-			if (element.IsRefMember() || (element is ICSharpLocalVariable localVariable && localVariable.ReferenceKind.IsByReference()))
+			if ((element.IsRefMember() || (element is ICSharpLocalVariable localVariable && localVariable.ReferenceKind.IsByReference())) && (element as IParameter)?.Kind == ParameterKind.REFERENCE)
 				AppendText("ref ", _highlighterIdProvider.Keyword);
 			else if (element is IParameter parameter) {
 				string? specialModifier = GetParameterSpecialModifier(parameter);
