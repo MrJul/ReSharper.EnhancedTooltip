@@ -956,7 +956,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (constantValue.Type.GetEnumType() is { } enumType) {
 				if (treatEnumAsIntegral) {
-					AppendText(constantValue.StringValue ?? String.Empty, _highlighterIdProvider.Number);
+					AppendText(constantValue.IsEnum() ? constantValue.ToIntUnchecked().ToString() : constantValue.StringValue ?? String.Empty, _highlighterIdProvider.Number);
 					return;
 				}
 				if (AppendEnumValue(constantValue, enumType))

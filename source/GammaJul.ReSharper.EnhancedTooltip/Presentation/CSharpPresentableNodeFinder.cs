@@ -21,9 +21,26 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 			if (tokenType == CSharpTokenType.NEW_KEYWORD)
 				return FindElementFromNewKeyword(node, file, out sourceRange);
-			
+
+			if (tokenType == CSharpTokenType.THIS_KEYWORD) {
+				return FindElementFromThisKeyword(node, file, out sourceRange);
+			}
+
 			sourceRange = TextRange.InvalidRange;
 			return null;
+		}
+
+		private static DeclaredElementInstance? FindElementFromThisKeyword(ITreeNode thisKeyword, IFile file, out TextRange sourceRange) {
+			sourceRange = TextRange.InvalidRange;
+			IDeclaredElement? declaredElement = (thisKeyword.Parent as IThisExpression)
+				?.GetContainingTypeDeclaration()
+				?.DeclaredElement;
+
+			if (declaredElement is null)
+				return null;
+
+			sourceRange = file.GetDocumentRange(thisKeyword.GetTreeTextRange()).TextRange;
+			return new DeclaredElementInstance(declaredElement, EmptySubstitution.INSTANCE);
 		}
 
 		private static DeclaredElementInstance? FindElementFromVarKeyword(ITreeNode varKeyword, IFile file, out TextRange sourceRange) {

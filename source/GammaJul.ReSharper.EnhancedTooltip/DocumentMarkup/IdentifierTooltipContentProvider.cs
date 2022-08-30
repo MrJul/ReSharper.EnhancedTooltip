@@ -378,8 +378,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 
 			if (attributeClass.GetAttributeInstances(PredefinedType.ATTRIBUTE_USAGE_ATTRIBUTE_CLASS, true).FirstOrDefault() is { } attributeUsage) {
 				targets = (AttributeTargets?) (attributeUsage.PositionParameter(0).ConstantValue.IntValue) ?? AttributeTargets.All;
-				allowMultiple = attributeUsage.NamedParameter(nameof(AttributeUsageAttribute.AllowMultiple)).ConstantValue.BoolValue as bool? ?? false;
-				inherited = attributeUsage.NamedParameter(nameof(AttributeUsageAttribute.Inherited)).ConstantValue.BoolValue as bool? ?? true;
+				var allowMultipleConstant = attributeUsage.NamedParameter(nameof(AttributeUsageAttribute.AllowMultiple)).ConstantValue;
+				allowMultiple = !allowMultipleConstant.IsBadValue() && ((Boolean)allowMultipleConstant.BoolValue);
+				var inheritedConstant = attributeUsage.NamedParameter(nameof(AttributeUsageAttribute.Inherited)).ConstantValue;
+				inherited = inheritedConstant.IsBadValue() || ((Boolean)attributeUsage.NamedParameter(nameof(AttributeUsageAttribute.Inherited)).ConstantValue.BoolValue);
 			}
 			else {
 				targets = AttributeTargets.All;

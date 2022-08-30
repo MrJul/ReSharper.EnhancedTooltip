@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.18.0.11
+- [Fixed] Fixed tooltip doesnt open for enum members.
+- [Fixed] Fixed tooltip doesnt open for this keyword.
+- [Fixed] Fixed tooltip doesnt open for attributes that have not specified explicitly AllowMultiple and Inherited.
+
 ## 3.18.0.2
 - [Fixed] Fixed wrongly labeled put parameters as ref.
 
