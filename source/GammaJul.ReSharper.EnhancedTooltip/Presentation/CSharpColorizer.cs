@@ -322,7 +322,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			}
 
 			if (context.Options.UseTypeKeywords) {
-				if (CSharpTypeFactory.GetTypeKeyword(declaredType.GetClrName()) is { } typeKeyword) {
+				if (CSharpTypeFactory.GetTypeKeyword(declaredType.GetTypeElement()) is { } typeKeyword) {
 					AppendText(typeKeyword, _highlighterIdProvider.Keyword);
 					if (declaredType.NullableAnnotation == NullableAnnotation.Annotated)
 						AppendText("?", _highlighterIdProvider.Operator);

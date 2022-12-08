@@ -1,3 +1,4 @@
+using System.Linq;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
@@ -26,14 +27,31 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				return FindElementFromThisKeyword(node, file, out sourceRange);
 			}
 
+      if (tokenType == CSharpTokenType.BASE_KEYWORD) {
+        return FindElementFromBaseKeyword(node, file, out sourceRange);
+      }
+
 			sourceRange = TextRange.InvalidRange;
 			return null;
 		}
 
+    private static DeclaredElementInstance? FindElementFromBaseKeyword(ITreeNode baseKeyword, IFile file, out TextRange sourceRange) {
+      sourceRange = TextRange.InvalidRange;
+      IDeclaredElement? declaredElement = (baseKeyword.Parent as IBaseExpression)
+      ?.GetContainingTypeDeclaration()
+      ?.DeclaredElement.GetSuperTypes().First().Resolve().DeclaredElement;
+
+      if (declaredElement is null)
+        return null;
+
+      sourceRange = file.GetDocumentRange(baseKeyword.GetTreeTextRange()).TextRange;
+      return new DeclaredElementInstance(declaredElement, EmptySubstitution.INSTANCE);
+    }
+
 		private static DeclaredElementInstance? FindElementFromThisKeyword(ITreeNode thisKeyword, IFile file, out TextRange sourceRange) {
 			sourceRange = TextRange.InvalidRange;
 			IDeclaredElement? declaredElement = (thisKeyword.Parent as IThisExpression)
-				?.GetContainingTypeDeclaration()
+        ?.GetContainingTypeDeclaration()
 				?.DeclaredElement;
 
 			if (declaredElement is null)

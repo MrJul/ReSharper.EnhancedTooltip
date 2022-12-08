@@ -1,12 +1,16 @@
 # Changelog
 
+## 3.19.0.4
+- [Fixed] Fixed tooltip doesnt open for "base" keyword.
+- [Updated] Updated ReSharper SDK to 2022.3.0.
+
 ## 3.18.0.11
 - [Fixed] Fixed tooltip doesnt open for enum members.
-- [Fixed] Fixed tooltip doesnt open for this keyword.
+- [Fixed] Fixed tooltip doesnt open for "this" keyword.
 - [Fixed] Fixed tooltip doesnt open for attributes that have not specified explicitly AllowMultiple and Inherited.
 
 ## 3.18.0.2
-- [Fixed] Fixed wrongly labeled put parameters as ref.
+- [Fixed] Fixed wrongly labeled out parameters as ref.
 
 ## 3.18.0.0
 - [Updated] Updated ReSharper SDK to 2022.2.0.

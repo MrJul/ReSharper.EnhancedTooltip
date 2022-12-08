@@ -32,13 +32,36 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public int PositionalParameterCount
 			=> UnderlyingCandidate.PositionalParameterCount;
 
-		public RichTextBlock GetDescription()
-			=> UnderlyingCandidate.GetDescription();
+    /// <inheritdoc />
+    public RichTextBlock GetDescription(ParameterInfoSettings settings) => UnderlyingCandidate.GetDescription(settings);
 
-		public bool Matches(IDeclaredElement signature)
+    public bool Matches(IDeclaredElement signature)
 			=> UnderlyingCandidate.Matches(signature);
 
-		public void GetParametersInfo(out ParamPresentationInfo[] paramInfos, out Int32 paramArrayIndex)
+    /// <inheritdoc />
+    public RichText GetSignature(
+      String[] namedArguments,
+      ParameterInfoSettings settings,
+      out TextRange[] parameterRanges,
+      out Int32[] mapToOriginalOrder,
+      out ExtensionMethodInfo extensionMethodInfo) {
+      
+      // TODO: handle named arguments with reordering; currently falling back to non-colored display
+      if (namedArguments.Any(s => s is not null)) {
+        RichText signature = UnderlyingCandidate.GetSignature(namedArguments, settings, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
+        if (!IsIdentityMap(mapToOriginalOrder))
+          return signature;
+      }
+
+      PresenterOptions options = GetPresenterOptions(_settings, settings.ShowAnnotations);
+      HighlighterIdProvider highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(_settings);
+
+      return TryGetSignatureCore(options, highlighterIdProvider, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo) 
+        ?? UnderlyingCandidate.GetSignature(namedArguments, settings, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
+
+    }
+
+    public void GetParametersInfo(out ParamPresentationInfo[] paramInfos, out Int32 paramArrayIndex)
 			=> UnderlyingCandidate.GetParametersInfo(out paramInfos, out paramArrayIndex);
 		
 		public override bool Equals(object obj)
@@ -48,26 +71,6 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public override int GetHashCode()
 			=> UnderlyingCandidate.GetHashCode();
 
-		public RichText GetSignature(
-			string[] namedArguments,
-			AnnotationsDisplayKind showAnnotations,
-			out TextRange[] parameterRanges,
-			out int[] mapToOriginalOrder,
-			out ExtensionMethodInfo extensionMethodInfo) {
-
-			// TODO: handle named arguments with reordering; currently falling back to non-colored display
-			if (namedArguments.Any(s => s is not null)) {
-				RichText signature = UnderlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
-				if (!IsIdentityMap(mapToOriginalOrder))
-					return signature;
-			}
-
-			PresenterOptions options = GetPresenterOptions(_settings, showAnnotations);
-			HighlighterIdProvider highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(_settings);
-
-			return TryGetSignatureCore(options, highlighterIdProvider, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo) 
-				?? UnderlyingCandidate.GetSignature(namedArguments, showAnnotations, out parameterRanges, out mapToOriginalOrder, out extensionMethodInfo);
-		}
 
 		protected abstract PresenterOptions GetPresenterOptions(IContextBoundSettingsStore settings, AnnotationsDisplayKind showAnnotations);
 

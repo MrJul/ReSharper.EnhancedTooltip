@@ -29,7 +29,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			IContextBoundSettingsStore settingsStore) {
 
 			IParameterInfoContext? context = base.CreateContext(solution, caretOffset, expectedLParenthOffset, invocationChar, settingsStore);
-			if (context is null || !settingsStore.GetValue((ParameterInfoSettings s) => s.Enabled))
+			if (context is null || !settingsStore.GetValue((Settings.ParameterInfoSettings s) => s.Enabled))
 				return context;
 
 			return new EnhancedTypeArgumentContext(

@@ -31,7 +31,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		[Pure]
 		private static IDocumentMarkup? TryGetDocumentMarkup(ITextView? textView)
 			=> VsTextViewSolutionContextProvider.TryGetContext(textView)?.TextControl.Document is { } document
-				&& Shell.Instance.TryGetComponent<IDocumentMarkupManager>()?.TryGetMarkupModel(document) is VsDocumentMarkupDevTen documentMarkup
+				&& Shell.Instance.TryGetComponent<IDocumentMarkupManager>()?.TryGetMarkupModel(document) is JetBrains.TextControl.DocumentMarkup.DocumentMarkup documentMarkup
 					? documentMarkup
 					: null;
 

@@ -1,5 +1,4 @@
 ﻿using GammaJul.ReSharper.EnhancedTooltip.Presentation;
-using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
@@ -29,7 +28,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 			IContextBoundSettingsStore settingsStore) {
 
 			IParameterInfoContext? context = base.CreateContext(solution, caretOffset, expectedLParenthOffset, invocationChar, settingsStore);
-			if (context is null || !settingsStore.GetValue((ParameterInfoSettings s) => s.Enabled))
+			if (context is null || !settingsStore.GetValue((Settings.ParameterInfoSettings s) => s.Enabled))
 				return context;
 
 			return new EnhancedParameterInfoContext(
