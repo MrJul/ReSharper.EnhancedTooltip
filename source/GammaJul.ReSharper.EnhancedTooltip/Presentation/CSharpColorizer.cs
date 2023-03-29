@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Text;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Psi;
@@ -13,6 +14,7 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.CSharp.Impl;
+using JetBrains.ReSharper.Psi.CSharp.Impl.Resolve;
 using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.CSharp.Util;
@@ -311,14 +313,18 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 			bool displayUnknownTypeParameters,
 			Context context) {
 
-			if (declaredType is IDynamicType) {
+      if (declaredType.IsDynamicType()) {
 				AppendText("dynamic", _highlighterIdProvider.Keyword);
 				return;
 			}
 
-			if (declaredType is ITupleType tupleType) {
-				AppendTupleType(tupleType, expectedQualifierDisplay, displayUnknownTypeParameters, context);
-				return;
+			if (declaredType.IsTupleType()) {
+        var tupleType = declaredType.AsTupleType();
+        if (tupleType != null) {
+          AppendTupleType(tupleType.Value, expectedQualifierDisplay, displayUnknownTypeParameters, context);
+        }
+
+        return;
 			}
 
 			if (context.Options.UseTypeKeywords) {
@@ -345,14 +351,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		}
 
 		private void AppendTupleType(
-			ITupleType tupleType,
+			DecoratedType<TupleTypeDecoration> tupleType,
 			QualifierDisplays expectedQualifierDisplay,
 			bool displayUnknownTypeParameters,
 			Context context) {
 
 			AppendText("(", null);
 
-			IReadOnlyList<TupleTypeComponent> components = tupleType.Components;
+			IReadOnlyList<TupleTypeComponent> components = tupleType.GetComponents();
 			int componentCount = components.Count;
 			for (int i = 0; i < componentCount; ++i) {
 				if (i > 0)

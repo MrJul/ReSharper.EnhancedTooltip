@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.20.0.2-pre
+- [Updated] Updated ReSharper SDK to 2023.1.0-eap09.
+
 ## 3.19.0.4
 - [Fixed] Fixed tooltip doesnt open for "base" keyword.
 - [Updated] Updated ReSharper SDK to 2022.3.0.
