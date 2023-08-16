@@ -1,5 +1,6 @@
 ﻿using JetBrains.Platform.VisualStudio.SinceVs10.Interop;
-using JetBrains.VsIntegration.Shell;
+using JetBrains.VsIntegration.Interop;
+
 using Microsoft.VisualStudio.Text.Classification;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {

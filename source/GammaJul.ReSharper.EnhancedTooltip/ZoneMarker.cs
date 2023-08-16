@@ -1,5 +1,5 @@
 using JetBrains.Application.BuildScript.Application.Zones;
-using JetBrains.Platform.VisualStudio.SinceVs10.Shell.Zones;
+using JetBrains.Platform.VisualStudio.SinceVs10.Zones;
 
 
 namespace GammaJul.ReSharper.EnhancedTooltip {

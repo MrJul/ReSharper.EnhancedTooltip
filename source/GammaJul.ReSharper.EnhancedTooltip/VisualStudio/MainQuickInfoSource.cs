@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
@@ -5,9 +6,11 @@ using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using JetBrains.Annotations;
+using JetBrains.Application;
 using JetBrains.Application.Settings;
 using JetBrains.Application.Threading;
 using JetBrains.DocumentModel;
+using JetBrains.Lifetimes;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Platform.VisualStudio.SinceVs10.Interop.Shim.TextControl;
 using JetBrains.Platform.VisualStudio.SinceVs10.TextControl.Markup;
@@ -15,6 +18,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Resources.Shell;
+using JetBrains.TextControl;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
@@ -24,6 +28,45 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
+
+  [ShellComponent]
+  public class QuickInfoSessionsLifetimes {
+    private SequentialLifetimes SequentialLifetimes { get; }
+    public QuickInfoSessionsLifetimes(Lifetime lifetime) {
+      SequentialLifetimes = new SequentialLifetimes(lifetime);
+    }
+    public Lifetime NextLifetime(ITextControl textControl) {
+      return SequentialLifetimes.Next().Intersect(textControl.Lifetime);
+    }
+  }
+
+  public class MyInterruptableReadActivity : InterruptableReadActivity 
+  {
+
+    public MyInterruptableReadActivity(MultipleTooltipContentPresenter presenter, IHighlighter highlighter, ShellLocks locks, Lifetime lifetime)
+      : base(lifetime, locks) {
+
+    }
+
+    /// <inheritdoc />
+    protected override void Start() {
+
+    }
+
+    protected override void Work() {
+      //myRichTextBlock = myHighlihgter.TryGetTooltip(HighlighterTooltipKind.TextEditor);
+      //myHighlihgter = null;
+    }
+
+    protected override void Finish()
+    {
+      //myPresenter.SetContent(myRichTextBlock);
+    }
+
+    /// <inheritdoc />
+    protected override String ThreadName => "EnhancedToolTip";
+
+  }
 
 	public class MainQuickInfoSource : QuickInfoSourceBase {
 

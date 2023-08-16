@@ -1,7 +1,7 @@
 using JetBrains.Application.Settings;
-using JetBrains.Platform.VisualStudio.Protocol.Common.Shell;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
+using JetBrains.Util.DevEnv;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 

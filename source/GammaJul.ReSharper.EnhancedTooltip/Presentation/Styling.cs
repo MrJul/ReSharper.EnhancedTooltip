@@ -124,6 +124,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				});
 			}
 
+			itemsControl.Background = new SolidColorBrush(Color.FromArgb(2, 0, 0, 0));
+
 			IContextBoundSettingsStore? settings = document.TryGetSettings();
 
 			bool isLegacy = itemsControl is ListBox;

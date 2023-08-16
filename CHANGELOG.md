@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.21.0.0
+- [Updated] Updated ReSharper SDK to 2023.2.0.
+
 ## 3.20.0.2-pre
 - [Updated] Updated ReSharper SDK to 2023.1.0-eap09.
 
