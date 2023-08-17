@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.21.0.26
+- [Updated] Changed the way tooltip look and feel.
+- [Fixed] Prevent tooltip to close when you try to hove it with the mouse.
+
 ## 3.21.0.0
 - [Updated] Updated ReSharper SDK to 2023.2.0.
 

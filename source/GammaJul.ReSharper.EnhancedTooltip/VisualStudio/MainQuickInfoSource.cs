@@ -26,6 +26,7 @@ using JetBrains.VsIntegration.ProjectDocuments;
 using JetBrains.VsIntegration.TextControl;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Adornments;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
@@ -156,13 +157,35 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 						if (contentFullName == VsFullTypeNames.LightBulbQuickInfoPlaceHolder)
 							continue;
 
-						if (contentFullName == VsFullTypeNames.QuickInfoDisplayPanel)
-							presenter.AddVsIdentifierContent(new VsIdentifierContent(content));
-						else if (content is string stringContent && vsSquiggleContents.Contains(stringContent))
-							presenter.AddVsSquiggleContent(new VsSquiggleContent(stringContent));
-						else
-							presenter.AddVsUnknownContent(content);
-					}
+            if (contentFullName == VsFullTypeNames.QuickInfoDisplayPanel) {
+              presenter.AddVsIdentifierContent(new VsIdentifierContent(content));
+            } else if (content is string stringContent && vsSquiggleContents.Contains(stringContent)) {
+              presenter.AddVsSquiggleContent(new VsSquiggleContent(stringContent));
+            } else {
+              var shouldAddContent = true;
+							// Filter out native visual studio analysis issue nodes. Currently only IDEXXXX and CSXXXX
+              if (content is ContainerElement ce) {
+                foreach (var content2 in ce.Elements) {
+                  if (content2 is ContainerElement ce2) {
+                    foreach (var cte in ce2.Elements.Cast<ClassifiedTextElement>()) {
+                      var firstRun = cte.Runs.First();
+                      if (firstRun != null) {
+                        if (firstRun.Text.StartsWith("IDE") || firstRun.Text.StartsWith("CS")) {
+                          shouldAddContent = false;
+                        }
+                      }
+                    }
+                  }
+                }
+                
+              }
+
+              if (shouldAddContent) {
+                presenter.AddVsUnknownContent(content);
+              }
+
+            }
+          }
 
 					quickInfoContent.Clear();
 					quickInfoContent.AddRange(presenter.PresentContents());

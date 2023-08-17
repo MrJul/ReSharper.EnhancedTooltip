@@ -68,32 +68,33 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 		public IEnumerable<object> PresentContents() {
 			foreach (IdentifierTooltipContent identifierContent in _identifierContents)
-				yield return PresentTooltipContents("Id", new[] { identifierContent });
+				yield return PresentTooltipContents("Id", new[] { identifierContent }, this._vsIdentifierContents.Count == 0 && this._argumentRoleContents.Count == 0 && this._issueContents.Count == 0 && this._miscContents.Count == 0 && this._vsUnknownContents.Count == 0 && this._vsSquiggleContents.Count == 0);
 
 			foreach (VsIdentifierContent identifierContent in _vsIdentifierContents)
-				yield return PresentTooltipContents("Id", new[] { identifierContent });
+				yield return PresentTooltipContents("Id", new[] { identifierContent }, this._argumentRoleContents.Count == 0 && this._issueContents.Count == 0 && this._miscContents.Count == 0 && this._vsUnknownContents.Count == 0 && this._vsSquiggleContents.Count == 0);
 
 			foreach (ArgumentRoleTooltipContent argumentRoleContent in _argumentRoleContents)
-				yield return PresentTooltipContents("Role", new[] { argumentRoleContent });
+				yield return PresentTooltipContents("Role", new[] { argumentRoleContent }, this._issueContents.Count == 0 && this._miscContents.Count == 0 && this._vsUnknownContents.Count == 0 && this._vsSquiggleContents.Count == 0);
 
 			if (_issueContents.Count > 0)
-				yield return PresentTooltipContents(_issueContents.Count == 1 ? "Issue" : "Issues", _issueContents);
+				yield return PresentTooltipContents(_issueContents.Count == 1 ? "Issue" : "Issues", _issueContents, this._miscContents.Count == 0 && this._vsUnknownContents.Count == 0 && this._vsSquiggleContents.Count == 0);
 
 			foreach (MiscTooltipContent miscContent in _miscContents)
-				yield return PresentTooltipContents("Misc", new[] { miscContent });
-
-			foreach (object vsUnknownContent in _vsUnknownContents)
-				yield return vsUnknownContent;
+				yield return PresentTooltipContents("Misc", new[] { miscContent }, this._vsUnknownContents.Count == 0 && this._vsSquiggleContents.Count == 0);
 
 			if (_vsSquiggleContents.Count > 0)
-				yield return PresentTooltipContents("VS", _vsSquiggleContents);
+				yield return PresentTooltipContents("VS", _vsSquiggleContents, this._vsUnknownContents.Count == 0);
+
+      foreach (object vsUnknownContent in _vsUnknownContents)
+        yield return vsUnknownContent;
 		}
 
 		[Pure]
-		private HeaderedContentControl PresentTooltipContents(object? header, IEnumerable<object> tooltipContents) {
+		private HeaderedContentControl PresentTooltipContents(object? header, IEnumerable<object> tooltipContents, Boolean isLast = true) {
 			var control = new HeaderedContentControl {
 				Style = UIResources.Instance.HeaderedContentControlStyle,
 				Focusable = false,
+				Tag = isLast ? "Last" : "",
 				Header = header,
 				Content = new ItemsControl {
 					Focusable = false,

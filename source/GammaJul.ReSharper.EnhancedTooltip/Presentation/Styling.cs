@@ -124,9 +124,22 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 				});
 			}
 
-			itemsControl.Background = new SolidColorBrush(Color.FromArgb(2, 0, 0, 0));
+			//itemsControl.Background = new SolidColorBrush(Color.FromArgb(2, 0, 0, 0));
+      itemsControl.BorderThickness = new Thickness(1);
 
 			IContextBoundSettingsStore? settings = document.TryGetSettings();
+
+      if (Shell.HasInstance) {
+        if (Shell.Instance.TryGetComponent<TooltipFormattingProvider>() is { } tooltipFormattingProvider) {
+          var colorSource = settings?.GetValue((DisplaySettings s) => s.TooltipColorSource) ?? TooltipColorSource.TextEditorSettings;
+
+          if (tooltipFormattingProvider.TryGetBackground(colorSource) is { } background)
+            itemsControl.Background = background;
+
+          if (tooltipFormattingProvider.TryGetBorderBrush() is { } borderBrush)
+            itemsControl.BorderBrush = borderBrush;
+        }
+      }
 
 			bool isLegacy = itemsControl is ListBox;
 			itemsControl.Style = UIResources.Instance.QuickInfoListBoxStyle;
@@ -155,7 +168,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		private static Style CreateItemContainerStyle(IContextBoundSettingsStore? settings, bool forListBoxItem) {
 			var itemContainerStyle = new Style(forListBoxItem ? typeof(ListBoxItem) : typeof(ContentPresenter));
-			itemContainerStyle.Setters.Add(new Setter(FrameworkElement.MarginProperty, new Thickness(0.0, 0.0, 0.0, 2.0)));
+			itemContainerStyle.Setters.Add(new Setter(FrameworkElement.MarginProperty, new Thickness(0.0, 0.0, 0.0, 0.0)));
 
 			if (forListBoxItem) {
 				itemContainerStyle.Setters.Add(new Setter(Control.BorderThicknessProperty, new Thickness(0.0)));
