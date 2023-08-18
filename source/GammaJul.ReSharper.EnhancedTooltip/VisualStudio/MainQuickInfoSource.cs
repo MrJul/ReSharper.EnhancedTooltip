@@ -13,7 +13,6 @@ using JetBrains.DocumentModel;
 using JetBrains.Lifetimes;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Platform.VisualStudio.SinceVs10.Interop.Shim.TextControl;
-using JetBrains.Platform.VisualStudio.SinceVs10.TextControl.Markup;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
@@ -41,8 +40,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
     }
   }
 
-  public class MyInterruptableReadActivity : InterruptableReadActivity 
-  {
+  public class MyInterruptableReadActivity : InterruptableReadActivity {
 
     public MyInterruptableReadActivity(MultipleTooltipContentPresenter presenter, IHighlighter highlighter, ShellLocks locks, Lifetime lifetime)
       : base(lifetime, locks) {
@@ -59,8 +57,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
       //myHighlihgter = null;
     }
 
-    protected override void Finish()
-    {
+    protected override void Finish() {
       //myPresenter.SetContent(myRichTextBlock);
     }
 
@@ -69,93 +66,100 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
   }
 
-	public class MainQuickInfoSource : QuickInfoSourceBase {
+  public class MainQuickInfoSource : QuickInfoSourceBase {
 
-		protected override void AugmentQuickInfoSessionCore(
-			IQuickInfoSession session,
-			IList<object?> quickInfoContent,
-			IDocumentMarkup documentMarkup,
-			TooltipFormattingProvider tooltipFormattingProvider,
-			out ITrackingSpan? applicableToSpan) {
+    protected override void AugmentQuickInfoSessionCore(
+      IQuickInfoSession session,
+      IList<object?> quickInfoContent,
+      IDocumentMarkup documentMarkup,
+      TooltipFormattingProvider tooltipFormattingProvider,
+      out ITrackingSpan? applicableToSpan) {
 
-			applicableToSpan = null;
+      applicableToSpan = null;
 
-			ITextSnapshot textSnapshot = TextBuffer.CurrentSnapshot;
-			TextRange textRange = GetCurrentTextRange(session, textSnapshot);
-			IShellLocks shellLocks = Shell.Instance.GetComponent<IShellLocks>();
-			Span? finalSpan = null;
+      ITextSnapshot textSnapshot = TextBuffer.CurrentSnapshot;
+      TextRange textRange = GetCurrentTextRange(session, textSnapshot);
+      IShellLocks shellLocks = Shell.Instance.GetComponent<IShellLocks>();
+      Span? finalSpan = null;
 
-			void GetEnhancedTooltips() {
-				using (shellLocks.UsingReadLock()) {
+      void GetEnhancedTooltips() {
+        using (shellLocks.UsingReadLock()) {
 
-					IDocument document = documentMarkup.Document;
-					var presenter = new MultipleTooltipContentPresenter(tooltipFormattingProvider.GetTooltipFormatting(), document);
-					IContextBoundSettingsStore settings = document.GetSettings();
-					ISolution? solution = MainQuickInfoSource.TryGetCurrentSolution();
-					bool hasIdentifierTooltipContent = false;
+          IDocument document = documentMarkup.Document;
+          var presenter = new MultipleTooltipContentPresenter(tooltipFormattingProvider.GetTooltipFormatting(), document);
+          IContextBoundSettingsStore settings = document.GetSettings();
+          ISolution? solution = MainQuickInfoSource.TryGetCurrentSolution();
+          bool hasIdentifierTooltipContent = false;
 
-					var resolveContext = solution is null ? UniversalModuleReferenceContext.Instance : document.GetContext(solution);
-					using (CompilationContextCookie.GetOrCreate(resolveContext)) {
+          var resolveContext = solution is null ? UniversalModuleReferenceContext.Instance : document.GetContext(solution);
+          using (CompilationContextCookie.GetOrCreate(resolveContext)) {
 
-						if (solution is not null && MainQuickInfoSource.GetIdentifierContentGroup(textRange.CreateDocumentRange(document), solution, settings) is { } contentGroup) {
-							foreach (IdentifierTooltipContent content in contentGroup.Identifiers) {
-								presenter.AddIdentifierTooltipContent(content);
-								finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
-								hasIdentifierTooltipContent = true;
-							}
-							
-							if (contentGroup.ArgumentRole is not null) {
-								presenter.AddArgumentRoleTooltipContent(contentGroup.ArgumentRole);
-								// Only track the argument role if we have nothing else displayed.
-								// See https://github.com/MrJul/ReSharper.EnhancedTooltip/issues/70
-								finalSpan ??= contentGroup.ArgumentRole.TrackingRange.ToSpan();
-							}
-						}
+            if (solution is not null && MainQuickInfoSource.GetIdentifierContentGroup(textRange.CreateDocumentRange(document), solution, settings) is { } contentGroup) {
+              foreach (IdentifierTooltipContent content in contentGroup.Identifiers) {
+                presenter.AddIdentifierTooltipContent(content);
+                finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
+                hasIdentifierTooltipContent = true;
+              }
 
-						var highlighters = documentMarkup.GetHighlightersOver(textRange).ToList();
-						foreach (var highlighter in highlighters) {
-							IEnumerable<IReSharperTooltipContent> contents = MainQuickInfoSource.GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution, hasIdentifierTooltipContent);
-							foreach (IReSharperTooltipContent content in contents) {
-								if (presenter.TryAddReSharperContent(content))
-									finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
-							}
-						}
+              if (contentGroup.ArgumentRole is not null) {
+                presenter.AddArgumentRoleTooltipContent(contentGroup.ArgumentRole);
+                // Only track the argument role if we have nothing else displayed.
+                // See https://github.com/MrJul/ReSharper.EnhancedTooltip/issues/70
+                finalSpan ??= contentGroup.ArgumentRole.TrackingRange.ToSpan();
+              }
+            }
 
-					}
+            var highlighters = documentMarkup.GetHighlightersOver(textRange).ToList();
+            foreach (var highlighter in highlighters) {
+              IEnumerable<IReSharperTooltipContent> contents = MainQuickInfoSource.GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution, hasIdentifierTooltipContent);
+              foreach (IReSharperTooltipContent content in contents) {
+                if (presenter.TryAddReSharperContent(content))
+                  finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
+              }
+            }
 
-					var vsSquiggleContents = session.RetrieveVsSquiggleContents()
-						.OfType<string>()
-						.ToSet();
+          }
 
-					bool ignoredFirstVsElement = false;
-					foreach (object? content in quickInfoContent) {
-						if (content is null)
-							continue;
+          var vsSquiggleContents = session.RetrieveVsSquiggleContents()
+            .OfType<string>()
+            .ToSet();
 
-						// ignore existing R# elements
-						if (content is IQuickInfoContent)
-							continue;
+          bool ignoredFirstVsElement = false;
+          foreach (object? content in quickInfoContent) {
+            if (content is null)
+              continue;
 
-						var contentFullName = content.GetType().FullName;
-						if (content.ToString().Contains("quickinfo:")) {
-							continue;
-						}
+            // ignore existing R# elements
+            if (content is IQuickInfoContent)
+              continue;
 
-						// ignore the first VS element, as it's the identifier tooltip and we already have one
-						if (hasIdentifierTooltipContent && !ignoredFirstVsElement) {
-							
-							if (contentFullName == VsFullTypeNames.ContainerElement /* VS 2017 >= 15.8 */
-							|| contentFullName == VsFullTypeNames.QuickInfoDisplayPanel /* VS 2015 and VS 2017 < 15.8 */
-							|| content is ITextBuffer /* VS2012 and VS2013 */) {
-								ignoredFirstVsElement = true;
-								continue;
-							}
+            var contentFullName = content.GetType().FullName;
+            if (content.ToString().Contains("quickinfo:")) {
+              continue;
+            }
 
-						}
+            // ignore the first VS element, as it's the identifier tooltip and we already have one
+            if (hasIdentifierTooltipContent && !ignoredFirstVsElement) {
 
-						// ignore Roslyn's bulb info placeholder (interactive tooltip "press ctrl+.")
-						if (contentFullName == VsFullTypeNames.LightBulbQuickInfoPlaceHolder)
-							continue;
+              if (contentFullName == VsFullTypeNames.ContainerElement /* VS 2017 >= 15.8 */
+              || contentFullName == VsFullTypeNames.QuickInfoDisplayPanel /* VS 2015 and VS 2017 < 15.8 */
+              || content is ITextBuffer /* VS2012 and VS2013 */) {
+                ignoredFirstVsElement = true;
+                if (content is ContainerElement element) {
+                  var contentsForAdd = element.Elements.SafeOfType<ClassifiedTextElement>();
+                  foreach (var addItem in contentsForAdd) {
+                    presenter.AddVsUnknownContent(addItem);
+                  }
+                }
+
+                continue;
+              }
+
+            }
+
+            // ignore Roslyn's bulb info placeholder (interactive tooltip "press ctrl+.")
+            if (contentFullName == VsFullTypeNames.LightBulbQuickInfoPlaceHolder)
+              continue;
 
             if (contentFullName == VsFullTypeNames.QuickInfoDisplayPanel) {
               presenter.AddVsIdentifierContent(new VsIdentifierContent(content));
@@ -163,11 +167,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
               presenter.AddVsSquiggleContent(new VsSquiggleContent(stringContent));
             } else {
               var shouldAddContent = true;
-							// Filter out native visual studio analysis issue nodes. Currently only IDEXXXX and CSXXXX
+              // Filter out native visual studio analysis issue nodes. Currently only IDEXXXX and CSXXXX
               if (content is ContainerElement ce) {
                 foreach (var content2 in ce.Elements) {
                   if (content2 is ContainerElement ce2) {
-                    foreach (var cte in ce2.Elements.Cast<ClassifiedTextElement>()) {
+                    foreach (var cte in ce2.Elements.SafeOfType<ClassifiedTextElement>()) {
                       var firstRun = cte.Runs.First();
                       if (firstRun != null) {
                         if (firstRun.Text.StartsWith("IDE") || firstRun.Text.StartsWith("CS")) {
@@ -177,7 +181,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
                     }
                   }
                 }
-                
+
               }
 
               if (shouldAddContent) {
@@ -187,142 +191,142 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
             }
           }
 
-					quickInfoContent.Clear();
-					quickInfoContent.AddRange(presenter.PresentContents());
-				}
-			}
+          quickInfoContent.Clear();
+          quickInfoContent.AddRange(presenter.PresentContents());
+        }
+      }
 
-			if (shellLocks.ReentrancyGuard.TryExecute("GetEnhancedTooltips", GetEnhancedTooltips) && finalSpan is not null)
-				applicableToSpan = textSnapshot.CreateTrackingSpan(finalSpan.Value, SpanTrackingMode.EdgeInclusive);
-		}
+      if (shellLocks.ReentrancyGuard.TryExecute("GetEnhancedTooltips", GetEnhancedTooltips) && finalSpan is not null)
+        applicableToSpan = textSnapshot.CreateTrackingSpan(finalSpan.Value, SpanTrackingMode.EdgeInclusive);
+    }
 
-		[Pure]
-		private static IdentifierContentGroup? GetIdentifierContentGroup(
-			DocumentRange documentRange,
-			ISolution solution,
-			IContextBoundSettingsStore settings)
-			=> solution
-				.GetComponent<IdentifierTooltipContentProvider>()
-				.GetIdentifierContentGroup(documentRange, settings);
+    [Pure]
+    private static IdentifierContentGroup? GetIdentifierContentGroup(
+      DocumentRange documentRange,
+      ISolution solution,
+      IContextBoundSettingsStore settings)
+      => solution
+        .GetComponent<IdentifierTooltipContentProvider>()
+        .GetIdentifierContentGroup(documentRange, settings);
 
-		[Pure]
-		private static IEnumerable<IReSharperTooltipContent> GetTooltipContents(
-			IHighlighter highlighter,
-			TextRange range,
-			IDocumentMarkup documentMarkup,
-			ISolution? solution,
-			bool skipIdentifierHighlighting) {
+    [Pure]
+    private static IEnumerable<IReSharperTooltipContent> GetTooltipContents(
+      IHighlighter highlighter,
+      TextRange range,
+      IDocumentMarkup documentMarkup,
+      ISolution? solution,
+      bool skipIdentifierHighlighting) {
 
-			if (highlighter.Attributes.EffectType == EffectType.GUTTER_MARK)
-				yield break;
+      if (highlighter.Attributes.EffectType == EffectType.GUTTER_MARK)
+        yield break;
 
-			if (highlighter.UserData is IHighlighting highlighting) {
-				
-				IDocument document = documentMarkup.Document;
-				IContextBoundSettingsStore settings = document.GetSettings();
-				IPsiSourceFile? sourceFile = solution is null ? null : document.GetPsiSourceFile(solution);
+      if (highlighter.UserData is IHighlighting highlighting) {
 
-				Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, highlighting.GetType(), sourceFile, settings);
-				if (MainQuickInfoSource.TryCreateIssueContent(highlighting, range, highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), severity, settings, solution) is { } issueContent) {
-					yield return issueContent;
-					yield break;
-				}
+        IDocument document = documentMarkup.Document;
+        IContextBoundSettingsStore settings = document.GetSettings();
+        IPsiSourceFile? sourceFile = solution is null ? null : document.GetPsiSourceFile(solution);
 
-				if (solution is not null && MainQuickInfoSource.IsIdentifierHighlighting(highlighting)) {
-					if (!skipIdentifierHighlighting) {
-						var identifierContentGroup = MainQuickInfoSource.GetIdentifierContentGroup(highlighter, solution, settings);
-						if (identifierContentGroup is not null) {
-							foreach (IdentifierTooltipContent content in identifierContentGroup.Identifiers)
-								yield return content;
-							if (identifierContentGroup.ArgumentRole is not null)
-								yield return identifierContentGroup.ArgumentRole;
-						}
-					}
-					yield break;
-				}
-			}
+        Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, highlighting.GetType(), sourceFile, settings);
+        if (MainQuickInfoSource.TryCreateIssueContent(highlighting, range, highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), severity, settings, solution) is { } issueContent) {
+          yield return issueContent;
+          yield break;
+        }
 
-			if (MainQuickInfoSource.TryCreateMiscContent(highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), range) is { } miscContent)
-				yield return miscContent;
-		}
+        if (solution is not null && MainQuickInfoSource.IsIdentifierHighlighting(highlighting)) {
+          if (!skipIdentifierHighlighting) {
+            var identifierContentGroup = MainQuickInfoSource.GetIdentifierContentGroup(highlighter, solution, settings);
+            if (identifierContentGroup is not null) {
+              foreach (IdentifierTooltipContent content in identifierContentGroup.Identifiers)
+                yield return content;
+              if (identifierContentGroup.ArgumentRole is not null)
+                yield return identifierContentGroup.ArgumentRole;
+            }
+          }
+          yield break;
+        }
+      }
 
-		private static ISolution? TryGetCurrentSolution()
-			=> Shell.Instance.TryGetComponent<VSSolutionManager>()?.CurrentSolution;
+      if (MainQuickInfoSource.TryCreateMiscContent(highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), range) is { } miscContent)
+        yield return miscContent;
+    }
 
-		[Pure]
-		private static IdentifierContentGroup? GetIdentifierContentGroup(
-			IHighlighter highlighter,
-			ISolution solution,
-			IContextBoundSettingsStore settings)
-			=> solution
-				.GetComponent<IdentifierTooltipContentProvider>()
-				.GetIdentifierContentGroup(highlighter, settings);
+    private static ISolution? TryGetCurrentSolution()
+      => Shell.Instance.TryGetComponent<VSSolutionManager>()?.CurrentSolution;
 
-		[Pure]
-		private static IssueTooltipContent? TryCreateIssueContent(
-			IHighlighting highlighting,
-			TextRange trackingRange,
-			RichTextBlock? textBlock,
-			Severity severity,
-			IContextBoundSettingsStore settings,
-			ISolution? solution) {
+    [Pure]
+    private static IdentifierContentGroup? GetIdentifierContentGroup(
+      IHighlighter highlighter,
+      ISolution solution,
+      IContextBoundSettingsStore settings)
+      => solution
+        .GetComponent<IdentifierTooltipContentProvider>()
+        .GetIdentifierContentGroup(highlighter, settings);
 
-			if (textBlock is null || !severity.IsIssue())
-				return null;
+    [Pure]
+    private static IssueTooltipContent? TryCreateIssueContent(
+      IHighlighting highlighting,
+      TextRange trackingRange,
+      RichTextBlock? textBlock,
+      Severity severity,
+      IContextBoundSettingsStore settings,
+      ISolution? solution) {
 
-			RichText text = textBlock.RichText;
-			if (text.IsEmpty)
-				return null;
+      if (textBlock is null || !severity.IsIssue())
+        return null;
 
-			if (settings.GetValue((IssueTooltipSettings s) => s.ColorizeElementsInErrors)) {
-				RichText? enhancedText = MainQuickInfoSource.TryEnhanceHighlighting(highlighting, settings, solution);
-				if (!enhancedText.IsNullOrEmpty())
-					text = enhancedText!;
-			}
+      RichText text = textBlock.RichText;
+      if (text.IsEmpty)
+        return null;
 
-			var issueContent = new IssueTooltipContent(text, trackingRange);
-			if (settings.GetValue((IssueTooltipSettings s) => s.ShowIcon))
-				issueContent.Icon = severity.TryGetIcon();
-			return issueContent;
-		}
+      if (settings.GetValue((IssueTooltipSettings s) => s.ColorizeElementsInErrors)) {
+        RichText? enhancedText = MainQuickInfoSource.TryEnhanceHighlighting(highlighting, settings, solution);
+        if (!enhancedText.IsNullOrEmpty())
+          text = enhancedText!;
+      }
 
-		private static RichText? TryEnhanceHighlighting(
-			IHighlighting highlighting,
-			IContextBoundSettingsStore settings,
-			ISolution? solution)
-			=> solution
-				?.TryGetComponent<HighlightingEnhancerManager>()
-				?.TryEnhance(highlighting, settings);
+      var issueContent = new IssueTooltipContent(text, trackingRange);
+      if (settings.GetValue((IssueTooltipSettings s) => s.ShowIcon))
+        issueContent.Icon = severity.TryGetIcon();
+      return issueContent;
+    }
 
-		[Pure]
-		private static MiscTooltipContent? TryCreateMiscContent(RichTextBlock? textBlock, TextRange range) {
-			if (textBlock is null)
-				return null;
+    private static RichText? TryEnhanceHighlighting(
+      IHighlighting highlighting,
+      IContextBoundSettingsStore settings,
+      ISolution? solution)
+      => solution
+        ?.TryGetComponent<HighlightingEnhancerManager>()
+        ?.TryEnhance(highlighting, settings);
 
-			RichText text = textBlock.RichText;
-			if (text.IsEmpty)
-				return null;
+    [Pure]
+    private static MiscTooltipContent? TryCreateMiscContent(RichTextBlock? textBlock, TextRange range) {
+      if (textBlock is null)
+        return null;
 
-			return new MiscTooltipContent(text, range);
-		}
+      RichText text = textBlock.RichText;
+      if (text.IsEmpty)
+        return null;
 
-		[Pure]
-		private TextRange GetCurrentTextRange(IIntellisenseSession session, ITextSnapshot textSnapshot) {
-			SnapshotPoint currentPoint = session.GetTriggerPoint(TextBuffer).GetPoint(textSnapshot);
-			var currentSpan = new SnapshotSpan(currentPoint, 0);
-			return new TextRange(currentSpan.Start, currentSpan.End);
-		}
+      return new MiscTooltipContent(text, range);
+    }
 
-		[Pure]
-		private static bool IsIdentifierHighlighting(IHighlighting highlighting) {
-			var attribute = HighlightingSettingsManager.Instance.GetHighlightingAttribute(highlighting) as StaticSeverityHighlightingAttribute;
-			return attribute?.GroupId == RegisterStaticHighlightingsGroupAttribute.GetGroupIdString(typeof(HighlightingGroupIds.IdentifierHighlightings));
-		}
+    [Pure]
+    private TextRange GetCurrentTextRange(IIntellisenseSession session, ITextSnapshot textSnapshot) {
+      SnapshotPoint currentPoint = session.GetTriggerPoint(TextBuffer).GetPoint(textSnapshot);
+      var currentSpan = new SnapshotSpan(currentPoint, 0);
+      return new TextRange(currentSpan.Start, currentSpan.End);
+    }
 
-		public MainQuickInfoSource(ITextBuffer textBuffer)
-			: base(textBuffer) {
-		}
+    [Pure]
+    private static bool IsIdentifierHighlighting(IHighlighting highlighting) {
+      var attribute = HighlightingSettingsManager.Instance.GetHighlightingAttribute(highlighting) as StaticSeverityHighlightingAttribute;
+      return attribute?.GroupId == RegisterStaticHighlightingsGroupAttribute.GetGroupIdString(typeof(HighlightingGroupIds.IdentifierHighlightings));
+    }
 
-	}
+    public MainQuickInfoSource(ITextBuffer textBuffer)
+      : base(textBuffer) {
+    }
+
+  }
 
 }

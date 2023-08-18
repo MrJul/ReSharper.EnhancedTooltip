@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.21.0.32
+- [Added] Imported nullability state text from visual studio tooltip.
+
 ## 3.21.0.26
 - [Updated] Changed the way tooltip look and feel.
 - [Fixed] Prevent tooltip to close when you try to hove it with the mouse.
