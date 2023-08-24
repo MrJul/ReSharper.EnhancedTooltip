@@ -163,7 +163,8 @@
 											<TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Parameter"
 											           FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
 										</Border>
-										<TextBlock Text="{Binding Name}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,0,1" />
+                    <local:AutoContrastedRichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center"
+                                                           RichText="{Binding Name}" Margin="0,0,0,1" />
 										<TextBlock Text=" • " FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,0,1" />
 									</StackPanel>
 
@@ -222,7 +223,7 @@
 											<TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Throws"
 												FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
 										</Border>
-										<TextBlock Text="{Binding Exception}" TextWrapping="Wrap" VerticalAlignment="Center" Margin="0,0,0,1" />
+                    <local:AutoContrastedRichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center" RichText="{Binding Exception}" Margin="0,0,0,1" />
 										<TextBlock Text=" → " FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,0,1" />
 									</StackPanel>
 

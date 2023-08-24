@@ -14,13 +14,21 @@ using JetBrains.Util;
 using JetBrains.Util.Media;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
-	internal enum XmlDocListType {
+
+  using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+  using GammaJul.ReSharper.EnhancedTooltip.Presentation;
+
+  using JetBrains.Application.Settings;
+  using JetBrains.ReSharper.Psi.CodeAnnotations;
+
+  internal enum XmlDocListType {
 		TABLE,
 		BULLET,
 		NUMBER,
 	}
 	public class XmlDocRichTextPresenterEx : XmlDocVisitor {
 		private static readonly TextStyle ourCodeStyle = TextStyle.FromForeColor(Color.DarkBlue.ToJetRgbaColor());
+    private static readonly TextStyle ourParameterStyle = new TextStyle(JetFontStyles.Bold, Color.FromArgb(201, 94, 163).ToJetRgbaColor());
 		private static readonly TextStyle ourCRefStyle = new TextStyle(JetFontStyles.Bold);
 		private static readonly TextStyle ourNormalStyle = TextStyle.Default;
 		private readonly PsiLanguageType myLanguageType;
@@ -31,13 +39,42 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		private JetBrains.UI.RichText.RichText myLastString = null!;
 		private int myLevel;
 
-		protected XmlDocRichTextPresenterEx(XmlNode node, PsiLanguageType languageType, DeclaredElementPresenterTextStyles textStyles, IPsiModule module) {
+    private IContextBoundSettingsStore? _Settings;
+
+    private HighlighterIdProviderFactory? _HighlighterIdProviderFactory;
+
+    private ColorizerPresenter? _ColorizerPresenter;
+    private readonly TextStyleHighlighterManager? _textStyleHighlighterManager;
+    private readonly CodeAnnotationsConfiguration? _codeAnnotationsConfiguration;
+
+		protected XmlDocRichTextPresenterEx(XmlNode node, 
+                                        PsiLanguageType languageType, 
+                                        DeclaredElementPresenterTextStyles textStyles, 
+                                        IPsiModule module, 
+                                        IContextBoundSettingsStore settings, 
+                                        HighlighterIdProviderFactory highlighterIdProviderFactory, 
+                                        ColorizerPresenter colorizerPresenter, 
+                                        TextStyleHighlighterManager textStyleHighlighterManager,
+                                        CodeAnnotationsConfiguration codeAnnotationsConfiguration) {
 			this.myModule = module;
 			this.myLanguageType = languageType;
 			this.myTextStyles = textStyles;
+			this._ColorizerPresenter = colorizerPresenter;
+			this._HighlighterIdProviderFactory = highlighterIdProviderFactory;
+			this._textStyleHighlighterManager = textStyleHighlighterManager;
+			this._codeAnnotationsConfiguration = codeAnnotationsConfiguration;
+			this._Settings = settings;
 			this.NewLine();
 			this.VisitNode(node);
 		}
+
+    protected XmlDocRichTextPresenterEx(XmlNode node, PsiLanguageType languageType, DeclaredElementPresenterTextStyles textStyles, IPsiModule module) {
+      this.myModule = module;
+      this.myLanguageType = languageType;
+      this.myTextStyles = textStyles;
+      this.NewLine();
+      this.VisitNode(node);
+    }
 
 		[NotNull]
 		protected RichTextBlock RichTextBlock {
@@ -120,10 +157,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		public override void VisitCommonSee(XmlElement element) {
 			XmlAttribute attribute1 = element.Attributes["cref"] ?? element.Attributes["href"] ?? element.Attributes["typeparamref"] ?? element.Attributes["paramref"];
 			if (attribute1 != null)
-				this.Append(this.ProcessCRef(attribute1.Value));
+				this.Append(this.ProcessCRef(attribute1.Value, this._Settings, this._HighlighterIdProviderFactory, this._ColorizerPresenter));
 			XmlAttribute attribute2 = element.Attributes["langword"];
 			if (attribute2 != null)
-				this.Append(attribute2.Value, XmlDocRichTextPresenterEx.ourCRefStyle);
+				this.Append(EnhanceColorizingTooltip(attribute2.Value, this._Settings, this._HighlighterIdProviderFactory, this._textStyleHighlighterManager!, this._codeAnnotationsConfiguration!, true));
 			XmlAttribute attribute3 = element.Attributes["title"];
 			if (attribute3 == null)
 				return;
@@ -216,7 +253,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				if (xmlNode2 == null) {
 					this.Append(new string(' ', val1 + 1), XmlDocRichTextPresenterEx.ourNormalStyle);
 				} else {
-					string str2 = xmlNode2.InnerText.Trim();
+					string str2 = xmlNode2.InnerText.Trim(); 
 					this.Append(str2, XmlDocRichTextPresenterEx.ourNormalStyle);
 					this.Append(new string(' ', val1 - str2.Length + 1), XmlDocRichTextPresenterEx.ourNormalStyle);
 				}
@@ -231,14 +268,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 			string attribute = element.GetAttribute("name");
 			if (string.IsNullOrEmpty(attribute))
 				return;
-			this.Append(attribute, XmlDocRichTextPresenterEx.ourCRefStyle);
+			this.Append(EnhanceColorizingTooltip(attribute, this._Settings, this._HighlighterIdProviderFactory, this._textStyleHighlighterManager!, this._codeAnnotationsConfiguration!, false));
 		}
 
 		public override void VisitParamRef(XmlElement element) => this.ProcessRefTagNameAttr(element);
 
 		public override void VisitTypeParamRef(XmlElement element) => this.ProcessRefTagNameAttr(element);
 
-		private JetBrains.UI.RichText.RichText ProcessCRef(string value) {
+		private JetBrains.UI.RichText.RichText ProcessCRef(string value, IContextBoundSettingsStore? settings, HighlighterIdProviderFactory? highlighterIdProviderFactory, ColorizerPresenter? colorizerPresenter) {
 			DeclaredElementPresenterStyle presenterStyle = new DeclaredElementPresenterStyle() {
 				ShowAccessRights = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowAccessRights,
 				ShowModifiers = XmlDocPresenterUtil.LinkedElementPresentationStyle.ShowModifiers,
@@ -259,13 +296,48 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 				TextStyles = this.myTextStyles ?? XmlDocPresenterUtil.LinkedElementPresentationStyle.TextStyles
 			};
 
-			return XmlDocRichTextPresenterEx.ProcessCRef(value, this.myLanguageType, this.myModule, presenterStyle);
+			return XmlDocRichTextPresenterEx.ProcessCRef(value, this.myLanguageType, this.myModule, presenterStyle, settings, highlighterIdProviderFactory, colorizerPresenter);
 		}
 
-		public static JetBrains.UI.RichText.RichText ProcessCRef(string crefValue, PsiLanguageType languageType, IPsiModule psiModule, DeclaredElementPresenterStyle presenterStyle) {
+		public static JetBrains.UI.RichText.RichText ProcessCRef(string crefValue, PsiLanguageType languageType, IPsiModule psiModule, DeclaredElementPresenterStyle presenterStyle, IContextBoundSettingsStore? settings, HighlighterIdProviderFactory? highlighterIdProviderFactory, ColorizerPresenter? colorizerPresenter) {
 			var element = psiModule == null ? null : XMLDocUtil.ResolveId(psiModule.GetPsiServices(), crefValue, psiModule, true);
-			return element == null || !element.IsValid() ? new JetBrains.UI.RichText.RichText(XmlDocPresenterUtil.ProcessCref(crefValue), XmlDocRichTextPresenterEx.ourCRefStyle) : DeclaredElementPresenter.Format(languageType, presenterStyle, element);
-		}
+      if (crefValue.ToLower().StartsWith("http")) {
+        return new JetBrains.UI.RichText.RichText(crefValue, XmlDocRichTextPresenterEx.ourCRefStyle);
+      }
+
+      if (element != null && element.IsValid() && settings != null && highlighterIdProviderFactory != null && colorizerPresenter != null) {
+        HighlighterIdProvider highlighterIdProvider = highlighterIdProviderFactory?.CreateProvider(settings!)!;
+        var dei = new DeclaredElementInstance(element, element.GetIdSubstitutionSafe());
+
+        var richText = colorizerPresenter?.TryPresent(
+          dei,
+          PresenterOptions.ForXmlDocToolTip(settings),
+          languageType,
+          highlighterIdProvider,
+          null,
+          out _);
+        return richText ?? DeclaredElementPresenter.Format(languageType, presenterStyle, element);
+      }
+
+      return new JetBrains.UI.RichText.RichText(XmlDocPresenterUtil.ProcessCref(crefValue), XmlDocRichTextPresenterEx.ourCRefStyle);
+    }
+
+    public static RichText EnhanceColorizingTooltip(String word, 
+                                                    IContextBoundSettingsStore? settings, 
+                                                    HighlighterIdProviderFactory? highlighterIdProviderFactory, 
+                                                    TextStyleHighlighterManager textStyleHighlighterManager,
+                                                    CodeAnnotationsConfiguration codeAnnotationsConfiguration,
+                                                    Boolean isLanguageWord) {
+			var richText = new RichText();
+      var highlighterIdProvider = highlighterIdProviderFactory?.CreateProvider(settings!);
+      var colorizer = new CSharpColorizer(richText, textStyleHighlighterManager, codeAnnotationsConfiguration, highlighterIdProvider!);
+      if (isLanguageWord) {
+				colorizer.AppendKeyword(word);
+      } else {
+				colorizer.AppendParameterName(word);
+      }
+			return richText;
+    }
 
 		private static int GetListItemTermSize(XmlNode node) {
 			if (node == null)
@@ -335,5 +407,19 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		public static RichTextBlock Run(XmlNode node, bool includeHeader, PsiLanguageType languageType, DeclaredElementPresenterTextStyles textStyles, IPsiModule module) {
 			return node == null ? new RichTextBlock(new RichTextBlockParameters()) : new XmlDocRichTextPresenterEx(node, languageType, textStyles, module).RichTextBlock;
 		}
+
+    [NotNull]
+    public static RichTextBlock Run(XmlNode node, 
+                                    bool includeHeader, 
+                                    PsiLanguageType languageType, 
+                                    DeclaredElementPresenterTextStyles textStyles, 
+                                    IPsiModule module, 
+                                    IContextBoundSettingsStore? settings, 
+                                    HighlighterIdProviderFactory? highlighterIdProviderFactory, 
+                                    ColorizerPresenter? colorizerPresenter, 
+                                    TextStyleHighlighterManager textStyleHighlighterManager,
+                                    CodeAnnotationsConfiguration codeAnnotationsConfiguration) {
+      return node == null ? new RichTextBlock(new RichTextBlockParameters()) : new XmlDocRichTextPresenterEx(node, languageType, textStyles, module, settings!, highlighterIdProviderFactory!, colorizerPresenter!, textStyleHighlighterManager, codeAnnotationsConfiguration).RichTextBlock;
+    }
 	}
 }

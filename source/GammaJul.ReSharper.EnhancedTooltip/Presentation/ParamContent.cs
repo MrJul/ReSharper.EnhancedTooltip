@@ -4,11 +4,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public sealed class ParamContent {
 
-		public string Name { get; }
+		public RichText Name { get; }
 
 		public RichText? Description { get; set; }
 
-		public ParamContent(string name) {
+		public ParamContent(RichText name) {
 			Name = name;
 		}
 

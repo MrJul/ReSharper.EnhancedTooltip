@@ -147,7 +147,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
                 ignoredFirstVsElement = true;
                 if (content is ContainerElement element) {
                   var contentsForAdd = element.Elements.SafeOfType<ClassifiedTextElement>();
-                  foreach (var addItem in contentsForAdd) {
+                  foreach (var addItem in contentsForAdd.Where(w => w.Runs.Count() == 1)) {
                     presenter.AddVsUnknownContent(addItem);
                   }
                 }
@@ -171,11 +171,23 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
               if (content is ContainerElement ce) {
                 foreach (var content2 in ce.Elements) {
                   if (content2 is ContainerElement ce2) {
-                    foreach (var cte in ce2.Elements.SafeOfType<ClassifiedTextElement>()) {
-                      var firstRun = cte.Runs.First();
-                      if (firstRun != null) {
-                        if (firstRun.Text.StartsWith("IDE") || firstRun.Text.StartsWith("CS")) {
-                          shouldAddContent = false;
+                    var shouldTake = true;
+                    foreach (var cteObj in ce2.Elements) {
+                      if (cteObj is ContainerElement) {
+                        shouldTake = false;
+                        shouldAddContent = false;
+                      }
+
+                      if (!shouldTake) {
+                        continue;
+                      }
+
+                      if (cteObj is ClassifiedTextElement cte) {
+                        var firstRun = cte.Runs.First();
+                        if (firstRun != null) {
+                          if (firstRun.Text.StartsWith("IDE") || firstRun.Text.StartsWith("CS") || firstRun.Text.StartsWith("CA")) {
+                            shouldAddContent = false;
+                          }
                         }
                       }
                     }

@@ -8,22 +8,21 @@ using JetBrains.UI.RichText;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings {
 
-	[SolutionComponent]
-	public sealed class HighlightingEnhancerManager {
+  [SolutionComponent]
+  public sealed class HighlightingEnhancerManager {
+    private readonly Dictionary<Type, IHighlightingEnhancer> _HighlightingEnhancers;
+    public RichText? TryEnhance(IHighlighting? highlighting, IContextBoundSettingsStore settings) {
+      if (highlighting is null || !this._HighlightingEnhancers.TryGetValue(highlighting.GetType(), out IHighlightingEnhancer highlightingEnhancer)) {
+        return null;
+      }
 
-		private readonly Dictionary<Type, IHighlightingEnhancer> _highlightingEnhancers;
+      return highlightingEnhancer.TryEnhance(highlighting, settings);
+    }
 
-		public RichText? TryEnhance(IHighlighting? highlighting, IContextBoundSettingsStore settings) {
-			if (highlighting is null || !_highlightingEnhancers.TryGetValue(highlighting.GetType(), out IHighlightingEnhancer highlightingEnhancer))
-				return null;
+    public HighlightingEnhancerManager(IEnumerable<IHighlightingEnhancer> highlightingEnhancers) {
+      this._HighlightingEnhancers = highlightingEnhancers.ToDictionary(he => he.HighlightingType);
+    }
 
-			return highlightingEnhancer.TryEnhance(highlighting, settings);
-		}
-
-		public HighlightingEnhancerManager(IEnumerable<IHighlightingEnhancer> highlightingEnhancers) {
-			_highlightingEnhancers = highlightingEnhancers.ToDictionary(he => he.HighlightingType);
-		}
-
-	}
+  }
 
 }

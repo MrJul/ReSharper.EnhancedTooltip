@@ -4,11 +4,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 	public sealed class ExceptionContent {
 
-		public string Exception { get; }
+		public RichText? Exception { get; }
 
 		public RichText? Description { get; set; }
 
-		public ExceptionContent(string exception) {
+		public ExceptionContent(RichText? exception) {
 			Exception = exception;
 		}
 
