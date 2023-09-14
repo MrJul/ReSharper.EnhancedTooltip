@@ -84,7 +84,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
       void GetEnhancedTooltips() {
         using (shellLocks.UsingReadLock()) {
-
+          var compilerIds = HighlightingSettingsManager.Instance.GetAllCompilerIds();
           IDocument document = documentMarkup.Document;
           var presenter = new MultipleTooltipContentPresenter(tooltipFormattingProvider.GetTooltipFormatting(), document);
           IContextBoundSettingsStore settings = document.GetSettings();
@@ -92,6 +92,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
           bool hasIdentifierTooltipContent = false;
 
           var resolveContext = solution is null ? UniversalModuleReferenceContext.Instance : document.GetContext(solution);
+          var issueContents = new List<IssueTooltipContent>();
           using (CompilationContextCookie.GetOrCreate(resolveContext)) {
 
             if (solution is not null && MainQuickInfoSource.GetIdentifierContentGroup(textRange.CreateDocumentRange(document), solution, settings) is { } contentGroup) {
@@ -112,6 +113,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
             var highlighters = documentMarkup.GetHighlightersOver(textRange).ToList();
             foreach (var highlighter in highlighters) {
               IEnumerable<IReSharperTooltipContent> contents = MainQuickInfoSource.GetTooltipContents(highlighter, highlighter.Range, documentMarkup, solution, hasIdentifierTooltipContent);
+              issueContents.AddRange(contents.SafeOfType<IssueTooltipContent>());
               foreach (IReSharperTooltipContent content in contents) {
                 if (presenter.TryAddReSharperContent(content))
                   finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
@@ -185,7 +187,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
                       if (cteObj is ClassifiedTextElement cte) {
                         var firstRun = cte.Runs.First();
                         if (firstRun != null) {
-                          if (firstRun.Text.StartsWith("IDE") || firstRun.Text.StartsWith("CS") || firstRun.Text.StartsWith("CA")) {
+                          var roslynIssueText = firstRun.Text.Replace(":", String.Empty);
+                          if (issueContents.Count(s => s.Text?.Text.ToUpper().Contains(roslynIssueText.ToUpper()) == true) > 0 || roslynIssueText.StartsWith("IDE") || compilerIds.Contains(roslynIssueText)) {
                             shouldAddContent = false;
                           }
                         }
@@ -196,6 +199,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
               }
 
+              issueContents.Clear();
               if (shouldAddContent) {
                 presenter.AddVsUnknownContent(content);
               }

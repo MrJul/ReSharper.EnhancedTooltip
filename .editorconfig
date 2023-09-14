@@ -4,9 +4,15 @@ root = true
 end_of_line = crlf
 charset = utf-8
 
+# ReSharper properties
+resharper_csharp_indent_size = 2
+resharper_csharp_indent_style = space
+resharper_csharp_tab_width = 2
+
 [*.cs]
-indent_style = tab
-indent_size = 4
+indent_style = space
+indent_size = 2
+tab_width = 2
 
 [*.csproj]
 indent_style = tab

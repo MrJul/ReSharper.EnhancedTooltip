@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.21.1.14
+- [Added] Support for external extensions tooltip highlighting.
+- [Added] More colorizings over the tooltip
+- [Fixed] hide redundant Roslyn analizers tooltip items
+
 ## 3.21.0.32
 - [Added] Imported nullability state text from visual studio tooltip.
 

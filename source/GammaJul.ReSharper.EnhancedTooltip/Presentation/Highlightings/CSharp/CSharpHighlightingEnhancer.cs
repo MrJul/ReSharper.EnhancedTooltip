@@ -18,17 +18,22 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			=> typeof(T);
 		
 		public RichText? TryEnhance(IHighlighting highlighting, IContextBoundSettingsStore settings) {
-			if (highlighting is not T typedHighlighting)
-				return null;
-			
+      var typedHighlighting = highlighting as T;
 			var richText = new RichText();
 			var highlighterIdProvider = _highlighterIdProviderFactory.CreateProvider(settings);
 			var colorizer = new CSharpColorizer(richText, _textStyleHighlighterManager, _codeAnnotationsConfiguration, highlighterIdProvider);
-			AppendTooltip(typedHighlighting, colorizer);
-			return richText;
+      if (typedHighlighting != null) {
+        AppendTooltip(typedHighlighting, colorizer);
+      } else {
+        AppendTooltip(highlighting, colorizer);
+      }
+
+      return richText;
 		}
 
 		protected abstract void AppendTooltip(T highlighting, CSharpColorizer colorizer);
+
+    protected virtual void AppendTooltip(IHighlighting highlighting, CSharpColorizer colorizer) { }
 
 		protected CSharpHighlightingEnhancer(
 			TextStyleHighlighterManager textStyleHighlighterManager,

@@ -35,9 +35,25 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
         return FindElementFromDotKeyword(node, file, out sourceRange);
       }
 
+      if (tokenType == CSharpTokenType.OVERRIDE_KEYWORD || tokenType == CSharpTokenType.VIRTUAL_KEYWORD ) {
+        return FindElementFromModifiersKeyword(node, file, out sourceRange);
+      }
+
 			sourceRange = TextRange.InvalidRange;
 			return null;
 		}
+
+    private static DeclaredElementInstance? FindElementFromModifiersKeyword(ITreeNode modifiersKeyword, IFile file, out TextRange sourceRange) {
+      sourceRange = TextRange.InvalidRange;
+      IDeclaredElement? declaredElement = (modifiersKeyword.Parent?.Parent as IMethodDeclaration)
+        ?.DeclaredElement;
+
+      if (declaredElement is null)
+        return null;
+
+      sourceRange = file.GetDocumentRange(modifiersKeyword.GetTreeTextRange()).TextRange;
+      return new DeclaredElementInstance(declaredElement, EmptySubstitution.INSTANCE);
+    }
 
     private static DeclaredElementInstance? FindElementFromDotKeyword(ITreeNode dotKeyword, IFile file, out TextRange sourceRange) {
       sourceRange = TextRange.InvalidRange;

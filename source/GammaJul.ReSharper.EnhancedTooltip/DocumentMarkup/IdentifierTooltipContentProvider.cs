@@ -502,7 +502,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
       if (string.IsNullOrEmpty(name))
         return null;
 
-      var paramContent = new ParamContent(XmlDocRichTextPresenterEx.EnhanceColorizingTooltip(name!,settings,highlighterIdProviderFactory,textStyleHighlighterManager,codeAnnotationsConfiguration,false));
+      var paramContent = new ParamContent(XmlDocRichTextPresenterEx.EnhanceColorizingTooltip(name!, settings, highlighterIdProviderFactory, textStyleHighlighterManager, codeAnnotationsConfiguration, false));
 
       RichText richText = XmlDocRichTextPresenterEx.Run(paramElement!, false, languageType, DeclaredElementPresenterTextStyles.Empty, psiModule, settings, highlighterIdProviderFactory, colorizerPresenter, textStyleHighlighterManager, codeAnnotationsConfiguration).RichText;
       if (!richText.IsNullOrEmpty())
