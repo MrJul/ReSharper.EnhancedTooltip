@@ -13,6 +13,7 @@
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<UserSecretsId>c45f04a1-d5d4-4d62-a6ab-51724e0ace93</UserSecretsId>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -20,7 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2023.2.0" />
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2023.3.0" />
 		<PackageReference Include="EnvDTE" Version="8.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="15.8.525" />
 		<PackageReference Include="VSSDK.Editor" Version="11.0.*" />
@@ -31,6 +32,21 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Properties\Settings.Designer.cs">
+	    <DesignTimeSharedInput>True</DesignTimeSharedInput>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Settings.settings</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="Properties\Settings.settings">
+	    <Generator>SettingsSingleFileGenerator</Generator>
+	    <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+	  </None>
 	</ItemGroup>
 
 </Project>

@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.23.2.0
+- [Updated] Updated ReSharper SDK to 2023.3.0.
+
+## 3.22.0.0-pre
+- [Updated] Updated ReSharper SDK to 2023.3.0-eap01.
+
 ## 3.21.1.14
 - [Added] Support for external extensions tooltip highlighting.
 - [Added] More colorizings over the tooltip

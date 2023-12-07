@@ -1,11 +1,12 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.ReSharper.Feature.Services.ParameterInfo;
-using JetBrains.Util;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 
-	public abstract class EnhancedContext<TCandidate> : IParameterInfoContext
+  using JetBrains.DocumentModel;
+
+  public abstract class EnhancedContext<TCandidate> : IParameterInfoContext
 	where TCandidate : class, ICandidate {
 
 		private readonly IParameterInfoContext _context;
@@ -63,7 +64,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 		public ICollection<Type> ParameterNodeTypes
 			=> _context.ParameterNodeTypes;
 
-		public TextRange Range
+		public DocumentRange Range
 			=> _context.Range;
 
 		protected EnhancedContext(IParameterInfoContext context) {

@@ -72,7 +72,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
       => new PresenterOptions {
         AttributesFormattingMode = settings.GetValue((IdentifierTooltipSettings s) => s.AttributesFormattingMode),
         ExternalCodeNamespaceDisplayKind = settings.GetValue((IdentifierTooltipSettings s) => s.ExternalCodeNamespaceDisplayKind),
-        FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey s) => s.DelegatesAsLambdas),
+        FormatDelegatesAsLambdas = false, //settings.GetValue((ParameterInfoSettingsKey s) => s.DelegatesAsLambdas),
         ParametersFormattingMode = settings.GetValue((IdentifierTooltipSettings s) => s.ParametersFormattingMode),
         ShowAccessors = settings.GetValue((IdentifierTooltipSettings s) => s.ShowAccessors),
         ShowAccessRights = settings.GetValue((IdentifierTooltipSettings s) => s.ShowAccessRights),
@@ -212,7 +212,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
       => new PresenterOptions {
         AttributesFormattingMode = AttributesFormattingMode.AllOnCurrentLine,
         ExternalCodeNamespaceDisplayKind = ExternalCodeNamespaceDisplayKind.Never,
-        FormatDelegatesAsLambdas = settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas),
+        FormatDelegatesAsLambdas = false, //settings.GetValue((ParameterInfoSettingsKey key) => key.DelegatesAsLambdas),
         ParametersFormattingMode = ParametersFormattingMode.AllOnCurrentLine,
         ShowAccessors = false,
         ShowAccessRights = false,
