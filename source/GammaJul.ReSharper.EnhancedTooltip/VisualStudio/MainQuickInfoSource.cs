@@ -206,14 +206,14 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
               }
 
-              issueContents.Clear();
+              
               if (shouldAddContent) {
                 presenter.AddVsUnknownContent(content);
               }
 
             }
           }
-
+          issueContents.Clear();
           quickInfoContent.Clear();
           quickInfoContent.AddRange(presenter.PresentContents());
         }

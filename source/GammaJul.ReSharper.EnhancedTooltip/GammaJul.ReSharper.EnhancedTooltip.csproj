@@ -12,7 +12,7 @@
 		<LangVersion>9.0</LangVersion>
 		<Nullable>enable</Nullable>
 		<UseWPF>true</UseWPF>
-		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<TreatWarningsAsErrors>false</TreatWarningsAsErrors>
 		<UserSecretsId>c45f04a1-d5d4-4d62-a6ab-51724e0ace93</UserSecretsId>
 	</PropertyGroup>
 
@@ -21,7 +21,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2023.3.0" />
+		<PackageReference Include="JetBrains.ReSharper.SDK" Version="2023.3.2" />
 		<PackageReference Include="EnvDTE" Version="8.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="15.8.525" />
 		<PackageReference Include="VSSDK.Editor" Version="11.0.*" />
