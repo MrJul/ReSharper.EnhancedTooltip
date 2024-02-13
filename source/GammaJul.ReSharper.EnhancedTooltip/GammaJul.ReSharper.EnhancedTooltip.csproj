@@ -28,7 +28,7 @@
 		<PackageReference Include="VSSDK.Language" Version="11.0.*" />
 		<PackageReference Include="VSSDK.Shell.Immutable.11" Version="11.0.*" />
 		<PackageReference Include="VSSDK.Text" Version="11.0.*" />
-		<PackageReference Include="NuGet.CommandLine" Version="6.0.5">
+		<PackageReference Include="NuGet.CommandLine" Version="6.0.6">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
