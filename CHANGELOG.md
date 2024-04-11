@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.25.0.0
+- [Updated] Updated ReSharper SDK to 2024.1.0.
+
 ## 3.23.3.1
 - [Updated] Updated ReSharper SDK to 2023.3.2.
 - [Fixed] duplicated display of roslyn analyzers issues content

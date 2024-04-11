@@ -33,7 +33,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		private static ResourceDictionary LoadResourceDictionary()
 			=> new ResourceDictionary {
-				Source = UriHelpers.MakeUri("Presentation/UIResources.xaml", typeof(UIResources).Assembly)
+				Source = new Uri(string.Format("pack://application:,,,/{0};component/{1}", (object) typeof(UIResources).Assembly.FullName, (object) "Presentation/UIResources.xaml"))
 			};
 
 	}

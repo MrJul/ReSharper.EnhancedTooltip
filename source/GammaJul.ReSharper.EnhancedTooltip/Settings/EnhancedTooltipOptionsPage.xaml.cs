@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IdentityModel.Protocols.WSTrust;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Windows;
@@ -14,10 +15,12 @@ using JetBrains.DataFlow;
 using JetBrains.Lifetimes;
 using JetBrains.ReSharper.Features.Intellisense.Options;
 using JetBrains.UI.Controls;
+using JetBrains.UI.DataFlow;
 using JetBrains.UI.Extensions;
 using JetBrains.UI.Options.OptionsDialog2.SimpleOptions;
 using JetBrains.UI.Wpf.Controls.NumericUpDown.Impl;
 using JetBrains.UI.Wpf.Converters;
+using Lifetime = JetBrains.Lifetimes.Lifetime;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 
@@ -91,7 +94,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 		private void ConfigureCheckBox(CheckBoxDisabledNoCheck2 checkBox, string content, SettingsScalarEntry entry) {
 			checkBox.Content ??= content;
 			_keywords.Add(new OptionsPageKeyword(content));
-			_context.SetBinding<bool>(_lifetime, entry, checkBox, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
+			_context.SetBinding<bool>(_lifetime, entry, checkBox.IsCheckedLogically);
 			SearchablePageBehavior.SetSearchFilter(checkBox, true);
 		}
 
@@ -116,7 +119,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			comboBox.SelectedValuePath = nameof(EnumValue.Value);
 
 			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
-			_context.SetBinding<object>(_lifetime, entry, comboBox, Selector.SelectedValueProperty);
+      var selectedValueProperty = DependencyPropertyWrapper.Create<object>(_lifetime, comboBox, Selector.SelectedValueProperty, true);
+			_context.SetBinding<object>(_lifetime, entry, selectedValueProperty);
 
 			SetAssociatedLabel(comboBox, entry.Description);
 
@@ -129,8 +133,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Settings {
 			CheckBoxDisabledNoCheck2? parentCheckBox) {
 
 			SettingsScalarEntry entry = _context.Schema.GetScalarEntry(settingAccessor);
-			_context.SetBinding<int>(_lifetime, entry, numericUpDown, NumericUpDown.ValueProperty);
-
+      var prop = DependencyPropertyWrapper.Create<int>(_lifetime, numericUpDown, NumericUpDown.ValueProperty, true);
+			_context.SetBinding<int>(_lifetime, entry,  prop);
+			
 			SetAssociatedLabel(numericUpDown, entry.Description);
 
 			parentCheckBox?.IsAppearingChecked.FlowInto(_lifetime, numericUpDown, IsEnabledProperty);
