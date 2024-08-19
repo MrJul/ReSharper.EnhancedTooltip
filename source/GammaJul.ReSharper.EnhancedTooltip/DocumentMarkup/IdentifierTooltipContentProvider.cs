@@ -473,8 +473,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
       var paramNodesList = new LocalList<ParamContent>();
       if (typeParamNodes != null) {
         foreach (XmlNode paramNode in typeParamNodes) {
-          if (TryExtractParams(paramNode as XmlElement, languageType, psiModule, settings, highlighterIdProviderFactory, colorizerPresenter, textStyleHighlighterManager, codeAnnotationsConfiguration) is { } typeparam)
+          if (TryExtractParams(paramNode as XmlElement, languageType, psiModule, settings, highlighterIdProviderFactory, colorizerPresenter,
+                textStyleHighlighterManager, codeAnnotationsConfiguration) is { } typeparam) {
+            typeparam.IsTypeParameter = true;
             paramNodesList.Add(typeparam);
+          }
         }
       }
 

@@ -160,7 +160,7 @@
 								<DockPanel Margin="0,2,0,0">
 									<StackPanel Orientation="Horizontal" VerticalAlignment="Top" DockPanel.Dock="Left">
 										<Border BorderBrush="Gray" BorderThickness="1" Margin="0,0,4,0" VerticalAlignment="Center">
-											<TextBlock Style="{StaticResource TitleTextBlockStyle}" Text="Parameter"
+											<TextBlock x:Name="txtLabel" Style="{StaticResource TitleTextBlockStyle}" Text="Parameter"
 											           FontSize="{Binding Path=(TextElement.FontSize), ElementName=Root, Converter={StaticResource SmallFontSizeConverter}}" />
 										</Border>
                     <local:AutoContrastedRichTextPresenter TextWrapping="Wrap" VerticalAlignment="Center"
@@ -172,7 +172,11 @@
 									                                       RichText="{Binding Description}" Margin="0,0,0,1" />
 
 								</DockPanel>
-
+								<DataTemplate.Triggers>
+									<DataTrigger Binding="{Binding IsTypeParameter}" Value="true">
+										<Setter TargetName="txtLabel" Property="Text" Value="Type param" />
+									</DataTrigger>
+								</DataTemplate.Triggers>
 							</DataTemplate>
 						</ItemsControl.ItemTemplate>
 					</ItemsControl>

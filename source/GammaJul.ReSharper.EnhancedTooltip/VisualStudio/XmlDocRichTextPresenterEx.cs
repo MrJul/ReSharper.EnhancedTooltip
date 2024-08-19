@@ -12,6 +12,7 @@ using JetBrains.ReSharper.Psi.Util;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
 using JetBrains.Util.Media;
+using JetBrains.Util.NetFX.Media.Colors;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 

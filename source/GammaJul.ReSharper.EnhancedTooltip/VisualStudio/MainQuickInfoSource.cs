@@ -250,7 +250,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
         IPsiSourceFile? sourceFile = solution is null ? null : document.GetPsiSourceFile(solution);
 
         Severity severity = HighlightingSettingsManager.Instance.GetSeverity(highlighting, highlighting.GetType(), sourceFile, settings);
-        if (MainQuickInfoSource.TryCreateIssueContent(highlighting, range, highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), severity, settings, solution) is { } issueContent) {
+        if (MainQuickInfoSource.TryCreateIssueContent(highlighting, range, highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor) ?? highlighter.TryGetTooltip(HighlighterTooltipKind.ErrorStripe), severity, settings, solution) is { } issueContent) {
           yield return issueContent;
           yield break;
         }
@@ -269,7 +269,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
         }
       }
 
-      if (MainQuickInfoSource.TryCreateMiscContent(highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor), range) is { } miscContent)
+      if (MainQuickInfoSource.TryCreateMiscContent(highlighter.TryGetTooltip(HighlighterTooltipKind.TextEditor) ?? highlighter.TryGetTooltip(HighlighterTooltipKind.ErrorStripe), range) is { } miscContent)
         yield return miscContent;
     }
 

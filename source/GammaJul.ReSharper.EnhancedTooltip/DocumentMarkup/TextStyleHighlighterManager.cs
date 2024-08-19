@@ -11,6 +11,7 @@ using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
 using JetBrains.Util.Media;
+using JetBrains.Util.NetFX.Media.Colors;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
 using Color = System.Drawing.Color;

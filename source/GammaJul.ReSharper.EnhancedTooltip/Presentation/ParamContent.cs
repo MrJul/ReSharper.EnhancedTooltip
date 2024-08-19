@@ -1,3 +1,4 @@
+using System;
 using JetBrains.UI.RichText;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
@@ -8,8 +9,10 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public RichText? Description { get; set; }
 
+		public Boolean IsTypeParameter { get; set; }
+
 		public ParamContent(RichText name) {
-			Name = name;
+      this.Name = name;
 		}
 
 	}
