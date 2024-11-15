@@ -1,5 +1,6 @@
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Psi;
+using JetBrains.Application.Parts;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
@@ -9,7 +10,7 @@ using JetBrains.Util;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
 	internal sealed class CycleInStructLayoutErrorEnhancer : CSharpHighlightingEnhancer<CycleInStructLayoutError> {
 
 		protected override void AppendTooltip(CycleInStructLayoutError highlighting, CSharpColorizer colorizer) {

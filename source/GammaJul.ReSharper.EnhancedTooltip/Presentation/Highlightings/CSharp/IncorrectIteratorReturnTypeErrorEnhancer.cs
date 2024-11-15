@@ -1,4 +1,5 @@
 ﻿using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+using JetBrains.Application.Parts;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Psi;
@@ -7,7 +8,7 @@ using JetBrains.ReSharper.Psi.Resolve;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
 	internal sealed class IncorrectIteratorReturnTypeErrorEnhancer : CSharpHighlightingEnhancer<IncorrectIteratorReturnTypeError> {
 
 		protected override void AppendTooltip(IncorrectIteratorReturnTypeError highlighting, CSharpColorizer colorizer) {

@@ -1,4 +1,5 @@
 ﻿using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+using JetBrains.Application.Parts;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
@@ -12,7 +13,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 	/// A component that can create a colored representation of a <see cref="IDeclaredElement"/>.
 	/// Currently only uses <see cref="CSharpColorizer"/>.
 	/// </summary>
-	[SolutionComponent]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
 	public class ColorizerPresenter {
 
 		private readonly TextStyleHighlighterManager _textStyleHighlighterManager;

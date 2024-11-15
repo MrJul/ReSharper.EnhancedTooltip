@@ -1,4 +1,7 @@
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using JetBrains.Application.Threading;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl.DocumentMarkup;
 using JetBrains.Util;
 using Microsoft.VisualStudio.Language.Intellisense;

@@ -1,3 +1,4 @@
+using JetBrains.Application.Parts;
 using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Daemon;
@@ -5,7 +6,7 @@ using JetBrains.Util.DevEnv;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
-	[SolutionComponent]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
 	public class HighlighterIdProviderFactory {
 
 		private readonly uint _vsMajorVersion;

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Resolve;
+using JetBrains.UI.RichText;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
@@ -10,6 +11,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
 		public static void AppendPlainText(this CSharpColorizer colorizer, string? text)
 			=> colorizer.AppendText(text, null);
+
+    public static void AppendRichText(this CSharpColorizer colorizer, RichText text)
+      => colorizer.AppendRichText(text);
 
 		public static void AppendKeyword(this CSharpColorizer colorizer, string? keyword)
 			=> colorizer.AppendText(keyword, colorizer.HighlighterIdProvider.Keyword);

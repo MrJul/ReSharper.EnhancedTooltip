@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Media;
 using JetBrains.Application.Components;
+using JetBrains.Application.Parts;
 using JetBrains.DataFlow;
 using JetBrains.Lifetimes;
 using JetBrains.ProjectModel;
@@ -21,7 +22,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 	/// <summary>
 	/// A component that retrieve <see cref="TextStyle"/>s from either ReSharper's highlighters or Visual Studio colors.
 	/// </summary>
-	[SolutionComponent]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
 	public class TextStyleHighlighterManager {
 
 		private readonly Dictionary<string, TextStyle> _vsAttributesByName = new();

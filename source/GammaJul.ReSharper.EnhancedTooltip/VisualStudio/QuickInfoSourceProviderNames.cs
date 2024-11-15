@@ -4,6 +4,7 @@
 
 		public const string VsSquiggle = "squiggle";
 		public const string VsDefault = "default";
+    public const string VsDefault2 = "Default Quick Info Presenter";
 		public const string VsRoslyn = "Roslyn Quick Info Presenter";
 		public const string VsLightBulb = "Default LightBulb QuickInfo Provider";
 		public const string VsSemantic = "Semantic Quick Info Provider";

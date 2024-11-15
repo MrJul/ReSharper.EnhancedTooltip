@@ -1,12 +1,13 @@
 using System;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+using JetBrains.Application.Parts;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
 	internal sealed class CannotApplyUnaryOperatorMultipleCandidatesErrorEnhancer : CSharpHighlightingEnhancer<CannotApplyUnaryOperatorMultipleCandidatesError> {
 
 		protected override void AppendTooltip(CannotApplyUnaryOperatorMultipleCandidatesError highlighting, CSharpColorizer colorizer) {
@@ -17,7 +18,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("', ");
 			colorizer.AppendPlainText(Environment.NewLine);
 			colorizer.AppendPlainText("candidates are: ");
-			colorizer.AppendPlainText(highlighting.Candidates);
+			colorizer.AppendRichText(highlighting.Candidates);
 		}
 		
 		public CannotApplyUnaryOperatorMultipleCandidatesErrorEnhancer(

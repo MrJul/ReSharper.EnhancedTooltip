@@ -1,4 +1,5 @@
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+using JetBrains.Application.Parts;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
@@ -11,7 +12,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
   using JetBrains.ReSharper.Daemon.UsageChecking;
 
 
-  [SolutionComponent]
+  [SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
   internal sealed class UnusedMemberLocalWarningEnhancer : CSharpHighlightingEnhancer<UnusedMemberLocalWarning> {
 
     protected override void AppendTooltip(UnusedMemberLocalWarning highlighting, CSharpColorizer colorizer) {

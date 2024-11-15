@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.27.0.0
+- [Updated] Updated ReSharper SDK to 2024.3.0.
+
 ## 3.26.2.4
 - [Updated] Updated ReSharper SDK to 2024.2.0.
 

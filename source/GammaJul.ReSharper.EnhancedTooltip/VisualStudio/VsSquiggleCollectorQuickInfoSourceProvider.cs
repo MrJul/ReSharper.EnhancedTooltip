@@ -6,10 +6,16 @@ using Microsoft.VisualStudio.Utilities;
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
 	[Name(Name)]
-	[Order(After = QuickInfoSourceProviderNames.VsSquiggle)]
-	[Order(Before = QuickInfoSourceProviderNames.ReSharper)]
+  [Order(After = QuickInfoSourceProviderNames.VsDefault)]
+  [Order(After = QuickInfoSourceProviderNames.VsDefault2)]
+  [Order(After = QuickInfoSourceProviderNames.VsRoslyn)]
+  [Order(After = QuickInfoSourceProviderNames.VsSyntactic)]
+  [Order(After = QuickInfoSourceProviderNames.VsSemantic)]
+  [Order(After = QuickInfoSourceProviderNames.VsSquiggle)]
+  [Order(After = QuickInfoSourceProviderNames.VsLightBulb)]
+	[Order(After = QuickInfoSourceProviderNames.ReSharper)]
 	[Order(Before = MainQuickInfoSourceProvider.Name)]
-	[ContentType("text")]
+	[ContentType("any")]
 	[Export(typeof(IQuickInfoSourceProvider))]
 	public sealed class VsSquiggleCollectorQuickInfoSourceProvider : QuickInfoSourceProviderBase {
 

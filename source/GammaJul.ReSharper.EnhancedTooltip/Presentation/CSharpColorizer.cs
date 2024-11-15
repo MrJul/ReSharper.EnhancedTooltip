@@ -133,6 +133,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
         this._richText.Append(text, textStyle);
     }
 
+    private void AppendRichText(RichText text) {
+      if (!text.IsEmpty)
+        this._richText.Append(text);
+    }
+
     private void AppendElementKind(IDeclaredElement? element, Context context, bool stylized) {
       PresenterOptions options = context.Options;
       string kind = element.GetElementKindString(

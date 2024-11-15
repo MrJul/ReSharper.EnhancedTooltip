@@ -7,6 +7,7 @@ using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using GammaJul.ReSharper.EnhancedTooltip.Psi;
 using GammaJul.ReSharper.EnhancedTooltip.Settings;
 using GammaJul.ReSharper.EnhancedTooltip.VisualStudio;
+using JetBrains.Application.Parts;
 using JetBrains.Application.Settings;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
@@ -32,7 +33,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
   /// <summary>
   /// Provides colored identifier tooltips.
   /// </summary>
-  [SolutionComponent]
+  [SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
   public class IdentifierTooltipContentProvider {
 
     private sealed class DeclaredElementInfo {
@@ -307,7 +308,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
         var sortedPresentedInterfaces = new SortedDictionary<String, RichText>(StringComparer.Ordinal);
         foreach (DeclaredElementInstance implementedInterface in implementedInterfaces) {
           if (this._colorizerPresenter.TryPresent(implementedInterface, presenterOptions, languageType, highlighterIdProvider, contextualNode, out _) is { } richText)
-            sortedPresentedInterfaces[richText.ToString(false)] = richText;
+            sortedPresentedInterfaces[richText.ToString()] = richText;
         }
 
         foreach (RichText richText in sortedPresentedInterfaces.Values)

@@ -14,6 +14,7 @@ using JetBrains.Lifetimes;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Platform.VisualStudio.SinceVs10.Interop.Shim.TextControl;
 using JetBrains.ProjectModel;
+using JetBrains.PsiFeatures.VisualStudio.SinceVs10.TextControl.Intellisense;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Resources.Shell;
@@ -84,10 +85,11 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
         return;
       }
 
+      //var vsTextViewIntelliSenseContext = VsTextViewSolutionContextProvider.TryGetContext(session.TextView);
+      //var lifetime = vsTextViewIntelliSenseContext!.QuickInfoComponent.GetQuickInfoSessionLifetime(vsTextViewIntelliSenseContext, session);
+
       IShellLocks shellLocks = Shell.Instance.GetComponent<IShellLocks>();
       Span? finalSpan = null;
-
-
 
       void GetEnhancedTooltips() {
         using (shellLocks.UsingReadLock()) {
@@ -203,10 +205,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
                     }
                   }
                 }
-
               }
 
-              
               if (shouldAddContent) {
                 presenter.AddVsUnknownContent(content);
               }

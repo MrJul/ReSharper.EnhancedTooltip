@@ -1,11 +1,12 @@
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+using JetBrains.Application.Parts;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
 	internal sealed class ConvertIfStatementToNullCoalescingExpression2WarningEnhancer : CSharpHighlightingEnhancer<ConvertIfStatementToNullCoalescingExpression2Warning> {
 
 		protected override void AppendTooltip(ConvertIfStatementToNullCoalescingExpression2Warning highlighting, CSharpColorizer colorizer) {

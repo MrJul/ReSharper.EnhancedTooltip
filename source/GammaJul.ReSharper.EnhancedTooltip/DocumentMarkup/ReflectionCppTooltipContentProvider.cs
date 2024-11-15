@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using JetBrains.Application.Parts;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.UI.RichText;
@@ -12,7 +13,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 	/// We can't directly reference ReSharper C++ or the plugin will fail for people not having it installed.
 	/// Let's use some reflection instead.
 	/// </summary>
-	[SolutionComponent]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
 	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	public sealed class ReflectionCppTooltipContentProvider {
 

@@ -1,4 +1,5 @@
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+using JetBrains.Application.Parts;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Psi.CodeAnnotations;
@@ -6,7 +7,7 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI.Resolve;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
 	internal sealed class AccessRightsInTextWarningEnhancer : CSharpHighlightingEnhancer<AccessRightsInTextWarning> {
 
 		protected override void AppendTooltip(AccessRightsInTextWarning highlighting, CSharpColorizer colorizer) {

@@ -1,4 +1,5 @@
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+using JetBrains.Application.Parts;
 using JetBrains.DocumentManagers;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
@@ -10,7 +11,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
 	internal sealed class CannotCreateInstanceOfAbstractClassErrorEnhancer : CSharpHighlightingEnhancer<CannotCreateInstanceOfAbstractClassError> {
 
 		protected override void AppendTooltip(CannotCreateInstanceOfAbstractClassError highlighting, CSharpColorizer colorizer) {
