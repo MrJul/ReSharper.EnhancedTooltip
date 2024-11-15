@@ -373,6 +373,11 @@
 				<ContentPresenter Content="{Binding Content}" Margin="0,1" />
 			</DataTemplate>
 
+			<!-- Style for VS non C# content -->
+			<DataTemplate DataType="{x:Type local:NonCSharpTooltipContent}">
+				<ContentPresenter Content="{Binding Content}" Margin="0,1" />
+			</DataTemplate>
+
 		</Style.Resources>
 
 		<Setter Property="Margin" Value="0" />

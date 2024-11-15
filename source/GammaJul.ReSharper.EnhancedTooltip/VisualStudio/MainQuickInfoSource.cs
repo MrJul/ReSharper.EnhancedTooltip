@@ -14,12 +14,16 @@ using JetBrains.Lifetimes;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Platform.VisualStudio.SinceVs10.Interop.Shim.TextControl;
 using JetBrains.ProjectModel;
+using JetBrains.PsiFeatures.VisualStudio.Core.TextControl.Intellisense;
 using JetBrains.PsiFeatures.VisualStudio.SinceVs10.TextControl.Intellisense;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Cpp.Language;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
 using JetBrains.TextControl.DocumentMarkup;
+using JetBrains.UI.Controls;
 using JetBrains.UI.RichText;
 using JetBrains.Util;
 using JetBrains.VsIntegration.ProjectDocuments;
@@ -94,11 +98,13 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
       void GetEnhancedTooltips() {
         using (shellLocks.UsingReadLock()) {
           var compilerIds = HighlightingSettingsManager.Instance.GetAllCompilerIds();
-          IDocument document = documentMarkup.Document;
+          var solution = MainQuickInfoSource.TryGetCurrentSolution();
+          var document = documentMarkup.Document;
+          var isCSharp = document.GetPsiSourceFile(solution).LanguageType.Name == "CSHARP";
           var presenter = new MultipleTooltipContentPresenter(tooltipFormattingProvider.GetTooltipFormatting(), document);
-          IContextBoundSettingsStore settings = document.GetSettings();
-          ISolution? solution = MainQuickInfoSource.TryGetCurrentSolution();
-          bool hasIdentifierTooltipContent = false;
+          var settings = document.GetSettings();
+
+          var hasIdentifierTooltipContent = !isCSharp;
 
           var resolveContext = solution is null ? UniversalModuleReferenceContext.Instance : document.GetContext(solution);
           var issueContents = new List<IssueTooltipContent>();
@@ -126,6 +132,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
               foreach (IReSharperTooltipContent content in contents) {
                 if (presenter.TryAddReSharperContent(content))
                   finalSpan = content.TrackingRange.ToSpan().Union(finalSpan);
+              }
+            }
+
+            if (!isCSharp) {
+              foreach (object? content in quickInfoContent) {
+                if (content is IQuickInfoContent) {
+                  if (content is RichContentPresenter rcp) {
+                    var textPresenter = rcp.Content as RichTextPresenter;
+                    if (!issueContents.Any(w => textPresenter != null && w.Text?.Text.Contains(textPresenter.RichText.Text) == true) && !String.IsNullOrEmpty(textPresenter?.RichText.Text.Trim())) {
+                      presenter.AddNonCSharpContent(new NonCSharpTooltipContent(content));
+                    }
+                  } else {
+                    presenter.AddNonCSharpContent(new NonCSharpTooltipContent(content));
+                  }
+                }
               }
             }
 
