@@ -10,7 +10,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
   using JetBrains.PsiFeatures.VisualStudio.Backend.Daemon;
   using JetBrains.Reflection;
 
-  [SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+  [SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
   internal sealed class RoslynDiagnosticHighlightingEnhancer : CSharpHighlightingEnhancer<RoslynDiagnosticsDaemonProcess.RoslynDiagnosticHighlighting> {
 
     protected override void AppendTooltip(RoslynDiagnosticsDaemonProcess.RoslynDiagnosticHighlighting highlighting, CSharpColorizer colorizer) {

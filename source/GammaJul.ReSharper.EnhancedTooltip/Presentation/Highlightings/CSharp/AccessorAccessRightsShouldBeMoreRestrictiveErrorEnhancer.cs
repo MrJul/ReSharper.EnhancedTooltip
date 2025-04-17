@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Resolve;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class AccessorAccessRightsShouldBeMoreRestrictiveErrorEnhancer : CSharpHighlightingEnhancer<AccessorAccessRightsShouldBeMoreRestrictiveError> {
 
 		protected override void AppendTooltip(AccessorAccessRightsShouldBeMoreRestrictiveError highlighting, CSharpColorizer colorizer) {

@@ -13,7 +13,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 	/// We can't directly reference ReSharper C++ or the plugin will fail for people not having it installed.
 	/// Let's use some reflection instead.
 	/// </summary>
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	[SuppressMessage("ReSharper", "InconsistentNaming")]
 	public sealed class ReflectionCppTooltipContentProvider {
 

@@ -5,8 +5,8 @@ using System.Reflection;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Julien Lebosquain, Gainedge org")]
 [assembly: AssemblyProduct("GammaJul.ReSharper.EnhancedTooltip")]
-[assembly: AssemblyCopyright("Copyright © 2013-2024 Julien Lebosquain, Gainedge org")]
+[assembly: AssemblyCopyright("Copyright © 2013-2025 Gainedge org, Julien Lebosquain")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("3.27.1.8")]
+[assembly: AssemblyVersion("3.28.1.0")]

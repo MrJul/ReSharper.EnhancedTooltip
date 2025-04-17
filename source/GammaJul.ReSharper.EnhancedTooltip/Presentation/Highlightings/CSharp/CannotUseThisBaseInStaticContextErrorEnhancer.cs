@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.CSharp.Parsing;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class CannotUseThisBaseInStaticContextErrorEnhancer : CSharpHighlightingEnhancer<CannotUseThisBaseInStaticContextError> {
 
 		protected override void AppendTooltip(CannotUseThisBaseInStaticContextError highlighting, CSharpColorizer colorizer) {

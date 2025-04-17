@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Resolve;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class CannotCreateInstanceOfTypeWithoutConstructorErrorEnhancer : CSharpHighlightingEnhancer<CannotCreateInstanceOfTypeWithoutConstructorError> {
 
 		protected override void AppendTooltip(CannotCreateInstanceOfTypeWithoutConstructorError highlighting, CSharpColorizer colorizer) {

@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class ConvertIfStatementToNullCoalescingExpression3WarningEnhancer : CSharpHighlightingEnhancer<ConvertIfStatementToNullCoalescingExpression3Warning> {
 
 		protected override void AppendTooltip(ConvertIfStatementToNullCoalescingExpression3Warning highlighting, CSharpColorizer colorizer) {

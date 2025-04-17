@@ -22,7 +22,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
 	/// <summary>
 	/// A component that retrieve <see cref="TextStyle"/>s from either ReSharper's highlighters or Visual Studio colors.
 	/// </summary>
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	public class TextStyleHighlighterManager {
 
 		private readonly Dictionary<string, TextStyle> _vsAttributesByName = new();

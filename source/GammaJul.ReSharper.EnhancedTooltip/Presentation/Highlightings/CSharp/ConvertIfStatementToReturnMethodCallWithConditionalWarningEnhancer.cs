@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class ConvertIfStatementToReturnMethodCallWithConditionalWarningEnhancer : CSharpHighlightingEnhancer<ConvertIfStatementToReturnMethodCallWithConditionalWarning> {
 
 		protected override void AppendTooltip(ConvertIfStatementToReturnMethodCallWithConditionalWarning highlighting, CSharpColorizer colorizer) {

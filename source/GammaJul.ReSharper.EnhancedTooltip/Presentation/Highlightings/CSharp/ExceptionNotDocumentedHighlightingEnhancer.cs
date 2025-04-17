@@ -9,7 +9,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
   using GammaJul.ReSharper.EnhancedTooltip.Utils;
   using JetBrains.ReSharper.Feature.Services.Daemon;
 
-  [SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+  [SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
   internal sealed class ExceptionNotDocumentedHighlightingEnhancer : CSharpHighlightingEnhancer<IExceptionNotDocumentedHighlighting> {
 
     protected override void AppendTooltip(IExceptionNotDocumentedHighlighting highlighting, CSharpColorizer colorizer) {  }

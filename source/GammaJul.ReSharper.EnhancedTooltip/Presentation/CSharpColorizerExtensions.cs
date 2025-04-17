@@ -12,7 +12,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 		public static void AppendPlainText(this CSharpColorizer colorizer, string? text)
 			=> colorizer.AppendText(text, null);
 
-    public static void AppendRichText(this CSharpColorizer colorizer, RichText text)
+    public static void AppendRichTextToText(this CSharpColorizer colorizer, RichText text)
       => colorizer.AppendRichText(text);
 
 		public static void AppendKeyword(this CSharpColorizer colorizer, string? keyword)

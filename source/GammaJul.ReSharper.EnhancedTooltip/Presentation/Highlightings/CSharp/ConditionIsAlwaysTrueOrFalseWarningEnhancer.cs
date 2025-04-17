@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class ConditionIsAlwaysTrueOrFalseWarningEnhancer : CSharpHighlightingEnhancer<ConditionIsAlwaysTrueOrFalseWarning> {
 
 		protected override void AppendTooltip(ConditionIsAlwaysTrueOrFalseWarning highlighting, CSharpColorizer colorizer) {

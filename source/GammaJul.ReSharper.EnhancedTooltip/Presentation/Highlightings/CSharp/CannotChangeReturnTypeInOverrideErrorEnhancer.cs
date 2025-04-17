@@ -8,12 +8,12 @@ using JetBrains.ReSharper.Psi.Resolve;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class CannotChangeReturnTypeInOverrideErrorEnhancer : CSharpHighlightingEnhancer<CannotChangeReturnTypeInOverrideError> {
 
 		protected override void AppendTooltip(CannotChangeReturnTypeInOverrideError highlighting, CSharpColorizer colorizer) {
 			if (highlighting.TypeUsageMismatch.HasShortDescription) {
-				colorizer.AppendRichText(highlighting.TypeUsageMismatch.GetDescription());
+				colorizer.AppendRichTextToText(highlighting.TypeUsageMismatch.GetDescription());
 				colorizer.AppendPlainText(Environment.NewLine);
 				colorizer.AppendPlainText(Environment.NewLine);
 			}

@@ -1,4 +1,4 @@
-﻿using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using JetBrains.Application.Parts;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon.CSharp.Errors;
@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class ReturnTypeIsVoidErrorEnhancer : CSharpHighlightingEnhancer<ReturnTypeIsVoidError> {
 
 		protected override void AppendTooltip(ReturnTypeIsVoidError highlighting, CSharpColorizer colorizer) {

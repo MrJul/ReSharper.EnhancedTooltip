@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class AwaitNotUnderAsyncMethodErrorEnhancer : CSharpHighlightingEnhancer<AwaitNotUnderAsyncMethodError> {
 
 		protected override void AppendTooltip(AwaitNotUnderAsyncMethodError highlighting, CSharpColorizer colorizer) {

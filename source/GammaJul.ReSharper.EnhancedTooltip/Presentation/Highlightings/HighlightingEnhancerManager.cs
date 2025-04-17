@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using GammaJul.ReSharper.EnhancedTooltip.ExternalHighlightings;
@@ -12,7 +12,7 @@ using JetBrains.UI.RichText;
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings
 {
 
-  [SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+  [SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
   public sealed class HighlightingEnhancerManager {
     private readonly Dictionary<Type, IHighlightingEnhancer> _HighlightingEnhancers;
     public RichText? TryEnhance(IHighlighting? highlighting, IContextBoundSettingsStore settings) {

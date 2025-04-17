@@ -59,8 +59,8 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
       ShowName = NameStyle.SHORT
     };
 
-    private readonly RichText _richText;
-    private readonly TextStyleHighlighterManager _textStyleHighlighterManager;
+    private readonly RichText? _richText;
+    private readonly TextStyleHighlighterManager? _textStyleHighlighterManager;
     private readonly CodeAnnotationsConfiguration _codeAnnotationsConfiguration;
     private readonly HighlighterIdProvider _highlighterIdProvider;
 
@@ -121,21 +121,25 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
       && element.GetElementType().IsPresentable(CSharpLanguage.Instance);
 
     public void AppendText(string? text, string? highlighterAttributeId) {
-      if (text.IsEmpty())
+      if (text == null || text.IsEmpty() || this._textStyleHighlighterManager == null)
         return;
 
       TextStyle textStyle = this._textStyleHighlighterManager.GetHighlighterTextStyle(highlighterAttributeId);
-      this._richText.Append(text, textStyle);
+      if (this._richText != null) {
+        this._richText.Append(text, textStyle);
+      }
     }
 
     private void AppendText(string? text, TextStyle textStyle) {
-      if (!text.IsEmpty())
+      if (text != null && !text.IsEmpty() && this._richText != null) {
         this._richText.Append(text, textStyle);
+      }
     }
 
-    private void AppendRichText(RichText text) {
-      if (!text.IsEmpty)
+    public void AppendRichText(RichText text) {
+      if (!text.IsEmpty && this._richText != null) {
         this._richText.Append(text);
+      }
     }
 
     private void AppendElementKind(IDeclaredElement? element, Context context, bool stylized) {

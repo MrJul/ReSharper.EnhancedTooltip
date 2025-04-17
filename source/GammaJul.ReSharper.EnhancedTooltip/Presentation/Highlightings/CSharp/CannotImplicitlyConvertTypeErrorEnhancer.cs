@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class CannotImplicitlyConvertTypeErrorEnhancer : CSharpHighlightingEnhancer<CannotImplicitlyConvertTypeError> {
 
 		protected override void AppendTooltip(CannotImplicitlyConvertTypeError highlighting, CSharpColorizer colorizer) {

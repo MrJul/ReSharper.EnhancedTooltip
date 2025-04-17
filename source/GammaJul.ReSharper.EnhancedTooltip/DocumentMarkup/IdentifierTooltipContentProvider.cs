@@ -33,7 +33,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup {
   /// <summary>
   /// Provides colored identifier tooltips.
   /// </summary>
-  [SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+  [SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
   public class IdentifierTooltipContentProvider {
 
     private sealed class DeclaredElementInfo {

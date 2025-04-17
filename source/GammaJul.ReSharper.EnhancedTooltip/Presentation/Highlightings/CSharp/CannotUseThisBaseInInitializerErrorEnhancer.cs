@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.CSharp.Parsing;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class CannotUseThisBaseInInitializerErrorEnhancer : CSharpHighlightingEnhancer<CannotUseThisBaseInInitializerError> {
 
 		protected override void AppendTooltip(CannotUseThisBaseInInitializerError highlighting, CSharpColorizer colorizer) {

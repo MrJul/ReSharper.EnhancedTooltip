@@ -1,4 +1,4 @@
-﻿using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
+using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Psi;
 using JetBrains.Application.Parts;
 using JetBrains.ProjectModel;
@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class IncorrectArrayElementTypeErrorEnhancer : CSharpHighlightingEnhancer<IncorrectArrayElementTypeError> {
 
 		protected override void AppendTooltip(IncorrectArrayElementTypeError highlighting, CSharpColorizer colorizer) {

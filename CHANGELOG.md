@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.28.1.0
+- [Updated] Updated ReSharper SDK to 2025.1.0.
+- [Fixed] Incorrect display of C# 9.0 records and record structs.
+
 ## 3.27.1.8
 - [Fixed] Tooltips not displaying in C++.
 - [Added] New section on top of the tooltip for non C# tooltip content.

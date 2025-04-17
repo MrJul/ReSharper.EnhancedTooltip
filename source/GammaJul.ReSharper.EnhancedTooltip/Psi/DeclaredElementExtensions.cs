@@ -1,5 +1,6 @@
 using JetBrains.Annotations;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.DeclaredElements;
 using JetBrains.ReSharper.Psi.CSharp.Tree.Query;
 using JetBrains.ReSharper.Psi.CSharp.Util;
@@ -19,8 +20,9 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Psi {
 
 			return element switch {
 				null => "unknown",
-				IClass @class => GetClassModifiersDisplay(@class, useClassModifiers) + (useAttributeTypeKind && @class.IsAttribute() ? "attribute" : "class"),
-				IStruct @struct => GetStructModifiersDisplay(@struct, useStructModifiers) + "struct",
+				IRecord record => element is IStruct @struct ? GetStructModifiersDisplay(@struct, useStructModifiers) + "record struct" : GetClassModifiersDisplay(record, useClassModifiers) + (useAttributeTypeKind && record.IsAttribute() ? "attribute " : "record"),
+        IClass @class => GetClassModifiersDisplay(@class, useClassModifiers) + (useAttributeTypeKind && @class.IsAttribute() ? "attribute" : "class"),
+				IStruct @struct => GetStructModifiersDisplay(@struct, useStructModifiers) + (element is IRecord ? "record struct" : "struct"),
 				INamespace => "namespace",
 				IInterface => "interface",
 				IDelegate => "delegate",

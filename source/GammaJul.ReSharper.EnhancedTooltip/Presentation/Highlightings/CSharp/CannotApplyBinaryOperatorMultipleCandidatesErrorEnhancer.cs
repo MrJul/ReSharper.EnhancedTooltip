@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class CannotApplyBinaryOperatorMultipleCandidatesErrorEnhancer : CSharpHighlightingEnhancer<CannotApplyBinaryOperatorMultipleCandidatesError> {
 
 		protected override void AppendTooltip(CannotApplyBinaryOperatorMultipleCandidatesError highlighting, CSharpColorizer colorizer) {
@@ -20,7 +20,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("', ");
 			colorizer.AppendPlainText(Environment.NewLine);
 			colorizer.AppendPlainText("candidates are: ");
-			colorizer.AppendRichText(highlighting.Candidates);
+			colorizer.AppendRichTextToText(highlighting.Candidates);
 		}
 		
 		public CannotApplyBinaryOperatorMultipleCandidatesErrorEnhancer(

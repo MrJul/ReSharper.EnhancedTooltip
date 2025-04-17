@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class AnonymousTypePropertyCannotBeVoidErrorEnhancer : CSharpHighlightingEnhancer<AnonymousTypePropertyCannotBeVoidError> {
 
 		protected override void AppendTooltip(AnonymousTypePropertyCannotBeVoidError highlighting, CSharpColorizer colorizer) {

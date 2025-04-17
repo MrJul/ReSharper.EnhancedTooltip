@@ -6,7 +6,7 @@ using JetBrains.Util.DevEnv;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	public class HighlighterIdProviderFactory {
 
 		private readonly uint _vsMajorVersion;

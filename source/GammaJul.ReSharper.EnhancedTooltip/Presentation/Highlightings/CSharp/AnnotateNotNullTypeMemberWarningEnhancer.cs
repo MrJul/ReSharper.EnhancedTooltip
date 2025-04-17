@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Resolve;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class AnnotateNotNullTypeMemberWarningEnhancer : CSharpHighlightingEnhancer<AnnotateNotNullTypeMemberWarning> {
 		
 		protected override void AppendTooltip(AnnotateNotNullTypeMemberWarning highlighting, CSharpColorizer colorizer) {

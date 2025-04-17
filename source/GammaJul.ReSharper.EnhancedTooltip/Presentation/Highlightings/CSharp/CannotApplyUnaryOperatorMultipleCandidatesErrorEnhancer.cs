@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.CodeAnnotations;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class CannotApplyUnaryOperatorMultipleCandidatesErrorEnhancer : CSharpHighlightingEnhancer<CannotApplyUnaryOperatorMultipleCandidatesError> {
 
 		protected override void AppendTooltip(CannotApplyUnaryOperatorMultipleCandidatesError highlighting, CSharpColorizer colorizer) {
@@ -18,7 +18,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 			colorizer.AppendPlainText("', ");
 			colorizer.AppendPlainText(Environment.NewLine);
 			colorizer.AppendPlainText("candidates are: ");
-			colorizer.AppendRichText(highlighting.Candidates);
+			colorizer.AppendRichTextToText(highlighting.Candidates);
 		}
 		
 		public CannotApplyUnaryOperatorMultipleCandidatesErrorEnhancer(

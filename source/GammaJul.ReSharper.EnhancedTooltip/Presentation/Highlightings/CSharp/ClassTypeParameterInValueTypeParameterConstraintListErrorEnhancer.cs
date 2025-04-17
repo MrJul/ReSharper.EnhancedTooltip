@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.Resolve;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings.CSharp {
 
-	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadSafe)]
+	[SolutionComponent(Instantiation.ContainerAsyncAnyThreadUnsafe)]
 	internal sealed class ClassTypeParameterInValueTypeParameterConstraintListErrorEnhancer : CSharpHighlightingEnhancer<ClassTypeParameterInValueTypeParameterConstraintListError> {
 
 		protected override void AppendTooltip(ClassTypeParameterInValueTypeParameterConstraintListError highlighting, CSharpColorizer colorizer) {
