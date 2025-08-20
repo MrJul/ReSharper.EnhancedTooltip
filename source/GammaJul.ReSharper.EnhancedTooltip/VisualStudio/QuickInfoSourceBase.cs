@@ -7,6 +7,8 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using System.Collections.Generic;
+using JetBrains.Platform.VisualStudio.SinceVs10.TextControl.Intellisense;
+using JetBrains.TextControl.TextControlsManagement;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
@@ -29,13 +31,21 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		}
 
 		[Pure]
-		private static IDocumentMarkup? TryGetDocumentMarkup(ITextView? textView)
-			=> VsTextViewSolutionContextProvider.TryGetContext(textView)?.TextControl.Document is { } document
-				&& Shell.Instance.TryGetComponent<IDocumentMarkupManager>()?.TryGetMarkupModel(document) is JetBrains.TextControl.DocumentMarkup.DocumentMarkup documentMarkup
-					? documentMarkup
-					: null;
+		private static IDocumentMarkup? TryGetDocumentMarkup(ITextView? textView) {
+      var textControlManager = Shell.Instance.GetComponent<TextControlManager>();
+      var runningTextControlId = VsTextViewSolutionContextProvider.TryGetContext(textView)?.Id;
+      if (runningTextControlId == null)
+        return null;
+      
+      var document = textControlManager.TryGetTextControlById(runningTextControlId.Value)?.Document;
+      if (document == null)
+        return null;
+      
+      var documentMarkupManager = Shell.Instance.TryGetComponent<IDocumentMarkupManager>();
+      return documentMarkupManager?.TryGetMarkupModel(document);
+    }
 
-		protected abstract void AugmentQuickInfoSessionCore(
+    protected abstract void AugmentQuickInfoSessionCore(
 			IQuickInfoSession session,
 			IList<object?> quickInfoContent,
 			IDocumentMarkup documentMarkup,

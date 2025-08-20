@@ -702,7 +702,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
 
           if (isTopLevel && context.PresentedInfo is not null) {
             context.PresentedInfo.Parameters.Add(new TextRange(startOffset, this._richText.Length));
-            if (parameter.IsExtensionFirstParameter())
+            if (parameter.IsFirstParameterOfClassicExtensionMethod())
               context.PresentedInfo.IsExtensionMethod = true;
           }
         }
@@ -909,7 +909,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.Presentation {
     private static string? GetParameterSpecialModifier(IParameter parameter) {
       if (parameter.IsParameterArray)
         return "params ";
-      if (parameter.IsExtensionFirstParameter())
+      if (parameter.IsFirstParameterOfClassicExtensionMethod())
         return "this ";
       return null;
     }
