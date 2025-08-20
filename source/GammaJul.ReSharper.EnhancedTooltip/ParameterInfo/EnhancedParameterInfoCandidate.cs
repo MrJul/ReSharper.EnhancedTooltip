@@ -38,7 +38,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.ParameterInfo {
 				return null;
 
 			if (presentedInfo.Parameters.Count > 0) {
-				if (presentedInfo.IsExtensionMethod && UnderlyingCandidate.InvocationCandidate.IsExtensionMethodInvocation) {
+				if (presentedInfo.IsExtensionMethod && UnderlyingCandidate.InvocationCandidate.ExtensionInvocationKind != ExtensionMemberKind.NONE) {
 					parameterRanges = presentedInfo.Parameters.Skip(1).ToArray();
 					mapToOriginalOrder = CreateIdentityMap(presentedInfo.Parameters.Count - 1);
 					extensionMethodInfo = new ExtensionMethodInfo(presentedInfo.Parameters[0], TextRange.InvalidRange);

@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using GammaJul.ReSharper.EnhancedTooltip.DocumentMarkup;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation;
 using GammaJul.ReSharper.EnhancedTooltip.Presentation.Highlightings;
@@ -13,6 +10,7 @@ using JetBrains.DocumentModel;
 using JetBrains.Lifetimes;
 using JetBrains.Metadata.Reader.API;
 using JetBrains.Platform.VisualStudio.SinceVs10.Interop.Shim.TextControl;
+using JetBrains.Platform.VisualStudio.SinceVs10.TextControl.Intellisense;
 using JetBrains.ProjectModel;
 using JetBrains.PsiFeatures.VisualStudio.Core.TextControl.Intellisense;
 using JetBrains.PsiFeatures.VisualStudio.SinceVs10.TextControl.Intellisense;
@@ -31,6 +29,9 @@ using JetBrains.VsIntegration.TextControl;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 
@@ -138,7 +139,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
             if (!isCSharp) {
               foreach (object? content in quickInfoContent) {
                 if (content is IQuickInfoContent) {
-                  if (content is RichContentPresenter rcp) {
+                  if (content is QuickInfoContentPresenter rcp) {
                     var textPresenter = rcp.Content as RichTextPresenter;
                     if (!issueContents.Any(w => textPresenter != null && w.Text?.Text.Contains(textPresenter.RichText.Text) == true) && !String.IsNullOrEmpty(textPresenter?.RichText.Text.Trim())) {
                       presenter.AddNonCSharpContent(new NonCSharpTooltipContent(content));
