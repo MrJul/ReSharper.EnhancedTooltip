@@ -33,7 +33,7 @@ namespace GammaJul.ReSharper.EnhancedTooltip.VisualStudio {
 		[Pure]
 		private static IDocumentMarkup? TryGetDocumentMarkup(ITextView? textView) {
       var textControlManager = Shell.Instance.GetComponent<TextControlManager>();
-      var runningTextControlId = VsTextViewSolutionContextProvider.TryGetContext(textView)?.Id;
+      var runningTextControlId = VsTextViewSolutionContextProvider.TryGetContext(textView)?.TextControlId;
       if (runningTextControlId == null)
         return null;
       
